@@ -1,4 +1,5 @@
 using JetBrains.Annotations;
+using Unity.VisualScripting;
 using UnityEngine;
 using UnityEngine.InputSystem;
 using UnityEngine.SocialPlatforms;
@@ -60,6 +61,7 @@ public class GunOrbit : MonoBehaviour {
 
         // Optionally, rotate the gun to align with the input
         transform.rotation = Quaternion.Euler(0, 0, angleDeg);
-    }
+    }   
+
 }
 
