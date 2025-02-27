@@ -8,7 +8,7 @@ using UnityEngine.InputSystem;
 public class PlayerController : MonoBehaviour
 {
     public float walkSpeed = 5f;
-    public float crouchSpeed = 2.5f;
+    public float crouchSpeed = 1.5f;
     Vector2 moveInput;
     TouchingSpaceDirections touchingDirecctions;
     public bool doubleJumpAvail = true;
@@ -138,23 +138,24 @@ public class PlayerController : MonoBehaviour
 
     [SerializeField]
     public float rollImpulse = 4f;
-    public void OnRoll(InputAction.CallbackContext context)
+    //
+    public void OnSlam(InputAction.CallbackContext context)
     {
-        if (context.started && touchingDirecctions.isGrounded)  //check for alive later
+        if (context.started && doubleJumpAvail)  //check for alive later
         {
+            doubleJumpAvail = false;
             animator.SetTrigger("roll");
             rb.linearVelocity = new Vector2(rb.linearVelocity.x, rollImpulse);
         }
     }
-    
-    [SerializeField]
-    public float slideImpulse = 4f;
-    public void OnSlide(InputAction.CallbackContext context)
+
+
+    public void Interact(InputAction.CallbackContext context)
+    //
     {
-        if (context.started && touchingDirecctions.isGrounded)  //check for alive later
+        if (context.started)  //check for alive later
         {
             animator.SetTrigger("slide");
-            rb.linearVelocity = new Vector2(rb.linearVelocity.x, slideImpulse);
         }
     }
 }

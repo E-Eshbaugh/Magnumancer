@@ -764,7 +764,7 @@ Transform:
   m_GameObject: {fileID: 519420028}
   serializedVersion: 2
   m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
-  m_LocalPosition: {x: -3.58, y: -3.05, z: -61.93847}
+  m_LocalPosition: {x: -3.59, y: -2.45, z: -61.93847}
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_ConstrainProportionsScale: 0
   m_Children: []
@@ -38712,7 +38712,7 @@ PrefabInstance:
     m_Modifications:
     - target: {fileID: 262873490512974425, guid: 2ac4d7359680abb459b49bfd5060d7b5, type: 3}
       propertyPath: orbitRadius
-      value: 1.75
+      value: 2
       objectReference: {fileID: 0}
     - target: {fileID: 262873490512974425, guid: 2ac4d7359680abb459b49bfd5060d7b5, type: 3}
       propertyPath: lookAction.m_Name
@@ -38740,11 +38740,11 @@ PrefabInstance:
       objectReference: {fileID: 0}
     - target: {fileID: 4169952922166708216, guid: 2ac4d7359680abb459b49bfd5060d7b5, type: 3}
       propertyPath: m_LocalPosition.x
-      value: -3.58
+      value: -3.59
       objectReference: {fileID: 0}
     - target: {fileID: 4169952922166708216, guid: 2ac4d7359680abb459b49bfd5060d7b5, type: 3}
       propertyPath: m_LocalPosition.y
-      value: -3.05
+      value: -2.45
       objectReference: {fileID: 0}
     - target: {fileID: 4169952922166708216, guid: 2ac4d7359680abb459b49bfd5060d7b5, type: 3}
       propertyPath: m_LocalPosition.z
@@ -38824,7 +38824,7 @@ PrefabInstance:
       objectReference: {fileID: 0}
     - target: {fileID: 8677858510353205197, guid: 2ac4d7359680abb459b49bfd5060d7b5, type: 3}
       propertyPath: slideImpulse
-      value: 2
+      value: 5
       objectReference: {fileID: 0}
     - target: {fileID: 8677858510353205197, guid: 2ac4d7359680abb459b49bfd5060d7b5, type: 3}
       propertyPath: diddoubleJump
@@ -39104,7 +39104,7 @@ PrefabInstance:
       objectReference: {fileID: 0}
     - target: {fileID: 9086708811866961630, guid: 2ac4d7359680abb459b49bfd5060d7b5, type: 3}
       propertyPath: m_ActionEvents.Array.data[3].m_PersistentCalls.m_Calls.Array.data[0].m_MethodName
-      value: OnSlide
+      value: OnSlam
       objectReference: {fileID: 0}
     - target: {fileID: 9086708811866961630, guid: 2ac4d7359680abb459b49bfd5060d7b5, type: 3}
       propertyPath: m_ActionEvents.Array.data[4].m_PersistentCalls.m_Calls.Array.data[0].m_MethodName
@@ -39120,7 +39120,7 @@ PrefabInstance:
       objectReference: {fileID: 0}
     - target: {fileID: 9086708811866961630, guid: 2ac4d7359680abb459b49bfd5060d7b5, type: 3}
       propertyPath: m_ActionEvents.Array.data[19].m_PersistentCalls.m_Calls.Array.data[0].m_MethodName
-      value: OnRoll
+      value: Interact
       objectReference: {fileID: 0}
     - target: {fileID: 9086708811866961630, guid: 2ac4d7359680abb459b49bfd5060d7b5, type: 3}
       propertyPath: m_ActionEvents.Array.data[0].m_PersistentCalls.m_Calls.Array.data[0].m_TargetAssemblyTypeName
@@ -39276,7 +39276,7 @@ Transform:
   m_GameObject: {fileID: 1852195414}
   serializedVersion: 2
   m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
-  m_LocalPosition: {x: -3.58, y: -3.05, z: -61.93847}
+  m_LocalPosition: {x: -3.59, y: -2.45, z: -61.93847}
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_ConstrainProportionsScale: 0
   m_Children: []

@@ -189,6 +189,18 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   orbitRadius: 3
   deadZone: 0.2
+  lookAction:
+    m_Name: 
+    m_Type: 0
+    m_ExpectedControlType: 
+    m_Id: 4d9d46a3-f2af-45b3-a05d-805db9dd67a9
+    m_Processors: 
+    m_Interactions: 
+    m_SingletonActionBindings: []
+    m_Flags: 0
+  angleLog: 
+  angleDeg: 0
+  shouldFlip: 0
 --- !u!1 &7260553425517245600
 GameObject:
   m_ObjectHideFlags: 0
@@ -273,7 +285,7 @@ SpriteRenderer:
   m_SortingLayerID: 0
   m_SortingLayer: 0
   m_SortingOrder: 0
-  m_Sprite: {fileID: 1107923323, guid: 71a620adff0f106438259cf3ec0af897, type: 3}
+  m_Sprite: {fileID: 1591709252, guid: 83fa121b3217fa84ca11623844a0189b, type: 3}
   m_Color: {r: 1, g: 1, b: 1, a: 1}
   m_FlipX: 0
   m_FlipY: 0
