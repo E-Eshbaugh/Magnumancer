@@ -38710,6 +38710,30 @@ PrefabInstance:
     serializedVersion: 3
     m_TransformParent: {fileID: 0}
     m_Modifications:
+    - target: {fileID: 262873490512974425, guid: 2ac4d7359680abb459b49bfd5060d7b5, type: 3}
+      propertyPath: orbitRadius
+      value: 1.75
+      objectReference: {fileID: 0}
+    - target: {fileID: 262873490512974425, guid: 2ac4d7359680abb459b49bfd5060d7b5, type: 3}
+      propertyPath: lookAction.m_Name
+      value: Look
+      objectReference: {fileID: 0}
+    - target: {fileID: 262873490512974425, guid: 2ac4d7359680abb459b49bfd5060d7b5, type: 3}
+      propertyPath: lookAction.m_SingletonActionBindings.Array.size
+      value: 1
+      objectReference: {fileID: 0}
+    - target: {fileID: 262873490512974425, guid: 2ac4d7359680abb459b49bfd5060d7b5, type: 3}
+      propertyPath: lookAction.m_SingletonActionBindings.Array.data[0].m_Id
+      value: 2ee89edf-1349-4f64-91ee-71a9abdec1f5
+      objectReference: {fileID: 0}
+    - target: {fileID: 262873490512974425, guid: 2ac4d7359680abb459b49bfd5060d7b5, type: 3}
+      propertyPath: lookAction.m_SingletonActionBindings.Array.data[0].m_Path
+      value: <Gamepad>/rightStick
+      objectReference: {fileID: 0}
+    - target: {fileID: 262873490512974425, guid: 2ac4d7359680abb459b49bfd5060d7b5, type: 3}
+      propertyPath: lookAction.m_SingletonActionBindings.Array.data[0].m_Action
+      value: Look
+      objectReference: {fileID: 0}
     - target: {fileID: 2399037753107447158, guid: 2ac4d7359680abb459b49bfd5060d7b5, type: 3}
       propertyPath: m_GravityScale
       value: 2.2
@@ -38771,16 +38795,24 @@ PrefabInstance:
       value: 
       objectReference: {fileID: 1987816353, guid: 88365eb93f90dc0448eb4a39ecadd679, type: 3}
     - target: {fileID: 8540673457664713396, guid: 2ac4d7359680abb459b49bfd5060d7b5, type: 3}
+      propertyPath: m_SortingLayer
+      value: 1
+      objectReference: {fileID: 0}
+    - target: {fileID: 8540673457664713396, guid: 2ac4d7359680abb459b49bfd5060d7b5, type: 3}
+      propertyPath: m_SortingLayerID
+      value: 2119602375
+      objectReference: {fileID: 0}
+    - target: {fileID: 8540673457664713396, guid: 2ac4d7359680abb459b49bfd5060d7b5, type: 3}
       propertyPath: m_WasSpriteAssigned
       value: 1
       objectReference: {fileID: 0}
     - target: {fileID: 8581477358434173045, guid: 2ac4d7359680abb459b49bfd5060d7b5, type: 3}
       propertyPath: m_LocalPosition.x
-      value: 1.05
+      value: 2.03
       objectReference: {fileID: 0}
     - target: {fileID: 8581477358434173045, guid: 2ac4d7359680abb459b49bfd5060d7b5, type: 3}
       propertyPath: m_LocalPosition.y
-      value: -0.26
+      value: -0.06
       objectReference: {fileID: 0}
     - target: {fileID: 8677858510353205197, guid: 2ac4d7359680abb459b49bfd5060d7b5, type: 3}
       propertyPath: jumpImpulse
