@@ -1,4 +1,5 @@
 using System;
+using System.Collections;
 using System.Runtime.CompilerServices;
 using UnityEngine;
 using UnityEngine.InputSystem;
@@ -12,18 +13,26 @@ public class PlayerController : MonoBehaviour
     public Sprite jumpBarFull;
     public Sprite jumpBarHalf;
     public Sprite jumpBarEmpty;
+    public Image dashBar;
+    public Sprite dashFull;
+    public Sprite dashEmpty;
+    public Sprite dash1;
+    public Sprite dash2;
+    public Sprite dash3;
+    public Sprite dash4;
     public bool isGrounded;
     public bool isJumping;
     public Transform groundCheck;
     public float groundCheckRadius = 0.1f;
     public LayerMask whatIsGround;
     public float walkSpeed = 5f;
-    public float crouchSpeed = 1.5f;
+    public bool dash = true;
+    public bool isDashing = false;
     Vector2 moveInput;
     TouchingSpaceDirections touchingDirecctions;
     public bool doubleJumpAvail = true;
     private bool _isMoving = false;
-    
+
 
     public bool isMoving
     {
@@ -36,31 +45,32 @@ public class PlayerController : MonoBehaviour
     }
     private bool _isCrouched = false;
 
-    public bool isCrouched { get{return _isCrouched;} private set 
+    public bool isCrouched
+    {
+        get { return _isCrouched; }
+        private set
         {
             _isCrouched = value;
             animator.SetBool("isCrouch", _isCrouched);
-        } 
+        }
     }
 
-    public float CurrentMoveSpeed 
+    public float CurrentMoveSpeed
     {
         get
         {
             if (isMoving && !touchingDirecctions.isOnWall)
             {
-                if (isCrouched)
-                {
-                    return crouchSpeed;
-                } else {
-                    return walkSpeed;
-                }
-            } else {
+                return walkSpeed;
+
+            }
+            else
+            {
                 return 0f;
             }
         }
     }
-    
+
     public bool _isFacingRight = true;
 
     public bool isFacingRight()
@@ -71,7 +81,8 @@ public class PlayerController : MonoBehaviour
     Rigidbody2D rb;
     Animator animator;
     [SerializeField]
-     public float jumpImpulse = 20f;
+    public float jumpImpulse = 20f;
+    public float dashImpulse = 20f;
 
     private void Awake()
     {
@@ -86,11 +97,16 @@ public class PlayerController : MonoBehaviour
     {
         isGrounded = Physics2D.OverlapCircle(groundCheck.position, groundCheckRadius, whatIsGround);
 
+        if (isGrounded && isJumping)
+        {
+            isJumping = false;
+        }
+
         if (isGrounded)
         {
             jumpBar.sprite = jumpBarFull;
         }
-        else if (!isGrounded && doubleJumpAvail && !diddoubleJump)
+        else if (!isGrounded && doubleJumpAvail && !diddoubleJump && isJumping)
         {
             jumpBar.sprite = jumpBarHalf;
         }
@@ -98,7 +114,7 @@ public class PlayerController : MonoBehaviour
         {
             jumpBar.sprite = jumpBarEmpty;
         }
-        
+
         if (touchingDirecctions.isGrounded)
         {
             doubleJumpAvail = true;
@@ -106,7 +122,7 @@ public class PlayerController : MonoBehaviour
         }
 
         float horizontalInput = Input.GetAxis("Horizontal");
-        
+
         // Flip direction when input changes
         if (horizontalInput > 0 && !_isFacingRight)
             Flip();
@@ -122,8 +138,11 @@ public class PlayerController : MonoBehaviour
 
     void FixedUpdate()
     {
-        rb.linearVelocity = new Vector2(moveInput.x * CurrentMoveSpeed, rb.linearVelocityY);
-        animator.SetFloat("yVel", rb.linearVelocityY);
+        if (!isDashing)
+        {
+            rb.linearVelocity = new Vector2(moveInput.x * CurrentMoveSpeed, rb.linearVelocityY);
+            animator.SetFloat("yVel", rb.linearVelocityY);
+        }
     }
 
     public void OnMove(InputAction.CallbackContext context)
@@ -132,16 +151,17 @@ public class PlayerController : MonoBehaviour
         isMoving = moveInput != Vector2.zero;
     }
 
-    public void OnCrouch(InputAction.CallbackContext context)
+    public void OnDash(InputAction.CallbackContext context)
     {
-        if (context.canceled)
+        if (context.started && dash)  //check for alive later
         {
-            if (isCrouched)
-            {
-                isCrouched = false;
-            } else {
-                isCrouched = true;
-            }
+            //animator.SetTrigger("dash");
+            StartCoroutine(DashCooldown());
+            rb.AddForce(new Vector2(dashImpulse * (isFacingRight() ? 1 : -1), 0), ForceMode2D.Impulse);
+            dash = false;
+            isDashing = true;
+            dashBar.sprite = dashEmpty;
+            StartCoroutine(DashDuration());
         }
     }
 
@@ -192,5 +212,31 @@ public class PlayerController : MonoBehaviour
         {
             animator.SetTrigger("slide");
         }
+    }
+
+    private IEnumerator DashCooldown()
+    {
+        yield return new WaitForSeconds(0.5f);
+        dashBar.sprite = dash1;
+
+        yield return new WaitForSeconds(0.5f);
+        dashBar.sprite = dash2;
+
+        yield return new WaitForSeconds(0.5f);
+        dashBar.sprite = dash3;
+
+        yield return new WaitForSeconds(0.5f);
+        dashBar.sprite = dash4;
+
+        yield return new WaitForSeconds(0.5f);
+        dashBar.sprite = dashFull;
+
+        dash = true;
+    }
+    
+    private IEnumerator DashDuration()
+    {
+        yield return new WaitForSeconds(0.2f);
+        isDashing = false;
     }
 }
