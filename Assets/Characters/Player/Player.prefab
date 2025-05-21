@@ -116,6 +116,37 @@ MonoBehaviour:
   angleLog: 
   angleDeg: 0
   shouldFlip: 0
+--- !u!1 &5872184808567646753
+GameObject:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  serializedVersion: 6
+  m_Component:
+  - component: {fileID: 637108249259504277}
+  m_Layer: 0
+  m_Name: GroundCheck
+  m_TagString: Untagged
+  m_Icon: {fileID: 0}
+  m_NavMeshLayer: 0
+  m_StaticEditorFlags: 0
+  m_IsActive: 1
+--- !u!4 &637108249259504277
+Transform:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 5872184808567646753}
+  serializedVersion: 2
+  m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
+  m_LocalPosition: {x: 0, y: 0, z: 0}
+  m_LocalScale: {x: 1, y: 1, z: 1}
+  m_ConstrainProportionsScale: 0
+  m_Children: []
+  m_Father: {fileID: 4169952922166708216}
+  m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
 --- !u!1 &7260553425517245600
 GameObject:
   m_ObjectHideFlags: 0
@@ -154,6 +185,7 @@ Transform:
   m_ConstrainProportionsScale: 0
   m_Children:
   - {fileID: 8581477358434173045}
+  - {fileID: 637108249259504277}
   m_Father: {fileID: 0}
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
 --- !u!212 &3331707760867405213
@@ -250,6 +282,16 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 08177b43528a4b641b3992bf64978663, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  jumpBar: {fileID: 0}
+  jumpBarFull: {fileID: 0}
+  jumpBarHalf: {fileID: 0}
+  jumpBarEmpty: {fileID: 0}
+  isGrounded: 0
+  groundCheck: {fileID: 0}
+  groundCheckRadius: 0.1
+  whatIsGround:
+    serializedVersion: 2
+    m_Bits: 0
   walkSpeed: 5
   crouchSpeed: 2.5
   doubleJumpAvail: 1

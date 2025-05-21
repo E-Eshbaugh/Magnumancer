@@ -512,6 +512,17 @@
                     "action": "isShooting",
                     "isComposite": false,
                     "isPartOfComposite": false
+                },
+                {
+                    "name": "",
+                    "id": "af4f5693-20e3-4b54-a413-5500fcff118a",
+                    "path": "<Mouse>/leftButton",
+                    "interactions": "",
+                    "processors": "",
+                    "groups": "",
+                    "action": "isShooting",
+                    "isComposite": false,
+                    "isPartOfComposite": false
                 }
             ]
         },

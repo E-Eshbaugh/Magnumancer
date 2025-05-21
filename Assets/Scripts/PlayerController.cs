@@ -2,23 +2,37 @@ using System;
 using System.Runtime.CompilerServices;
 using UnityEngine;
 using UnityEngine.InputSystem;
+using UnityEngine.UI;
 
 [RequireComponent(typeof(Rigidbody2D), typeof(TouchingSpaceDirections))]
 
 public class PlayerController : MonoBehaviour
 {
+    public Image jumpBar;
+    public Sprite jumpBarFull;
+    public Sprite jumpBarHalf;
+    public Sprite jumpBarEmpty;
+    public bool isGrounded;
+    public bool isJumping;
+    public Transform groundCheck;
+    public float groundCheckRadius = 0.1f;
+    public LayerMask whatIsGround;
     public float walkSpeed = 5f;
     public float crouchSpeed = 1.5f;
     Vector2 moveInput;
     TouchingSpaceDirections touchingDirecctions;
     public bool doubleJumpAvail = true;
-
     private bool _isMoving = false;
-    public bool isMoving { get{return _isMoving;} private set 
+    
+
+    public bool isMoving
+    {
+        get { return _isMoving; }
+        private set
         {
             _isMoving = value;
             animator.SetBool("isMoving", _isMoving);
-        } 
+        }
     }
     private bool _isCrouched = false;
 
@@ -61,6 +75,8 @@ public class PlayerController : MonoBehaviour
 
     private void Awake()
     {
+        isGrounded = true;
+        isJumping = false;
         rb = GetComponent<Rigidbody2D>();
         animator = GetComponent<Animator>();
         touchingDirecctions = GetComponent<TouchingSpaceDirections>();
@@ -68,6 +84,21 @@ public class PlayerController : MonoBehaviour
 
     void Update()
     {
+        isGrounded = Physics2D.OverlapCircle(groundCheck.position, groundCheckRadius, whatIsGround);
+
+        if (isGrounded)
+        {
+            jumpBar.sprite = jumpBarFull;
+        }
+        else if (!isGrounded && doubleJumpAvail && !diddoubleJump)
+        {
+            jumpBar.sprite = jumpBarHalf;
+        }
+        else if (!isGrounded && !doubleJumpAvail && diddoubleJump)
+        {
+            jumpBar.sprite = jumpBarEmpty;
+        }
+        
         if (touchingDirecctions.isGrounded)
         {
             doubleJumpAvail = true;
@@ -116,8 +147,10 @@ public class PlayerController : MonoBehaviour
 
     public void OnJump(InputAction.CallbackContext context)
     {
+        isJumping = true;
         if (context.started && touchingDirecctions.isGrounded)  //check for alive later
         {
+            jumpBar.sprite = jumpBarHalf;
             animator.SetTrigger("jump");
             rb.linearVelocity = new Vector2(rb.linearVelocity.x, jumpImpulse);
         }
@@ -130,6 +163,7 @@ public class PlayerController : MonoBehaviour
         if (context.started && !touchingDirecctions.isGrounded && doubleJumpAvail)  //check for alive later
         {
             animator.SetTrigger("doubleJump");
+            jumpBar.sprite = jumpBarEmpty;
             rb.linearVelocity = new Vector2(rb.linearVelocity.x, jumpImpulse);
             diddoubleJump = true;
             doubleJumpAvail = false;
@@ -146,6 +180,7 @@ public class PlayerController : MonoBehaviour
             doubleJumpAvail = false;
             animator.SetTrigger("roll");
             rb.linearVelocity = new Vector2(rb.linearVelocity.x, rollImpulse);
+            jumpBar.sprite = jumpBarEmpty;
         }
     }
 
