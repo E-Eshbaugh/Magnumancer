@@ -39179,19 +39179,19 @@ PrefabInstance:
       objectReference: {fileID: 0}
     - target: {fileID: 637108249259504277, guid: 2ac4d7359680abb459b49bfd5060d7b5, type: 3}
       propertyPath: m_LocalScale.x
-      value: 0.98586
+      value: 0.21569593
       objectReference: {fileID: 0}
     - target: {fileID: 637108249259504277, guid: 2ac4d7359680abb459b49bfd5060d7b5, type: 3}
       propertyPath: m_LocalScale.y
-      value: 0.98586
+      value: 0.21569593
       objectReference: {fileID: 0}
     - target: {fileID: 637108249259504277, guid: 2ac4d7359680abb459b49bfd5060d7b5, type: 3}
       propertyPath: m_LocalScale.z
-      value: 0.98586
+      value: 0.21569593
       objectReference: {fileID: 0}
     - target: {fileID: 637108249259504277, guid: 2ac4d7359680abb459b49bfd5060d7b5, type: 3}
       propertyPath: m_LocalPosition.x
-      value: -0.39
+      value: -0.23
       objectReference: {fileID: 0}
     - target: {fileID: 637108249259504277, guid: 2ac4d7359680abb459b49bfd5060d7b5, type: 3}
       propertyPath: m_LocalPosition.y
@@ -39239,7 +39239,7 @@ PrefabInstance:
       objectReference: {fileID: 9100000, guid: 5aabada5ebb84584aaafa8ca5c51263c, type: 2}
     - target: {fileID: 2399037753107447158, guid: 2ac4d7359680abb459b49bfd5060d7b5, type: 3}
       propertyPath: m_GravityScale
-      value: 2.2
+      value: 1.5
       objectReference: {fileID: 0}
     - target: {fileID: 3931076846131361600, guid: 2ac4d7359680abb459b49bfd5060d7b5, type: 3}
       propertyPath: m_Size.x
@@ -39358,9 +39358,37 @@ PrefabInstance:
       value: -0.06
       objectReference: {fileID: 0}
     - target: {fileID: 8677858510353205197, guid: 2ac4d7359680abb459b49bfd5060d7b5, type: 3}
+      propertyPath: dash1
+      value: 
+      objectReference: {fileID: 1181015523, guid: 0e1b3d57d082d1946be22f30e9aadfe2, type: 3}
+    - target: {fileID: 8677858510353205197, guid: 2ac4d7359680abb459b49bfd5060d7b5, type: 3}
+      propertyPath: dash2
+      value: 
+      objectReference: {fileID: 1367555829, guid: 0e1b3d57d082d1946be22f30e9aadfe2, type: 3}
+    - target: {fileID: 8677858510353205197, guid: 2ac4d7359680abb459b49bfd5060d7b5, type: 3}
+      propertyPath: dash3
+      value: 
+      objectReference: {fileID: 468064086, guid: 0e1b3d57d082d1946be22f30e9aadfe2, type: 3}
+    - target: {fileID: 8677858510353205197, guid: 2ac4d7359680abb459b49bfd5060d7b5, type: 3}
+      propertyPath: dash4
+      value: 
+      objectReference: {fileID: 1326481909, guid: 0e1b3d57d082d1946be22f30e9aadfe2, type: 3}
+    - target: {fileID: 8677858510353205197, guid: 2ac4d7359680abb459b49bfd5060d7b5, type: 3}
+      propertyPath: dashBar
+      value: 
+      objectReference: {fileID: 1442862658}
+    - target: {fileID: 8677858510353205197, guid: 2ac4d7359680abb459b49bfd5060d7b5, type: 3}
       propertyPath: jumpBar
       value: 
       objectReference: {fileID: 146376729}
+    - target: {fileID: 8677858510353205197, guid: 2ac4d7359680abb459b49bfd5060d7b5, type: 3}
+      propertyPath: dashFull
+      value: 
+      objectReference: {fileID: 392689569, guid: 0e1b3d57d082d1946be22f30e9aadfe2, type: 3}
+    - target: {fileID: 8677858510353205197, guid: 2ac4d7359680abb459b49bfd5060d7b5, type: 3}
+      propertyPath: dashEmpty
+      value: 
+      objectReference: {fileID: -332296177, guid: 0e1b3d57d082d1946be22f30e9aadfe2, type: 3}
     - target: {fileID: 8677858510353205197, guid: 2ac4d7359680abb459b49bfd5060d7b5, type: 3}
       propertyPath: groundCheck
       value: 
@@ -39711,7 +39739,7 @@ PrefabInstance:
       objectReference: {fileID: 0}
     - target: {fileID: 9086708811866961630, guid: 2ac4d7359680abb459b49bfd5060d7b5, type: 3}
       propertyPath: m_ActionEvents.Array.data[4].m_PersistentCalls.m_Calls.Array.data[0].m_MethodName
-      value: OnCrouch
+      value: OnDash
       objectReference: {fileID: 0}
     - target: {fileID: 9086708811866961630, guid: 2ac4d7359680abb459b49bfd5060d7b5, type: 3}
       propertyPath: m_ActionEvents.Array.data[5].m_PersistentCalls.m_Calls.Array.data[0].m_MethodName
