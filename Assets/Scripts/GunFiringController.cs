@@ -41,6 +41,7 @@ public class GunAmmo : MonoBehaviour
     public int ammoCount;
     public int maxAmmoCount;
     public int damage;
+    public int weight;
 
     // Start is called once before the first execution of Update after the MonoBehaviour is created
     void Start()
@@ -55,6 +56,7 @@ public class GunAmmo : MonoBehaviour
             damage = 10;
             fireRate = 0.075f;
             fireType = "auto";
+            weight = 50;
         }
         //heavy sniper
         else if (gunName == "1_49")
@@ -64,6 +66,7 @@ public class GunAmmo : MonoBehaviour
             damage = 50;
             fireRate = 1f;
             fireType = "semi";
+            weight = 30;
         }
         //ak
         else if (gunName == "1_56")
@@ -73,6 +76,7 @@ public class GunAmmo : MonoBehaviour
             damage = 30;
             fireRate = 0.15f;
             fireType = "auto";
+            weight = 20;
         }
         //smg
         else if (gunName == "1_62")
@@ -82,6 +86,7 @@ public class GunAmmo : MonoBehaviour
             damage = 20;
             fireRate = 0.1f;
             fireType = "auto";
+            weight = 10;
         }
         // ================================================
 
