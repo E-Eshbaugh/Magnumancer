@@ -39500,6 +39500,10 @@ PrefabInstance:
       value: 0.13
       objectReference: {fileID: 0}
     - target: {fileID: 8677858510353205197, guid: 2ac4d7359680abb459b49bfd5060d7b5, type: 3}
+      propertyPath: dash
+      value: 1
+      objectReference: {fileID: 0}
+    - target: {fileID: 8677858510353205197, guid: 2ac4d7359680abb459b49bfd5060d7b5, type: 3}
       propertyPath: dash1
       value: 
       objectReference: {fileID: 1181015523, guid: 0e1b3d57d082d1946be22f30e9aadfe2, type: 3}
@@ -39531,6 +39535,10 @@ PrefabInstance:
       propertyPath: dashEmpty
       value: 
       objectReference: {fileID: -332296177, guid: 0e1b3d57d082d1946be22f30e9aadfe2, type: 3}
+    - target: {fileID: 8677858510353205197, guid: 2ac4d7359680abb459b49bfd5060d7b5, type: 3}
+      propertyPath: walkSpeed
+      value: 8
+      objectReference: {fileID: 0}
     - target: {fileID: 8677858510353205197, guid: 2ac4d7359680abb459b49bfd5060d7b5, type: 3}
       propertyPath: groundCheck
       value: 

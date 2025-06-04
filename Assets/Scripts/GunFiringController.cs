@@ -60,7 +60,7 @@ public class GunAmmo : MonoBehaviour
             damage = 10;
             fireRate = 0.075f;
             fireType = "auto";
-            weight = 50;
+            weight = 40;
         }
         //heavy sniper
         else if (gunName == "1_49")
@@ -70,7 +70,7 @@ public class GunAmmo : MonoBehaviour
             damage = 50;
             fireRate = 1f;
             fireType = "semi";
-            weight = 30;
+            weight = 25;
         }
         //ak
         else if (gunName == "1_56")
@@ -80,7 +80,7 @@ public class GunAmmo : MonoBehaviour
             damage = 30;
             fireRate = 0.15f;
             fireType = "auto";
-            weight = 20;
+            weight = 15;
         }
         //smg
         else if (gunName == "1_62")
@@ -90,16 +90,19 @@ public class GunAmmo : MonoBehaviour
             damage = 20;
             fireRate = 0.1f;
             fireType = "auto";
-            weight = 10;
+            weight = 5;
         }
         // ================================================
 
         if (animator == null)
             animator = fireSprite.GetComponent<Animator>();
-        
-        if(newController != null) {
+
+        if (newController != null)
+        {
             animator.runtimeAnimatorController = newController;
         }
+
+        updatePlayerWeight();
     }
 
     // Update is called once per frame
@@ -172,6 +175,15 @@ public class GunAmmo : MonoBehaviour
         shooting = true;
         Instantiate(bulletPrefab, firePoint.position, firePoint.rotation);
         ammoCount--;
+    }
+
+    void updatePlayerWeight()
+    {
+        PlayerController player = FindFirstObjectByType<PlayerController>();
+        if (player != null)
+        {
+            player.walkSpeed =  player.walkSpeed - weight/10f;
+        }
     }
 
 }
