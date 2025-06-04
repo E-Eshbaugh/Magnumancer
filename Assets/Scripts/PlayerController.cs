@@ -1,6 +1,4 @@
-using System;
 using System.Collections;
-using System.Runtime.CompilerServices;
 using UnityEngine;
 using UnityEngine.InputSystem;
 using UnityEngine.UI;
@@ -32,8 +30,6 @@ public class PlayerController : MonoBehaviour
     TouchingSpaceDirections touchingDirecctions;
     public bool doubleJumpAvail = true;
     private bool _isMoving = false;
-
-
     public bool isMoving
     {
         get { return _isMoving; }
@@ -84,8 +80,12 @@ public class PlayerController : MonoBehaviour
     public float jumpImpulse = 20f;
     public float dashImpulse = 20f;
 
+    [Header("-- Spell Menu Control --")]
+    public GameObject spellMenu;
+
     private void Awake()
     {
+        spellMenu.SetActive(false);
         isGrounded = true;
         isJumping = false;
         rb = GetComponent<Rigidbody2D>();
@@ -233,10 +233,22 @@ public class PlayerController : MonoBehaviour
 
         dash = true;
     }
-    
+
     private IEnumerator DashDuration()
     {
         yield return new WaitForSeconds(0.2f);
         isDashing = false;
+    }
+
+    public void OnOpenSpellMenu(InputAction.CallbackContext context)
+    {
+        if (context.started)
+        {
+            spellMenu.SetActive(true);
+        }
+        else if (context.canceled)
+        {
+            spellMenu.SetActive(false);
+        }
     }
 }
