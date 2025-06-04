@@ -6,7 +6,7 @@ using UnityEngine.SocialPlatforms;
 
 public class GunOrbit : MonoBehaviour {
     [Tooltip("Distance from the player's position at which the gun orbits.")]
-    public float orbitRadius = 1.5f;
+    public float orbitRadius = 1f;
     [Tooltip("Minimum magnitude of input required to update orbit.")]
     public float deadZone = 0.2f;
 
