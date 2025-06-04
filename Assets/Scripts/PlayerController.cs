@@ -205,13 +205,10 @@ public class PlayerController : MonoBehaviour
     }
 
 
-    public void Interact(InputAction.CallbackContext context)
+    public void Interact()
     //
     {
-        if (context.started)  //check for alive later
-        {
-            animator.SetTrigger("slide");
-        }
+        animator.SetTrigger("slide");
     }
 
     private IEnumerator DashCooldown()
@@ -249,6 +246,7 @@ public class PlayerController : MonoBehaviour
         else if (context.canceled)
         {
             spellMenu.SetActive(false);
+            Interact();
         }
     }
 }
