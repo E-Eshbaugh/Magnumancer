@@ -25,7 +25,7 @@ public class PlayerController : MonoBehaviour
     public Transform groundCheck;
     public float groundCheckRadius = 0.1f;
     public LayerMask whatIsGround;
-    public float walkSpeed = 10f;
+    public float walkSpeed = 5f;
     public bool dash = true;
     public bool isDashing = false;
     Vector2 moveInput;
