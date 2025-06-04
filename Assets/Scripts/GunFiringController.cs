@@ -46,6 +46,10 @@ public class GunAmmo : MonoBehaviour
     // Start is called once before the first execution of Update after the MonoBehaviour is created
     void Start()
     {
+        //fire point setup =====================================================
+        Vector2 gunSize = gunRenderer.bounds.size;
+        firePoint.localPosition = new Vector3(gunSize.x, 0f, 0f);
+
         // Gun Setup ====================================================
         gunName = gunRenderer.sprite.name;
         //mini gun
