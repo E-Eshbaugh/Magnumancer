@@ -1,4 +1,6 @@
 using UnityEngine;
+using UnityEngine.InputSystem;
+using UnityEngine.SceneManagement;
 using UnityEngine.UI;
 
 public class ButtonIconController : MonoBehaviour
@@ -27,6 +29,11 @@ public class ButtonIconController : MonoBehaviour
 
             if (image != null)
                 image.sprite = buttonSprites[currentFrame];
+        }
+
+        if (Gamepad.current.aButton.IsPressed())
+        {
+            SceneManager.LoadScene("MainMenu");
         }
     }
 }
