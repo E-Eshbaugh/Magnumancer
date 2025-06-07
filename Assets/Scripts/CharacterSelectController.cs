@@ -100,12 +100,6 @@ public class CharacterSelectController : MonoBehaviour
         rightPressed = isPressedR;
 
         updateWizard();
-
-        if (Gamepad.current.aButton.wasPressedThisFrame)
-        {
-            UnityEngine.SceneManagement.SceneManager.LoadScene("ForestMap");
-        }
-
     }
 
     void updateWizard()
