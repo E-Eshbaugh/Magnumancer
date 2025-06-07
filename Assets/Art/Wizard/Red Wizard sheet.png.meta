@@ -110,12 +110,1068 @@ TextureImporter:
     serializedVersion: 2
     sprites:
     - serializedVersion: 2
-      name: rain light_0
+      name: Red Wizard sheet_0
       rect:
         serializedVersion: 2
-        x: 4
-        y: 0
-        width: 7
+        x: 18
+        y: 640
+        width: 29
+        height: 42
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: 0
+      bones: []
+      spriteID: 8ba47d30842d1774fa145ef8e4af28b9
+      internalID: -320323907
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: Red Wizard sheet_1
+      rect:
+        serializedVersion: 2
+        x: 82
+        y: 640
+        width: 30
+        height: 41
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: 0
+      bones: []
+      spriteID: a2bbe1bf45ec7f540814c0bb80b69e89
+      internalID: 1472030574
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: Red Wizard sheet_2
+      rect:
+        serializedVersion: 2
+        x: 146
+        y: 640
+        width: 30
+        height: 40
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: 0
+      bones: []
+      spriteID: 0b168ba89012df049acc1a49fe124275
+      internalID: -992316685
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: Red Wizard sheet_3
+      rect:
+        serializedVersion: 2
+        x: 210
+        y: 640
+        width: 29
+        height: 40
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: 0
+      bones: []
+      spriteID: 1793f10d8148041488b44ef3f06ead7d
+      internalID: 1115399514
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: Red Wizard sheet_4
+      rect:
+        serializedVersion: 2
+        x: 274
+        y: 640
+        width: 29
+        height: 41
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: 0
+      bones: []
+      spriteID: 8fbec0f7f24b76b4bbe6c6d13cdddba6
+      internalID: 680995955
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: Red Wizard sheet_5
+      rect:
+        serializedVersion: 2
+        x: 338
+        y: 640
+        width: 29
+        height: 42
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: 0
+      bones: []
+      spriteID: c8888fe7c7eb1cb4181650b445463062
+      internalID: 2052857913
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: Red Wizard sheet_6
+      rect:
+        serializedVersion: 2
+        x: 18
+        y: 576
+        width: 28
+        height: 43
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: 0
+      bones: []
+      spriteID: 6ee6b0d1beadda44ea1fe73143f9cfbc
+      internalID: 1270308439
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: Red Wizard sheet_7
+      rect:
+        serializedVersion: 2
+        x: 82
+        y: 576
+        width: 28
+        height: 44
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: 0
+      bones: []
+      spriteID: c0be97b527a746a4fbac55dc8336a666
+      internalID: 647125805
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: Red Wizard sheet_8
+      rect:
+        serializedVersion: 2
+        x: 146
+        y: 576
+        width: 27
+        height: 42
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: 0
+      bones: []
+      spriteID: 0b2bb7ac6ff0f2642b611283cdcafd7a
+      internalID: -610333168
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: Red Wizard sheet_9
+      rect:
+        serializedVersion: 2
+        x: 210
+        y: 576
+        width: 28
+        height: 43
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: 0
+      bones: []
+      spriteID: ab70cc8397d453e41be1de1555b6c581
+      internalID: -170940173
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: Red Wizard sheet_10
+      rect:
+        serializedVersion: 2
+        x: 274
+        y: 576
+        width: 29
+        height: 44
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: 0
+      bones: []
+      spriteID: ed234ecf6321c7f45ad191842375ad38
+      internalID: 1902819235
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: Red Wizard sheet_11
+      rect:
+        serializedVersion: 2
+        x: 338
+        y: 576
+        width: 30
+        height: 42
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: 0
+      bones: []
+      spriteID: 7d91ceee45abad84fb0082cdc060de54
+      internalID: 1705927056
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: Red Wizard sheet_12
+      rect:
+        serializedVersion: 2
+        x: 18
+        y: 512
+        width: 30
+        height: 47
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: 0
+      bones: []
+      spriteID: c4b037dc0ede12547bad46d133998727
+      internalID: -1265864500
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: Red Wizard sheet_13
+      rect:
+        serializedVersion: 2
+        x: 81
+        y: 512
+        width: 23
+        height: 54
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: 0
+      bones: []
+      spriteID: cf9c2f761eb93e940950e5b85f8cb4f6
+      internalID: -1020747024
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: Red Wizard sheet_14
+      rect:
+        serializedVersion: 2
+        x: 146
+        y: 512
+        width: 43
+        height: 42
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: 0
+      bones: []
+      spriteID: 2e9734ee3c3b6874fa9b187548d36054
+      internalID: 612565062
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: Red Wizard sheet_15
+      rect:
+        serializedVersion: 2
+        x: 210
+        y: 512
+        width: 43
+        height: 43
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: 0
+      bones: []
+      spriteID: 50344426d06c04b4a8274c94110afe4b
+      internalID: -1140282929
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: Red Wizard sheet_16
+      rect:
+        serializedVersion: 2
+        x: 274
+        y: 512
+        width: 42
+        height: 44
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: 0
+      bones: []
+      spriteID: 9dfbb9b9939757c458da6f4d1e9c5e11
+      internalID: 1636625428
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: Red Wizard sheet_17
+      rect:
+        serializedVersion: 2
+        x: 338
+        y: 512
+        width: 29
+        height: 42
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: 0
+      bones: []
+      spriteID: 8b8071899490d744882b2b414e74c353
+      internalID: -1331054155
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: Red Wizard sheet_18
+      rect:
+        serializedVersion: 2
+        x: 18
+        y: 448
+        width: 30
+        height: 40
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: 0
+      bones: []
+      spriteID: 2ebe83afd841a514396bdaeeea64dc21
+      internalID: -537808106
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: Red Wizard sheet_19
+      rect:
+        serializedVersion: 2
+        x: 82
+        y: 448
+        width: 29
+        height: 39
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: 0
+      bones: []
+      spriteID: 66e3f1eba1739034e910690790dbd012
+      internalID: -1327891717
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: Red Wizard sheet_20
+      rect:
+        serializedVersion: 2
+        x: 146
+        y: 448
+        width: 28
+        height: 44
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: 0
+      bones: []
+      spriteID: 1959080211ba5f34cb072ad9b627aaf4
+      internalID: 2110157579
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: Red Wizard sheet_21
+      rect:
+        serializedVersion: 2
+        x: 210
+        y: 450
+        width: 30
+        height: 42
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: 0
+      bones: []
+      spriteID: 7a3e7141a917609468c7ed128bb242ba
+      internalID: -672842281
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: Red Wizard sheet_22
+      rect:
+        serializedVersion: 2
+        x: 274
+        y: 448
+        width: 30
+        height: 42
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: 0
+      bones: []
+      spriteID: 7df3737e44d750345a5fb85ea65d27f7
+      internalID: -536222236
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: Red Wizard sheet_23
+      rect:
+        serializedVersion: 2
+        x: 338
+        y: 448
+        width: 29
+        height: 39
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: 0
+      bones: []
+      spriteID: 39f8411c137bc75499bb0f807443c3dd
+      internalID: 56405356
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: Red Wizard sheet_24
+      rect:
+        serializedVersion: 2
+        x: 18
+        y: 384
+        width: 30
+        height: 40
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: 0
+      bones: []
+      spriteID: 2fe1d15a7b492e440aedccb46fd75b21
+      internalID: 593220819
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: Red Wizard sheet_25
+      rect:
+        serializedVersion: 2
+        x: 82
+        y: 384
+        width: 29
+        height: 42
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: 0
+      bones: []
+      spriteID: 8cd04be94a03e2f46885ce32f9730860
+      internalID: 763262285
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: Red Wizard sheet_26
+      rect:
+        serializedVersion: 2
+        x: 145
+        y: 384
+        width: 30
+        height: 42
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: 0
+      bones: []
+      spriteID: b09ef643dbb3c374d94a4764a08ff09b
+      internalID: -346765535
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: Red Wizard sheet_27
+      rect:
+        serializedVersion: 2
+        x: 208
+        y: 384
+        width: 30
+        height: 46
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: 0
+      bones: []
+      spriteID: 3e622a48a57a612449f32d08389b6d24
+      internalID: -966481974
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: Red Wizard sheet_28
+      rect:
+        serializedVersion: 2
+        x: 273
+        y: 384
+        width: 22
+        height: 52
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: 0
+      bones: []
+      spriteID: 88606207a1354824b874465d85e6a442
+      internalID: 1316933141
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: Red Wizard sheet_29
+      rect:
+        serializedVersion: 2
+        x: 340
+        y: 384
+        width: 43
+        height: 42
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: 0
+      bones: []
+      spriteID: 6a638ed23ee195147866a5fb58529d58
+      internalID: -892137005
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: Red Wizard sheet_30
+      rect:
+        serializedVersion: 2
+        x: 20
+        y: 320
+        width: 43
+        height: 42
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: 0
+      bones: []
+      spriteID: d0ca6de96ae940a469bf2b3a55bd7761
+      internalID: -475115388
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: Red Wizard sheet_31
+      rect:
+        serializedVersion: 2
+        x: 83
+        y: 320
+        width: 43
+        height: 42
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: 0
+      bones: []
+      spriteID: 86c4339e3d81b644987cc99c588ea7de
+      internalID: 76235099
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: Red Wizard sheet_32
+      rect:
+        serializedVersion: 2
+        x: 147
+        y: 320
+        width: 29
+        height: 42
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: 0
+      bones: []
+      spriteID: bc077ebab72732549afe64c7dac34b1d
+      internalID: 248399364
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: Red Wizard sheet_33
+      rect:
+        serializedVersion: 2
+        x: 177
+        y: 320
+        width: 54
+        height: 42
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: 0
+      bones: []
+      spriteID: 716faa1f400a18841bca7f9bda3438d2
+      internalID: -667027961
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: Red Wizard sheet_34
+      rect:
+        serializedVersion: 2
+        x: 272
+        y: 320
+        width: 23
+        height: 42
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: 0
+      bones: []
+      spriteID: 81599c0d058cd6847b5a9fab2d9c57b9
+      internalID: 346655905
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: Red Wizard sheet_35
+      rect:
+        serializedVersion: 2
+        x: 339
+        y: 320
+        width: 43
+        height: 42
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: 0
+      bones: []
+      spriteID: 475e35c20563a4e45a1dabf53df654c5
+      internalID: -923768866
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: Red Wizard sheet_36
+      rect:
+        serializedVersion: 2
+        x: 19
+        y: 256
+        width: 43
+        height: 42
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: 0
+      bones: []
+      spriteID: c741de53f9c011c42b5ed76eb8f749a2
+      internalID: 1675079626
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: Red Wizard sheet_37
+      rect:
+        serializedVersion: 2
+        x: 80
+        y: 256
+        width: 23
+        height: 46
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: 0
+      bones: []
+      spriteID: 9c475f36325cd9e4ba3b60cf551c21df
+      internalID: 1126894180
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: Red Wizard sheet_38
+      rect:
+        serializedVersion: 2
+        x: 145
+        y: 256
+        width: 22
+        height: 42
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: 0
+      bones: []
+      spriteID: 5e0d287c021e7b043a1d90c36fef64f4
+      internalID: 1450756000
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: Red Wizard sheet_39
+      rect:
+        serializedVersion: 2
+        x: 211
+        y: 256
+        width: 22
+        height: 42
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: 0
+      bones: []
+      spriteID: fe3049c2f8bd3eb46b0ef1760e4ea2a7
+      internalID: -508995358
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: Red Wizard sheet_40
+      rect:
+        serializedVersion: 2
+        x: 273
+        y: 256
+        width: 32
+        height: 48
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: 0
+      bones: []
+      spriteID: 3beb9df203f902d449aba800eee13ae1
+      internalID: -1605552435
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: Red Wizard sheet_41
+      rect:
+        serializedVersion: 2
+        x: 336
+        y: 256
+        width: 22
+        height: 49
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: 0
+      bones: []
+      spriteID: 2a32f3ce1147f614794a4075dd9d04fd
+      internalID: 899379973
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: Red Wizard sheet_42
+      rect:
+        serializedVersion: 2
+        x: 350
+        y: 284
+        width: 19
+        height: 19
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: 0
+      bones: []
+      spriteID: 3e70d24a02b65b049bf2b32149dacda3
+      internalID: 847846990
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: Red Wizard sheet_43
+      rect:
+        serializedVersion: 2
+        x: 16
+        y: 192
+        width: 23
+        height: 46
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: 0
+      bones: []
+      spriteID: 7ac5e43393c9c114187a71aa8fbdc8d5
+      internalID: -1321061913
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: Red Wizard sheet_44
+      rect:
+        serializedVersion: 2
+        x: 81
+        y: 192
+        width: 22
+        height: 42
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: 0
+      bones: []
+      spriteID: 4f3fdb784dcbc874dbb6c62aed7711f6
+      internalID: -2113161545
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: Red Wizard sheet_45
+      rect:
+        serializedVersion: 2
+        x: 147
+        y: 192
+        width: 22
+        height: 42
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: 0
+      bones: []
+      spriteID: 5050ce00b040f9147ad85321959805a9
+      internalID: -2050878856
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: Red Wizard sheet_46
+      rect:
+        serializedVersion: 2
+        x: 208
+        y: 192
+        width: 45
+        height: 57
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: 0
+      bones: []
+      spriteID: b1bed03f467757549a92759041833f34
+      internalID: -1512622518
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: Red Wizard sheet_47
+      rect:
+        serializedVersion: 2
+        x: 272
+        y: 192
+        width: 28
+        height: 49
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: 0
+      bones: []
+      spriteID: 75747a5f51821c94caa87c89fe9dc20e
+      internalID: 1571458861
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: Red Wizard sheet_48
+      rect:
+        serializedVersion: 2
+        x: 286
+        y: 212
+        width: 22
         height: 31
       alignment: 0
       pivot: {x: 0, y: 0}
@@ -123,10 +1179,648 @@ TextureImporter:
       customData: 
       outline: []
       physicsShape: []
-      tessellationDetail: -1
+      tessellationDetail: 0
       bones: []
-      spriteID: 7bb90c7956bbd3fe0800000000000000
-      internalID: -1207603080053351497
+      spriteID: 79cf902bbb62f6a4a821e00481ccd07c
+      internalID: 1550395146
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: Red Wizard sheet_49
+      rect:
+        serializedVersion: 2
+        x: 308
+        y: 225
+        width: 6
+        height: 4
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: 0
+      bones: []
+      spriteID: d529a95d05d28ac41b59a2c321970bbe
+      internalID: -1349768698
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: Red Wizard sheet_50
+      rect:
+        serializedVersion: 2
+        x: 339
+        y: 192
+        width: 30
+        height: 47
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: 0
+      bones: []
+      spriteID: 9460d89f1c182464ebed8a659709436c
+      internalID: 1511860331
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: Red Wizard sheet_51
+      rect:
+        serializedVersion: 2
+        x: 18
+        y: 128
+        width: 31
+        height: 48
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: 0
+      bones: []
+      spriteID: f506cb0caa492144998956844d3b85b7
+      internalID: 2034317144
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: Red Wizard sheet_52
+      rect:
+        serializedVersion: 2
+        x: 82
+        y: 128
+        width: 30
+        height: 49
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: 0
+      bones: []
+      spriteID: 073bbfb60f0abd7478f22457bb59b066
+      internalID: 1403697440
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: Red Wizard sheet_53
+      rect:
+        serializedVersion: 2
+        x: 147
+        y: 128
+        width: 29
+        height: 49
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: 0
+      bones: []
+      spriteID: 009770f9c38e9374681a53b771af1fa1
+      internalID: 213019413
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: Red Wizard sheet_54
+      rect:
+        serializedVersion: 2
+        x: 211
+        y: 114
+        width: 30
+        height: 60
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: 0
+      bones: []
+      spriteID: 1ec33f3bff64a434993174762e168115
+      internalID: -261501515
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: Red Wizard sheet_55
+      rect:
+        serializedVersion: 2
+        x: 235
+        y: 163
+        width: 5
+        height: 4
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: 0
+      bones: []
+      spriteID: b16f491e6bb778744ba53d4098fabe28
+      internalID: 1409136100
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: Red Wizard sheet_56
+      rect:
+        serializedVersion: 2
+        x: 274
+        y: 123
+        width: 29
+        height: 47
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: 0
+      bones: []
+      spriteID: 3bd6227525ee7824490c3dad57748b68
+      internalID: -1679521052
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: Red Wizard sheet_57
+      rect:
+        serializedVersion: 2
+        x: 338
+        y: 128
+        width: 29
+        height: 42
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: 0
+      bones: []
+      spriteID: f1fd3e0eab53e7d4a97a6f8d4731e2b8
+      internalID: -296126537
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: Red Wizard sheet_58
+      rect:
+        serializedVersion: 2
+        x: 17
+        y: 64
+        width: 38
+        height: 41
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: 0
+      bones: []
+      spriteID: 36f383a77b0f6874aae997805020a109
+      internalID: 643102743
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: Red Wizard sheet_59
+      rect:
+        serializedVersion: 2
+        x: 82
+        y: 64
+        width: 26
+        height: 63
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: 0
+      bones: []
+      spriteID: fcb276eab2c7bc74a9469665d334aefe
+      internalID: -956150953
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: Red Wizard sheet_60
+      rect:
+        serializedVersion: 2
+        x: 156
+        y: 102
+        width: 4
+        height: 23
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: 0
+      bones: []
+      spriteID: 11fe29b107465a444ab3b5742b198fd7
+      internalID: -2051737669
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: Red Wizard sheet_61
+      rect:
+        serializedVersion: 2
+        x: 107
+        y: 84
+        width: 4
+        height: 11
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: 0
+      bones: []
+      spriteID: 1f26ab640d71131479be1fed40398122
+      internalID: 1147372546
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: Red Wizard sheet_62
+      rect:
+        serializedVersion: 2
+        x: 146
+        y: 64
+        width: 26
+        height: 34
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: 0
+      bones: []
+      spriteID: ec894442150a0be4abc1c16b7e86f909
+      internalID: -2097888598
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: Red Wizard sheet_63
+      rect:
+        serializedVersion: 2
+        x: 171
+        y: 79
+        width: 4
+        height: 11
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: 0
+      bones: []
+      spriteID: 6b7ed9acbc26b2243b7637a8aad07f4d
+      internalID: 1135550192
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: Red Wizard sheet_64
+      rect:
+        serializedVersion: 2
+        x: 210
+        y: 85
+        width: 20
+        height: 12
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: 0
+      bones: []
+      spriteID: 04000b07af7b8134084cf5530658f429
+      internalID: -932802006
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: Red Wizard sheet_65
+      rect:
+        serializedVersion: 2
+        x: 269
+        y: 83
+        width: 21
+        height: 11
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: 0
+      bones: []
+      spriteID: 30beaa48dee8c724eaf4e91efaf14bb9
+      internalID: -1432533805
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: Red Wizard sheet_66
+      rect:
+        serializedVersion: 2
+        x: 335
+        y: 79
+        width: 19
+        height: 9
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: 0
+      bones: []
+      spriteID: 9dd2604fca2775b41828b7a9820748a6
+      internalID: -103961812
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: Red Wizard sheet_67
+      rect:
+        serializedVersion: 2
+        x: 210
+        y: 64
+        width: 29
+        height: 18
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: 0
+      bones: []
+      spriteID: 24bbd6b86577ada4b9303ce605d09ebc
+      internalID: -1367117685
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: Red Wizard sheet_68
+      rect:
+        serializedVersion: 2
+        x: 273
+        y: 64
+        width: 30
+        height: 16
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: 0
+      bones: []
+      spriteID: 78633dc805eb4a945b45da33d68b3914
+      internalID: 62196255
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: Red Wizard sheet_69
+      rect:
+        serializedVersion: 2
+        x: 336
+        y: 64
+        width: 29
+        height: 14
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: 0
+      bones: []
+      spriteID: 767a1f9599da19646bd3e12f04bda26f
+      internalID: -196560932
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: Red Wizard sheet_70
+      rect:
+        serializedVersion: 2
+        x: 20
+        y: 11
+        width: 20
+        height: 10
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: 0
+      bones: []
+      spriteID: 16128a2ae7428a04781258e91c5ce39d
+      internalID: 34331889
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: Red Wizard sheet_71
+      rect:
+        serializedVersion: 2
+        x: 41
+        y: 3
+        width: 6
+        height: 12
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: 0
+      bones: []
+      spriteID: 5239a894bca69d64db555493229c1bc2
+      internalID: 618612017
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: Red Wizard sheet_72
+      rect:
+        serializedVersion: 2
+        x: 87
+        y: 6
+        width: 27
+        height: 12
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: 0
+      bones: []
+      spriteID: 9139ff411f288d149990d1bcfc6d3219
+      internalID: -23292330
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: Red Wizard sheet_73
+      rect:
+        serializedVersion: 2
+        x: 143
+        y: 0
+        width: 35
+        height: 14
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: 0
+      bones: []
+      spriteID: f1983a6b96f45a84aad8030fd363ffd1
+      internalID: -1137253499
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: Red Wizard sheet_74
+      rect:
+        serializedVersion: 2
+        x: 207
+        y: 0
+        width: 34
+        height: 12
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: 0
+      bones: []
+      spriteID: bffbb052a8c23ae42903227774f620a7
+      internalID: -2084070144
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: Red Wizard sheet_75
+      rect:
+        serializedVersion: 2
+        x: 271
+        y: 0
+        width: 35
+        height: 11
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: 0
+      bones: []
+      spriteID: e066721304885c349aea835841b2360f
+      internalID: 319614079
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: Red Wizard sheet_76
+      rect:
+        serializedVersion: 2
+        x: 15
+        y: 0
+        width: 30
+        height: 6
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: 0
+      bones: []
+      spriteID: e1315ec3b3fd1194683431eed24e0b1e
+      internalID: 2023300798
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: Red Wizard sheet_77
+      rect:
+        serializedVersion: 2
+        x: 79
+        y: 0
+        width: 30
+        height: 4
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: 0
+      bones: []
+      spriteID: 6df84fe7dc3f01e4190828876a686e74
+      internalID: -663657464
       vertices: []
       indices: 
       edges: []
@@ -135,7 +1829,7 @@ TextureImporter:
     customData: 
     physicsShape: []
     bones: []
-    spriteID: 
+    spriteID: 1de035bd60a493e47b4431fcadbf6391
     internalID: 0
     vertices: []
     indices: 
@@ -145,7 +1839,84 @@ TextureImporter:
     spriteCustomMetadata:
       entries: []
     nameFileIdTable:
-      rain light_0: -1207603080053351497
+      Red Wizard sheet_0: -320323907
+      Red Wizard sheet_1: 1472030574
+      Red Wizard sheet_10: 1902819235
+      Red Wizard sheet_11: 1705927056
+      Red Wizard sheet_12: -1265864500
+      Red Wizard sheet_13: -1020747024
+      Red Wizard sheet_14: 612565062
+      Red Wizard sheet_15: -1140282929
+      Red Wizard sheet_16: 1636625428
+      Red Wizard sheet_17: -1331054155
+      Red Wizard sheet_18: -537808106
+      Red Wizard sheet_19: -1327891717
+      Red Wizard sheet_2: -992316685
+      Red Wizard sheet_20: 2110157579
+      Red Wizard sheet_21: -672842281
+      Red Wizard sheet_22: -536222236
+      Red Wizard sheet_23: 56405356
+      Red Wizard sheet_24: 593220819
+      Red Wizard sheet_25: 763262285
+      Red Wizard sheet_26: -346765535
+      Red Wizard sheet_27: -966481974
+      Red Wizard sheet_28: 1316933141
+      Red Wizard sheet_29: -892137005
+      Red Wizard sheet_3: 1115399514
+      Red Wizard sheet_30: -475115388
+      Red Wizard sheet_31: 76235099
+      Red Wizard sheet_32: 248399364
+      Red Wizard sheet_33: -667027961
+      Red Wizard sheet_34: 346655905
+      Red Wizard sheet_35: -923768866
+      Red Wizard sheet_36: 1675079626
+      Red Wizard sheet_37: 1126894180
+      Red Wizard sheet_38: 1450756000
+      Red Wizard sheet_39: -508995358
+      Red Wizard sheet_4: 680995955
+      Red Wizard sheet_40: -1605552435
+      Red Wizard sheet_41: 899379973
+      Red Wizard sheet_42: 847846990
+      Red Wizard sheet_43: -1321061913
+      Red Wizard sheet_44: -2113161545
+      Red Wizard sheet_45: -2050878856
+      Red Wizard sheet_46: -1512622518
+      Red Wizard sheet_47: 1571458861
+      Red Wizard sheet_48: 1550395146
+      Red Wizard sheet_49: -1349768698
+      Red Wizard sheet_5: 2052857913
+      Red Wizard sheet_50: 1511860331
+      Red Wizard sheet_51: 2034317144
+      Red Wizard sheet_52: 1403697440
+      Red Wizard sheet_53: 213019413
+      Red Wizard sheet_54: -261501515
+      Red Wizard sheet_55: 1409136100
+      Red Wizard sheet_56: -1679521052
+      Red Wizard sheet_57: -296126537
+      Red Wizard sheet_58: 643102743
+      Red Wizard sheet_59: -956150953
+      Red Wizard sheet_6: 1270308439
+      Red Wizard sheet_60: -2051737669
+      Red Wizard sheet_61: 1147372546
+      Red Wizard sheet_62: -2097888598
+      Red Wizard sheet_63: 1135550192
+      Red Wizard sheet_64: -932802006
+      Red Wizard sheet_65: -1432533805
+      Red Wizard sheet_66: -103961812
+      Red Wizard sheet_67: -1367117685
+      Red Wizard sheet_68: 62196255
+      Red Wizard sheet_69: -196560932
+      Red Wizard sheet_7: 647125805
+      Red Wizard sheet_70: 34331889
+      Red Wizard sheet_71: 618612017
+      Red Wizard sheet_72: -23292330
+      Red Wizard sheet_73: -1137253499
+      Red Wizard sheet_74: -2084070144
+      Red Wizard sheet_75: 319614079
+      Red Wizard sheet_76: 2023300798
+      Red Wizard sheet_77: -663657464
+      Red Wizard sheet_8: -610333168
+      Red Wizard sheet_9: -170940173
   mipmapLimitGroupName: 
   pSDRemoveMatte: 0
   userData: 

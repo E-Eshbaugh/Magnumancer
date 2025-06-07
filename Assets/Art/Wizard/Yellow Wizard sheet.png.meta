@@ -110,12 +110,1068 @@ TextureImporter:
     serializedVersion: 2
     sprites:
     - serializedVersion: 2
-      name: rain light_0
+      name: Yellow Wizard sheet_0
       rect:
         serializedVersion: 2
-        x: 4
-        y: 0
-        width: 7
+        x: 18
+        y: 640
+        width: 29
+        height: 42
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: 0
+      bones: []
+      spriteID: 10b95bc880ff94048aac89c1bbe06a80
+      internalID: -1239181586
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: Yellow Wizard sheet_1
+      rect:
+        serializedVersion: 2
+        x: 82
+        y: 640
+        width: 30
+        height: 41
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: 0
+      bones: []
+      spriteID: caf3e35fb2c73324daf482b2c431716e
+      internalID: 1685517442
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: Yellow Wizard sheet_2
+      rect:
+        serializedVersion: 2
+        x: 146
+        y: 640
+        width: 30
+        height: 40
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: 0
+      bones: []
+      spriteID: 239f22666653c914fac52c9b398b65ed
+      internalID: 115670052
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: Yellow Wizard sheet_3
+      rect:
+        serializedVersion: 2
+        x: 210
+        y: 640
+        width: 29
+        height: 40
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: 0
+      bones: []
+      spriteID: 0a605822e3bfc364bad663d4eb582549
+      internalID: 1583211127
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: Yellow Wizard sheet_4
+      rect:
+        serializedVersion: 2
+        x: 274
+        y: 640
+        width: 29
+        height: 41
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: 0
+      bones: []
+      spriteID: f1d6eb6822a5fba4faa62095e88399d4
+      internalID: 1819668388
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: Yellow Wizard sheet_5
+      rect:
+        serializedVersion: 2
+        x: 338
+        y: 640
+        width: 29
+        height: 42
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: 0
+      bones: []
+      spriteID: 300ff67fd67309e4d9e23f6909f2dcc5
+      internalID: -126164925
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: Yellow Wizard sheet_6
+      rect:
+        serializedVersion: 2
+        x: 18
+        y: 576
+        width: 28
+        height: 43
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: 0
+      bones: []
+      spriteID: 238f6c9bef95b2e49a8919f52ff763b5
+      internalID: 649137563
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: Yellow Wizard sheet_7
+      rect:
+        serializedVersion: 2
+        x: 82
+        y: 576
+        width: 28
+        height: 44
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: 0
+      bones: []
+      spriteID: c053191ca8ec4cd449ea846f7c787dec
+      internalID: -755109691
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: Yellow Wizard sheet_8
+      rect:
+        serializedVersion: 2
+        x: 146
+        y: 576
+        width: 27
+        height: 42
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: 0
+      bones: []
+      spriteID: 3152fddd5d937204f9e62be50fd17f9c
+      internalID: -1769993711
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: Yellow Wizard sheet_9
+      rect:
+        serializedVersion: 2
+        x: 210
+        y: 576
+        width: 28
+        height: 43
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: 0
+      bones: []
+      spriteID: 43e4341495e8fad47982258a06257e88
+      internalID: 1691591958
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: Yellow Wizard sheet_10
+      rect:
+        serializedVersion: 2
+        x: 274
+        y: 576
+        width: 29
+        height: 44
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: 0
+      bones: []
+      spriteID: 91ce69557ec7b034a8ddcb8ca0849fd2
+      internalID: 473271674
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: Yellow Wizard sheet_11
+      rect:
+        serializedVersion: 2
+        x: 338
+        y: 576
+        width: 30
+        height: 42
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: 0
+      bones: []
+      spriteID: 6521a503913c03549b949986430afc87
+      internalID: 1330455054
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: Yellow Wizard sheet_12
+      rect:
+        serializedVersion: 2
+        x: 18
+        y: 512
+        width: 30
+        height: 47
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: 0
+      bones: []
+      spriteID: 57ad5ba735a817640bfa595a3c16f8c8
+      internalID: 1805580353
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: Yellow Wizard sheet_13
+      rect:
+        serializedVersion: 2
+        x: 81
+        y: 512
+        width: 23
+        height: 54
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: 0
+      bones: []
+      spriteID: b2197411e5964094ea01b888844e9d4c
+      internalID: -1881063361
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: Yellow Wizard sheet_14
+      rect:
+        serializedVersion: 2
+        x: 146
+        y: 512
+        width: 43
+        height: 42
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: 0
+      bones: []
+      spriteID: c628dd4f835c8cd458913845e09781ff
+      internalID: 243454131
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: Yellow Wizard sheet_15
+      rect:
+        serializedVersion: 2
+        x: 210
+        y: 512
+        width: 43
+        height: 43
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: 0
+      bones: []
+      spriteID: 8e51e1180792ec945b07b86dc0f9ca11
+      internalID: 687713925
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: Yellow Wizard sheet_16
+      rect:
+        serializedVersion: 2
+        x: 274
+        y: 512
+        width: 42
+        height: 44
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: 0
+      bones: []
+      spriteID: 2ce89018c6ee5554e9e762424b124655
+      internalID: -58490476
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: Yellow Wizard sheet_17
+      rect:
+        serializedVersion: 2
+        x: 338
+        y: 512
+        width: 29
+        height: 42
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: 0
+      bones: []
+      spriteID: 8bc1f4ffa0c6d1b44b01134f175b2720
+      internalID: 416239735
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: Yellow Wizard sheet_18
+      rect:
+        serializedVersion: 2
+        x: 18
+        y: 448
+        width: 30
+        height: 40
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: 0
+      bones: []
+      spriteID: d16ca2079a458854f8253ef3b0dd3351
+      internalID: -544412776
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: Yellow Wizard sheet_19
+      rect:
+        serializedVersion: 2
+        x: 82
+        y: 448
+        width: 29
+        height: 39
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: 0
+      bones: []
+      spriteID: 67f29e2cd9d3f2846bfdc9ade9c89096
+      internalID: -1753130653
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: Yellow Wizard sheet_20
+      rect:
+        serializedVersion: 2
+        x: 146
+        y: 448
+        width: 28
+        height: 44
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: 0
+      bones: []
+      spriteID: 0c8101cbb87f5f547b753eab9aff5683
+      internalID: 1655078449
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: Yellow Wizard sheet_21
+      rect:
+        serializedVersion: 2
+        x: 210
+        y: 450
+        width: 30
+        height: 42
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: 0
+      bones: []
+      spriteID: 5c93fedf18348ab48906dcaff7fbb226
+      internalID: -283617337
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: Yellow Wizard sheet_22
+      rect:
+        serializedVersion: 2
+        x: 274
+        y: 448
+        width: 30
+        height: 42
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: 0
+      bones: []
+      spriteID: da6ea3fc401983f40bc51013027d3f14
+      internalID: 965367205
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: Yellow Wizard sheet_23
+      rect:
+        serializedVersion: 2
+        x: 338
+        y: 448
+        width: 29
+        height: 39
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: 0
+      bones: []
+      spriteID: b4245f278f4142f46994185f40f5c1b8
+      internalID: -145294531
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: Yellow Wizard sheet_24
+      rect:
+        serializedVersion: 2
+        x: 18
+        y: 384
+        width: 30
+        height: 40
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: 0
+      bones: []
+      spriteID: 30c8b8d78d1abe64fa77befa649bfbe1
+      internalID: -1299560982
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: Yellow Wizard sheet_25
+      rect:
+        serializedVersion: 2
+        x: 82
+        y: 384
+        width: 29
+        height: 42
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: 0
+      bones: []
+      spriteID: 9592d48e2de06304f93e7e0a7caf337b
+      internalID: 294933923
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: Yellow Wizard sheet_26
+      rect:
+        serializedVersion: 2
+        x: 145
+        y: 384
+        width: 30
+        height: 42
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: 0
+      bones: []
+      spriteID: 4980b009f8d224b43900577df5ac2502
+      internalID: -250911565
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: Yellow Wizard sheet_27
+      rect:
+        serializedVersion: 2
+        x: 208
+        y: 384
+        width: 30
+        height: 46
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: 0
+      bones: []
+      spriteID: 34ef88885141b4e478d739daf61fb838
+      internalID: 1593981830
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: Yellow Wizard sheet_28
+      rect:
+        serializedVersion: 2
+        x: 273
+        y: 384
+        width: 22
+        height: 52
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: 0
+      bones: []
+      spriteID: 9d30fc0d30c29fc44b688757e3f5d417
+      internalID: -1804543476
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: Yellow Wizard sheet_29
+      rect:
+        serializedVersion: 2
+        x: 340
+        y: 384
+        width: 43
+        height: 42
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: 0
+      bones: []
+      spriteID: 2857471360283dc4aa3a09870c9289ec
+      internalID: 139093838
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: Yellow Wizard sheet_30
+      rect:
+        serializedVersion: 2
+        x: 20
+        y: 320
+        width: 43
+        height: 42
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: 0
+      bones: []
+      spriteID: f777634bf1a4f1a44b2c1840b9b0150c
+      internalID: -424714189
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: Yellow Wizard sheet_31
+      rect:
+        serializedVersion: 2
+        x: 83
+        y: 320
+        width: 43
+        height: 42
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: 0
+      bones: []
+      spriteID: c157f1c35f1ffd44599c778a2e1eb5e0
+      internalID: -1259203470
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: Yellow Wizard sheet_32
+      rect:
+        serializedVersion: 2
+        x: 147
+        y: 320
+        width: 29
+        height: 42
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: 0
+      bones: []
+      spriteID: cd4d6746240936d44a97776ecf768e4e
+      internalID: 1402805366
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: Yellow Wizard sheet_33
+      rect:
+        serializedVersion: 2
+        x: 177
+        y: 320
+        width: 54
+        height: 42
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: 0
+      bones: []
+      spriteID: 8ffd1bd7903216a4aabd930d4cca9038
+      internalID: -1038177457
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: Yellow Wizard sheet_34
+      rect:
+        serializedVersion: 2
+        x: 272
+        y: 320
+        width: 23
+        height: 42
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: 0
+      bones: []
+      spriteID: 7e106f25365e1cb4d8b26f4121835d9d
+      internalID: -764142365
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: Yellow Wizard sheet_35
+      rect:
+        serializedVersion: 2
+        x: 339
+        y: 320
+        width: 43
+        height: 42
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: 0
+      bones: []
+      spriteID: 0139199ae052dce4f8003994971e4cf7
+      internalID: -1058830132
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: Yellow Wizard sheet_36
+      rect:
+        serializedVersion: 2
+        x: 19
+        y: 256
+        width: 43
+        height: 42
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: 0
+      bones: []
+      spriteID: f507f3a10daa92f4d810ae2d841f07e5
+      internalID: 616351210
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: Yellow Wizard sheet_37
+      rect:
+        serializedVersion: 2
+        x: 80
+        y: 256
+        width: 23
+        height: 46
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: 0
+      bones: []
+      spriteID: 219915fd11d291143b3665d3900a7d8a
+      internalID: 1721180693
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: Yellow Wizard sheet_38
+      rect:
+        serializedVersion: 2
+        x: 145
+        y: 256
+        width: 22
+        height: 42
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: 0
+      bones: []
+      spriteID: 49789290e68d01e4fa1b1c6fd65095dc
+      internalID: -1735365884
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: Yellow Wizard sheet_39
+      rect:
+        serializedVersion: 2
+        x: 211
+        y: 256
+        width: 22
+        height: 42
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: 0
+      bones: []
+      spriteID: 205988e7f5ac57b4bbc6d6ae74e66e43
+      internalID: -1514883275
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: Yellow Wizard sheet_40
+      rect:
+        serializedVersion: 2
+        x: 273
+        y: 256
+        width: 32
+        height: 48
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: 0
+      bones: []
+      spriteID: 84b143e99f41f554a822536aac2c2112
+      internalID: 1440951905
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: Yellow Wizard sheet_41
+      rect:
+        serializedVersion: 2
+        x: 336
+        y: 256
+        width: 22
+        height: 49
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: 0
+      bones: []
+      spriteID: 84763b31677e2cd44bfb49db10ce50e0
+      internalID: 1910157643
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: Yellow Wizard sheet_42
+      rect:
+        serializedVersion: 2
+        x: 350
+        y: 284
+        width: 19
+        height: 19
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: 0
+      bones: []
+      spriteID: b06a0fb79acf48e4883a49b81f5e98f5
+      internalID: 1973687903
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: Yellow Wizard sheet_43
+      rect:
+        serializedVersion: 2
+        x: 16
+        y: 192
+        width: 23
+        height: 46
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: 0
+      bones: []
+      spriteID: 33fe38451a1cbad47bf04ddf52bfc83b
+      internalID: 1721368912
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: Yellow Wizard sheet_44
+      rect:
+        serializedVersion: 2
+        x: 81
+        y: 192
+        width: 22
+        height: 42
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: 0
+      bones: []
+      spriteID: 5e9f63886aed3ef4bb157de2cd6bb127
+      internalID: -512460868
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: Yellow Wizard sheet_45
+      rect:
+        serializedVersion: 2
+        x: 147
+        y: 192
+        width: 22
+        height: 42
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: 0
+      bones: []
+      spriteID: 9576a30ed04f4954882e2e1f036553c2
+      internalID: -898360240
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: Yellow Wizard sheet_46
+      rect:
+        serializedVersion: 2
+        x: 208
+        y: 192
+        width: 45
+        height: 57
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: 0
+      bones: []
+      spriteID: f3790f22464dcd248a3e16e72276bc2e
+      internalID: 896629573
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: Yellow Wizard sheet_47
+      rect:
+        serializedVersion: 2
+        x: 272
+        y: 192
+        width: 28
+        height: 49
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: 0
+      bones: []
+      spriteID: 85169c973cea2574bbb4c855812580dc
+      internalID: -655611284
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: Yellow Wizard sheet_48
+      rect:
+        serializedVersion: 2
+        x: 286
+        y: 212
+        width: 22
         height: 31
       alignment: 0
       pivot: {x: 0, y: 0}
@@ -123,10 +1179,648 @@ TextureImporter:
       customData: 
       outline: []
       physicsShape: []
-      tessellationDetail: -1
+      tessellationDetail: 0
       bones: []
-      spriteID: 7bb90c7956bbd3fe0800000000000000
-      internalID: -1207603080053351497
+      spriteID: 23badc01cb671704a881948fb7f53090
+      internalID: 573728479
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: Yellow Wizard sheet_49
+      rect:
+        serializedVersion: 2
+        x: 308
+        y: 225
+        width: 6
+        height: 4
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: 0
+      bones: []
+      spriteID: bd2b7ee15714f964ea9d2c99bbcf2e96
+      internalID: -1388166041
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: Yellow Wizard sheet_50
+      rect:
+        serializedVersion: 2
+        x: 339
+        y: 192
+        width: 30
+        height: 47
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: 0
+      bones: []
+      spriteID: e16a29c9710eaf740ae916dd521705f6
+      internalID: -2639108
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: Yellow Wizard sheet_51
+      rect:
+        serializedVersion: 2
+        x: 18
+        y: 128
+        width: 31
+        height: 48
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: 0
+      bones: []
+      spriteID: 85dee83e17bdd164c9a493d9ad7063dd
+      internalID: 480470031
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: Yellow Wizard sheet_52
+      rect:
+        serializedVersion: 2
+        x: 82
+        y: 128
+        width: 30
+        height: 49
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: 0
+      bones: []
+      spriteID: 3226ec59acfc1164c8bfa990968e92f5
+      internalID: 116563720
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: Yellow Wizard sheet_53
+      rect:
+        serializedVersion: 2
+        x: 147
+        y: 128
+        width: 29
+        height: 49
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: 0
+      bones: []
+      spriteID: f962f819821d5464d8e8cfd958c94192
+      internalID: 1329545295
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: Yellow Wizard sheet_54
+      rect:
+        serializedVersion: 2
+        x: 211
+        y: 114
+        width: 30
+        height: 60
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: 0
+      bones: []
+      spriteID: f7fc2c2d057bdde428117d50601ccd99
+      internalID: -221756153
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: Yellow Wizard sheet_55
+      rect:
+        serializedVersion: 2
+        x: 235
+        y: 163
+        width: 5
+        height: 4
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: 0
+      bones: []
+      spriteID: dd5bc0cac8c5bca4c96c51f2f36b77b2
+      internalID: -1006345866
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: Yellow Wizard sheet_56
+      rect:
+        serializedVersion: 2
+        x: 274
+        y: 123
+        width: 29
+        height: 47
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: 0
+      bones: []
+      spriteID: 617daec6cb066884098585fb323ea41f
+      internalID: -515518335
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: Yellow Wizard sheet_57
+      rect:
+        serializedVersion: 2
+        x: 338
+        y: 128
+        width: 29
+        height: 42
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: 0
+      bones: []
+      spriteID: 7cf64d0858926ed42bbda50c905fa708
+      internalID: 1575233197
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: Yellow Wizard sheet_58
+      rect:
+        serializedVersion: 2
+        x: 17
+        y: 64
+        width: 38
+        height: 41
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: 0
+      bones: []
+      spriteID: b8bf7e3c341662743950e059e0b321ac
+      internalID: -1326309363
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: Yellow Wizard sheet_59
+      rect:
+        serializedVersion: 2
+        x: 82
+        y: 64
+        width: 26
+        height: 63
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: 0
+      bones: []
+      spriteID: 727966634386edf4e89680b6dc31d0cb
+      internalID: -115553308
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: Yellow Wizard sheet_60
+      rect:
+        serializedVersion: 2
+        x: 156
+        y: 102
+        width: 4
+        height: 23
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: 0
+      bones: []
+      spriteID: 572f033df0a53d34391ff5cc33a629b0
+      internalID: -1537857854
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: Yellow Wizard sheet_61
+      rect:
+        serializedVersion: 2
+        x: 107
+        y: 84
+        width: 4
+        height: 11
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: 0
+      bones: []
+      spriteID: 2638bb6a449035a4b90d06a8f01dbc94
+      internalID: 1242258070
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: Yellow Wizard sheet_62
+      rect:
+        serializedVersion: 2
+        x: 146
+        y: 64
+        width: 26
+        height: 34
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: 0
+      bones: []
+      spriteID: 3e315ea0712ea86489d500cace71088c
+      internalID: 675701828
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: Yellow Wizard sheet_63
+      rect:
+        serializedVersion: 2
+        x: 171
+        y: 79
+        width: 4
+        height: 11
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: 0
+      bones: []
+      spriteID: 88533d41d6c95f042a3ce19235e4abb7
+      internalID: -1344613292
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: Yellow Wizard sheet_64
+      rect:
+        serializedVersion: 2
+        x: 210
+        y: 85
+        width: 20
+        height: 12
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: 0
+      bones: []
+      spriteID: 60bcc719e748ba94c9349c95fdd81287
+      internalID: -972975325
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: Yellow Wizard sheet_65
+      rect:
+        serializedVersion: 2
+        x: 269
+        y: 83
+        width: 21
+        height: 11
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: 0
+      bones: []
+      spriteID: 585ab65b452b22b40a306e508c740aa8
+      internalID: 1576589877
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: Yellow Wizard sheet_66
+      rect:
+        serializedVersion: 2
+        x: 335
+        y: 79
+        width: 19
+        height: 9
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: 0
+      bones: []
+      spriteID: ccdfe4c627d06674e89812cc8b52657d
+      internalID: -20747968
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: Yellow Wizard sheet_67
+      rect:
+        serializedVersion: 2
+        x: 210
+        y: 64
+        width: 29
+        height: 18
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: 0
+      bones: []
+      spriteID: b0b487af47c1e4d4288357483bfb38cd
+      internalID: 1809864490
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: Yellow Wizard sheet_68
+      rect:
+        serializedVersion: 2
+        x: 273
+        y: 64
+        width: 30
+        height: 16
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: 0
+      bones: []
+      spriteID: 490144d147e1391479ba04cea57e0545
+      internalID: 1087212961
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: Yellow Wizard sheet_69
+      rect:
+        serializedVersion: 2
+        x: 336
+        y: 64
+        width: 29
+        height: 14
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: 0
+      bones: []
+      spriteID: 194854d4ec34f7e4dabc25c5cf102b78
+      internalID: 1452488942
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: Yellow Wizard sheet_70
+      rect:
+        serializedVersion: 2
+        x: 20
+        y: 11
+        width: 20
+        height: 10
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: 0
+      bones: []
+      spriteID: 732b0b89ae7ce7947b3eb319684ef9c5
+      internalID: 1098888916
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: Yellow Wizard sheet_71
+      rect:
+        serializedVersion: 2
+        x: 41
+        y: 3
+        width: 6
+        height: 12
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: 0
+      bones: []
+      spriteID: 7597662f3fe1ce542916415cc67bf9ad
+      internalID: -1729763890
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: Yellow Wizard sheet_72
+      rect:
+        serializedVersion: 2
+        x: 87
+        y: 6
+        width: 27
+        height: 12
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: 0
+      bones: []
+      spriteID: 596e7e1b94056354e807d9c6db6eccd9
+      internalID: -1209350973
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: Yellow Wizard sheet_73
+      rect:
+        serializedVersion: 2
+        x: 143
+        y: 0
+        width: 35
+        height: 14
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: 0
+      bones: []
+      spriteID: 6b0918896edbfed4582cfb1017b34e5b
+      internalID: -3228760
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: Yellow Wizard sheet_74
+      rect:
+        serializedVersion: 2
+        x: 207
+        y: 0
+        width: 34
+        height: 12
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: 0
+      bones: []
+      spriteID: 4f18581a26f22e14fab636a2bc5a3003
+      internalID: -1880380634
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: Yellow Wizard sheet_75
+      rect:
+        serializedVersion: 2
+        x: 271
+        y: 0
+        width: 35
+        height: 11
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: 0
+      bones: []
+      spriteID: 1a603a89a4304fd42b0f1decb46a03c6
+      internalID: 346247230
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: Yellow Wizard sheet_76
+      rect:
+        serializedVersion: 2
+        x: 15
+        y: 0
+        width: 30
+        height: 6
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: 0
+      bones: []
+      spriteID: 36aab5058869c934aaf9b8c43c46030c
+      internalID: -667109226
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: Yellow Wizard sheet_77
+      rect:
+        serializedVersion: 2
+        x: 79
+        y: 0
+        width: 30
+        height: 4
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: 0
+      bones: []
+      spriteID: 44fe55dd951595449ae999fa1fd999a6
+      internalID: 548563217
       vertices: []
       indices: 
       edges: []
@@ -135,7 +1829,7 @@ TextureImporter:
     customData: 
     physicsShape: []
     bones: []
-    spriteID: 
+    spriteID: cca5ac2f755aee340b40454d328ff665
     internalID: 0
     vertices: []
     indices: 
@@ -145,7 +1839,84 @@ TextureImporter:
     spriteCustomMetadata:
       entries: []
     nameFileIdTable:
-      rain light_0: -1207603080053351497
+      Yellow Wizard sheet_0: -1239181586
+      Yellow Wizard sheet_1: 1685517442
+      Yellow Wizard sheet_10: 473271674
+      Yellow Wizard sheet_11: 1330455054
+      Yellow Wizard sheet_12: 1805580353
+      Yellow Wizard sheet_13: -1881063361
+      Yellow Wizard sheet_14: 243454131
+      Yellow Wizard sheet_15: 687713925
+      Yellow Wizard sheet_16: -58490476
+      Yellow Wizard sheet_17: 416239735
+      Yellow Wizard sheet_18: -544412776
+      Yellow Wizard sheet_19: -1753130653
+      Yellow Wizard sheet_2: 115670052
+      Yellow Wizard sheet_20: 1655078449
+      Yellow Wizard sheet_21: -283617337
+      Yellow Wizard sheet_22: 965367205
+      Yellow Wizard sheet_23: -145294531
+      Yellow Wizard sheet_24: -1299560982
+      Yellow Wizard sheet_25: 294933923
+      Yellow Wizard sheet_26: -250911565
+      Yellow Wizard sheet_27: 1593981830
+      Yellow Wizard sheet_28: -1804543476
+      Yellow Wizard sheet_29: 139093838
+      Yellow Wizard sheet_3: 1583211127
+      Yellow Wizard sheet_30: -424714189
+      Yellow Wizard sheet_31: -1259203470
+      Yellow Wizard sheet_32: 1402805366
+      Yellow Wizard sheet_33: -1038177457
+      Yellow Wizard sheet_34: -764142365
+      Yellow Wizard sheet_35: -1058830132
+      Yellow Wizard sheet_36: 616351210
+      Yellow Wizard sheet_37: 1721180693
+      Yellow Wizard sheet_38: -1735365884
+      Yellow Wizard sheet_39: -1514883275
+      Yellow Wizard sheet_4: 1819668388
+      Yellow Wizard sheet_40: 1440951905
+      Yellow Wizard sheet_41: 1910157643
+      Yellow Wizard sheet_42: 1973687903
+      Yellow Wizard sheet_43: 1721368912
+      Yellow Wizard sheet_44: -512460868
+      Yellow Wizard sheet_45: -898360240
+      Yellow Wizard sheet_46: 896629573
+      Yellow Wizard sheet_47: -655611284
+      Yellow Wizard sheet_48: 573728479
+      Yellow Wizard sheet_49: -1388166041
+      Yellow Wizard sheet_5: -126164925
+      Yellow Wizard sheet_50: -2639108
+      Yellow Wizard sheet_51: 480470031
+      Yellow Wizard sheet_52: 116563720
+      Yellow Wizard sheet_53: 1329545295
+      Yellow Wizard sheet_54: -221756153
+      Yellow Wizard sheet_55: -1006345866
+      Yellow Wizard sheet_56: -515518335
+      Yellow Wizard sheet_57: 1575233197
+      Yellow Wizard sheet_58: -1326309363
+      Yellow Wizard sheet_59: -115553308
+      Yellow Wizard sheet_6: 649137563
+      Yellow Wizard sheet_60: -1537857854
+      Yellow Wizard sheet_61: 1242258070
+      Yellow Wizard sheet_62: 675701828
+      Yellow Wizard sheet_63: -1344613292
+      Yellow Wizard sheet_64: -972975325
+      Yellow Wizard sheet_65: 1576589877
+      Yellow Wizard sheet_66: -20747968
+      Yellow Wizard sheet_67: 1809864490
+      Yellow Wizard sheet_68: 1087212961
+      Yellow Wizard sheet_69: 1452488942
+      Yellow Wizard sheet_7: -755109691
+      Yellow Wizard sheet_70: 1098888916
+      Yellow Wizard sheet_71: -1729763890
+      Yellow Wizard sheet_72: -1209350973
+      Yellow Wizard sheet_73: -3228760
+      Yellow Wizard sheet_74: -1880380634
+      Yellow Wizard sheet_75: 346247230
+      Yellow Wizard sheet_76: -667109226
+      Yellow Wizard sheet_77: 548563217
+      Yellow Wizard sheet_8: -1769993711
+      Yellow Wizard sheet_9: 1691591958
   mipmapLimitGroupName: 
   pSDRemoveMatte: 0
   userData: 

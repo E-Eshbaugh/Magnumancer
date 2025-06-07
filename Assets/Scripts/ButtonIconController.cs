@@ -31,7 +31,7 @@ public class ButtonIconController : MonoBehaviour
                 image.sprite = buttonSprites[currentFrame];
         }
 
-        if (Gamepad.current.aButton.IsPressed())
+        if (Gamepad.current.aButton.IsPressed() && SceneManager.GetActiveScene().name != "MainMenu")
         {
             SceneManager.LoadScene("MainMenu");
         }

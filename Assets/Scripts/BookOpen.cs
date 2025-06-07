@@ -4,6 +4,7 @@ using UnityEngine.UI;
 
 public class BookOpen : MonoBehaviour
 {
+    public GameObject menu;
     public GameObject[] books;
     public Text bookText;
     public Text bookText2;
@@ -14,6 +15,8 @@ public class BookOpen : MonoBehaviour
 
     void Start()
     {
+        menu.SetActive(false);
+
         for (int i = 0; i < books.Length; i++)
         {
             books[i].SetActive(i == 0);
@@ -41,5 +44,7 @@ public class BookOpen : MonoBehaviour
             currentBookIndex++;
             books[currentBookIndex].SetActive(true);
         }
+
+        menu.SetActive(true);
     }
 }
