@@ -11052,7 +11052,7 @@ TextureImporter:
         width: 14
         height: 16
       alignment: 0
-      pivot: {x: 0, y: 0}
+      pivot: {x: 0.5, y: 0.5}
       border: {x: 0, y: 0, z: 0, w: 0}
       customData: 
       outline: []
@@ -11061,6 +11061,28 @@ TextureImporter:
       bones: []
       spriteID: 1bf4b0b049173d9449f13bdc6f2d7f01
       internalID: -2083227717
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: gdb-xbox-2_498
+      rect:
+        serializedVersion: 2
+        x: 49
+        y: 593
+        width: 14
+        height: 15
+      alignment: 0
+      pivot: {x: 0.5, y: 0.5}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: 0
+      bones: []
+      spriteID: c021c368227ba234c8e4b9b39dbf5521
+      internalID: -783729669
       vertices: []
       indices: 
       edges: []
@@ -11523,6 +11545,7 @@ TextureImporter:
       gdb-xbox-2_495: 808217538
       gdb-xbox-2_496: 1225723023
       gdb-xbox-2_497: -2083227717
+      gdb-xbox-2_498: -783729669
       gdb-xbox-2_5: -1446438195
       gdb-xbox-2_50: -775686120
       gdb-xbox-2_51: -1384997483
