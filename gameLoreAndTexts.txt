@@ -1,0 +1,49 @@
+Lore Texts--
+Fire (Emberguard)-- 
+Once revered for forging metal and inspiring awe through flame, the Emberguard have turned their craft into a weapon of war. Dwelling in volcanic forges and ash-choked wastes, they’ve traded elegance for brutal efficiency. Their gun spells roar like dragon breath, best suited for ARs and SMGs that mirror their ferocity.
+
+Frost (Frostwardens)--
+Descendants of the ancient cryomancers, the Frostwardens dwell in glacial sanctuaries charged with ancient magic. Their frozen lands shaped them into disciplined marksmen who wield precision sniper spells to halt foes in their tracks. Strategic and icy in demeanor, they dominate from a distance.
+
+Lightning (Voltborn)--
+Living among storm-wracked peaks, Voltborn are speed and chaos incarnate. Balanced in both stats, they prefer SMGs and high rate of fire, mobility-enhancing weapons and gadgets to strike chaos across the battlefield. Volborn’s edge is unpredictability—they attack hard and fast then vanishing like lightning, their electrified combat style keeps enemies guessing.
+
+Water (Tidebound)--
+Once peaceful stewards of healing springs and coastal sanctuaries, the Tidebound have evolved into relentless close-combatants hidden deep in flooded ruins and sea caverns. hardened by amphibious goblin raids during the great war, they master the tides with close-range whirlpool attacks and brutal melee spells. They crash in like waves—overwhelming and personal.
+
+Nature (The Verdant Circle)--
+Guardians of the Old Woods, the secretive Verdant Circle blend ancient healing with cunning survival tactics. Patient and persistent, they lay traps and wield massive weapons to protect the last living Lost Groves. Their strength lies in outlasting any foe.
+
+Poison (The Blightward)--
+Magicians of medicine during the war, the Viridant Order of medical mages healed their wizard brothers on field. After being corrupted by corruptive spores released by goblin shamans, the powerful healers were warped into the Blightward, using their strong magical power and tactical knowledge to attack with AoE weapons to slowly poison and decay their enemies.
+
+Earth (The Granite Vow)--
+Forged in canyon fortresses, the Granite Vow are elite engineer-soldiers bound by strength and discipline. Raised on the frontlines of the Dark Rifts, they carry unmatched durability and power—slow to move but impossible to stop, wielding heavy, crushing weapons and firepower to accompany their strong fortification spells and will power.
+
+Dark (The Hollow)--
+Wielders of forsaken magics, the Hollow were not an original Great Faction, instead abandoned their kin of various factions to chase unspeakable power. Hidden in cursed ruins and shadowed tunnels, they mastered every form of magnumancy, bringing upon an eternal dark curse to their whole faction. Ruthless and unpredictable, they walk the line between mastery and madness.
+
+-------------------------------------------------------
+-- Overall lore script--
+Long ago, in a world known as Aetheros, magic was not a tool of war—it was an artform. The land pulsed with arcane life, flowing freely through forests, mountains, seas, and skies. From this harmony rose the 7 Great Factions of Magic, each born from fusions of the teachings of the ancient Mancers who came before them. Though different in their elemental affinities and regional homes, the Factions lived in balance, communing regularly to share discoveries, preserve ancient texts, and expand upon what was known simply as the Old Magic.
+
+As peace endured, the curiosity of wizards grew. They pushed deeper into magical theory—blending elements, forging new incantations, and chasing ever more ambitious spells. Magic became bolder, less stable. Beautiful, yet dangerous. The world trembled beneath the weight of experimentation, and the fabric of Aetheros began to thin.
+
+Then came the Rending as tears opened across the land, formed by the extreme stress in the fabric of magic. Dark, bottomless voids now known as Dark Rifts, gaping wounds in the world’s magical and physical core, opened up across Aetheros. From the depths surged creatures of chaos: Goblins, twisted avatars of entropy born from the imbalance of magic. They flooded from canyons, erupted from the ocean floor, and clawed up through farmland and sanctuary alike.
+
+The Eight Houses, unprepared for war, were forced to unite under one banner for the first time in history. The arts of peace were replaced with the demands of survival. Their combined effort became known as the Concord of Flame, and the ensuing conflict would be remembered as The Great Goblin War.
+
+But the goblins were relentless. The war dragged on for generations. Magic itself—drawn upon to power shields, barriers, and spells—began to fade. Magical Orbs, crystalline cores of energy once used to create beauty and wonder, became ammunition for spells of annihilation. Sanctuaries were lost. Forests burned. Glaciers shattered.
+
+Eventually, the goblin hordes began to wane—not defeated, but scattered, licking their wounds in the shadows of the world. The Concord dissolved, its unity faded like smoke after fire.
+
+And that’s when the true war began.
+
+With the world’s magic reserves crippled and orbs nearly extinct, the Houses turned on each other. The trust forged in battle crumbled into desperation and greed. Once-beautiful lands became battlegrounds yet again. Arcane cities fell silent. In the absence of modern magic, factions began to study forbidden sorcery even older than Old Magic: Magnumancy, the art of summoning weapons from magic itself.
+
+Crafted from spells long buried and imbued with elemental fury, these weapons became the future of battle. They consumed less Orb energy. They were easy to train with. And they killed.
+
+Now, in this Era of Embers, the Eight Factions—no longer scholars, but warlords—fight not for knowledge or peace, but for survival. The goblins still lurk beneath the surface. The rifts still whisper in the dark. The fabric of magic still strains. Aetheros still burns. But no one listens.
+
+They’re too busy aiming
+
