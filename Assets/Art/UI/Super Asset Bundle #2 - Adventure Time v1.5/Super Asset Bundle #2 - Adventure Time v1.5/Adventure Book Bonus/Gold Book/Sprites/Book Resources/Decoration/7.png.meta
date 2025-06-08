@@ -110,23 +110,45 @@ TextureImporter:
     serializedVersion: 2
     sprites:
     - serializedVersion: 2
-      name: rain light_0
+      name: 7_0
       rect:
         serializedVersion: 2
-        x: 4
-        y: 0
-        width: 7
-        height: 31
+        x: 58
+        y: 152
+        width: 32
+        height: 12
       alignment: 0
       pivot: {x: 0, y: 0}
       border: {x: 0, y: 0, z: 0, w: 0}
       customData: 
       outline: []
       physicsShape: []
-      tessellationDetail: -1
+      tessellationDetail: 0
       bones: []
-      spriteID: 7bb90c7956bbd3fe0800000000000000
-      internalID: -1207603080053351497
+      spriteID: 60f97c3ea65cd84428a8d95a0bb867d0
+      internalID: 1484736750
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: 7_1
+      rect:
+        serializedVersion: 2
+        x: 70
+        y: 139
+        width: 8
+        height: 11
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: 0
+      bones: []
+      spriteID: 07576ceda68d6914288060cbb419317b
+      internalID: -1442204133
       vertices: []
       indices: 
       edges: []
@@ -135,7 +157,7 @@ TextureImporter:
     customData: 
     physicsShape: []
     bones: []
-    spriteID: 
+    spriteID: 96e3049be1127c740827a21dd977fb60
     internalID: 0
     vertices: []
     indices: 
@@ -145,7 +167,8 @@ TextureImporter:
     spriteCustomMetadata:
       entries: []
     nameFileIdTable:
-      rain light_0: -1207603080053351497
+      7_0: 1484736750
+      7_1: -1442204133
   mipmapLimitGroupName: 
   pSDRemoveMatte: 0
   userData: 

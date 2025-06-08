@@ -1,0 +1,28 @@
+%YAML 1.1
+%TAG !u! tag:unity3d.com,2011:
+--- !u!114 &11400000
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 63fead236d618324bb2d3bd0af51c6a8, type: 3}
+  m_Name: Granite Vow
+  m_EditorClassIdentifier: 
+  wizardName: Granite Vow
+  heartCount: 5
+  orbCount: 2
+  loadoutOrbs: 6
+  factionEmblem: {fileID: -1668397718, guid: 75fdd9b071aefd14fa1922afc36f8c0a, type: 3}
+  charcterImage: {fileID: -21015154, guid: 966ee461096bb924f91cc201321af6f8, type: 3}
+  passiveAbility: 'Heavy Weight: Slams have increas AoE knockback and damage'
+  activeAbility: 'Earthwarden''s Bulwark: Summon a powerful stone wall, bloacking
+    incoming bullets and providing cover until destroyed'
+  loreText: "Forged in canyon fortresses, the Granite Vow are elite engineer-soldiers
+    bound by strength and discipline. Raised on the frontlines of the Dark Rifts,
+    they carry unmatched durability and power\u2014slow to move but impossible to
+    stop, wielding heavy, crushing weapons and firepower to accompany their strong
+    fortification spells and will power."

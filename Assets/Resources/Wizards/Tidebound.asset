@@ -1,0 +1,28 @@
+%YAML 1.1
+%TAG !u! tag:unity3d.com,2011:
+--- !u!114 &11400000
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 63fead236d618324bb2d3bd0af51c6a8, type: 3}
+  m_Name: Tidebound
+  m_EditorClassIdentifier: 
+  wizardName: Tidebound
+  heartCount: 4
+  orbCount: 2
+  loadoutOrbs: 6
+  factionEmblem: {fileID: -1969268113, guid: 75fdd9b071aefd14fa1922afc36f8c0a, type: 3}
+  charcterImage: {fileID: 2062932452, guid: 14b3787829e18034195f3cad3ff558b4, type: 3}
+  passiveAbility: 'Mistshroud: Every 3rd dash ability triggers a small smoke screen'
+  activeAbility: 'Abyssal Vortex: Next bullet fired creates a whirlpool that pulls
+    enemies in, trapping them in place and dealing damage over time'
+  loreText: "Once peaceful stewards of healing springs and coastal sanctuaries, the
+    Tidebound have evolved into relentless close-combatants hidden deep in flooded
+    ruins and sea caverns. hardened by amphibious goblin raids during the great war,
+    they master the tides with close-range whirlpool attacks and brutal melee spells.
+    They crash in like waves\u2014overwhelming and personal."

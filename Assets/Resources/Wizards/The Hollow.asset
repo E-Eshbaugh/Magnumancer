@@ -1,0 +1,30 @@
+%YAML 1.1
+%TAG !u! tag:unity3d.com,2011:
+--- !u!114 &11400000
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 63fead236d618324bb2d3bd0af51c6a8, type: 3}
+  m_Name: The Hollow
+  m_EditorClassIdentifier: 
+  wizardName: The Hollow
+  heartCount: 1
+  orbCount: 5
+  loadoutOrbs: 12
+  factionEmblem: {fileID: 1339321590, guid: 75fdd9b071aefd14fa1922afc36f8c0a, type: 3}
+  charcterImage: {fileID: 1591709252, guid: 83fa121b3217fa84ca11623844a0189b, type: 3}
+  passiveAbility: 'Shadowshot: 25% chance to fire a shadow bullet that can phase
+    through walls and obstacles'
+  activeAbility: 'Forsaken Bargain: Next bullet fired curses hit enemy, causing them
+    to take 2x damage from you. However, all other incoming damage is instead dealt
+    to you. Curse lasts 5 sec.'
+  loreText: Wielders of forsaken magics, the Hollow were not an original Great Faction,
+    instead abandoned their kin of various factions to chase unspeakable power. Hidden
+    in cursed ruins and shadowed tunnels, they mastered every form of magnumancy,
+    bringing upon an eternal dark curse to their whole faction. Ruthless and unpredictable,
+    they walk the line between mastery and madness.

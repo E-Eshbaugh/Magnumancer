@@ -1,0 +1,28 @@
+%YAML 1.1
+%TAG !u! tag:unity3d.com,2011:
+--- !u!114 &11400000
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 63fead236d618324bb2d3bd0af51c6a8, type: 3}
+  m_Name: Verdant Circle
+  m_EditorClassIdentifier: 
+  wizardName: Verdant Circle
+  heartCount: 4
+  orbCount: 3
+  loadoutOrbs: 8
+  factionEmblem: {fileID: 1473206808, guid: 75fdd9b071aefd14fa1922afc36f8c0a, type: 3}
+  charcterImage: {fileID: 409340080, guid: 05fba9a15d23a8e4db95735512ff105e, type: 3}
+  passiveAbility: 'Bounty of the Forest: Returns a portion of damage dealt by planted
+    thorns as health'
+  activeAbility: 'Spinebloom Mine: Deploy a mine that ensnares enemies caught in
+    it''s radius. Explodes after a period of time, releasing thorn spikes'
+  loreText: Guardians of the Old Woods, the secretive Verdant Circle blend ancient
+    healing with cunning survival tactics. Patient and persistent, they lay traps
+    and wield massive weapons to protect the last living Lost Groves. Their strength
+    lies in outlasting any foe.

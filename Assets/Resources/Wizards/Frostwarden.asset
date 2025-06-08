@@ -1,0 +1,27 @@
+%YAML 1.1
+%TAG !u! tag:unity3d.com,2011:
+--- !u!114 &11400000
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 63fead236d618324bb2d3bd0af51c6a8, type: 3}
+  m_Name: Frostwarden
+  m_EditorClassIdentifier: 
+  wizardName: Frostwarden
+  heartCount: 2
+  orbCount: 4
+  loadoutOrbs: 10
+  factionEmblem: {fileID: -1983320218, guid: 75fdd9b071aefd14fa1922afc36f8c0a, type: 3}
+  charcterImage: {fileID: -1695864718, guid: 2b157bd54fec28a47a9c6c2e19006362, type: 3}
+  passiveAbility: 'Frostarmor: Small chance to deflect bullets back at enemies'
+  activeAbility: 'Winter''s Judgement: Fires a piercing ice shard that does extreme
+    damage and freezes enemy in place'
+  loreText: Descendants of the ancient cryomancers, the Frostwardens dwell in glacial
+    sanctuaries charged with ancient magic. Their frozen lands shaped them into disciplined
+    marksmen who wield precision sniper spells to halt foes in their tracks. Strategic
+    and icy in demeanor, they dominate from a distance.

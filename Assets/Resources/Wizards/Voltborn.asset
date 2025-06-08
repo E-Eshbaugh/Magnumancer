@@ -1,0 +1,29 @@
+%YAML 1.1
+%TAG !u! tag:unity3d.com,2011:
+--- !u!114 &11400000
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 63fead236d618324bb2d3bd0af51c6a8, type: 3}
+  m_Name: Voltborn
+  m_EditorClassIdentifier: 
+  wizardName: Voltborn
+  heartCount: 3
+  orbCount: 3
+  loadoutOrbs: 8
+  factionEmblem: {fileID: -969096767, guid: 75fdd9b071aefd14fa1922afc36f8c0a, type: 3}
+  charcterImage: {fileID: -1239181586, guid: b0ebbbbb3b6b6d0448687e12fa505137, type: 3}
+  passiveAbility: 'Thunderstrike: Bullets can chain to nearby enemies, dealing reduced
+    chain damage'
+  activeAbility: 'Thunderfall: Slam down, creating a shockwave that damages and stuns
+    enemies in a large radius sendin chaining damage out to nearby enemies'
+  loreText: "Living among storm-wracked peaks, Voltborn are speed and chaos incarnate.
+    Balanced in both stats, they prefer SMGs and high rate of fire, mobility-enhancing
+    weapons and gadgets to strike chaos across the battlefield. Volborn\u2019s edge
+    is unpredictability\u2014they attack hard and fast then vanishing like lightning,
+    their electrified combat style keeps enemies guessing."
