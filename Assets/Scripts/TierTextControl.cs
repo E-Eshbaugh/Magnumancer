@@ -7,7 +7,7 @@ public class TierTextControl : MonoBehaviour
 {
     public Text tierText;
     private String[] tierNames = { "Initiate", "Ascended", "Archon" };
-    private int currentTier = 0;
+    public int currentTier = 0;
     void Start()
     {
 

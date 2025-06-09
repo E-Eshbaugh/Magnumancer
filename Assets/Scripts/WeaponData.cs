@@ -1,13 +1,14 @@
 using UnityEngine;
 
-[CreateAssetMenu(menuName = "Magnumancer/Weapon")]
+[CreateAssetMenu(menuName = "Spells/Weapon")]
 public class WeaponData : ScriptableObject
 {
     public string weaponName;
     public int damage;
     public int ammoCapacity;
-    public int weight;
     public float attackSpeed;
+    public int weight;
+    public int orbCost;
     public Sprite weaponIcon;
     public string description;
 

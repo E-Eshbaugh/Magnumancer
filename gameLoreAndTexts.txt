@@ -47,3 +47,38 @@ Now, in this Era of Embers, the Eight Factions—no longer scholars, but warlord
 
 They’re too busy aiming
 
+-- Gun names -------------------------------------
+AWS -- Astral Lance (1_49)
+SVD -- Runepiercer  (1_47)
+M1 -- Ironspike     (1_48)
+
+P90 -- Bloodcurrent (1_61)
+MP4 -- Brassfang (1_62)
+Drako -- Ashspitter (1_60)
+
+M4 -- Gravewhisper (1_55)
+? -- Blackmaw (1_63)
+AK -- Ironchant (1_56)
+
+(1_64) Hellthrasher
+(1_57) Dustbreaker
+(1_46) Scrapshot
+
+katana - Voidpiercer (1_23)
+sword - Runeshard (1_22)
+karambat - Nightshard (1_30)
+
+RPG -- Titan's Wrath 
+Minigun -- Iron Tempest
+G launcher -- Emberblast
+(1_70) -- Scrapwind
+
+
+
+
+
+
+
+
+
+
