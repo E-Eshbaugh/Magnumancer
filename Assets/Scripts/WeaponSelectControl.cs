@@ -1,4 +1,5 @@
 using System;
+using NUnit.Framework;
 using UnityEngine;
 using UnityEngine.InputSystem;
 using UnityEngine.Rendering;
@@ -26,11 +27,17 @@ public class WeaponSelectControl : MonoBehaviour
     public WeaponData[] ascendantWeapons;
     [Header("-- Initiate Weapons --")]
     public WeaponData[] initiateWeapons;
-    [Header("-- Fill Bar Settings --")]
-    public Image parentFull;
+    [Header("-- Orbs --")]
+    public MAgicManagement magicManagement;
+    [Header("-- Inventory Settings --")]
+    [Tooltip("0 - UP | 1 - RIGHT | 2 - DOWN | 3 - LEFT")]
+    public Image[] inventorySlots = new Image[4];
+    public WeaponData[] inventoryData = new WeaponData[4];
+    public WeaponData InventoryPlaceHolder;
+    public bool clear = false;
     private float minX = -614f; //5%
     private float maxX = -211f; //99%
-    
+
 
     private Array currentWeaponArray;
     private int currentWeaponIndex = 0;
@@ -43,6 +50,12 @@ public class WeaponSelectControl : MonoBehaviour
     {
         currentWeaponArray = initiateWeapons;
         tierTextControl = FindFirstObjectByType<TierTextControl>();
+        magicManagement = FindFirstObjectByType<MAgicManagement>();
+
+        for (int i = 0; i < inventorySlots.Length; i++)
+        {
+            inventorySlots[i].enabled = false;
+        }
 
         UpdateWeaponDisplay();
     }
@@ -82,7 +95,7 @@ public class WeaponSelectControl : MonoBehaviour
             }
         }
 
-        // Handle input for weapon selection
+        // Handle input for weapon scrolling
         float x = Gamepad.current.rightStick.ReadValue().x;
         float time = Time.time;
 
@@ -98,6 +111,45 @@ public class WeaponSelectControl : MonoBehaviour
                 ScrollLeft();
                 lastInputTime = time;
             }
+        }
+
+        //weapon selection with DPad to put in inventory slots
+
+        if (Gamepad.current.buttonWest.IsPressed())
+        {
+            if (Gamepad.current.dpad.up.wasPressedThisFrame)
+            {
+                ClearWeapon(0);
+            }
+            else if (Gamepad.current.dpad.right.wasPressedThisFrame)
+            {
+                ClearWeapon(1);
+                clear = true;
+            }
+            else if (Gamepad.current.dpad.down.wasPressedThisFrame)
+            {
+                ClearWeapon(2);
+            }
+            else if (Gamepad.current.dpad.left.wasPressedThisFrame)
+            {
+                ClearWeapon(3);
+            }
+        }
+        else if (Gamepad.current.dpad.up.wasPressedThisFrame)
+        {
+            SelectWeapon(0);
+        }
+        else if (Gamepad.current.dpad.right.wasPressedThisFrame)
+        {
+            SelectWeapon(1);
+        }
+        else if (Gamepad.current.dpad.down.wasPressedThisFrame)
+        {
+            SelectWeapon(2);
+        }
+        else if (Gamepad.current.dpad.left.wasPressedThisFrame)
+        {
+            SelectWeapon(3);
         }
     }
 
@@ -171,5 +223,66 @@ public class WeaponSelectControl : MonoBehaviour
         if (weightX < minX) weightX = minX;
         if (weightX > maxX) weightX = maxX;
         weaponWeight.anchoredPosition = new Vector2(weightX, weaponWeight.anchoredPosition.y);
+    }
+
+    void SelectWeapon(int slotIndex)
+    {
+        int remainingOrbs = magicManagement.numOrbs - ((WeaponData)currentWeaponArray.GetValue(currentWeaponIndex)).orbCost;
+
+        //already in inventory?
+        for (int i = 0; i < inventorySlots.Length; i++)
+        {
+            if (inventorySlots[i].enabled && inventorySlots[i].sprite == ((WeaponData)currentWeaponArray.GetValue(currentWeaponIndex)).weaponIcon)
+            {
+                return;
+            }
+        }
+
+        if (remainingOrbs >= 0)
+        {
+            inventorySlots[slotIndex].sprite = ((WeaponData)currentWeaponArray.GetValue(currentWeaponIndex)).weaponIcon;
+            inventorySlots[slotIndex].enabled = true;
+            inventoryData[slotIndex] = (WeaponData)currentWeaponArray.GetValue(currentWeaponIndex);
+            magicManagement.spentOrbs = CountInventoryCost();
+        }
+        else
+        {
+            if (inventorySlots[slotIndex].enabled)
+            {
+                int swappedPrice = remainingOrbs + ((WeaponData)inventoryData.GetValue(slotIndex)).orbCost;
+                if (swappedPrice >= 0)
+                {
+                    inventorySlots[slotIndex].sprite = ((WeaponData)currentWeaponArray.GetValue(currentWeaponIndex)).weaponIcon;
+                    inventorySlots[slotIndex].enabled = true;
+                    inventoryData[slotIndex] = (WeaponData)currentWeaponArray.GetValue(currentWeaponIndex);
+                    magicManagement.spentOrbs = CountInventoryCost();
+                }
+                else return;
+            }
+            else return;
+        }
+
+    }
+
+    void ClearWeapon(int slotIndex)
+    {
+        if (inventorySlots[slotIndex].enabled)
+        {
+            inventorySlots[slotIndex].enabled = false;
+            inventoryData[slotIndex] = InventoryPlaceHolder;
+            magicManagement.spentOrbs = CountInventoryCost();
+        }
+        else return;
+    }
+
+    int CountInventoryCost()
+    {
+        int orbCount = 0;
+        for (int i = 0; i < inventorySlots.Length; i++)
+        {
+            orbCount += ((WeaponData)inventoryData.GetValue(i)).orbCost;
+        }
+
+        return orbCount;
     }
 }
