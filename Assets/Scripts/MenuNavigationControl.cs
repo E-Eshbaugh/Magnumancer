@@ -85,7 +85,7 @@ public class MenuNavigationControl : MonoBehaviour
             }
             else if (page5.activeSelf)
             {
-                // Final confirmation - go to game
+                SceneManager.LoadScene("OldWoods");
             }
         }
         else if (Gamepad.current.bButton.wasPressedThisFrame)
