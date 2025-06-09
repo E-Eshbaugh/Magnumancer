@@ -1,5 +1,5 @@
 fileFormatVersion: 2
-guid: 622c32bd5f3ff7f4b896cb4dfa9af272
+guid: a533cd277e372dd4997d533e609458ce
 TextureImporter:
   internalIDToNameTable: []
   externalObjects: {}
@@ -110,35 +110,13 @@ TextureImporter:
     serializedVersion: 2
     sprites:
     - serializedVersion: 2
-      name: 0_0
+      name: burning_end_1_1
       rect:
         serializedVersion: 2
-        x: 147
-        y: 9
-        width: 170
-        height: 210
-      alignment: 0
-      pivot: {x: 0.5, y: 0.5}
-      border: {x: 0, y: 0, z: 0, w: 0}
-      customData: 
-      outline: []
-      physicsShape: []
-      tessellationDetail: 0
-      bones: []
-      spriteID: a00801d3737cee44bac1667d4f8372cb
-      internalID: -1454609242
-      vertices: []
-      indices: 
-      edges: []
-      weights: []
-    - serializedVersion: 2
-      name: 0_1
-      rect:
-        serializedVersion: 2
-        x: 46
-        y: 86
-        width: 397
-        height: 154
+        x: 29
+        y: 0
+        width: 14
+        height: 22
       alignment: 0
       pivot: {x: 0, y: 0}
       border: {x: 0, y: 0, z: 0, w: 0}
@@ -147,8 +125,96 @@ TextureImporter:
       physicsShape: []
       tessellationDetail: 0
       bones: []
-      spriteID: 2ae1b2585b6710646b9088d2c1f08b7f
-      internalID: -405295763
+      spriteID: d0185836ff56862429ab4af47f8a6cdd
+      internalID: -560357845
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: burning_end_1_3
+      rect:
+        serializedVersion: 2
+        x: 6
+        y: 0
+        width: 14
+        height: 22
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: 0
+      bones: []
+      spriteID: 9a7fc5a2661871a4a83c945f24a42d22
+      internalID: -1835472389
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: burning_end_1_0
+      rect:
+        serializedVersion: 2
+        x: 52
+        y: 0
+        width: 14
+        height: 22
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: 0
+      bones: []
+      spriteID: b318840b073870f4f83ab668531f3f6d
+      internalID: -1831506839
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: burning_end_1_2
+      rect:
+        serializedVersion: 2
+        x: 76
+        y: 0
+        width: 14
+        height: 22
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: 0
+      bones: []
+      spriteID: 7e45322916a44e144a69ded9db7de4ac
+      internalID: -585041149
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: burning_end_1_4
+      rect:
+        serializedVersion: 2
+        x: 102
+        y: 0
+        width: 14
+        height: 22
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: 0
+      bones: []
+      spriteID: 1ba73fa5cf3e4b04cabcebbca7f6b394
+      internalID: -847769897
       vertices: []
       indices: 
       edges: []
@@ -157,7 +223,7 @@ TextureImporter:
     customData: 
     physicsShape: []
     bones: []
-    spriteID: 14607a468fa6de24c9c9da1158067c0c
+    spriteID: 0d35442d10f427a45ac62f1b772d5852
     internalID: 0
     vertices: []
     indices: 
@@ -167,8 +233,11 @@ TextureImporter:
     spriteCustomMetadata:
       entries: []
     nameFileIdTable:
-      0_0: -1454609242
-      0_1: -405295763
+      burning_end_1_0: -1831506839
+      burning_end_1_1: -560357845
+      burning_end_1_2: -585041149
+      burning_end_1_3: -1835472389
+      burning_end_1_4: -847769897
   mipmapLimitGroupName: 
   pSDRemoveMatte: 0
   userData: 

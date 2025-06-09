@@ -1,5 +1,5 @@
 fileFormatVersion: 2
-guid: 622c32bd5f3ff7f4b896cb4dfa9af272
+guid: 7dda7f7e41093ff4bb8453ee6bcbe57a
 TextureImporter:
   internalIDToNameTable: []
   externalObjects: {}
@@ -110,45 +110,23 @@ TextureImporter:
     serializedVersion: 2
     sprites:
     - serializedVersion: 2
-      name: 0_0
+      name: rain light_0
       rect:
         serializedVersion: 2
-        x: 147
-        y: 9
-        width: 170
-        height: 210
-      alignment: 0
-      pivot: {x: 0.5, y: 0.5}
-      border: {x: 0, y: 0, z: 0, w: 0}
-      customData: 
-      outline: []
-      physicsShape: []
-      tessellationDetail: 0
-      bones: []
-      spriteID: a00801d3737cee44bac1667d4f8372cb
-      internalID: -1454609242
-      vertices: []
-      indices: 
-      edges: []
-      weights: []
-    - serializedVersion: 2
-      name: 0_1
-      rect:
-        serializedVersion: 2
-        x: 46
-        y: 86
-        width: 397
-        height: 154
+        x: 4
+        y: 0
+        width: 7
+        height: 31
       alignment: 0
       pivot: {x: 0, y: 0}
       border: {x: 0, y: 0, z: 0, w: 0}
       customData: 
       outline: []
       physicsShape: []
-      tessellationDetail: 0
+      tessellationDetail: -1
       bones: []
-      spriteID: 2ae1b2585b6710646b9088d2c1f08b7f
-      internalID: -405295763
+      spriteID: 7bb90c7956bbd3fe0800000000000000
+      internalID: -1207603080053351497
       vertices: []
       indices: 
       edges: []
@@ -157,7 +135,7 @@ TextureImporter:
     customData: 
     physicsShape: []
     bones: []
-    spriteID: 14607a468fa6de24c9c9da1158067c0c
+    spriteID: 
     internalID: 0
     vertices: []
     indices: 
@@ -167,8 +145,7 @@ TextureImporter:
     spriteCustomMetadata:
       entries: []
     nameFileIdTable:
-      0_0: -1454609242
-      0_1: -405295763
+      rain light_0: -1207603080053351497
   mipmapLimitGroupName: 
   pSDRemoveMatte: 0
   userData: 

@@ -7,11 +7,10 @@ public class BookOpen : MonoBehaviour
     public GameObject menu;
     public GameObject[] books;
     public Text bookText;
-    public Text bookText2;
+    public GameObject bookText2;
     public float frameRate = 0.01f;
 
     private int currentBookIndex = 0;
-    private bool hasStarted = false;
 
     void Start()
     {
@@ -25,17 +24,13 @@ public class BookOpen : MonoBehaviour
 
     void Update()
     {
-        if (!hasStarted && Gamepad.current != null && Gamepad.current.aButton.IsPressed())
-        {
-            hasStarted = true;
-            StartCoroutine(PlayBookOpening());
-        }
+
     }
 
-    System.Collections.IEnumerator PlayBookOpening()
+    public System.Collections.IEnumerator PlayBookOpening()
     {
         bookText.text = "";
-        bookText2.text = "";
+        bookText2.SetActive(false);
 
         while (currentBookIndex < books.Length - 1)
         {

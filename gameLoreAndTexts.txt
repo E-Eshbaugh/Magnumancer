@@ -25,25 +25,25 @@ Wielders of forsaken magics, the Hollow were not an original Great Faction, inst
 
 -------------------------------------------------------
 -- Overall lore script--
-Long ago, in a world known as Aetheros, magic was not a tool of war—it was an artform. The land pulsed with arcane life, flowing freely through forests, mountains, seas, and skies. From this harmony rose the 7 Great Factions of Magic, each born from fusions of the teachings of the ancient Mancers who came before them. Though different in their elemental affinities and regional homes, the Factions lived in balance, communing regularly to share discoveries, preserve ancient texts, and expand upon what was known simply as the Old Magic.
+Long ago, in a world known as Aetheros, magic was not a tool of war--it was an artform. The land pulsed with arcane life, flowing freely through forests, mountains, seas, and skies. From this harmony rose the 7 Great Factions of Magic, each born from fusions of the teachings of the ancient Mancers who came before them. Though different in their elemental affinities and regional homes, the Factions lived in balance, communing regularly to share discoveries, preserve ancient texts, and expand upon what was known simply as the Old Magic.
 
-As peace endured, the curiosity of wizards grew. They pushed deeper into magical theory—blending elements, forging new incantations, and chasing ever more ambitious spells. Magic became bolder, less stable. Beautiful, yet dangerous. The world trembled beneath the weight of experimentation, and the fabric of Aetheros began to thin.
+As peace endured, the curiosity of wizards grew. They pushed deeper into magical theory-blending elements, forging new incantations, and chasing ever more ambitious spells. Magic became bolder, less stable. Beautiful, yet dangerous. The world trembled beneath the weight of experimentation, and the fabric of Aetheros began to thin.
 
 Then came the Rending as tears opened across the land, formed by the extreme stress in the fabric of magic. Dark, bottomless voids now known as Dark Rifts, gaping wounds in the world’s magical and physical core, opened up across Aetheros. From the depths surged creatures of chaos: Goblins, twisted avatars of entropy born from the imbalance of magic. They flooded from canyons, erupted from the ocean floor, and clawed up through farmland and sanctuary alike.
 
-The Eight Houses, unprepared for war, were forced to unite under one banner for the first time in history. The arts of peace were replaced with the demands of survival. Their combined effort became known as the Concord of Flame, and the ensuing conflict would be remembered as The Great Goblin War.
+The 7 Factions, unprepared for war, were forced to unite under one banner for the first time in history. The arts of peace were replaced with the demands of survival. Their combined effort became known as the Concord of Flame, and the ensuing conflict would be remembered as The Great Goblin War.
 
-But the goblins were relentless. The war dragged on for generations. Magic itself—drawn upon to power shields, barriers, and spells—began to fade. Magical Orbs, crystalline cores of energy once used to create beauty and wonder, became ammunition for spells of annihilation. Sanctuaries were lost. Forests burned. Glaciers shattered.
+But the goblins were relentless. The war dragged on for generations. Magic itself--drawn upon to power shields, barriers, and spells--began to fade. Magical Orbs, crystalline cores of energy once used to create beauty and wonder, became ammunition for spells of annihilation. Sanctuaries were lost. Forests burned. Glaciers shattered.
 
 Eventually, the goblin hordes began to wane—not defeated, but scattered, licking their wounds in the shadows of the world. The Concord dissolved, its unity faded like smoke after fire.
 
 And that’s when the true war began.
 
-With the world’s magic reserves crippled and orbs nearly extinct, the Houses turned on each other. The trust forged in battle crumbled into desperation and greed. Once-beautiful lands became battlegrounds yet again. Arcane cities fell silent. In the absence of modern magic, factions began to study forbidden sorcery even older than Old Magic: Magnumancy, the art of summoning weapons from magic itself.
+With the world’s magic reserves crippled and orbs nearly extinct, the Factions turned on each other. The trust forged in battle crumbled into desperation and greed. Once-beautiful lands became battlegrounds yet again. Arcane cities fell silent. In the absence of modern magic, factions began to study forbidden sorcery even older than Old Magic: Magnumancy, the art of summoning weapons from magic itself.
 
 Crafted from spells long buried and imbued with elemental fury, these weapons became the future of battle. They consumed less Orb energy. They were easy to train with. And they killed.
 
-Now, in this Era of Embers, the Eight Factions—no longer scholars, but warlords—fight not for knowledge or peace, but for survival. The goblins still lurk beneath the surface. The rifts still whisper in the dark. The fabric of magic still strains. Aetheros still burns. But no one listens.
+Now, in this Era of Embers, the 7 Factions--no longer scholars, but warlords--fight not for knowledge or peace, but for survival. The goblins still lurk beneath the surface. The rifts still whisper in the dark. The fabric of magic still strains. Aetheros still burns. But no one listens.
 
 They’re too busy aiming
 
@@ -60,18 +60,19 @@ M4 -- Gravewhisper (1_55)
 ? -- Blackmaw (1_63)
 AK -- Ironchant (1_56)
 
-(1_64) Hellthrasher
-(1_57) Dustbreaker
-(1_46) Scrapshot
+shotguns--
+(1_64) Hellthrasher -- auto
+(1_57) Dustbreaker -- lever action
+(1_46) Scrapshot -- semi
 
 katana - Voidpiercer (1_23)
 sword - Runeshard (1_22)
 karambat - Nightshard (1_30)
 
-RPG -- Titan's Wrath 
-Minigun -- Iron Tempest
-G launcher -- Emberblast
-(1_70) -- Scrapwind
+RPG -- Titan's Wrath 1_51
+Minigun -- Iron Tempest 1_50
+Grenade launcher -- Emberblast 1_45
+(1_70) -- Scrapwind -- sidefed AR
 
 
 
