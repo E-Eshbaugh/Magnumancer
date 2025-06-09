@@ -1,5 +1,4 @@
 using UnityEngine;
-using UnityEngine.UI;
 
 [CreateAssetMenu(menuName = "Mangumancer/Wizard")]
 public class WizardData : ScriptableObject

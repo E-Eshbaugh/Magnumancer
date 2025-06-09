@@ -732,7 +732,7 @@ RectTransform:
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
   m_AnchorMin: {x: 0.5, y: 0.5}
   m_AnchorMax: {x: 0.5, y: 0.5}
-  m_AnchoredPosition: {x: 0, y: 0}
+  m_AnchoredPosition: {x: 0, y: 41}
   m_SizeDelta: {x: 100, y: 100}
   m_Pivot: {x: 0.5, y: 0.5}
 --- !u!1 &119227956
@@ -2559,8 +2559,8 @@ RectTransform:
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
   m_AnchorMin: {x: 0.5, y: 0.5}
   m_AnchorMax: {x: 0.5, y: 0.5}
-  m_AnchoredPosition: {x: 380.18616, y: -77}
-  m_SizeDelta: {x: 73.6277, y: 51.6507}
+  m_AnchoredPosition: {x: 379.41638, y: -77}
+  m_SizeDelta: {x: 50.9047, y: 51.6507}
   m_Pivot: {x: 0.5, y: 0.5}
 --- !u!114 &329120638
 MonoBehaviour:
@@ -2582,7 +2582,7 @@ MonoBehaviour:
   m_OnCullStateChanged:
     m_PersistentCalls:
       m_Calls: []
-  m_Sprite: {fileID: -1257122006, guid: 88365eb93f90dc0448eb4a39ecadd679, type: 3}
+  m_Sprite: {fileID: 1093795445, guid: 7188369e9a666dd4da15075aecf6aa27, type: 3}
   m_Type: 0
   m_PreserveAspect: 0
   m_FillCenter: 1
@@ -8441,7 +8441,7 @@ MonoBehaviour:
     m_PersistentCalls:
       m_Calls: []
   m_FontData:
-    m_Font: {fileID: 12800000, guid: 4012217dee8a8554c9e3d021d0e7eb38, type: 2}
+    m_Font: {fileID: 12800000, guid: 225a42d42a6fb6143ae2f9afddb99c1f, type: 2}
     m_FontSize: 0
     m_FontStyle: 0
     m_BestFit: 0
@@ -8454,7 +8454,7 @@ MonoBehaviour:
     m_VerticalOverflow: 0
     m_LineSpacing: 1
   m_Text: An unwieldy behemoth that sprays a relentless hail of bullets. Low per-shot
-    damage, but overwhelms foes with sheer volume.
+    damage, but high volume.
 --- !u!222 &1359708479
 CanvasRenderer:
   m_ObjectHideFlags: 0
@@ -9616,7 +9616,7 @@ RectTransform:
   m_GameObject: {fileID: 1556900580}
   m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
   m_LocalPosition: {x: 0, y: 0, z: 0}
-  m_LocalScale: {x: 1, y: 1, z: 1}
+  m_LocalScale: {x: 1.2386, y: 1.2386, z: 1.2386}
   m_ConstrainProportionsScale: 0
   m_Children:
   - {fileID: 139945576}
@@ -9625,7 +9625,7 @@ RectTransform:
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
   m_AnchorMin: {x: 0.5, y: 0.5}
   m_AnchorMax: {x: 0.5, y: 0.5}
-  m_AnchoredPosition: {x: 190, y: -337}
+  m_AnchoredPosition: {x: 175, y: -311}
   m_SizeDelta: {x: 160, y: 30}
   m_Pivot: {x: 0.5, y: 0.5}
 --- !u!1 &1558185662
