@@ -38,7 +38,6 @@ public class MenuNavigationControl : MonoBehaviour
 
     void Start()
     {
-        // Grab reference if not set
         if (characterSelectController == null) characterSelectController = FindFirstObjectByType<CharacterSelectController>();
 
         page3.SetActive(false);
@@ -117,7 +116,7 @@ public class MenuNavigationControl : MonoBehaviour
             else if (page1.activeSelf)
             {
                 Debug.Log("Book is closed. Exit menu?");
-                // Optional: implement quit logic
+                // Maybe add game exit logic later to close book?
             }
         }
     }
