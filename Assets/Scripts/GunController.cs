@@ -1,8 +1,5 @@
-using JetBrains.Annotations;
-using Unity.VisualScripting;
 using UnityEngine;
 using UnityEngine.InputSystem;
-using UnityEngine.SocialPlatforms;
 
 public class GunOrbit : MonoBehaviour {
     [Tooltip("Distance from the player's position at which the gun orbits.")]
