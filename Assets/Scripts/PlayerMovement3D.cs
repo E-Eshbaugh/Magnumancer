@@ -51,10 +51,14 @@ public class PlayerMovement : MonoBehaviour
         controller.Move(move * Time.deltaTime);
 
         // Rotate to face movement
-        if (isoInput.sqrMagnitude > 0.01f)
+        if (moveInput.sqrMagnitude > 0.01f)
         {
-            Quaternion targetRot = Quaternion.LookRotation(isoInput);
-            transform.rotation = Quaternion.Slerp(transform.rotation, targetRot, 10f * Time.deltaTime);
+            Vector3 direction = IsoRotation * new Vector3(moveInput.x, 0f, moveInput.y);
+            if (direction.sqrMagnitude > 0.001f)
+            {
+                Quaternion targetRot = Quaternion.LookRotation(direction);
+                transform.rotation = Quaternion.Slerp(transform.rotation, targetRot, 10f * Time.deltaTime);
+            }
         }
     }
 }
