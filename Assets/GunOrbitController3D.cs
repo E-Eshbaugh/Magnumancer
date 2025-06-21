@@ -3,37 +3,41 @@ using UnityEngine.InputSystem;
 
 public class GunOrbitController : MonoBehaviour
 {
-    private Vector2 moveInput;
-    private CharacterController controller;
-    private static readonly Quaternion IsoRotation = Quaternion.Euler(0, 45f, 0);
-    void Awake()
+    public Transform player;
+    public float orbitRadius = 2f;
+    public float fixedHeight = 1.5f;
+    public float tilt = -45f;
+
+    private Vector3 currentWorldOffset;
+
+    void Start()
     {
-        controller = GetComponent<CharacterController>();
+        // Start with current offset from player
+        currentWorldOffset = transform.position - player.position;
+        currentWorldOffset.y = 0;
     }
 
     void Update()
-    //create a method that orbits the gun around the player based on right stick input
     {
-        Vector3 input = new Vector3(moveInput.x, 0f, moveInput.y);
-        Vector3 isoInput = IsoRotation * input;
+        Vector2 stick = Gamepad.current?.rightStick.ReadValue() ?? Vector2.zero;
 
-        
-
-        // Rotate the gun based on input
-        if (moveInput.sqrMagnitude > 0.01f)
+        if (stick.magnitude > 0.1f)
         {
-            Vector3 direction = IsoRotation * new Vector3(moveInput.x, 0f, moveInput.y);
-            if (direction.sqrMagnitude > 0.001f)
-            {
-                Quaternion targetRot = Quaternion.LookRotation(direction);
-                transform.rotation = Quaternion.Slerp(transform.rotation, targetRot, 10f * Time.deltaTime);
-            }
+            // Convert stick input to angle
+            float angle = Mathf.Atan2(stick.x, stick.y);
+            Vector3 direction = new Vector3(Mathf.Sin(angle), 0, Mathf.Cos(angle));
+            currentWorldOffset = direction.normalized * orbitRadius;
         }
 
-    }
-    
-    public void OnLook(InputAction.CallbackContext context)
-    {
-        moveInput = context.ReadValue<Vector2>();
+        // Apply world position (ignoring parent transform)
+        Vector3 worldPos = player.position + currentWorldOffset;
+        worldPos.y = fixedHeight;
+        transform.position = worldPos;
+
+        // Face away from the player
+        Vector3 outward = (transform.position - player.position).normalized;
+        if (outward != Vector3.zero)
+            transform.rotation = Quaternion.LookRotation(outward, Vector3.up);
+            transform.Rotate(Vector3.right, tilt);
     }
 }
