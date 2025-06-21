@@ -8,9 +8,9 @@ public class PlayerMovement : MonoBehaviour
     public float moveSpeed = 5f;
     public float gravity = -9.81f;
     public float verticalVelocity = 0f;
-    public float jumpForce = 5f; // Optional: add jump later
 
     private Vector2 moveInput;
+    private Vector3 lastDirection = Vector3.forward;
     private CharacterController controller;
     private static readonly Quaternion IsoRotation = Quaternion.Euler(0, 45f, 0);
 
@@ -26,39 +26,38 @@ public class PlayerMovement : MonoBehaviour
 
     void Update()
     {
-        Vector3 input = new Vector3(moveInput.x, 0f, moveInput.y);
-        Vector3 isoInput = IsoRotation * input;
+        // Filter small noisy inputs
+        Vector2 filteredInput = (moveInput.magnitude < 0.1f) ? Vector2.zero : moveInput;
 
-        float moveMagnitude = isoInput.magnitude;
+        // Isometric movement direction
+        Vector3 inputDir = new Vector3(filteredInput.x, 0f, filteredInput.y).normalized;
+        Vector3 isoDir = IsoRotation * inputDir;
 
-        // Set speed param for animation
-        animator.SetFloat("Speed", moveMagnitude);
+        // Save last known movement direction (if valid)
+        if (isoDir.sqrMagnitude > 0.01f)
+            lastDirection = isoDir;
 
-        // Apply gravity
+        Vector3 horizontalMove = lastDirection * moveSpeed * filteredInput.magnitude;
+
+        // Gravity
         if (controller.isGrounded)
-        {
-            verticalVelocity = -0.5f; // Small downward push to stay grounded
-        }
+            verticalVelocity = -0.5f;
         else
-        {
             verticalVelocity += gravity * Time.deltaTime;
-        }
 
-        // Combine horizontal and vertical movement
-        Vector3 move = isoInput * moveSpeed + Vector3.up * verticalVelocity;
+        // Final move vector
+        Vector3 finalMove = new Vector3(horizontalMove.x, verticalVelocity, horizontalMove.z);
+        controller.Move(finalMove * Time.deltaTime);
 
-        // Move the player
-        controller.Move(move * Time.deltaTime);
-
-        // Rotate to face movement
-        if (moveInput.sqrMagnitude > 0.01f)
+        // Rotate to face last known movement direction
+        if (filteredInput.sqrMagnitude > 0.01f)
         {
-            Vector3 direction = IsoRotation * new Vector3(moveInput.x, 0f, moveInput.y);
-            if (direction.sqrMagnitude > 0.001f)
-            {
-                Quaternion targetRot = Quaternion.LookRotation(direction);
-                transform.rotation = Quaternion.Slerp(transform.rotation, targetRot, 10f * Time.deltaTime);
-            }
+            Quaternion targetRot = Quaternion.LookRotation(lastDirection);
+            transform.rotation = Quaternion.Slerp(transform.rotation, targetRot, 10f * Time.deltaTime);
         }
+
+        // Animate
+        animator.SetFloat("Speed", filteredInput.magnitude);
     }
 }
+
