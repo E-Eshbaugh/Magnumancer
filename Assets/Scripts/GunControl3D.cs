@@ -41,5 +41,16 @@ public class GunSwapControl : MonoBehaviour
 
             EquipGun(currentGunIndex);
         }
+
+        if (Gamepad.current.leftShoulder.wasPressedThisFrame)
+        {
+            currentGunIndex = currentGunIndex - 1;
+            if (currentGunIndex < 0)
+            {
+                currentGunIndex = gunPrefabs.Length - 1;
+            }
+
+            EquipGun(currentGunIndex);
+        }
     }
 }

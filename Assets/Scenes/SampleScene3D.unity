@@ -2075,7 +2075,15 @@ MonoBehaviour:
   gunHolder: {fileID: 742823072}
   gunPrefabs:
   - {fileID: 783428057543782658, guid: d9581251f8e325d4893b0a3f4882ea22, type: 3}
+  - {fileID: 5155063420842357622, guid: 5e92427897877eb4ca1ffe06453dce65, type: 3}
+  - {fileID: 8010855702920727454, guid: 7af6f5c96bc1c254f95be7ae3f59bd7e, type: 3}
+  - {fileID: 6402438624428262626, guid: f15a895fe7bb29f4a821640ec940f8ed, type: 3}
   - {fileID: 890660743820011744, guid: 1edea87fafd4eda479b04ef1c1f8ed95, type: 3}
+  - {fileID: 2190313348958096730, guid: c1750b31497a35742ae917658e02dd8d, type: 3}
+  - {fileID: 4361711896178636241, guid: eac01db5101c2b34391afd8f13038949, type: 3}
+  - {fileID: 550212131937212752, guid: c4cdf604f3862674ca2f584e4983859a, type: 3}
+  - {fileID: 7034189242565825116, guid: cb3e3b2d69afbcc4fb96ea4a38eaea5d, type: 3}
+  - {fileID: 5167352523380930853, guid: 3b223e1e99f294a4392b3ae777722d38, type: 3}
   gunRotation: {x: 0, y: 0, z: 90}
   currentGunIndex: 0
   gunPrefabsLength: 0
