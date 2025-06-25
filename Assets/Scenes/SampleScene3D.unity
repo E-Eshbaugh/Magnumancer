@@ -2075,7 +2075,10 @@ MonoBehaviour:
   gunHolder: {fileID: 742823072}
   gunPrefabs:
   - {fileID: 783428057543782658, guid: d9581251f8e325d4893b0a3f4882ea22, type: 3}
+  - {fileID: 890660743820011744, guid: 1edea87fafd4eda479b04ef1c1f8ed95, type: 3}
   gunRotation: {x: 0, y: 0, z: 90}
+  currentGunIndex: 0
+  gunPrefabsLength: 0
 --- !u!1 &832575517
 GameObject:
   m_ObjectHideFlags: 0

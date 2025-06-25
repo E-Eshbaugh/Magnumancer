@@ -1,4 +1,5 @@
 using UnityEngine;
+using UnityEngine.InputSystem;
 
 public class GunSwapControl : MonoBehaviour
 {
@@ -8,6 +9,8 @@ public class GunSwapControl : MonoBehaviour
 
     private GameObject currentGun;
     public Vector3 gunRotation;
+    public int currentGunIndex = 0;
+    public int gunPrefabsLength;
 
     public void EquipGun(int index)
     {
@@ -21,12 +24,22 @@ public class GunSwapControl : MonoBehaviour
     // Start is called once before the first execution of Update after the MonoBehaviour is created
     void Start()
     {
-        EquipGun(0);
+        EquipGun(currentGunIndex);
+        gunPrefabsLength = gunPrefabs.Length;
     }
 
     // Update is called once per frame
     void Update()
     {
-        
+        if (Gamepad.current.rightShoulder.wasPressedThisFrame)
+        {
+            currentGunIndex = currentGunIndex + 1;
+            if (currentGunIndex == gunPrefabs.Length)
+            {
+                currentGunIndex = 0;
+            }
+
+            EquipGun(currentGunIndex);
+        }
     }
 }
