@@ -1930,7 +1930,6 @@ MonoBehaviour:
   moveSpeed: 5
   gravity: -9.81
   verticalVelocity: 0
-  jumpForce: 5
 --- !u!143 &815622703
 CharacterController:
   m_ObjectHideFlags: 0
