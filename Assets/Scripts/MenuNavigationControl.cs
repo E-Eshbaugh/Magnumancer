@@ -1,3 +1,4 @@
+using System.Reflection;
 using UnityEngine;
 using UnityEngine.InputSystem;
 using UnityEngine.SceneManagement;
@@ -23,6 +24,9 @@ public class MenuNavigationControl : MonoBehaviour
     [Header("-- Character Select --")]
     public CharacterSelectController characterSelectController;
     public static MenuNavigationControl Instance { get; private set; }
+    [Header("info")]
+    public int selectedMap;
+    public MapSelectController mapSelectController;
 
     private void Awake()
     {
@@ -39,6 +43,7 @@ public class MenuNavigationControl : MonoBehaviour
     void Start()
     {
         if (characterSelectController == null) characterSelectController = FindFirstObjectByType<CharacterSelectController>();
+        if (mapSelectController == null) mapSelectController = FindFirstObjectByType<MapSelectController>();
 
         page3.SetActive(false);
         page4.SetActive(false);
@@ -84,7 +89,47 @@ public class MenuNavigationControl : MonoBehaviour
             }
             else if (page5.activeSelf)
             {
-                SceneManager.LoadScene("SampleScene3D");
+                selectedMap = mapSelectController.currentIndex;
+                if (selectedMap == 0)
+                {
+                    //old woods
+                    SceneManager.LoadScene("Oldwoods3D");
+                }
+                else if (selectedMap == 1)
+                {
+                    //stormspire
+                    SceneManager.LoadScene("Stormspire");
+                }
+                else if (selectedMap == 2)
+                {
+                    //fungal hollow
+                    SceneManager.LoadScene("FungalHollow");
+                }
+                else if (selectedMap == 3)
+                {
+                    //riftforge bastion
+                    SceneManager.LoadScene("Riftforge");
+                }
+                else if (selectedMap == 4)
+                {
+                    //cinder crucible
+                    SceneManager.LoadScene("CinderCrucible");
+                }
+                else if (selectedMap == 5)
+                {
+                    //drowned sanctum
+                    SceneManager.LoadScene("DrownedSanctum");
+                }
+                else if (selectedMap == 6)
+                {
+                    //the black osuary
+                    SceneManager.LoadScene("BlackOsuary");
+                }
+                else if (selectedMap == 7)
+                {
+                    //frostgrave citadel
+                    SceneManager.LoadScene("Frostgrave");
+                }
             }
         }
         else if (Gamepad.current.bButton.wasPressedThisFrame)

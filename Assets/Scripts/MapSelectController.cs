@@ -10,6 +10,14 @@ public class MapSelectController : MonoBehaviour
 
     private float inputTimer = 0f;
 
+    //0 - old woods
+    //1 - stormspire
+    //2 - fungal hollow
+    //3 - riftforge bastion
+    //4 - cinder crucible
+    //5 - drowned sanctum
+    //6 - the black osuary
+    //7 - frostgrave citadel
     void Update()
     {
         inputTimer += Time.deltaTime;

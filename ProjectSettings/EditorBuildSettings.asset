@@ -15,8 +15,29 @@ EditorBuildSettings:
     path: Assets/Scenes/OldWoods.unity
     guid: 8c9cfa26abfee488c85f1582747f6a02
   - enabled: 1
-    path: Assets/Scenes/SampleScene3D.unity
+    path: Assets/Scenes/Oldwoods3D.unity
     guid: 99c9720ab356a0642a771bea13969a05
+  - enabled: 1
+    path: Assets/Scenes/Stormspire.unity
+    guid: c3d6fd52e47f86845a1adf3cc31929b8
+  - enabled: 1
+    path: Assets/Scenes/FungalHollow.unity
+    guid: 1b08c332e808fd54d806902f5fbda590
+  - enabled: 1
+    path: Assets/Scenes/Riftforge.unity
+    guid: b95ffcabb394f14438b3908ce0599f88
+  - enabled: 1
+    path: Assets/Scenes/CinderCrucible.unity
+    guid: 72d126743a4e3cc4daca5463443c882d
+  - enabled: 1
+    path: Assets/Scenes/DrownedSanctum.unity
+    guid: e1cdcd2de1334364da6464b382aad1fa
+  - enabled: 1
+    path: Assets/Scenes/BlackOsuary.unity
+    guid: 895c4a8aae9ad0448a31e3fdaf1e6569
+  - enabled: 1
+    path: Assets/Scenes/Frostgrave.unity
+    guid: a3efb96ba3d379946b806b5cf57d9a87
   m_configObjects:
     com.unity.input.settings.actions: {fileID: -944628639613478452, guid: 2bcd2660ca9b64942af0de543d8d7100, type: 3}
   m_UseUCBPForAssetBundles: 0
