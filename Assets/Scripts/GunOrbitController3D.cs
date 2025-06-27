@@ -31,7 +31,7 @@ public class GunOrbitController : MonoBehaviour
 
         // Apply world position (ignoring parent transform)
         Vector3 worldPos = player.position + currentWorldOffset;
-        worldPos.y = fixedHeight;
+        worldPos.y = player.position.y + fixedHeight;
         transform.position = worldPos;
 
         // Face away from the player
