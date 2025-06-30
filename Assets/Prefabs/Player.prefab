@@ -47,7 +47,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   player: {fileID: 4035411916356951479}
   orbitRadius: 0.75
-  fixedHeight: 0.4
+  fixedHeight: 0.5
   tilt: -68
 --- !u!114 &8453635311192558870
 MonoBehaviour:
@@ -542,7 +542,7 @@ CharacterController:
   m_StepOffset: 0.3
   m_SkinWidth: 0.08
   m_MinMoveDistance: 0.001
-  m_Center: {x: 2, y: 1, z: 0}
+  m_Center: {x: 0, y: 1, z: 0}
 --- !u!114 &2238920440627548857
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -581,7 +581,7 @@ CapsuleCollider:
   m_Radius: 0.5
   m_Height: 1
   m_Direction: 1
-  m_Center: {x: 0, y: 0, z: 0}
+  m_Center: {x: 0, y: 1, z: 0}
 --- !u!95 &536566785280687208
 Animator:
   serializedVersion: 7
