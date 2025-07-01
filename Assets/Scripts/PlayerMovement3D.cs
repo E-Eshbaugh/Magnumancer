@@ -1,14 +1,26 @@
 using UnityEngine;
 using UnityEngine.InputSystem;
+using System.Collections;
 
 [RequireComponent(typeof(CharacterController))]
-public class PlayerMovement : MonoBehaviour
+public class PlayerMovement3D : MonoBehaviour
 {
-    public Animator animator;
+    [Header("Movement")]
+    public Animator animator;           // Optional: for jump/land animations
     public float moveSpeed = 5f;
-    public float gravity = -9.81f;
-    public float verticalVelocity = 0f;
 
+    [Header("Jumping")]
+    public float gravity = -9.81f;
+    public float jumpForce = 5f;
+    public int maxJumps = 2;
+    private int jumpsRemaining;
+
+    [Header("Slam")]
+    public float slamPause = 0.2f;
+    public float slamForce = 25f;
+    private bool slamming;
+
+    private float verticalVelocity;
     private Vector2 moveInput;
     private Vector3 lastDirection = Vector3.forward;
     private CharacterController controller;
@@ -17,47 +29,87 @@ public class PlayerMovement : MonoBehaviour
     void Awake()
     {
         controller = GetComponent<CharacterController>();
+        jumpsRemaining = maxJumps;
     }
 
-    public void OnMove(InputAction.CallbackContext context)
+    public void OnMove(InputAction.CallbackContext ctx)
     {
-        moveInput = context.ReadValue<Vector2>();
+        moveInput = ctx.ReadValue<Vector2>();
+    }
+
+    public void OnJump(InputAction.CallbackContext ctx)
+    {
+        if (!ctx.performed || slamming) return;
+
+        // Jump if grounded or have jumps left
+        if (controller.isGrounded || jumpsRemaining > 0)
+        {
+            verticalVelocity = jumpForce;
+            if (!controller.isGrounded)
+                jumpsRemaining--;
+        }
+    }
+
+    public void OnSlam(InputAction.CallbackContext ctx)
+    {
+        if (!ctx.performed || slamming) return;
+
+        // Only slam if you're airborne
+        if (!controller.isGrounded)
+            StartCoroutine(DoSlam());
+    }
+
+    private IEnumerator DoSlam()
+    {
+        slamming = true;
+        // Pause in the air
+        float oldVel = verticalVelocity;
+        verticalVelocity = 0f;
+        yield return new WaitForSeconds(slamPause);
+
+        // Slam downward
+        verticalVelocity = -slamForce;
+        slamming = false;
     }
 
     void Update()
     {
-        // Filter small noisy inputs
-        Vector2 filteredInput = (moveInput.magnitude < 0.1f) ? Vector2.zero : moveInput;
-
-        // Isometric movement direction
-        Vector3 inputDir = new Vector3(filteredInput.x, 0f, filteredInput.y).normalized;
-        Vector3 isoDir = IsoRotation * inputDir;
-
-        // Save last known movement direction (if valid)
-        if (isoDir.sqrMagnitude > 0.01f)
+        // — Horizontal Movement & Facing —
+        Vector2 inp = moveInput.magnitude < .1f ? Vector2.zero : moveInput;
+        Vector3 planar = new Vector3(inp.x, 0, inp.y).normalized;
+        Vector3 isoDir = IsoRotation * planar;
+        if (isoDir.sqrMagnitude > .01f && !slamming)
             lastDirection = isoDir;
 
-        Vector3 horizontalMove = lastDirection * moveSpeed * filteredInput.magnitude;
+        Vector3 horiz = lastDirection * moveSpeed * inp.magnitude;
+        if (slamming) horiz = Vector3.zero;  // lock horizontal during slam
 
-        // Gravity
+        // — Gravity & Jump Reset —
         if (controller.isGrounded)
-            verticalVelocity = -0.5f;
-        else
-            verticalVelocity += gravity * Time.deltaTime;
-
-        // Final move vector
-        Vector3 finalMove = new Vector3(horizontalMove.x, verticalVelocity, horizontalMove.z);
-        controller.Move(finalMove * Time.deltaTime);
-
-        // Rotate to face last known movement direction
-        if (filteredInput.sqrMagnitude > 0.01f)
         {
-            Quaternion targetRot = Quaternion.LookRotation(lastDirection);
-            transform.rotation = Quaternion.Slerp(transform.rotation, targetRot, 10f * Time.deltaTime);
+            // Stick to ground
+            if (verticalVelocity < 0f) verticalVelocity = -0.5f;
+            // Reset jumps
+            jumpsRemaining = maxJumps - 1;
+        }
+        else
+        {
+            verticalVelocity += gravity * Time.deltaTime;
         }
 
-        // Animate
-        animator.SetFloat("Speed", filteredInput.magnitude);
+        // — Move Character —
+        Vector3 motion = new Vector3(horiz.x, verticalVelocity, horiz.z);
+        controller.Move(motion * Time.deltaTime);
+
+        // — Rotate to Face Movement —
+        if (inp.sqrMagnitude > .01f && !slamming)
+        {
+            Quaternion target = Quaternion.LookRotation(lastDirection);
+            transform.rotation = Quaternion.Slerp(transform.rotation, target, 10f * Time.deltaTime);
+        }
+
+        // — Animate Speed —
+        if (animator != null)
+            animator.SetFloat("Speed", inp.magnitude);
     }
 }
-

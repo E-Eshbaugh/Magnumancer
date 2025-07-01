@@ -11,6 +11,9 @@ public class WeaponData : ScriptableObject
     public int orbCost;
     public Sprite weaponIcon;
     public string description;
+    public string fireType;
+    public float recoil;
+    public GameObject ammoType;
 
     // Additional properties can be added as needed
 }

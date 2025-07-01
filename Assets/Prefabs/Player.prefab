@@ -11,6 +11,7 @@ GameObject:
   - component: {fileID: 499859174487956329}
   - component: {fileID: 195968306985607059}
   - component: {fileID: 8453635311192558870}
+  - component: {fileID: 553772029484670353}
   m_Layer: 3
   m_Name: GunPlaceHolder
   m_TagString: Untagged
@@ -64,11 +65,32 @@ MonoBehaviour:
   bulletPrefab: {fileID: 6997994299401861888, guid: 998a6807997784c46a5f2fb027daf411, type: 3}
   firePoint: {fileID: 499859174487956329}
   bulletSpeed: 20
-  fireRate: 10
-  triggerThreshold: 0.1
-  rumbleLow: 0.2
-  rumbleHigh: 0.5
-  rumbleDuration: 0.1
+--- !u!114 &553772029484670353
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 6526205957922899067}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 97f43e13f5c8bdc41b2e2f11f391e942, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  ammoBar: {fileID: 0}
+  ammoBarFull: {fileID: -2062426656, guid: 833c3ffd2f7675845aac0c2232d739b8, type: 3}
+  ammoBar80: {fileID: 2115074947, guid: 833c3ffd2f7675845aac0c2232d739b8, type: 3}
+  ammoBar60: {fileID: -632439397, guid: 833c3ffd2f7675845aac0c2232d739b8, type: 3}
+  ammoBar40: {fileID: 1388724155, guid: 833c3ffd2f7675845aac0c2232d739b8, type: 3}
+  ammoBar20: {fileID: -2112587343, guid: 833c3ffd2f7675845aac0c2232d739b8, type: 3}
+  ammoBarEmpty: {fileID: -1308985505, guid: 833c3ffd2f7675845aac0c2232d739b8, type: 3}
+  guns:
+  - {fileID: 11400000, guid: da1ae560b6a869f4c8a4cb39d809fe56, type: 2}
+  - {fileID: 11400000, guid: e9e3fa9f90558b84d8489bbdeb9f3b7a, type: 2}
+  - {fileID: 11400000, guid: ba907eeb7f55263498b3ec19d9243e67, type: 2}
+  - {fileID: 11400000, guid: 7fa214f30a53fc04d95a27b9379ec90b, type: 2}
+  currentGunIndex: 0
+  gunControl: {fileID: 2539188195041714078}
 --- !u!1001 &4578490373405997660
 PrefabInstance:
   m_ObjectHideFlags: 0
@@ -450,11 +472,35 @@ MonoBehaviour:
     m_ActionId: 852140f2-7766-474d-8707-702459ba45f3
     m_ActionName: 'Player/Interact[/Keyboard/e,/XInputControllerWindows/buttonNorth]'
   - m_PersistentCalls:
-      m_Calls: []
+      m_Calls:
+      - m_Target: {fileID: 2238920440627548857}
+        m_TargetAssemblyTypeName: 
+        m_MethodName: 
+        m_Mode: 1
+        m_Arguments:
+          m_ObjectArgument: {fileID: 0}
+          m_ObjectArgumentAssemblyTypeName: 
+          m_IntArgument: 0
+          m_FloatArgument: 0
+          m_StringArgument: 
+          m_BoolArgument: 0
+        m_CallState: 2
     m_ActionId: 27c5f898-bc57-4ee1-8800-db469aca5fe3
     m_ActionName: 'Player/Crouch[/XInputControllerWindows/buttonEast,/Keyboard/c]'
   - m_PersistentCalls:
-      m_Calls: []
+      m_Calls:
+      - m_Target: {fileID: 2238920440627548857}
+        m_TargetAssemblyTypeName: PlayerMovement, Assembly-CSharp
+        m_MethodName: OnJump
+        m_Mode: 0
+        m_Arguments:
+          m_ObjectArgument: {fileID: 0}
+          m_ObjectArgumentAssemblyTypeName: UnityEngine.Object, UnityEngine
+          m_IntArgument: 0
+          m_FloatArgument: 0
+          m_StringArgument: 
+          m_BoolArgument: 0
+        m_CallState: 2
     m_ActionId: f1ba0d36-48eb-4cd5-b651-1c94a6531f70
     m_ActionName: 'Player/Jump[/Keyboard/space,/XInputControllerWindows/buttonSouth]'
   - m_PersistentCalls:
@@ -557,8 +603,11 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   animator: {fileID: 536566785280687208}
   moveSpeed: 5
-  gravity: -9.81
-  verticalVelocity: 0
+  gravity: -14
+  jumpForce: 5
+  maxJumps: 2
+  slamPause: 0.2
+  slamForce: 25
 --- !u!136 &4489218736994952151
 CapsuleCollider:
   m_ObjectHideFlags: 0
@@ -618,15 +667,9 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   gunHolder: {fileID: 499859174487956329}
   gunPrefabs:
-  - {fileID: 783428057543782658, guid: d9581251f8e325d4893b0a3f4882ea22, type: 3}
   - {fileID: 5155063420842357622, guid: 5e92427897877eb4ca1ffe06453dce65, type: 3}
-  - {fileID: 8010855702920727454, guid: 7af6f5c96bc1c254f95be7ae3f59bd7e, type: 3}
-  - {fileID: 6402438624428262626, guid: f15a895fe7bb29f4a821640ec940f8ed, type: 3}
   - {fileID: 890660743820011744, guid: 1edea87fafd4eda479b04ef1c1f8ed95, type: 3}
-  - {fileID: 2190313348958096730, guid: c1750b31497a35742ae917658e02dd8d, type: 3}
-  - {fileID: 4361711896178636241, guid: eac01db5101c2b34391afd8f13038949, type: 3}
   - {fileID: 550212131937212752, guid: c4cdf604f3862674ca2f584e4983859a, type: 3}
-  - {fileID: 7034189242565825116, guid: cb3e3b2d69afbcc4fb96ea4a38eaea5d, type: 3}
   - {fileID: 5167352523380930853, guid: 3b223e1e99f294a4392b3ae777722d38, type: 3}
   gunRotation: {x: 0, y: 0, z: 90}
   currentGunIndex: 0

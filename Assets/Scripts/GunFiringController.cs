@@ -125,64 +125,7 @@ public class GunAmmo : MonoBehaviour
 
     public void updateGun()
     {
-        // Gun Setup ====================================================
-        gunName = gunRenderer.sprite.name;
-        //mini gun
-        if (gunName == "1_50")
-        {
-            maxAmmoCount = 150;
-            ammoCount = maxAmmoCount;
-            damage = 10;
-            fireRate = 0.075f;
-            fireType = "auto";
-            weight = 50;
-        }
-        //heavy sniper
-        else if (gunName == "1_49")
-        {
-            maxAmmoCount = 10;
-            ammoCount = maxAmmoCount;
-            damage = 50;
-            fireRate = 1f;
-            fireType = "semi";
-            weight = 30;
-        }
-        //ak
-        else if (gunName == "1_56")
-        {
-            maxAmmoCount = 25;
-            ammoCount = maxAmmoCount;
-            damage = 30;
-            fireRate = 0.15f;
-            fireType = "auto";
-            weight = 20;
-        }
-        //smg
-        else if (gunName == "1_62")
-        {
-            maxAmmoCount = 50;
-            ammoCount = maxAmmoCount;
-            damage = 20;
-            fireRate = 0.1f;
-            fireType = "auto";
-            weight = 10;
-        }
-
-        //fire point setup ================================        
-        Vector2 gunSize = gunRenderer.bounds.size;
-        firePoint.localPosition = new Vector3(gunSize.x, 0f, 0f);
-
-        // ================================================
-
-        if (animator == null)
-            animator = fireSprite.GetComponent<Animator>();
-
-        if (newController != null)
-        {
-            animator.runtimeAnimatorController = newController;
-        }
-
-        playerController.walkSpeed = 7f - (weight / 10f);
+        
 
     }
 }

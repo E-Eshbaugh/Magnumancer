@@ -1,76 +1,89 @@
 using UnityEngine;
 using UnityEngine.InputSystem;
-using System.Collections;
 
 public class FireController3D : MonoBehaviour
 {
-    [Header("References")]
-    public GameObject bulletPrefab;   // Your Bullet prefab
-    public Transform firePoint;      // The muzzle end Transform
+    public static FireController3D Instance { get; private set; }
 
-    [Header("Firing Settings")]
-    public float bulletSpeed = 20f;  // Initial speed
-    public float fireRate = 10f;  // Shots per second
-    public float triggerThreshold = 0.1f;
+    [Header("Bullet Setup")]
+    public GameObject bulletPrefab;       // assign your bullet prefab here
+    public Transform  firePoint;          // muzzle/exit point of the gun
+    public float      bulletSpeed = 20f;  // velocity applied to each bullet
 
-    private float nextAllowedFireTime = 0f;
+    // internal timers for rate‐limiting
+    private float nextSemiTime = 0f;
+    private float nextAutoTime = 0f;
 
-    [Header("Haptics")]
-    public float rumbleLow = 0.2f;   // low-frequency motor (heavy)
-    public float rumbleHigh = 0.5f;   // high-frequency motor (buzz)
-    public float rumbleDuration = 0.1f;
-
-    void Update()
+    void Awake()
     {
-        var pad = Gamepad.current;
-        if (pad == null) return;
+        // singleton pattern
+        if (Instance != null && Instance != this) Destroy(gameObject);
+        else Instance = this;
+    }
 
-        float rt = pad.rightTrigger.ReadValue();
+    /// <summary>
+    /// Fires once per trigger press, at a maximum rate of attackSpeed shots/sec.
+    /// Call from your Update: FireController3D.semiFire(attackSpeed, Time.time);
+    /// </summary>
+    public static void semiFire(float attackSpeed, float currentTime, GameObject ammoType)
+    {
+        // only proceed if our singleton is valid
+        if (Instance == null) return;
 
-        // Fire code
-        if (rt > triggerThreshold && Time.time >= nextAllowedFireTime)
+        // check for a new button‐down event and cooldown
+        if (Gamepad.current != null
+            && Gamepad.current.rightTrigger.wasPressedThisFrame
+            && currentTime >= Instance.nextSemiTime)
         {
-            Shoot();
-            nextAllowedFireTime = Time.time + 1f / fireRate;
+            Instance.Shoot(ammoType);
+            Instance.nextSemiTime = currentTime + 1f / attackSpeed;
         }
+    }
 
-        // Rumble while trigger is held
-        if (rt > triggerThreshold)
+    /// <summary>
+    /// Fires repeatedly while holding the trigger, at attackSpeed shots/sec.
+    /// Call from your Update: FireController3D.autoFire(attackSpeed, Time.time);
+    /// </summary>
+    public static void autoFire(float attackSpeed, float currentTime, GameObject ammoType)
+    {
+        if (Instance == null) return;
+
+        // check for trigger held beyond a small threshold and cooldown
+        if (Gamepad.current != null
+            && Gamepad.current.rightTrigger.ReadValue() > 0.1f
+            && currentTime >= Instance.nextAutoTime)
         {
-            pad.SetMotorSpeeds(rumbleLow, rumbleHigh);
+            Instance.Shoot(ammoType);
+            Instance.nextAutoTime = currentTime + 1f / attackSpeed;
+        }
+    }
+
+    /// <summary>
+    /// Spawns the bullet prefab and gives it velocity.
+    /// </summary>
+    private void Shoot(GameObject ammoType)
+    {
+        if (bulletPrefab == null || firePoint == null) return;
+
+        bulletPrefab = ammoType;
+
+        // Calculate flat firing direction (XZ plane)
+        Vector3 dir = -firePoint.forward;
+        dir.y = 0f;
+        dir.Normalize();
+
+        // Spawn the bullet
+        GameObject go = Instantiate(bulletPrefab, firePoint.position, Quaternion.LookRotation(dir));
+
+        // Initialize its mover
+        var mover = go.GetComponent<Bullet>();
+        if (mover != null)
+        {
+            mover.Initialize(dir);
         }
         else
         {
-            pad.SetMotorSpeeds(0f, 0f);
+            Debug.LogWarning("Bullet prefab needs a Bullet component!");
         }
     }
-
-    private void OnDisable()
-    {
-        // Make sure rumble stops if this component is disabled
-        if (Gamepad.current != null)
-            Gamepad.current.SetMotorSpeeds(0f, 0f);
-    }
-
-    private void Shoot()
-    {
-        // Determine the flat direction
-        Vector3 flatDir = firePoint.forward;
-        flatDir.y = 0f;
-        flatDir.Normalize();
-
-        // Calculate the spawn rotation so the bullet's Z+ faces flatDir
-        Quaternion spawnRot = Quaternion.LookRotation(flatDir, Vector3.up);
-
-        // Optionally push the spawn point a bit forward so it doesn't collide with the gun
-        Vector3 spawnPos = firePoint.position + flatDir * 0.2f;
-
-        // Instantiate with the correct rotation
-        GameObject go = Instantiate(bulletPrefab, spawnPos, spawnRot);
-
-        var bullet = go.GetComponent<Bullet>();
-        bullet.speed = -bulletSpeed;
-        bullet.Fire(flatDir);
-    }
-
 }

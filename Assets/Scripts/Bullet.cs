@@ -1,69 +1,68 @@
 using UnityEngine;
 using System.Collections;
 
-[RequireComponent(typeof(Collider))]
 public class Bullet : MonoBehaviour
 {
-    [Header("Movement")]
-    public float speed    = 20f;
-    public float lifetime = 5f;
+    [Tooltip("Speed in units/sec")]
+    public float speed = 20f;
 
-    [Header("Flash")]
-    public Light bulletLight;                 // Assign in prefab (child light)
-    public float flashIntensity   = 5f;       // peak intensity on hit
-    public float flashDuration    = 0.1f;     // how long to hold the flash
-    public GameObject explosionVFXPrefab;     // optional
+    [Header("Explosion Flash")]
+    [Tooltip("How bright the light gets when you hit something")]
+    public float flashIntensity = 8f;
+    [Tooltip("How long (seconds) the flash lasts before destroying the bullet")]
+    public float flashDuration = 0.1f;
 
-    private Vector3 direction;
-    private float   originalIntensity;
+    private Vector3 _direction;
+    private Light   _light;
+    private float   _originalIntensity;
 
     void Start()
     {
-        Destroy(gameObject, lifetime);
-        if (bulletLight != null)
-            originalIntensity = bulletLight.intensity;
+        // Cache the Light component (on this object or in children)
+        _light = GetComponentInChildren<Light>();
+        if (_light != null)
+            _originalIntensity = _light.intensity;
+        else
+            Debug.LogWarning("Bullet: no Light found for flash effect.");
+    }
+
+    /// <summary>
+    /// Call this right after you instantiate the bullet.
+    /// </summary>
+    public void Initialize(Vector3 dir)
+    {
+        _direction = dir.normalized;
     }
 
     void Update()
     {
-        Rigidbody rb = GetComponent<Rigidbody>();
-        rb.linearVelocity = direction * speed;
-    }
-
-    public void Fire(Vector3 dir)
-    {
-        direction = dir.normalized;
+        transform.position += _direction * speed * Time.deltaTime;
     }
 
     void OnCollisionEnter(Collision collision)
     {
-        // Spawn explosion VFX if you have one
-        if (explosionVFXPrefab != null)
-            Instantiate(explosionVFXPrefab, transform.position, Quaternion.identity);
-
-        // Flash the light, then destroy
-        if (bulletLight != null)
-            StartCoroutine(FlashAndDie());
+        // Start the flash & destroy sequence
+        if (_light != null)
+            StartCoroutine(FlashAndDestroy());
         else
             Destroy(gameObject);
     }
 
-    private IEnumerator FlashAndDie()
+    private IEnumerator FlashAndDestroy()
     {
-        // Ramp up
-        bulletLight.intensity = flashIntensity;
-        // Optional: also increase range for a quick “bang”
-        float origRange = bulletLight.range;
-        bulletLight.range = origRange * 2f;
+        // Crank up the light
+        _light.intensity = flashIntensity;
 
+        // Wait for the flash duration
         yield return new WaitForSeconds(flashDuration);
 
-        // Reset (or skip if you’re about to destroy)
-        bulletLight.intensity = originalIntensity;
-        bulletLight.range     = origRange;
+        // (Optional) reset in case you have pooled bullets
+        _light.intensity = _originalIntensity;
 
+        // Finally, destroy the bullet
         Destroy(gameObject);
     }
 }
+
 
 

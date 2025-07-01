@@ -21,3 +21,6 @@ MonoBehaviour:
   weaponIcon: {fileID: 1541817281, guid: 88365eb93f90dc0448eb4a39ecadd679, type: 3}
   description: Bursts of flaming lead singe anything in its path. Aggressive and
     loud.
+  fireType: auto
+  recoil: 0
+  ammoType: {fileID: 0}

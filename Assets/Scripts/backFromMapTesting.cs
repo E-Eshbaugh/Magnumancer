@@ -13,7 +13,7 @@ public class backFromMapTesting : MonoBehaviour
     // Update is called once per frame
     void Update()
     {
-        if (Gamepad.current.bButton.wasPressedThisFrame)
+        if (Gamepad.current.yButton.wasPressedThisFrame)
         {
             SceneManager.LoadScene("MainMenu");
         }

@@ -10,13 +10,16 @@ MonoBehaviour:
   m_Enabled: 1
   m_EditorHideFlags: 0
   m_Script: {fileID: 11500000, guid: 3b1075652dd939146a7c0fa3dc80ba42, type: 3}
-  m_Name: AR
+  m_Name: MP4
   m_EditorClassIdentifier: 
-  weaponName: Blackmaw
-  damage: 12
-  ammoCapacity: 20
-  attackSpeed: 5
+  weaponName: Brassfang
+  damage: 8
+  ammoCapacity: 32
+  attackSpeed: 8
   weight: 2
   orbCost: 4
-  weaponIcon: {fileID: -854721862, guid: 88365eb93f90dc0448eb4a39ecadd679, type: 3}
-  description: Hungers for battle. Heavy recoil, heavier impact.
+  weaponIcon: {fileID: -1649607643, guid: 88365eb93f90dc0448eb4a39ecadd679, type: 3}
+  description: Sleek and deadly. Balanced fire rate and accuracy in tight quarters.
+  fireType: auto
+  recoil: 0
+  ammoType: {fileID: 0}
