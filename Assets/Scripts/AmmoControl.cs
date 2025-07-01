@@ -15,9 +15,10 @@ public class AmmoControl : MonoBehaviour
 
     // runtime state
     private WeaponData currentGun;
-    private int        ammoCount;
-    private float      nextFireTime;
+    private int ammoCount;
+    private float nextFireTime;
     private GameObject ammoType;
+    private float recoil;
 
     void Start()
     {
@@ -26,6 +27,7 @@ public class AmmoControl : MonoBehaviour
         currentGun = guns[currentGunIndex];
         ammoCount = currentGun.ammoCapacity;
         ammoType = currentGun.ammoType;
+        recoil = currentGun.recoil;
     }
 
     void Update()
@@ -37,6 +39,8 @@ public class AmmoControl : MonoBehaviour
             currentGun = guns[currentGunIndex];
             ammoCount = currentGun.ammoCapacity;
             ammoType = currentGun.ammoType;
+            recoil = currentGun.recoil;
+
             nextFireTime = 0f;
         }
 
@@ -54,7 +58,7 @@ public class AmmoControl : MonoBehaviour
         {
             if (pad.rightTrigger.wasPressedThisFrame && ammoCount > 0 && now >= nextFireTime)
             {
-                FireController3D.semiFire(currentGun.attackSpeed, now, ammoType);
+                FireController3D.semiFire(currentGun.attackSpeed, now, ammoType, recoil);
                 ammoCount--;
                 nextFireTime = now + 1f / currentGun.attackSpeed;
             }
@@ -64,7 +68,7 @@ public class AmmoControl : MonoBehaviour
             // full-auto: as long as you hold past a small threshold
             if (rt > 0.1f && ammoCount > 0 && now >= nextFireTime)
             {
-                FireController3D.autoFire(currentGun.attackSpeed, now, ammoType);
+                FireController3D.autoFire(currentGun.attackSpeed, now, ammoType, recoil);
                 ammoCount--;
                 nextFireTime = now + 1f / currentGun.attackSpeed;
             }
