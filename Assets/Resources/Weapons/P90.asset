@@ -15,11 +15,11 @@ MonoBehaviour:
   weaponName: Bloodcurrent
   damage: 6
   ammoCapacity: 40
-  attackSpeed: 10
+  attackSpeed: 7
   weight: 2
   orbCost: 5
   weaponIcon: {fileID: -379827944, guid: 88365eb93f90dc0448eb4a39ecadd679, type: 3}
   description: A torrent of crimson lead. Fast, chaotic, and close-range lethal.
   fireType: auto
-  recoil: 0
+  recoil: 0.2
   ammoType: {fileID: 6997994299401861888, guid: 4d849fc1976060946ae9958de4546af5, type: 3}

@@ -21,5 +21,5 @@ MonoBehaviour:
   weaponIcon: {fileID: 1835304517, guid: 88365eb93f90dc0448eb4a39ecadd679, type: 3}
   description: Unpolished but fierce. Roars with every pull of the trigger.
   fireType: auto
-  recoil: 0
+  recoil: 0.5
   ammoType: {fileID: 6997994299401861888, guid: 998a6807997784c46a5f2fb027daf411, type: 3}

@@ -21,5 +21,5 @@ MonoBehaviour:
   weaponIcon: {fileID: 136629142, guid: 88365eb93f90dc0448eb4a39ecadd679, type: 3}
   description: A brutal relic that sends heavy steel with bone-snapping force.
   fireType: semi
-  recoil: 0
+  recoil: 1.5
   ammoType: {fileID: 6997994299401861888, guid: 86affdb9b46a4f84a87b8d37eb097266, type: 3}

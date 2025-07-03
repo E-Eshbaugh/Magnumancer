@@ -7,14 +7,10 @@ public class FireController3D : MonoBehaviour
     public static FireController3D Instance { get; private set; }
 
     [Header("Default Bullet Setup")]
-    [Tooltip("Fallback bullet prefab if none is provided by the weapon")]
     public GameObject bulletPrefab;
-    [Tooltip("Muzzle point of your current weapon")]
     public Transform  firePoint;
-    [Tooltip("Speed of the bullet if it has a Rigidbody or a mover script")]
     public float      bulletSpeed = 20f;
 
-    // Rate‐limit timers
     private float nextSemiTime = 0f;
     private float nextAutoTime = 0f;
 
@@ -24,89 +20,81 @@ public class FireController3D : MonoBehaviour
         else Instance = this;
     }
 
-    /// <summary>
-    /// Semi‐auto: one shot per press, cooldown by attackSpeed.
-    /// </summary>
     public static void semiFire(float attackSpeed, float currentTime, GameObject ammoType, float recoil)
     {
-        if (Instance == null) return;
+        if (Instance == null || Gamepad.current == null) return;
 
-        if (Gamepad.current != null
-            && Gamepad.current.rightTrigger.wasPressedThisFrame
+        if (Gamepad.current.rightTrigger.wasPressedThisFrame
             && currentTime >= Instance.nextSemiTime)
         {
-            Instance.Shoot(ammoType, recoil);
+            // pass applySpray = false for perfectly straight shots
+            Instance.Shoot(ammoType, recoil, applySpray: false);
             Instance.nextSemiTime = currentTime + 1f / attackSpeed;
         }
     }
 
-    /// <summary>
-    /// Full‐auto: fires while trigger held, cooldown by attackSpeed.
-    /// </summary>
     public static void autoFire(float attackSpeed, float currentTime, GameObject ammoType, float recoil)
     {
-        if (Instance == null) return;
+        if (Instance == null || Gamepad.current == null) return;
 
-        if (Gamepad.current != null
-            && Gamepad.current.rightTrigger.ReadValue() > 0.1f
+        if (Gamepad.current.rightTrigger.ReadValue() > 0.1f
             && currentTime >= Instance.nextAutoTime)
         {
-            Instance.Shoot(ammoType, recoil);
+            // pass applySpray = true for spread
+            Instance.Shoot(ammoType, recoil, applySpray: true);
             Instance.nextAutoTime = currentTime + 1f / attackSpeed;
         }
     }
 
-    /// <summary>
-    /// Internal spawn + recoil logic.
-    /// </summary>
-    private void Shoot(GameObject ammoType, float recoil)
+    private void Shoot(GameObject ammoType, float recoil, bool applySpray)
     {
-        // choose the prefab to instantiate
         var prefab = ammoType != null ? ammoType : bulletPrefab;
         if (prefab == null || firePoint == null) return;
 
-        // Determine flat firing direction (XZ plane)
-        Vector3 dir = -firePoint.forward;
-        dir.y = 0f;
-        dir.Normalize();
+        // Determine base direction (flat on XZ)
+        Vector3 baseDir = -firePoint.forward; 
+        baseDir.y = 0f;
+        baseDir.Normalize();
 
-        // Spawn bullet at the muzzle
-        GameObject go = Instantiate(prefab, firePoint.position, Quaternion.LookRotation(dir, Vector3.up));
+        Vector3 finalDir = baseDir;
 
-        // Initialize mover or rigidbody on bullet
-        var mover = go.GetComponent<Bullet>();
-        if (mover != null)
+        if (applySpray)
         {
-            mover.Initialize(dir);
+            // Only auto‐fire gets spread
+            float maxAngle = Mathf.Lerp(0f, 10f, recoil);
+            Vector3 yawed = Quaternion.AngleAxis(Random.Range(-maxAngle, maxAngle), Vector3.up) * baseDir;
+            finalDir = Quaternion.AngleAxis(Random.Range(-maxAngle, maxAngle), firePoint.right) * yawed;
+            finalDir.Normalize();
         }
+
+        // spawn offset so we don't collide with our own gun
+        Vector3 spawnPos = firePoint.position + finalDir * 0.5f;
+        GameObject go = Instantiate(prefab, spawnPos, Quaternion.LookRotation(finalDir, Vector3.up));
+
+        // try mover, else rb
+        var mover = go.GetComponent<Bullet>();
+        if (mover != null) mover.Initialize(finalDir);
         else
         {
             var rb = go.GetComponent<Rigidbody>();
-            if (rb != null) rb.linearVelocity = dir * bulletSpeed;
+            if (rb != null) rb.linearVelocity = finalDir * bulletSpeed;
         }
 
-        // Trigger controller rumble proportional to recoil
-        if (Gamepad.current != null && recoil > 0f)
-        {
-            // map recoil [0..1+] to motor speeds (clamped)
-            StartCoroutine(RecoilPulse(Gamepad.current, Mathf.Clamp01(recoil * 0.7f), Mathf.Clamp01(recoil * 1f)));
-        }
+        // always rumble
+        if (recoil > 0f)
+            StartCoroutine(RecoilPulse(
+                Gamepad.current,
+                Mathf.Clamp01(recoil * 0.7f),
+                Mathf.Clamp01(recoil * 1.5f)
+            ));
     }
 
-    private IEnumerator RecoilPulse(Gamepad pad, float baseLow, float baseHigh)
+    private IEnumerator RecoilPulse(Gamepad pad, float low, float high)
     {
-        // Phase 1: sharp punch
-        pad.SetMotorSpeeds(
-            Mathf.Clamp01(baseLow * 1.2f), 
-            Mathf.Clamp01(baseHigh * 1.5f)
-        );
-        yield return new WaitForSeconds(0.05f); // very brief spike
-
-        // Phase 2: softer tail
-        pad.SetMotorSpeeds(baseLow * 0.5f, baseHigh * 0.7f);
-        yield return new WaitForSeconds(0.1f);  // linger a bit longer
-
-        // Stop
+        pad.SetMotorSpeeds(low * 1.2f, high * 1.5f);
+        yield return new WaitForSeconds(0.05f);
+        pad.SetMotorSpeeds(low * 0.5f, high * 0.7f);
+        yield return new WaitForSeconds(0.1f);
         pad.SetMotorSpeeds(0f, 0f);
     }
 
