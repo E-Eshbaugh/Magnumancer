@@ -23,4 +23,8 @@ MonoBehaviour:
     loud.
   fireType: auto
   recoil: 0
-  ammoType: {fileID: 0}
+  ammoType: {fileID: 6997994299401861888, guid: 8de6b050532025b4a891587baeb511f6, type: 3}
+  laserRange: 0
+  isShotgun: 0
+  specialBulletType: {fileID: 6997994299401861888, guid: 8de6b050532025b4a891587baeb511f6, type: 3}
+  baseAmmoType: {fileID: 6997994299401861888, guid: 8de6b050532025b4a891587baeb511f6, type: 3}

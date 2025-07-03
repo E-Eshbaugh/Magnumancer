@@ -24,3 +24,7 @@ MonoBehaviour:
   fireType: auto
   recoil: 0.8
   ammoType: {fileID: 6997994299401861888, guid: 2ec29fc9207248740970443e058a84f0, type: 3}
+  laserRange: 0
+  isShotgun: 0
+  specialBulletType: {fileID: 6997994299401861888, guid: 2ec29fc9207248740970443e058a84f0, type: 3}
+  baseAmmoType: {fileID: 6997994299401861888, guid: 2ec29fc9207248740970443e058a84f0, type: 3}

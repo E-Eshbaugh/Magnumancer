@@ -22,4 +22,8 @@ MonoBehaviour:
   description: A torrent of crimson lead. Fast, chaotic, and close-range lethal.
   fireType: auto
   recoil: 0.2
-  ammoType: {fileID: 6997994299401861888, guid: 4d849fc1976060946ae9958de4546af5, type: 3}
+  ammoType: {fileID: 6997994299401861888, guid: 8de6b050532025b4a891587baeb511f6, type: 3}
+  laserRange: 0
+  isShotgun: 0
+  specialBulletType: {fileID: 6997994299401861888, guid: 8de6b050532025b4a891587baeb511f6, type: 3}
+  baseAmmoType: {fileID: 6997994299401861888, guid: 8de6b050532025b4a891587baeb511f6, type: 3}
