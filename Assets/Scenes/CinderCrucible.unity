@@ -11929,6 +11929,14 @@ PrefabInstance:
       propertyPath: ammoBar
       value: 
       objectReference: {fileID: 887969806}
+    - target: {fileID: 553772029484670353, guid: c5f5e18deb66d6e42a0a5ba121e25b7a, type: 3}
+      propertyPath: 'guns.Array.data[0]'
+      value: 
+      objectReference: {fileID: 11400000, guid: a9185a17e638c0b43bc9521d7c8a0e2b, type: 2}
+    - target: {fileID: 2539188195041714078, guid: c5f5e18deb66d6e42a0a5ba121e25b7a, type: 3}
+      propertyPath: 'gunPrefabs.Array.data[0]'
+      value: 
+      objectReference: {fileID: 8929761037137178150, guid: f7d3eb3902e70d048b658d11462d0b00, type: 3}
     - target: {fileID: 3696181430366619405, guid: c5f5e18deb66d6e42a0a5ba121e25b7a, type: 3}
       propertyPath: m_Name
       value: Player

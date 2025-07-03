@@ -6,7 +6,7 @@ public class GunOrbitController : MonoBehaviour
     public Transform player;
     public float orbitRadius = 2f;
     public float fixedHeight = 1.5f;
-    public float tilt = -45f;
+    public float tilt = 0f;
 
     private Vector3 currentWorldOffset;
 

@@ -3,7 +3,17 @@ guid: 37b47e5c259a4724ba1e2158b0eacade
 ModelImporter:
   serializedVersion: 22200
   internalIDToNameTable: []
-  externalObjects: {}
+  externalObjects:
+  - first:
+      type: UnityEngine:Texture2D
+      assembly: UnityEngine.CoreModule
+      name: shotgunfinal_color
+    second: {fileID: 2800000, guid: 46df2f84385c8b144a65b08c4ed7228e, type: 3}
+  - first:
+      type: UnityEngine:Texture2D
+      assembly: UnityEngine.CoreModule
+      name: shotgunfinal_normal
+    second: {fileID: 2800000, guid: 3ee1d8cd371aade418e894f3010f0177, type: 3}
   materials:
     materialImportMode: 2
     materialName: 0

@@ -66,12 +66,27 @@ public class AmmoControl : MonoBehaviour
         UpdateAmmoBar();
 
         // 5) Fire logic
-        // Semi-auto
-        if (currentGun.fireType == "semi")
+        //shotgun fire
+        if (currentGun.fireType == "shotgun")
         {
             if (pad.rightTrigger.wasPressedThisFrame
-                && ammoCount > 0
-                && currentTime >= nextFireTime)
+                    && ammoCount > 0
+                    && currentTime >= nextFireTime && currentGun.ammoType == currentGun.baseAmmoType)
+            {
+                FireController3D.shotgunFire(
+                    currentGun.attackSpeed,
+                    currentTime,
+                    toFire,
+                    currentGun.recoil,
+                    currentGun.pelletCount,
+                    currentGun.spreadAngle
+                );
+                ammoCount--;
+                nextFireTime = currentTime + 1f / currentGun.attackSpeed;
+            }
+            else if (pad.rightTrigger.wasPressedThisFrame
+                    && ammoCount > 0
+                    && currentTime >= nextFireTime && currentGun.ammoType == currentGun.specialBulletType)
             {
                 FireController3D.semiFire(
                     currentGun.attackSpeed,
@@ -83,23 +98,40 @@ public class AmmoControl : MonoBehaviour
                 nextFireTime = currentTime + 1f / currentGun.attackSpeed;
             }
         }
-        // Full-auto
-        else if (currentGun.fireType == "auto")
-        {
-            if (pad.rightTrigger.ReadValue() > 0.1f
-                && ammoCount > 0
-                && currentTime >= nextFireTime)
+        // Semi-auto
+            if (currentGun.fireType == "semi")
             {
-                FireController3D.autoFire(
-                    currentGun.attackSpeed,
-                    currentTime,
-                    toFire,
-                    currentGun.recoil
-                );
-                ammoCount--;
-                nextFireTime = currentTime + 1f / currentGun.attackSpeed;
+                if (pad.rightTrigger.wasPressedThisFrame
+                    && ammoCount > 0
+                    && currentTime >= nextFireTime)
+                {
+                    FireController3D.semiFire(
+                        currentGun.attackSpeed,
+                        currentTime,
+                        toFire,
+                        currentGun.recoil
+                    );
+                    ammoCount--;
+                    nextFireTime = currentTime + 1f / currentGun.attackSpeed;
+                }
             }
-        }
+            // Full-auto
+            else if (currentGun.fireType == "auto")
+            {
+                if (pad.rightTrigger.ReadValue() > 0.1f
+                    && ammoCount > 0
+                    && currentTime >= nextFireTime)
+                {
+                    FireController3D.autoFire(
+                        currentGun.attackSpeed,
+                        currentTime,
+                        toFire,
+                        currentGun.recoil
+                    );
+                    ammoCount--;
+                    nextFireTime = currentTime + 1f / currentGun.attackSpeed;
+                }
+            }
     }
 
     private void UpdateAmmoBar()

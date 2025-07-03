@@ -41,7 +41,13 @@ public class Bullet : MonoBehaviour
 
     void OnCollisionEnter(Collision collision)
     {
-        // Start the flash & destroy sequence
+        // Start the flash & destroy sequence if not hitting another bullet
+        //check if colliding with another bullet
+        if (collision.gameObject.CompareTag("Bullet"))
+        {
+            return;
+        }
+
         if (_light != null)
             StartCoroutine(FlashAndDestroy());
         else
