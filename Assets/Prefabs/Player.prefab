@@ -91,9 +91,10 @@ MonoBehaviour:
   - {fileID: 11400000, guid: e9e3fa9f90558b84d8489bbdeb9f3b7a, type: 2}
   - {fileID: 11400000, guid: ba907eeb7f55263498b3ec19d9243e67, type: 2}
   - {fileID: 11400000, guid: 7fa214f30a53fc04d95a27b9379ec90b, type: 2}
-  currentGunIndex: 0
   gunControl: {fileID: 2539188195041714078}
   currentGun: {fileID: 0}
+  ammoCount: 0
+  toFire: {fileID: 0}
 --- !u!114 &1738727186408261700
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -799,6 +800,7 @@ MonoBehaviour:
   - {fileID: 550212131937212752, guid: c4cdf604f3862674ca2f584e4983859a, type: 3}
   - {fileID: 5167352523380930853, guid: 3b223e1e99f294a4392b3ae777722d38, type: 3}
   gunRotation: {x: 0, y: 0, z: 90}
+  ammoControl: {fileID: 553772029484670353}
   currentGunIndex: 0
   gunPrefabsLength: 0
 --- !u!4 &4035411916356951479 stripped

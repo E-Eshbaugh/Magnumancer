@@ -1,3 +1,4 @@
+using JetBrains.Annotations;
 using UnityEngine;
 
 [CreateAssetMenu(menuName = "Spells/Weapon")]
@@ -15,6 +16,9 @@ public class WeaponData : ScriptableObject
     public float recoil;
     public GameObject ammoType;
     public float laserRange;
+    public bool isShotgun;
+    public GameObject specialBulletType;
+    public GameObject baseAmmoType;
 
     // Additional properties can be added as needed
 }

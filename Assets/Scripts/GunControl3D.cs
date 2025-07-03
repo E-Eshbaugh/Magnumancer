@@ -9,6 +9,7 @@ public class GunSwapControl : MonoBehaviour
 
     private GameObject currentGun;
     public Vector3 gunRotation;
+    public AmmoControl ammoControl;
     public int currentGunIndex = 0;
     public int gunPrefabsLength;
 
@@ -20,6 +21,7 @@ public class GunSwapControl : MonoBehaviour
         currentGun = Instantiate(gunPrefabs[index], gunHolder);
         currentGun.transform.localPosition = Vector3.zero;
         currentGun.transform.localRotation = Quaternion.Euler(gunRotation);
+        ammoControl.currentGun.ammoType = ammoControl.currentGun.baseAmmoType;
     }
     // Start is called once before the first execution of Update after the MonoBehaviour is created
     void Start()
