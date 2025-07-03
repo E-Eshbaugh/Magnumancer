@@ -13,7 +13,7 @@ public class AmmoControl : MonoBehaviour
     public GunSwapControl  gunControl;
 
     // runtime state
-    private int         currentGunIndex;
+    public int         currentGunIndex;
     public WeaponData  currentGun;
     public int         ammoCount;
     private float       nextFireTime;

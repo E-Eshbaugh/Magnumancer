@@ -21,6 +21,11 @@ public class WeaponData : ScriptableObject
     public bool isShotgun;
     public int pelletCount = 5;
     public float spreadAngle = 15f;
+    [Header("Heavy Weapon Abilities")]
+    public bool heavyWeapon;
+    [Header("Smg Abilities")]
+    public bool akimbo;
+
     [Header("Bullet Abilities")]
     public GameObject specialBulletType;
     public GameObject baseAmmoType;

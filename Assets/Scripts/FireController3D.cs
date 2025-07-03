@@ -28,7 +28,7 @@ public class FireController3D : MonoBehaviour
             && currentTime >= Instance.nextSemiTime)
         {
             // pass applySpray = false for perfectly straight shots
-            Instance.Shoot(ammoType, recoil, 0);
+            Instance.Shoot(ammoType, recoil, applySpray: false, spreadAngle: 0f);
             Instance.nextSemiTime = currentTime + 1f / attackSpeed;
         }
     }
@@ -47,7 +47,7 @@ public class FireController3D : MonoBehaviour
             && currentTime >= Instance.nextSemiTime)
         {
             for (int i = 0; i < pelletCount; i++)
-                Instance.Shoot(ammoType, recoil, spreadAngle);
+                Instance.Shoot(ammoType, recoil, applySpray: true,  spreadAngle: spreadAngle);
 
             Instance.nextSemiTime = currentTime + 1f / attackSpeed;
         }
@@ -61,55 +61,65 @@ public class FireController3D : MonoBehaviour
             && currentTime >= Instance.nextAutoTime)
         {
             // pass applySpray = true for spread
-            Instance.Shoot(ammoType, recoil, 0);
+            Instance.Shoot(ammoType, recoil, applySpray: true,  spreadAngle: 0f);
             Instance.nextAutoTime = currentTime + 1f / attackSpeed;
         }
     }
 
-    private void Shoot(GameObject ammoType, float recoil, float spreadAngle)
+    private void Shoot(GameObject ammoType, float recoil, bool applySpray, float spreadAngle)
     {
         var prefab = ammoType != null ? ammoType : bulletPrefab;
         if (prefab == null || firePoint == null) return;
 
-        // 1) Base forward on the XZ plane
+        // 1) Base forward direction on XZ
         Vector3 baseDir = -firePoint.forward;
         baseDir.y = 0f;
         baseDir.Normalize();
 
-        // 2) Apply horizontal spread only: random yaw
-        Vector3 dir = baseDir;
-        if (spreadAngle > 0f)
+        // 2) Determine how wide our cone is
+        float maxAngle = 0f;
+        if (applySpray)
         {
-            float yaw = Random.Range(-spreadAngle, spreadAngle);
+            // If a custom spreadAngle was passed, use that:
+            if (spreadAngle > 0f)
+                maxAngle = spreadAngle;
+            else
+                // Otherwise map recoil [0..1] to a reasonable max (e.g. 0°–10°)
+                maxAngle = Mathf.Lerp(0f, 10f, recoil);
+        }
+
+        // 3) Apply horizontal yaw spread
+        Vector3 dir = baseDir;
+        if (maxAngle > 0f)
+        {
+            float yaw = Random.Range(-maxAngle, maxAngle);
             dir = Quaternion.AngleAxis(yaw, Vector3.up) * baseDir;
         }
 
-        // 3) Spawn a bit in front so it doesn't hit your own collider
+        // 4) Spawn the bullet in front of the muzzle
         Vector3 spawnPos = firePoint.position + baseDir * 0.5f;
-        Quaternion spawnRot = Quaternion.LookRotation(dir, Vector3.up);
-        GameObject go = Instantiate(prefab, spawnPos, spawnRot);
+        GameObject go = Instantiate(prefab, spawnPos, Quaternion.LookRotation(dir, Vector3.up));
 
-        // 4) Propel it
+        // 5) Propel it
         var mover = go.GetComponent<Bullet>();
         if (mover != null)
-        {
             mover.Initialize(dir);
-        }
         else
         {
             var rb = go.GetComponent<Rigidbody>();
             if (rb != null)
-                rb.linearVelocity = dir * bulletSpeed;
+                rb.linearVelocity = dir * bulletSpeed;  // use .velocity, not .linearVelocity
         }
 
-        // 5) Haptic recoil (unchanged)
-        if (recoil > 0f)
+        // 6) Haptic recoil
+        if (applySpray && recoil > 0f)
             StartCoroutine(RecoilPulse(
                 Gamepad.current,
                 Mathf.Clamp01(recoil * 0.7f),
                 Mathf.Clamp01(recoil * 1.5f)
             ));
     }
+
 
     private IEnumerator RecoilPulse(Gamepad pad, float low, float high)
     {

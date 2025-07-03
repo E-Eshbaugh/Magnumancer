@@ -25,5 +25,9 @@ MonoBehaviour:
   ammoType: {fileID: 6997994299401861888, guid: 8de6b050532025b4a891587baeb511f6, type: 3}
   laserRange: 0
   isShotgun: 0
+  pelletCount: 5
+  spreadAngle: 15
+  heavyWeapon: 0
+  akimbo: 1
   specialBulletType: {fileID: 6997994299401861888, guid: 8de6b050532025b4a891587baeb511f6, type: 3}
   baseAmmoType: {fileID: 6997994299401861888, guid: 8de6b050532025b4a891587baeb511f6, type: 3}

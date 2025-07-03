@@ -10,6 +10,7 @@ public class GunSwapControl : MonoBehaviour
     private GameObject currentGun;
     public Vector3 gunRotation;
     public AmmoControl ammoControl;
+    public AkimboController akimboControl;
     public int currentGunIndex = 0;
     public int gunPrefabsLength;
 
@@ -21,7 +22,16 @@ public class GunSwapControl : MonoBehaviour
         currentGun = Instantiate(gunPrefabs[index], gunHolder);
         currentGun.transform.localPosition = Vector3.zero;
         currentGun.transform.localRotation = Quaternion.Euler(gunRotation);
-        ammoControl.currentGun.ammoType = ammoControl.currentGun.baseAmmoType;
+        //reset ammo type to base ammo type on switch
+        if (ammoControl != null)
+        {
+            ammoControl.currentGunIndex = index;
+            ammoControl.currentGun = ammoControl.guns[index];
+            ammoControl.ammoCount = ammoControl.currentGun.ammoCapacity;
+            ammoControl.currentGun.ammoType = ammoControl.currentGun.baseAmmoType; // reset to base ammo type
+            akimboControl.EndAkimbo(); // reset akimbo state
+            akimboControl.secondaryAmmo = 0;
+        }
     }
     // Start is called once before the first execution of Update after the MonoBehaviour is created
     void Start()
@@ -33,6 +43,7 @@ public class GunSwapControl : MonoBehaviour
     // Update is called once per frame
     void Update()
     {
+
         if (Gamepad.current.rightShoulder.wasPressedThisFrame)
         {
             currentGunIndex = currentGunIndex + 1;
