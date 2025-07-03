@@ -23,3 +23,4 @@ MonoBehaviour:
   fireType: semi
   recoil: 1.5
   ammoType: {fileID: 6997994299401861888, guid: 86affdb9b46a4f84a87b8d37eb097266, type: 3}
+  laserRange: 10

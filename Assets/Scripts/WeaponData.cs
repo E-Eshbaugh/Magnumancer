@@ -14,6 +14,7 @@ public class WeaponData : ScriptableObject
     public string fireType;
     public float recoil;
     public GameObject ammoType;
+    public float laserRange;
 
     // Additional properties can be added as needed
 }

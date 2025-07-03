@@ -14,7 +14,7 @@ public class AmmoControl : MonoBehaviour
     public GunSwapControl gunControl;
 
     // runtime state
-    private WeaponData currentGun;
+    public WeaponData currentGun;
     private int ammoCount;
     private float nextFireTime;
     private GameObject ammoType;
