@@ -22,7 +22,7 @@ public class OverClock : MonoBehaviour
     private WeaponData  currentGun;
 
     // state
-    public bool  isActive = false;
+    private bool  isActive = false;
     private float nextReadyTime;
     private float endTime;
 
