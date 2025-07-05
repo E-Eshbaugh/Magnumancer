@@ -3,41 +3,59 @@ using UnityEngine.InputSystem;
 
 public class GunOrbitController : MonoBehaviour
 {
+    [Header("Player & Orbit Settings")]
     public Transform player;
-    public float orbitRadius = 2f;
-    public float fixedHeight = 1.5f;
-    public float tilt = 0f;
+    public float     orbitRadius = 2f;
+    public float     fixedHeight = 1.5f;
+    public float     tilt        = 0f;
+
+    [Header("Controller")]
+    public Gamepad gamepad;
 
     private Vector3 currentWorldOffset;
+    public Vector3 aimDirection = Vector3.forward;  // flat XZ aim
+    private bool    _logged;
+
+    void Awake()
+    {
+        if (player == null)
+            player = GetComponentInParent<PlayerMovement3D>()?.transform;
+
+        if (player == null)
+            Debug.LogError($"{name}: No player assigned!");
+    }
 
     void Start()
     {
-        // Start with current offset from player
+        // initialize offset
         currentWorldOffset = transform.position - player.position;
-        currentWorldOffset.y = 0;
+        currentWorldOffset.y = 0f;
     }
 
     void Update()
     {
-        Vector2 stick = Gamepad.current?.rightStick.ReadValue() ?? Vector2.zero;
+        if (gamepad == null || player == null) return;
 
+        // 1) Read stick & compute a flat XZ direction
+        Vector2 stick = gamepad.rightStick.ReadValue();
         if (stick.magnitude > 0.1f)
         {
-            // Convert stick input to angle
             float angle = Mathf.Atan2(stick.x, stick.y);
-            Vector3 direction = new Vector3(Mathf.Sin(angle), 0, Mathf.Cos(angle));
-            currentWorldOffset = direction.normalized * orbitRadius;
+            aimDirection = new Vector3(Mathf.Sin(angle), 0, Mathf.Cos(angle));
+            currentWorldOffset = aimDirection * orbitRadius;
+            if (!_logged)
+            {
+                Debug.Log($"[{name}] aimDirection = {aimDirection}");
+                _logged = true;
+            }
         }
 
-        // Apply world position (ignoring parent transform)
+        // 2) Position in orbit circle
         Vector3 worldPos = player.position + currentWorldOffset;
         worldPos.y = player.position.y + fixedHeight;
         transform.position = worldPos;
 
-        // Face away from the player
-        Vector3 outward = (transform.position - player.position).normalized;
-        if (outward != Vector3.zero)
-            transform.rotation = Quaternion.LookRotation(outward, Vector3.up);
-            transform.Rotate(Vector3.right, tilt);
+        transform.rotation = Quaternion.LookRotation(aimDirection, Vector3.up);
+        transform.Rotate(Vector3.right, tilt, Space.Self);
     }
 }

@@ -15,71 +15,109 @@ public class OverClock : MonoBehaviour
     [Tooltip("Cooldown before you can overclock again in seconds")]
     public float cooldown           = 10f;
 
+    [Header("Controller")]
+    public Gamepad gamepad;  // assigned by MultiplayerManager
+
     private AmmoControl ammoControl;
-    private WeaponData currentGun;
+    private WeaponData  currentGun;
 
     // state
-    private bool  isActive;
+    public bool  isActive = false;
     private float nextReadyTime;
     private float endTime;
 
     // to restore
     private float origAttackSpeed;
     private float origRecoil;
+    private float origSpreadAngle;
 
     void Awake()
     {
         ammoControl = GetComponent<AmmoControl>();
+        if (ammoControl == null)
+            Debug.LogError($"{name}: Missing AmmoControl!");
+    }
+
+    void Start()
+    {
+        // Prevent immediate activation:
+        nextReadyTime = Time.time + cooldown;
+        Debug.Log($"{name}: Overclock ready at {nextReadyTime:F1}");
+    }
+
+    /// <summary>
+    /// Call this whenever you swap guns to fully reset overclock state.
+    /// </summary>
+    public void ResetOverclock()
+    {
+        if (isActive)
+        {
+            // restore if needed
+            currentGun.attackSpeed = origAttackSpeed;
+            currentGun.recoil = origRecoil;
+            currentGun.spreadAngle = origSpreadAngle;
+        }
+
+        isActive      = false;
+        endTime       = 0f;
+        nextReadyTime = Time.time + cooldown;
+        Debug.Log($"{name}: Overclock reset; next ready at {nextReadyTime:F1}");
     }
 
     void Update()
     {
-        if (ammoControl == null) return;
+        if (gamepad == null)
+        {
+            Debug.Log($"No gamepad for OverClock");
+            return;
+        }
+
         currentGun = ammoControl.currentGun;
         if (currentGun == null || !currentGun.heavyWeapon) return;
 
-        var pad = Gamepad.current;
+        float now = Time.time;
+        var   pad = gamepad;
+
         if (!isActive)
         {
-            // trigger overclock on LT press, if off cooldown
-            if (pad != null && pad.leftTrigger.wasPressedThisFrame 
-                && Time.time >= nextReadyTime)
-            {
-                ActivateOverclock();
-            }
+            // only trigger when off cooldown
+            if (pad.leftTrigger.wasPressedThisFrame && now >= nextReadyTime)
+                ActivateOverclock(now);
         }
         else
         {
-            // maintain infinite ammo
+            // infinite ammo
             ammoControl.ammoCount = currentGun.ammoCapacity;
 
-            // check for end of duration
-            if (Time.time >= endTime)
+            if (now >= endTime)
                 DeactivateOverclock();
         }
     }
 
-    private void ActivateOverclock()
+    void ActivateOverclock(float now)
     {
-        // remember originals
         origAttackSpeed = currentGun.attackSpeed;
         origRecoil      = currentGun.recoil;
+        origSpreadAngle = currentGun.spreadAngle;
 
-        // apply buffs
         currentGun.attackSpeed *= fireRateMultiplier;
         currentGun.recoil      *= recoilMultiplier;
+        currentGun.spreadAngle  = 0f;
 
         isActive      = true;
-        endTime       = Time.time + duration;
-        nextReadyTime = Time.time + cooldown;
+        endTime       = now + duration;
+        nextReadyTime = now + cooldown;
+
+        Debug.Log($"{name}: Overclock ON until {endTime:F1}s (next ready at {nextReadyTime:F1}s)");
     }
 
-    private void DeactivateOverclock()
+    void DeactivateOverclock()
     {
-        // restore
         currentGun.attackSpeed = origAttackSpeed;
         currentGun.recoil      = origRecoil;
-
+        currentGun.spreadAngle  = origSpreadAngle;
         isActive = false;
+
+        Debug.Log($"{name}: Overclock OFF; next ready at {nextReadyTime:F1}s");
     }
 }

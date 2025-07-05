@@ -85,7 +85,7 @@ MonoBehaviour:
   player: {fileID: 2907260401102680906}
   orbitRadius: 0.75
   fixedHeight: 0.5
-  tilt: -68
+  tilt: -90
 --- !u!114 &1172201437893101653
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -98,7 +98,6 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 3d2b8dc319f89d742b80446d4197d3ac, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  bulletPrefab: {fileID: 6997994299401861888, guid: 998a6807997784c46a5f2fb027daf411, type: 3}
   firePoint: {fileID: 5038500048487318550}
   bulletSpeed: 20
 --- !u!114 &6173842408804933738
@@ -129,7 +128,6 @@ MonoBehaviour:
   currentGunIndex: 0
   currentGun: {fileID: 0}
   ammoCount: 0
-  toFire: {fileID: 0}
 --- !u!114 &8038730249821315990
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -891,10 +889,7 @@ MonoBehaviour:
   - {fileID: 550212131937212752, guid: c4cdf604f3862674ca2f584e4983859a, type: 3}
   - {fileID: 5167352523380930853, guid: 3b223e1e99f294a4392b3ae777722d38, type: 3}
   gunRotation: {x: 0, y: 0, z: 90}
-  ammoControl: {fileID: 6173842408804933738}
-  akimboControl: {fileID: 989908875927841010}
   currentGunIndex: 0
-  gunPrefabsLength: 0
 --- !u!4 &2907260401102680906 stripped
 Transform:
   m_CorrespondingSourceObject: {fileID: -8679921383154817045, guid: 231007177a16e5b4da2f96f9c54e101a, type: 3}

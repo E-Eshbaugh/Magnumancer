@@ -3,67 +3,84 @@ using UnityEngine.InputSystem;
 
 public class GunSwapControl : MonoBehaviour
 {
+    [Header("Controller")]
+    public Gamepad gamepad;                // set by MultiplayerManager
 
-    public Transform gunHolder;
+    [Header("Gun Setup")]
+    public Transform   gunHolder;
     public GameObject[] gunPrefabs;
+    public Vector3      gunRotation;
+
+    // we’ll fill these in Awake() so you don’t have to hook them up manually
+    private AmmoControl      ammoControl;
+    private FireController3D fireController;
+    private AkimboController akimboControl;
 
     private GameObject currentGun;
-    public Vector3 gunRotation;
-    public AmmoControl ammoControl;
-    public AkimboController akimboControl;
-    public int currentGunIndex = 0;
-    public int gunPrefabsLength;
+    public  int        currentGunIndex = 0;
 
-    public void EquipGun(int index)
+    void Awake()
     {
-        if (currentGun != null)
-            Destroy(currentGun);
+        // Find these components on this object or any of its children:
+        ammoControl    = GetComponentInChildren<AmmoControl>();
+        fireController = GetComponentInChildren<FireController3D>();
+        akimboControl  = GetComponentInChildren<AkimboController>();
 
-        currentGun = Instantiate(gunPrefabs[index], gunHolder);
-        currentGun.transform.localPosition = Vector3.zero;
-        currentGun.transform.localRotation = Quaternion.Euler(gunRotation);
-        //reset ammo type to base ammo type on switch
-        if (ammoControl != null)
-        {
-            ammoControl.currentGunIndex = index;
-            ammoControl.currentGun = ammoControl.guns[index];
-            ammoControl.ammoCount = ammoControl.currentGun.ammoCapacity;
-            ammoControl.currentGun.ammoType = ammoControl.currentGun.baseAmmoType; // reset to base ammo type
-            akimboControl.EndAkimbo(); // reset akimbo state
-            akimboControl.secondaryAmmo = 0;
-        }
+        if (ammoControl    == null) Debug.LogWarning("GunSwapControl: no AmmoControl found in children!");
+        if (fireController == null) Debug.LogWarning("GunSwapControl: no FireController3D found in children!");
+        if (akimboControl  == null) Debug.LogWarning("GunSwapControl: no AkimboController found in children!");
     }
-    // Start is called once before the first execution of Update after the MonoBehaviour is created
+
+
     void Start()
     {
         EquipGun(currentGunIndex);
-        gunPrefabsLength = gunPrefabs.Length;
     }
 
-    // Update is called once per frame
     void Update()
     {
+        //gunHolder.rotation = Quaternion.Euler(gunRotation);
+        if (gamepad == null) return;
 
-        if (Gamepad.current.rightShoulder.wasPressedThisFrame)
+        if (gamepad.rightShoulder.wasPressedThisFrame) CycleGun(+1);
+        if (gamepad.leftShoulder .wasPressedThisFrame) CycleGun(-1);
+    }
+
+    void CycleGun(int delta)
+    {
+        int len = gunPrefabs.Length;
+        currentGunIndex = (currentGunIndex + delta + len) % len;
+        EquipGun(currentGunIndex);
+    }
+
+    void EquipGun(int index)
+    {
+        // destroy old
+        if (currentGun != null) Destroy(currentGun);
+
+        // instantiate new
+        currentGun = Instantiate(gunPrefabs[index], gunHolder);
+        currentGun.transform.localPosition = Vector3.zero;
+        currentGun.transform.localRotation = Quaternion.Euler(gunRotation);
+
+        // re-target the shooter
+        if (fireController != null)
         {
-            currentGunIndex = currentGunIndex + 1;
-            if (currentGunIndex == gunPrefabs.Length)
-            {
-                currentGunIndex = 0;
-            }
-
-            EquipGun(currentGunIndex);
+            fireController.firePoint = gunHolder;
         }
 
-        if (Gamepad.current.leftShoulder.wasPressedThisFrame)
+        // reset ammo
+        if (ammoControl != null)
         {
-            currentGunIndex = currentGunIndex - 1;
-            if (currentGunIndex < 0)
-            {
-                currentGunIndex = gunPrefabs.Length - 1;
-            }
+            ammoControl.OnGunEquipped(index);
+        }
 
-            EquipGun(currentGunIndex);
+        // reset akimbo
+        if (akimboControl != null)
+        {
+            akimboControl.EndAkimbo();
+            akimboControl.secondaryAmmo = 0;
         }
     }
 }
+

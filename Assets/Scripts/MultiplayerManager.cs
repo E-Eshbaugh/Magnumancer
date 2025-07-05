@@ -1,0 +1,111 @@
+using UnityEngine;
+using UnityEngine.InputSystem;
+using UnityEngine.InputSystem.Users;
+
+public class MultiplayerManager : MonoBehaviour
+{
+    [Tooltip("Drag in your Player GameObjects here (root or prefab instances).")]
+    public GameObject[] players;
+
+    [Tooltip("How many controllers to support.")]
+    public int numPlayers = 2;
+
+    void Start()
+    {
+        Debug.Log("=== MultiplayerManager Setup ===");
+
+        // 1) Deactivate all slots
+        for (int i = 0; i < players.Length; i++)
+        {
+            players[i].SetActive(false);
+            Debug.Log($"Slot {i} deactivated: {players[i].name}");
+        }
+
+        // 2) Grab connected pads
+        var pads = Gamepad.all;
+        Debug.Log($"Found {pads.Count} gamepads");
+
+        // 3) Decide how many to activate
+        int count = Mathf.Min(numPlayers, players.Length, pads.Count);
+        Debug.Log($"Activating {count} player(s)");
+
+        for (int i = 0; i < count; i++)
+        {
+            var pad = pads[i];
+            var go = players[i];
+            go.SetActive(true);
+            Debug.Log($"Slot {i} activated: {go.name}");
+
+            // Optional pairing
+            var user = InputUser.CreateUserWithoutPairedDevices();
+            InputUser.PerformPairingWithDevice(pad, user);
+
+            // Movement
+            var move = go.GetComponentInChildren<PlayerMovement3D>();
+            if (move != null)
+            {
+                move.gamepad = pad;
+                Debug.Log($" → Assigned pad {i} to PlayerMovement3D on {move.name}");
+            }
+            else Debug.LogWarning($"No PlayerMovement3D on {go.name} or its children!");
+
+            // Weapon swap
+            var swap = go.GetComponentInChildren<GunSwapControl>();
+            if (swap != null)
+            {
+                swap.gamepad = pad;
+                Debug.Log($" → Assigned pad {i} to GunSwapControl on {swap.name}");
+            }
+            else Debug.LogWarning($"No GunSwapControl on {go.name} or its children!");
+
+            // Firing
+            var fire = go.GetComponentInChildren<FireController3D>();
+            if (fire != null)
+            {
+                fire.gamepad = pad;
+                Debug.Log($" → Assigned pad {i} to FireController3D on {fire.name}");
+            }
+            else Debug.LogWarning($"No FireController3D on {go.name} or its children!");
+
+            // Ammo UI
+            var ammo = go.GetComponentInChildren<AmmoControl>();
+            if (ammo != null)
+            {
+                ammo.gamepad = pad;
+                Debug.Log($" → Assigned pad {i} to AmmoControl on {ammo.name}");
+            }
+            else Debug.LogWarning($"No AmmoControl on {go.name} or its children!");
+
+            // Orbit
+            var orbit = go.GetComponentInChildren<GunOrbitController>();
+            if (orbit != null)
+            {
+                orbit.gamepad = pad;
+                orbit.player = go.transform;
+                Debug.Log($" → Assigned pad {i} to GunOrbitController on {orbit.name}");
+            }
+            else Debug.LogWarning($"No GunOrbitController on {go.name} or its children!");
+
+            var over = go.GetComponentInChildren<OverClock>();
+            if (over != null)
+            {
+                over.gamepad = pad;
+                Debug.Log($" → Assigned pad {i} to OverClock on {over.name}");
+            }
+
+            var laser = go.GetComponentInChildren<LaserScope>();
+            if (laser != null)
+            {
+                laser.gamepad = pad;
+                Debug.Log($" → Assigned pad {i} to LaserScope on {laser.name}");
+            }
+            else
+            {
+                Debug.LogWarning($"No LaserScope on {go.name} or its children!");
+            }
+            
+        }
+
+        Debug.Log("=== Setup Complete ===");
+    }
+}
