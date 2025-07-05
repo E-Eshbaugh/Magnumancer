@@ -103,6 +103,17 @@ public class MultiplayerManager : MonoBehaviour
             {
                 Debug.LogWarning($"No LaserScope on {go.name} or its children!");
             }
+
+            var akimbo = go.GetComponentInChildren<AkimboController>();
+            if (akimbo != null)
+            {
+                akimbo.gamepad = pad;
+                Debug.Log($" → Assigned pad {i} to AkimboController on {akimbo.name}");
+            }
+            else
+            {
+                Debug.LogWarning($"No AkimboController on {go.name} or its children!");
+            }
             
         }
 

@@ -2,52 +2,58 @@ using UnityEngine;
 using UnityEngine.InputSystem;
 using System.Collections;
 
+[RequireComponent(typeof(AmmoControl))]
 public class AkimboController : MonoBehaviour
 {
     [Header("References")]
-    public AmmoControl  ammoControl;            // your existing primary‐gun manager
-    public GameObject   secondaryPrefab;        // your off‐hand SMG model prefab
-    public Transform    secondaryAnchor;        // empty child at the off‐hand muzzle
+    public AmmoControl    ammoControl;       // your existing primary‐gun manager
+    public Gamepad        gamepad;           // assigned by MultiplayerManager
+    public Transform      secondaryAnchor;   // off‐hand muzzle placeholder
+    public GameObject     secondaryPrefab;   // off‐hand gun model prefab
 
     [Header("Akimbo Settings")]
-    public float        fireThreshold   = 0.1f; // LT deadzone
-    public float        cooldown        = 10f;  // Sec before you can re‐Akimbo
-    public float        bulletSpeed     = 20f;
+    public float bulletSpeed     = 20f;
+    public float fireThreshold   = 0.1f;     // LT deadzone
+    public float cooldown        = 10f;      // before you can re‐Akimbo
 
+    // state
     public bool   akimboActive;
     public int    secondaryAmmo;
     public float  nextAkimboReadyTime;
     public float  nextSecondaryFireTime;
 
-    GameObject secondaryInstance;
+    private GameObject         secondaryInstance;
+    private GunOrbitController orbit;
+
+    void Awake()
+    {
+        // cache your orbit so you get the precise flat aim
+        orbit = GetComponentInChildren<GunOrbitController>();
+        if (orbit == null)
+            Debug.LogError($"{name}: No GunOrbitController found!");
+    }
 
     void Update()
     {
-        if (ammoControl == null) return;
+        if (ammoControl == null || gamepad == null || orbit == null) return;
         var weapon = ammoControl.currentGun;
         if (weapon == null || !weapon.akimbo) return;
 
-        var pad = Gamepad.current;
-        if (pad == null) return;
-
         float now = Time.time;
+        var   pad = gamepad;
 
-        // 1) Activate Akimbo on LT tap
-        if (!akimboActive 
-            && pad.leftTrigger.wasPressedThisFrame
-            && now >= nextAkimboReadyTime)
-        {
-            StartAkimbo(weapon);
-        }
+        // 1) Activate Akimbo
+        if (!akimboActive && pad.leftTrigger.wasPressedThisFrame && now >= nextAkimboReadyTime)
+            StartAkimbo(weapon, now);
 
-        // 2) While Akimbo is active, handle LT → secondary fire
+        // 2) While Akimbo is active, fire off‐hand on LT hold
         if (akimboActive)
         {
             if (pad.leftTrigger.ReadValue() > fireThreshold 
-                && now >= nextSecondaryFireTime
-                && secondaryAmmo > 0)
+             && now >= nextSecondaryFireTime
+             && secondaryAmmo > 0)
             {
-                FireSecondary(weapon);
+                FireSecondary(weapon, now);
                 secondaryAmmo--;
                 nextSecondaryFireTime = now + 1f / weapon.attackSpeed;
 
@@ -55,19 +61,16 @@ public class AkimboController : MonoBehaviour
                     EndAkimbo();
             }
         }
-
-        // 3) Primary (RT) still fires as normal via AmmoControl.Update()
     }
 
-    private void StartAkimbo(WeaponData weapon)
+    private void StartAkimbo(WeaponData weapon, float now)
     {
-        akimboActive        = true;
-        secondaryAmmo       = weapon.ammoCapacity;
-        ammoControl.ammoCount = weapon.ammoCapacity;
-        nextSecondaryFireTime = 0f;
-        nextAkimboReadyTime = Time.time + cooldown;
+        akimboActive         = true;
+        secondaryAmmo        = weapon.ammoCapacity;
+        ammoControl.ammoCount= weapon.ammoCapacity;
+        nextSecondaryFireTime= 0f;
+        nextAkimboReadyTime  = now + cooldown;
 
-        // Spawn & show the off-hand model under the anchor
         if (secondaryInstance == null)
         {
             secondaryInstance = Instantiate(
@@ -78,6 +81,8 @@ public class AkimboController : MonoBehaviour
             );
         }
         secondaryInstance.SetActive(true);
+
+        Debug.Log($"{name}: Akimbo ON for {weapon.name}, ammo={secondaryAmmo}");
     }
 
     public void EndAkimbo()
@@ -85,36 +90,34 @@ public class AkimboController : MonoBehaviour
         akimboActive = false;
         if (secondaryInstance != null)
             secondaryInstance.SetActive(false);
+        Debug.Log($"{name}: Akimbo OFF; next ready at {nextAkimboReadyTime:F1}s");
     }
 
-    private void FireSecondary(WeaponData weapon)
+    private void FireSecondary(WeaponData weapon, float now)
     {
-        // choose ammo prefab
         var prefab = weapon.ammoType;
         if (prefab == null) return;
 
-        // direction flat on XZ
-        Vector3 dir = secondaryAnchor.forward;
-        dir.y = 0f;
-        dir.Normalize();
+        // 1) Use the flat aim direction from orbit
+        Vector3 dir = -orbit.aimDirection;
 
-        // spawn just ahead of off-hand muzzle
+        // 2) Spawn at the off‐hand muzzle
         Vector3 spawnPos = secondaryAnchor.position + dir * 0.5f;
-        GameObject go = Instantiate(prefab, spawnPos, Quaternion.LookRotation(dir));
+        Quaternion rot   = Quaternion.LookRotation(dir, Vector3.up);
+        var proj = Instantiate(prefab, spawnPos, rot);
 
-        // propel bullet
-        if (go.TryGetComponent<Bullet>(out var mover))
+        // 3) Propel or initialize
+        if (proj.TryGetComponent<Bullet>(out var mover))
             mover.Initialize(dir);
-        else if (go.TryGetComponent<Rigidbody>(out var rb))
+        else if (proj.TryGetComponent<Rigidbody>(out var rb))
             rb.linearVelocity = dir * bulletSpeed;
 
-        // haptic rumble
-        if (weapon.recoil > 0f)
-            StartCoroutine(HapticRecoil(
-                Gamepad.current,
-                Mathf.Clamp01(weapon.recoil * 0.7f),
-                Mathf.Clamp01(weapon.recoil * 1.5f)
-            ));
+        // 4) Haptic recoil on the correct pad
+        StartCoroutine(HapticRecoil(
+            gamepad,
+            Mathf.Clamp01(weapon.recoil * 0.7f),
+            Mathf.Clamp01(weapon.recoil * 1.5f)
+        ));
     }
 
     private IEnumerator HapticRecoil(Gamepad pad, float low, float high)
@@ -128,7 +131,7 @@ public class AkimboController : MonoBehaviour
 
     void OnDisable()
     {
-        if (Gamepad.current != null)
-            Gamepad.current.SetMotorSpeeds(0f, 0f);
+        if (gamepad != null)
+            gamepad.SetMotorSpeeds(0f, 0f);
     }
 }
