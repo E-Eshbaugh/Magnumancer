@@ -22,12 +22,12 @@ MonoBehaviour:
   description: An unwieldy behemoth that sprays a relentless hail of bullets. Low
     per-shot damage, but high volume.
   fireType: auto
-  recoil: 5
+  recoil: 0.5
   ammoType: {fileID: 6997994299401861888, guid: 2ec29fc9207248740970443e058a84f0, type: 3}
   laserRange: 0
   isShotgun: 0
   pelletCount: 0
-  spreadAngle: 25
+  spreadAngle: 20
   heavyWeapon: 1
   akimbo: 0
   specialBulletType: {fileID: 6997994299401861888, guid: 2ec29fc9207248740970443e058a84f0, type: 3}

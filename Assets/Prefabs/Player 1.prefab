@@ -86,6 +86,7 @@ MonoBehaviour:
   orbitRadius: 0.75
   fixedHeight: 0.5
   tilt: -90
+  aimDirection: {x: 0, y: 0, z: 1}
 --- !u!114 &1172201437893101653
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -281,11 +282,11 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   ammoControl: {fileID: 6173842408804933738}
-  secondaryPrefab: {fileID: 5167352523380930853, guid: 3b223e1e99f294a4392b3ae777722d38, type: 3}
   secondaryAnchor: {fileID: 2912342247700950833}
+  secondaryPrefab: {fileID: 5167352523380930853, guid: 3b223e1e99f294a4392b3ae777722d38, type: 3}
+  bulletSpeed: 20
   fireThreshold: 0.1
   cooldown: 10
-  bulletSpeed: 20
   akimboActive: 0
   secondaryAmmo: 0
   nextAkimboReadyTime: 0
@@ -823,8 +824,9 @@ MonoBehaviour:
   gravity: -14
   jumpForce: 5
   maxJumps: 2
-  slamPause: 0.2
-  slamForce: 25
+  dashSpeed: 20
+  dashDuration: 0.2
+  dashCooldown: 3
 --- !u!136 &3502903092251883525
 CapsuleCollider:
   m_ObjectHideFlags: 0

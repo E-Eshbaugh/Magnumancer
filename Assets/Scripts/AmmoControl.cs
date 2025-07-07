@@ -119,7 +119,7 @@ public class AmmoControl : MonoBehaviour
         currentAmmoPrefab = currentGun.baseAmmoType;
         nextFireTime      = Time.time;
         Debug.Log($"{name}: Equipped '{currentGun.name}' (base ammo: '{currentAmmoPrefab.name}')");
-        UpdateAmmoBar();
+        //UpdateAmmoBar();
     }
 
     void UpdateAmmoBar()
