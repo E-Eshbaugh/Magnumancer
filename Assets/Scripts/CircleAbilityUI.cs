@@ -18,6 +18,10 @@ public class CircleAbilityUI : MonoBehaviour
     [Tooltip("Speed of the pulse when full")]
     public float pulseSpeed = 3f;
 
+    [Header("Controller")]
+    [Tooltip("The specific gamepad to listen to for ability input")]
+    public Gamepad gamepad;         // assign in inspector or from MultiplayerManager
+
     private float timer;
     private Coroutine pulseRoutine;
     private Color sampledCrestColor;
@@ -56,21 +60,19 @@ public class CircleAbilityUI : MonoBehaviour
 
         // start or stop pulse routine
         if (frac >= 1f && pulseRoutine == null)
-            pulseRoutine = StartCoroutine(PulseAlpha(maxAlpha));
+            pulseRoutine = StartCoroutine(PulseAlpha(baseA));
         else if (frac < 1f && pulseRoutine != null)
         {
             StopCoroutine(pulseRoutine);
             pulseRoutine = null;
-            // ensure alpha resets to base
+            // ensure alpha resets to zero
             var c = glowImage.color;
             c.a = 0f;
             glowImage.color = c;
         }
 
-        // use ability on X / West
-        if ((Keyboard.current.xKey.wasPressedThisFrame ||
-             (Gamepad.current != null && Gamepad.current.buttonWest.wasPressedThisFrame))
-             && frac >= 1f)
+        // only use the assigned gamepad’s West (X) button
+        if (gamepad != null && gamepad.buttonWest.wasPressedThisFrame && frac >= 1f)
         {
             UseAbility();
         }
@@ -80,7 +82,7 @@ public class CircleAbilityUI : MonoBehaviour
     {
         while (true)
         {
-            // sine between 1−pulseIntensity and 1+pulseIntensity
+            // sine between 1−(pulseIntensity−1) and pulseIntensity
             float t = (Mathf.Sin(Time.time * pulseSpeed) + 1f) * 0.5f;  // 0→1
             float intensity = Mathf.Lerp(1f - (pulseIntensity - 1f),
                                          pulseIntensity,

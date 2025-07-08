@@ -7,6 +7,14 @@ TagManager:
   - Ground
   - Bullet
   - slug
+  - Player1_UI
+  - Player2_UI
+  - Player3_UI
+  - Player4_UI
+  - Player1
+  - Player2
+  - Player3
+  - Player4
   layers:
   - Default
   - TransparentFX

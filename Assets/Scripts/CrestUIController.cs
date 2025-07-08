@@ -9,15 +9,16 @@ public class CrestUIController : MonoBehaviour
     [Tooltip("Glow sprite or Image behind crest for ability charge")]
     public Image abilityGlow;
 
-    public float healthAmount;
-
     /// <summary>
     /// Call this with a 0→1 value as the player’s current health fraction.
+    /// 1.0 = full health (mask empty), 0.0 = zero health (mask full).
     /// </summary>
     public void SetHealthFraction(float frac)
     {
-        healthMask.fillAmount = 1-Mathf.Clamp01(frac);
+        Debug.Log($"[CrestUI] SetHealthFraction({frac})");
+        healthMask.fillAmount = 1f - Mathf.Clamp01(frac);
     }
+
 
     /// <summary>
     /// Call this with a 0→1 value as the ability charge fraction.
@@ -25,12 +26,8 @@ public class CrestUIController : MonoBehaviour
     /// </summary>
     public void SetAbilityFraction(float frac)
     {
-        // you can tweak the curve (e.g. ease-in) in code or via an animation curve
-        abilityGlow.color = new Color(1, 1, 1, Mathf.Clamp01(frac));
-    }
-
-    void Update()
-    {
-        SetHealthFraction(healthAmount);
+        var c = abilityGlow.color;
+        c.a = Mathf.Clamp01(frac);
+        abilityGlow.color = c;
     }
 }

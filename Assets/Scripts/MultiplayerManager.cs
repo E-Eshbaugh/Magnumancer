@@ -9,6 +9,7 @@ public class MultiplayerManager : MonoBehaviour
 
     [Tooltip("How many controllers to support.")]
     public int numPlayers = 2;
+    public CircleAbilityUI[] uiControllers;
 
     void Start()
     {
@@ -24,6 +25,15 @@ public class MultiplayerManager : MonoBehaviour
         // 2) Grab connected pads
         var pads = Gamepad.all;
         Debug.Log($"Found {pads.Count} gamepads");
+
+        var uis  = FindObjectsByType<CircleAbilityUI>(FindObjectsSortMode.None);
+        for (int i = 0; i < uis.Length; i++)
+        {
+            var ui  = uis[i];
+            var pad = (i < pads.Count) ? pads[i] : null;
+            ui.gamepad = pad;
+            Debug.Log($"[Multiplayer] Assigned pad {(pad != null ? pad.displayName : "None")} to UI {ui.name}");
+        }
 
         // 3) Decide how many to activate
         int count = Mathf.Min(numPlayers, players.Length, pads.Count);
@@ -114,8 +124,19 @@ public class MultiplayerManager : MonoBehaviour
             {
                 Debug.LogWarning($"No AkimboController on {go.name} or its children!");
             }
-            
-        }
+
+            // Attempt to use the player's tag, or fallback to a default
+            if (i < uiControllers.Length && uiControllers[i] != null)
+            {
+                uiControllers[i].gamepad = pad;
+                Debug.Log($" → Assigned pad {i} to CircleAbilityUI on {uiControllers[i].gameObject.name}");
+            }
+            else
+            {
+                Debug.LogWarning($"No uiControllers[{i}] assigned in the inspector!");
+            }
+
+                }
 
         Debug.Log("=== Setup Complete ===");
     }

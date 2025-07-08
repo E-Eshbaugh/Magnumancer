@@ -59,7 +59,7 @@ public class AmmoControl : MonoBehaviour
             Debug.Log($"{name}: Toggled shotgun ammo to '{currentAmmoPrefab.name}'");
             // Reset cooldown so you can shoot right away if you like
             nextFireTime = now;
-            UpdateAmmoBar();
+            //UpdateAmmoBar();
         }
 
 
@@ -106,7 +106,7 @@ public class AmmoControl : MonoBehaviour
             {
                 ammoCount--;
                 nextFireTime = now + 1f / currentGun.attackSpeed;
-                UpdateAmmoBar();
+                //UpdateAmmoBar();
             }
         }
     }
