@@ -10,6 +10,7 @@ public class AkimboController : MonoBehaviour
     public Gamepad        gamepad;           // assigned by MultiplayerManager
     public Transform      secondaryAnchor;   // off‐hand muzzle placeholder
     public GameObject     secondaryPrefab;   // off‐hand gun model prefab
+    public WeaponAbilityControl   weaponAbility;       // optional UI feedback
 
     [Header("Akimbo Settings")]
     public float bulletSpeed     = 20f;
@@ -65,6 +66,7 @@ public class AkimboController : MonoBehaviour
 
     private void StartAkimbo(WeaponData weapon, float now)
     {
+        weaponAbility?.TriggerAbilityFill(); // optional UI feedback
         akimboActive         = true;
         secondaryAmmo        = weapon.ammoCapacity;
         ammoControl.ammoCount= weapon.ammoCapacity;

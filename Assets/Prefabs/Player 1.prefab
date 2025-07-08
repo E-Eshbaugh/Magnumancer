@@ -268,7 +268,8 @@ MonoBehaviour:
   fireRateMultiplier: 2
   recoilMultiplier: 0.1
   duration: 5
-  cooldown: 10
+  cooldown: 20
+  weaponAbility: {fileID: 0}
 --- !u!114 &989908875927841010
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -284,9 +285,10 @@ MonoBehaviour:
   ammoControl: {fileID: 6173842408804933738}
   secondaryAnchor: {fileID: 2912342247700950833}
   secondaryPrefab: {fileID: 5167352523380930853, guid: 3b223e1e99f294a4392b3ae777722d38, type: 3}
+  weaponAbility: {fileID: 0}
   bulletSpeed: 20
   fireThreshold: 0.1
-  cooldown: 10
+  cooldown: 20
   akimboActive: 0
   secondaryAmmo: 0
   nextAkimboReadyTime: 0

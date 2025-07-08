@@ -14,6 +14,7 @@ public class OverClock : MonoBehaviour
     public float duration           = 5f;
     [Tooltip("Cooldown before you can overclock again in seconds")]
     public float cooldown           = 10f;
+    public WeaponAbilityControl weaponAbility;
 
     [Header("Controller")]
     public Gamepad gamepad;  // assigned by MultiplayerManager
@@ -96,6 +97,7 @@ public class OverClock : MonoBehaviour
 
     void ActivateOverclock(float now)
     {
+        weaponAbility?.TriggerAbilityFill();
         origAttackSpeed = currentGun.attackSpeed;
         origRecoil      = currentGun.recoil;
         origSpreadAngle = currentGun.spreadAngle;
