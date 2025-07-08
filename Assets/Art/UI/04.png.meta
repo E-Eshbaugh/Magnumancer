@@ -905,9 +905,9 @@ TextureImporter:
       name: 04_36
       rect:
         serializedVersion: 2
-        x: 105
+        x: 103
         y: 149
-        width: 25
+        width: 34
         height: 5
       alignment: 4
       pivot: {x: 0, y: 0.5}
@@ -929,7 +929,7 @@ TextureImporter:
         serializedVersion: 2
         x: 151
         y: 149
-        width: 4
+        width: 34
         height: 5
       alignment: 0
       pivot: {x: 0.5, y: 0.5}
@@ -1059,9 +1059,9 @@ TextureImporter:
       name: 04_43
       rect:
         serializedVersion: 2
-        x: 105
+        x: 103
         y: 133
-        width: 25
+        width: 34
         height: 5
       alignment: 4
       pivot: {x: 0, y: 0.5}
@@ -1083,7 +1083,7 @@ TextureImporter:
         serializedVersion: 2
         x: 151
         y: 133
-        width: 4
+        width: 34
         height: 5
       alignment: 0
       pivot: {x: 0.5, y: 0.5}

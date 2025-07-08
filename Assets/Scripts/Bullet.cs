@@ -9,100 +9,93 @@ public class Bullet : MonoBehaviour
     public float speed = 20f;
 
     [Header("Explosion Flash")]
-    [Tooltip("How bright the light gets when you hit something")]
     public float flashIntensity = 8f;
-    [Tooltip("How long (seconds) the flash lasts before destroying the bullet")]
     public float flashDuration = 0.1f;
 
     private Vector3 _direction;
-    private Light _light;
-    private float _originalIntensity;
+    private Light   _light;
+    private float   _originalIntensity;
+
+    // internal target position computed in FixedUpdate
+    private Vector3 _targetPosition;
 
     void Start()
     {
-        // grab your light (if any)
         _light = GetComponentInChildren<Light>();
         if (_light != null)
             _originalIntensity = _light.intensity;
         else
             Debug.LogWarning("Bullet: no Light found for flash effect.");
+
+        // initialize targetPosition to current
+        _targetPosition = transform.position;
     }
 
-    /// <summary>
-    /// Call this right after Instantiate so we know which way to go.
-    /// </summary>
     public void Initialize(Vector3 dir)
     {
         _direction = dir.normalized;
     }
 
-    void Update()
+    void FixedUpdate()
     {
-        // how far we’ll move this frame
-        float moveDist = speed * Time.deltaTime;
+        // compute how far to move this physics step
+        float moveDist = speed * Time.fixedDeltaTime;
 
-        // cast a short ray ahead
-        if (Physics.Raycast(transform.position, _direction, out RaycastHit hit, moveDist))
+        // raycast ahead
+        if (Physics.Raycast(_targetPosition, _direction, out RaycastHit hit, moveDist))
         {
             HandleHit(hit.collider, hit.point);
-            
+            // after a hit we stop updating movement
         }
         else
         {
-            // no hit → just move forward
-            transform.position += _direction * moveDist;
+            // advance target position
+            _targetPosition += _direction * moveDist;
         }
+    }
+
+    void Update()
+    {
+        // smooth render position toward target
+        transform.position = Vector3.Lerp(
+            transform.position,
+            _targetPosition,
+            0.5f  // adjust between 0 (no smoothing) and 1 (snap)
+        );
     }
 
     private void HandleHit(Collider hitCollider, Vector3 hitPoint)
     {
-        Debug.Log($"[Bullet] Raycast hit: {hitCollider.name} (tag = {hitCollider.tag})");
-
-        // 1) Ignore other bullets
+        // 1) ignore other bullets
         if (hitCollider.GetComponentInParent<Bullet>() != null)
             return;
 
-        // 2) Try to find a PlayerHealthControl on the collider or any of its parents
+        // 2) damage player if found
         var ph = hitCollider.GetComponentInParent<PlayerHealthControl>();
-
-        // 3) Fallback: overlap a tiny sphere at the hit point to catch the controller
         if (ph == null)
         {
-            Collider[] c = Physics.OverlapSphere(hitPoint, 0.1f);
-            foreach (var col in c)
-            {
-                ph = col.GetComponent<PlayerHealthControl>();
-                if (ph != null) break;
-            }
+            Collider[] cols = Physics.OverlapSphere(hitPoint, 0.1f);
+            foreach (var c in cols)
+                if ((ph = c.GetComponentInParent<PlayerHealthControl>()) != null)
+                    break;
         }
-
         if (ph != null)
-        {
-            Debug.Log($"[Bullet]  → Found PlayerHealthControl on {ph.gameObject.name}, dealing {damage}");
             ph.TakeDamage(damage);
-        }
-        else
-        {
-            Debug.Log($"[Bullet]  → No PlayerHealthControl found near {hitPoint}");
-        }
 
-        // 4) Snap to hit point & play flash/destroy
+        // 3) snap both target and actual to impact
+        _targetPosition = hitPoint;
         transform.position = hitPoint;
+
+        // 4) flash/destroy
         if (_light != null)
             StartCoroutine(FlashAndDestroy());
         else
             Destroy(gameObject);
     }
 
-
-
-
     private IEnumerator FlashAndDestroy()
     {
-        // ramp up light
         _light.intensity = flashIntensity;
-
-        // wait, then clean up
         yield return new WaitForSeconds(flashDuration);
         _light.intensity = _originalIntensity;
         Destroy(gameObject);

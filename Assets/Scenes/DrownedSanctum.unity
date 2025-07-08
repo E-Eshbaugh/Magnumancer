@@ -6110,6 +6110,10 @@ PrefabInstance:
       propertyPath: healthMask
       value: 
       objectReference: {fileID: 251807660}
+    - target: {fileID: 3914925275380878094, guid: af17a6b5eb464d74f84feae0cd057e54, type: 3}
+      propertyPath: dashBar
+      value: 
+      objectReference: {fileID: 2030616648}
     - target: {fileID: 4068159686816643109, guid: af17a6b5eb464d74f84feae0cd057e54, type: 3}
       propertyPath: m_LocalPosition.x
       value: -15.35
@@ -6130,6 +6134,10 @@ PrefabInstance:
       propertyPath: healthMask
       value: 
       objectReference: {fileID: 862977918}
+    - target: {fileID: 4529578935743639564, guid: af17a6b5eb464d74f84feae0cd057e54, type: 3}
+      propertyPath: ammoBar
+      value: 
+      objectReference: {fileID: 2030616649}
     - target: {fileID: 4839400446010385196, guid: af17a6b5eb464d74f84feae0cd057e54, type: 3}
       propertyPath: m_LocalPosition.x
       value: -4.13
@@ -6142,10 +6150,34 @@ PrefabInstance:
       propertyPath: m_LocalPosition.z
       value: -19.24
       objectReference: {fileID: 0}
+    - target: {fileID: 5008087130052930309, guid: af17a6b5eb464d74f84feae0cd057e54, type: 3}
+      propertyPath: ammoBar
+      value: 
+      objectReference: {fileID: 2030616643}
+    - target: {fileID: 5550857469046247431, guid: af17a6b5eb464d74f84feae0cd057e54, type: 3}
+      propertyPath: dashBar
+      value: 
+      objectReference: {fileID: 2030616642}
+    - target: {fileID: 6146350949669779426, guid: af17a6b5eb464d74f84feae0cd057e54, type: 3}
+      propertyPath: dashBar
+      value: 
+      objectReference: {fileID: 2030616644}
     - target: {fileID: 6748821727442966324, guid: af17a6b5eb464d74f84feae0cd057e54, type: 3}
       propertyPath: healthMask
       value: 
       objectReference: {fileID: 321468314}
+    - target: {fileID: 6756787433114848480, guid: af17a6b5eb464d74f84feae0cd057e54, type: 3}
+      propertyPath: ammoBar
+      value: 
+      objectReference: {fileID: 2030616645}
+    - target: {fileID: 6924758929273745832, guid: af17a6b5eb464d74f84feae0cd057e54, type: 3}
+      propertyPath: dashBar
+      value: 
+      objectReference: {fileID: 2030616646}
+    - target: {fileID: 7534935928117299882, guid: af17a6b5eb464d74f84feae0cd057e54, type: 3}
+      propertyPath: ammoBar
+      value: 
+      objectReference: {fileID: 2030616647}
     m_RemovedComponents: []
     m_RemovedGameObjects: []
     m_AddedGameObjects: []
@@ -17215,6 +17247,94 @@ PrefabInstance:
     m_AddedGameObjects: []
     m_AddedComponents: []
   m_SourcePrefab: {fileID: 100100000, guid: b5a9cd3f20c4df146b3f8338e69730d4, type: 3}
+--- !u!114 &2030616642 stripped
+MonoBehaviour:
+  m_CorrespondingSourceObject: {fileID: 5140083081370347195, guid: b5a9cd3f20c4df146b3f8338e69730d4, type: 3}
+  m_PrefabInstance: {fileID: 2030616641}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: fe87c0e1cc204ed48ad3b37840f39efc, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+--- !u!114 &2030616643 stripped
+MonoBehaviour:
+  m_CorrespondingSourceObject: {fileID: 2667945275590925046, guid: b5a9cd3f20c4df146b3f8338e69730d4, type: 3}
+  m_PrefabInstance: {fileID: 2030616641}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: fe87c0e1cc204ed48ad3b37840f39efc, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+--- !u!114 &2030616644 stripped
+MonoBehaviour:
+  m_CorrespondingSourceObject: {fileID: 5336651735775254422, guid: b5a9cd3f20c4df146b3f8338e69730d4, type: 3}
+  m_PrefabInstance: {fileID: 2030616641}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: fe87c0e1cc204ed48ad3b37840f39efc, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+--- !u!114 &2030616645 stripped
+MonoBehaviour:
+  m_CorrespondingSourceObject: {fileID: 8558740940035210421, guid: b5a9cd3f20c4df146b3f8338e69730d4, type: 3}
+  m_PrefabInstance: {fileID: 2030616641}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: fe87c0e1cc204ed48ad3b37840f39efc, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+--- !u!114 &2030616646 stripped
+MonoBehaviour:
+  m_CorrespondingSourceObject: {fileID: 2877020889341459367, guid: b5a9cd3f20c4df146b3f8338e69730d4, type: 3}
+  m_PrefabInstance: {fileID: 2030616641}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: fe87c0e1cc204ed48ad3b37840f39efc, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+--- !u!114 &2030616647 stripped
+MonoBehaviour:
+  m_CorrespondingSourceObject: {fileID: 8508397694917410465, guid: b5a9cd3f20c4df146b3f8338e69730d4, type: 3}
+  m_PrefabInstance: {fileID: 2030616641}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: fe87c0e1cc204ed48ad3b37840f39efc, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+--- !u!114 &2030616648 stripped
+MonoBehaviour:
+  m_CorrespondingSourceObject: {fileID: 4933694513266721276, guid: b5a9cd3f20c4df146b3f8338e69730d4, type: 3}
+  m_PrefabInstance: {fileID: 2030616641}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: fe87c0e1cc204ed48ad3b37840f39efc, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+--- !u!114 &2030616649 stripped
+MonoBehaviour:
+  m_CorrespondingSourceObject: {fileID: 712038881854167681, guid: b5a9cd3f20c4df146b3f8338e69730d4, type: 3}
+  m_PrefabInstance: {fileID: 2030616641}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: fe87c0e1cc204ed48ad3b37840f39efc, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
 --- !u!1 &2053736862 stripped
 GameObject:
   m_CorrespondingSourceObject: {fileID: 919132149155446097, guid: 9d51a465e872a8a4eb44d245622beda8, type: 3}

@@ -114,12 +114,12 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   ammoBar: {fileID: 0}
-  ammoBarFull: {fileID: -2062426656, guid: 833c3ffd2f7675845aac0c2232d739b8, type: 3}
-  ammoBar80: {fileID: 2115074947, guid: 833c3ffd2f7675845aac0c2232d739b8, type: 3}
-  ammoBar60: {fileID: -632439397, guid: 833c3ffd2f7675845aac0c2232d739b8, type: 3}
-  ammoBar40: {fileID: 1388724155, guid: 833c3ffd2f7675845aac0c2232d739b8, type: 3}
-  ammoBar20: {fileID: -2112587343, guid: 833c3ffd2f7675845aac0c2232d739b8, type: 3}
-  ammoBarEmpty: {fileID: -1308985505, guid: 833c3ffd2f7675845aac0c2232d739b8, type: 3}
+  ammoBarFull: {fileID: -37917698, guid: 833c3ffd2f7675845aac0c2232d739b8, type: 3}
+  ammoBar80: {fileID: 2012001957, guid: 833c3ffd2f7675845aac0c2232d739b8, type: 3}
+  ammoBar60: {fileID: 180181595, guid: 833c3ffd2f7675845aac0c2232d739b8, type: 3}
+  ammoBar40: {fileID: 1520874318, guid: 833c3ffd2f7675845aac0c2232d739b8, type: 3}
+  ammoBar20: {fileID: -1783010620, guid: 833c3ffd2f7675845aac0c2232d739b8, type: 3}
+  ammoBarEmpty: {fileID: 1552931491, guid: 833c3ffd2f7675845aac0c2232d739b8, type: 3}
   guns:
   - {fileID: 11400000, guid: a9185a17e638c0b43bc9521d7c8a0e2b, type: 2}
   - {fileID: 11400000, guid: e9e3fa9f90558b84d8489bbdeb9f3b7a, type: 2}
@@ -831,7 +831,13 @@ MonoBehaviour:
   dashDuration: 0.2
   dashCooldown: 3
   dashBar: {fileID: 0}
-  dashBarSprites: []
+  dashBarSprites:
+  - {fileID: -1913973324, guid: 833c3ffd2f7675845aac0c2232d739b8, type: 3}
+  - {fileID: 717967192, guid: 833c3ffd2f7675845aac0c2232d739b8, type: 3}
+  - {fileID: 741059488, guid: 833c3ffd2f7675845aac0c2232d739b8, type: 3}
+  - {fileID: 1937444487, guid: 833c3ffd2f7675845aac0c2232d739b8, type: 3}
+  - {fileID: -474014879, guid: 833c3ffd2f7675845aac0c2232d739b8, type: 3}
+  - {fileID: -1592719621, guid: 833c3ffd2f7675845aac0c2232d739b8, type: 3}
 --- !u!136 &3502903092251883525
 CapsuleCollider:
   m_ObjectHideFlags: 0
