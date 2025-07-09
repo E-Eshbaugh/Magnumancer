@@ -2150,7 +2150,7 @@ PrefabInstance:
     - target: {fileID: 7047936523304985117, guid: b5a9cd3f20c4df146b3f8338e69730d4, type: 3}
       propertyPath: glowImage
       value: 
-      objectReference: {fileID: 0}
+      objectReference: {fileID: 573732380}
     - target: {fileID: 7047936523304985117, guid: b5a9cd3f20c4df146b3f8338e69730d4, type: 3}
       propertyPath: crestImage
       value: 
@@ -2678,6 +2678,17 @@ Transform:
   m_Children: []
   m_Father: {fileID: 1823784100}
   m_LocalEulerAnglesHint: {x: 90, y: 0, z: 0}
+--- !u!114 &573732380 stripped
+MonoBehaviour:
+  m_CorrespondingSourceObject: {fileID: 1069152755680736997, guid: b5a9cd3f20c4df146b3f8338e69730d4, type: 3}
+  m_PrefabInstance: {fileID: 467396001}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: fe87c0e1cc204ed48ad3b37840f39efc, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
 --- !u!1001 &575883987
 PrefabInstance:
   m_ObjectHideFlags: 0
