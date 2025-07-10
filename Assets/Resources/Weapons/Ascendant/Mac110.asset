@@ -10,7 +10,7 @@ MonoBehaviour:
   m_Enabled: 1
   m_EditorHideFlags: 0
   m_Script: {fileID: 11500000, guid: 3b1075652dd939146a7c0fa3dc80ba42, type: 3}
-  m_Name: P90
+  m_Name: Mac110
   m_EditorClassIdentifier: 
   weaponName: Bloodcurrent
   damage: 6
@@ -31,3 +31,4 @@ MonoBehaviour:
   akimbo: 1
   specialBulletType: {fileID: 6997994299401861888, guid: 8de6b050532025b4a891587baeb511f6, type: 3}
   baseAmmoType: {fileID: 6997994299401861888, guid: 8de6b050532025b4a891587baeb511f6, type: 3}
+  prefab: {fileID: 5167352523380930853, guid: 3b223e1e99f294a4392b3ae777722d38, type: 3}

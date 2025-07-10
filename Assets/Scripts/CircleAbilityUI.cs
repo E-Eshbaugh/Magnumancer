@@ -71,8 +71,8 @@ public class CircleAbilityUI : MonoBehaviour
             glowImage.color = c;
         }
 
-        // only use the assigned gamepad’s West (X) button
-        if (gamepad != null && gamepad.buttonWest.wasPressedThisFrame && frac >= 1f)
+        // only use the assigned gamepad’s West (B) button
+        if (gamepad != null && gamepad.buttonNorth.wasPressedThisFrame && frac >= 1f)
         {
             UseAbility();
         }

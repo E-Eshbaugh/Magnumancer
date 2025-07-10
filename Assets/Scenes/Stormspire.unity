@@ -4537,50 +4537,6 @@ MeshCollider:
   m_Convex: 1
   m_CookingOptions: 30
   m_Mesh: {fileID: -8907757473011522176, guid: e2076684d16c69148b47bc6cb81626bd, type: 3}
---- !u!1 &908815965
-GameObject:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  serializedVersion: 6
-  m_Component:
-  - component: {fileID: 908815967}
-  - component: {fileID: 908815966}
-  m_Layer: 0
-  m_Name: TESTING_CONTROLLER
-  m_TagString: Untagged
-  m_Icon: {fileID: 0}
-  m_NavMeshLayer: 0
-  m_StaticEditorFlags: 0
-  m_IsActive: 1
---- !u!114 &908815966
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 908815965}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 6f46eeab4d3273c45a68e26f991f3042, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
---- !u!4 &908815967
-Transform:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 908815965}
-  serializedVersion: 2
-  m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
-  m_LocalPosition: {x: -2.7245836, y: -5.8587174, z: 17.412079}
-  m_LocalScale: {x: 1, y: 1, z: 1}
-  m_ConstrainProportionsScale: 0
-  m_Children: []
-  m_Father: {fileID: 0}
-  m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
 --- !u!1 &910472273 stripped
 GameObject:
   m_CorrespondingSourceObject: {fileID: 919132149155446097, guid: 46da72020c13c5040ba8bddd3c066849, type: 3}
@@ -9706,6 +9662,18 @@ PrefabInstance:
       propertyPath: m_LocalEulerAnglesHint.z
       value: 0
       objectReference: {fileID: 0}
+    - target: {fileID: 3696695508584311726, guid: 4b205b2f5c5c7f142aefb799900bcfa8, type: 3}
+      propertyPath: m_LocalPosition.x
+      value: 0.8
+      objectReference: {fileID: 0}
+    - target: {fileID: 3696695508584311726, guid: 4b205b2f5c5c7f142aefb799900bcfa8, type: 3}
+      propertyPath: m_LocalPosition.y
+      value: -0.1
+      objectReference: {fileID: 0}
+    - target: {fileID: 3696695508584311726, guid: 4b205b2f5c5c7f142aefb799900bcfa8, type: 3}
+      propertyPath: m_LocalPosition.z
+      value: -28.2
+      objectReference: {fileID: 0}
     - target: {fileID: 7199699730211462695, guid: 4b205b2f5c5c7f142aefb799900bcfa8, type: 3}
       propertyPath: m_Name
       value: PauseMenu
@@ -10316,7 +10284,6 @@ SceneRoots:
   - {fileID: 1858879057}
   - {fileID: 1617185897}
   - {fileID: 1823784100}
-  - {fileID: 908815967}
   - {fileID: 553237805}
   - {fileID: 1994720765}
   - {fileID: 567572486}
