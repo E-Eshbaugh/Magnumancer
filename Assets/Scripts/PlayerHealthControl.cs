@@ -16,6 +16,8 @@ public class PlayerHealthControl : MonoBehaviour
     [Header("UI")]
     [Tooltip("Crest UI controller for the health mask")]
     public CrestUIController healthMask;
+    public GameObject[] stock;
+    public int stockCount = 3;
 
     void Awake()
     {
@@ -24,6 +26,18 @@ public class PlayerHealthControl : MonoBehaviour
         Debug.Log($"[Health] Awake(): currentHealth = {currentHealth}/{maxHealth}");
         UpdateUI();
         OnHealthChanged?.Invoke(currentHealth, maxHealth);
+
+        for (int i = 0; i < stock.Length; i++)
+        {
+            if (i < stockCount)
+            {
+                stock[i].SetActive(true);
+            }
+            else
+            {
+                stock[i].SetActive(false);
+            }
+        }
     }
 
     /// <summary>
@@ -43,7 +57,9 @@ public class PlayerHealthControl : MonoBehaviour
         UpdateUI();
         OnHealthChanged?.Invoke(currentHealth, maxHealth);
 
-        if (currentHealth == 0)
+        if (currentHealth == 0 && stockCount > 0)
+            StockDamage();
+        else if (currentHealth <= 0)
             Die();
     }
 
@@ -71,5 +87,31 @@ public class PlayerHealthControl : MonoBehaviour
         Debug.Log($"[Health] {name} has died.");
         OnDeath?.Invoke();
         // TODO: disable input, play death animation, respawn, etc.
+    }
+
+    private void StockDamage()
+    {
+        Debug.Log($"[Health] Stock damage taken. Remaining stock: {stockCount - 1}");
+        stockCount--;
+        if (stockCount < 0)
+            stockCount = 0;
+
+        // Update the stock UI
+        for (int i = 0; i < stock.Length; i++)
+        {
+            if (i < stockCount)
+            {
+                stock[i].SetActive(true);
+            }
+            else
+            {
+                stock[i].SetActive(false);
+            }
+        }
+
+        // Reset health to max after taking stock damage
+        currentHealth = maxHealth;
+        UpdateUI();
+        OnHealthChanged?.Invoke(currentHealth, maxHealth);
     }
 }

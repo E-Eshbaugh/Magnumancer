@@ -919,6 +919,11 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   maxHealth: 100
   healthMask: {fileID: 0}
+  stock:
+  - {fileID: 0}
+  - {fileID: 0}
+  - {fileID: 0}
+  stockCount: 3
 --- !u!4 &2907260401102680906 stripped
 Transform:
   m_CorrespondingSourceObject: {fileID: -8679921383154817045, guid: 231007177a16e5b4da2f96f9c54e101a, type: 3}

@@ -986,6 +986,66 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 27dd8c529e2fe5e44b2512cb19227a2e, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+--- !u!1 &95451285 stripped
+GameObject:
+  m_CorrespondingSourceObject: {fileID: 3170279277217242753, guid: b5a9cd3f20c4df146b3f8338e69730d4, type: 3}
+  m_PrefabInstance: {fileID: 95451280}
+  m_PrefabAsset: {fileID: 0}
+--- !u!1 &95451286 stripped
+GameObject:
+  m_CorrespondingSourceObject: {fileID: 3793156855150195498, guid: b5a9cd3f20c4df146b3f8338e69730d4, type: 3}
+  m_PrefabInstance: {fileID: 95451280}
+  m_PrefabAsset: {fileID: 0}
+--- !u!1 &95451287 stripped
+GameObject:
+  m_CorrespondingSourceObject: {fileID: 1347742196913436191, guid: b5a9cd3f20c4df146b3f8338e69730d4, type: 3}
+  m_PrefabInstance: {fileID: 95451280}
+  m_PrefabAsset: {fileID: 0}
+--- !u!1 &95451288 stripped
+GameObject:
+  m_CorrespondingSourceObject: {fileID: 5259528559833957782, guid: b5a9cd3f20c4df146b3f8338e69730d4, type: 3}
+  m_PrefabInstance: {fileID: 95451280}
+  m_PrefabAsset: {fileID: 0}
+--- !u!1 &95451289 stripped
+GameObject:
+  m_CorrespondingSourceObject: {fileID: 1985731217353325786, guid: b5a9cd3f20c4df146b3f8338e69730d4, type: 3}
+  m_PrefabInstance: {fileID: 95451280}
+  m_PrefabAsset: {fileID: 0}
+--- !u!1 &95451290 stripped
+GameObject:
+  m_CorrespondingSourceObject: {fileID: 1537889016795778766, guid: b5a9cd3f20c4df146b3f8338e69730d4, type: 3}
+  m_PrefabInstance: {fileID: 95451280}
+  m_PrefabAsset: {fileID: 0}
+--- !u!1 &95451291 stripped
+GameObject:
+  m_CorrespondingSourceObject: {fileID: 5053321211726219497, guid: b5a9cd3f20c4df146b3f8338e69730d4, type: 3}
+  m_PrefabInstance: {fileID: 95451280}
+  m_PrefabAsset: {fileID: 0}
+--- !u!1 &95451292 stripped
+GameObject:
+  m_CorrespondingSourceObject: {fileID: 4840112584738901750, guid: b5a9cd3f20c4df146b3f8338e69730d4, type: 3}
+  m_PrefabInstance: {fileID: 95451280}
+  m_PrefabAsset: {fileID: 0}
+--- !u!1 &95451293 stripped
+GameObject:
+  m_CorrespondingSourceObject: {fileID: 3145711609232515529, guid: b5a9cd3f20c4df146b3f8338e69730d4, type: 3}
+  m_PrefabInstance: {fileID: 95451280}
+  m_PrefabAsset: {fileID: 0}
+--- !u!1 &95451294 stripped
+GameObject:
+  m_CorrespondingSourceObject: {fileID: 2995757379105113966, guid: b5a9cd3f20c4df146b3f8338e69730d4, type: 3}
+  m_PrefabInstance: {fileID: 95451280}
+  m_PrefabAsset: {fileID: 0}
+--- !u!1 &95451295 stripped
+GameObject:
+  m_CorrespondingSourceObject: {fileID: 4040076094279004610, guid: b5a9cd3f20c4df146b3f8338e69730d4, type: 3}
+  m_PrefabInstance: {fileID: 95451280}
+  m_PrefabAsset: {fileID: 0}
+--- !u!1 &95451296 stripped
+GameObject:
+  m_CorrespondingSourceObject: {fileID: 1156934499800188463, guid: b5a9cd3f20c4df146b3f8338e69730d4, type: 3}
+  m_PrefabInstance: {fileID: 95451280}
+  m_PrefabAsset: {fileID: 0}
 --- !u!1001 &99770802
 PrefabInstance:
   m_ObjectHideFlags: 0
@@ -7780,6 +7840,18 @@ PrefabInstance:
       propertyPath: healthMask
       value: 
       objectReference: {fileID: 362990429}
+    - target: {fileID: 857256091971022226, guid: af17a6b5eb464d74f84feae0cd057e54, type: 3}
+      propertyPath: 'stock.Array.data[0]'
+      value: 
+      objectReference: {fileID: 95451293}
+    - target: {fileID: 857256091971022226, guid: af17a6b5eb464d74f84feae0cd057e54, type: 3}
+      propertyPath: 'stock.Array.data[1]'
+      value: 
+      objectReference: {fileID: 95451292}
+    - target: {fileID: 857256091971022226, guid: af17a6b5eb464d74f84feae0cd057e54, type: 3}
+      propertyPath: 'stock.Array.data[2]'
+      value: 
+      objectReference: {fileID: 95451291}
     - target: {fileID: 900776338121966919, guid: af17a6b5eb464d74f84feae0cd057e54, type: 3}
       propertyPath: weaponAbility
       value: 
@@ -7860,6 +7932,18 @@ PrefabInstance:
       propertyPath: healthMask
       value: 
       objectReference: {fileID: 1879305886}
+    - target: {fileID: 2807045645170953277, guid: af17a6b5eb464d74f84feae0cd057e54, type: 3}
+      propertyPath: 'stock.Array.data[0]'
+      value: 
+      objectReference: {fileID: 95451287}
+    - target: {fileID: 2807045645170953277, guid: af17a6b5eb464d74f84feae0cd057e54, type: 3}
+      propertyPath: 'stock.Array.data[1]'
+      value: 
+      objectReference: {fileID: 95451286}
+    - target: {fileID: 2807045645170953277, guid: af17a6b5eb464d74f84feae0cd057e54, type: 3}
+      propertyPath: 'stock.Array.data[2]'
+      value: 
+      objectReference: {fileID: 95451285}
     - target: {fileID: 3494864072193770034, guid: af17a6b5eb464d74f84feae0cd057e54, type: 3}
       propertyPath: weaponAbility
       value: 
@@ -7888,6 +7972,18 @@ PrefabInstance:
       propertyPath: healthMask
       value: 
       objectReference: {fileID: 1809426774}
+    - target: {fileID: 4517114612605791192, guid: af17a6b5eb464d74f84feae0cd057e54, type: 3}
+      propertyPath: 'stock.Array.data[0]'
+      value: 
+      objectReference: {fileID: 95451290}
+    - target: {fileID: 4517114612605791192, guid: af17a6b5eb464d74f84feae0cd057e54, type: 3}
+      propertyPath: 'stock.Array.data[1]'
+      value: 
+      objectReference: {fileID: 95451289}
+    - target: {fileID: 4517114612605791192, guid: af17a6b5eb464d74f84feae0cd057e54, type: 3}
+      propertyPath: 'stock.Array.data[2]'
+      value: 
+      objectReference: {fileID: 95451288}
     - target: {fileID: 4529578935743639564, guid: af17a6b5eb464d74f84feae0cd057e54, type: 3}
       propertyPath: ammoBar
       value: 
@@ -7920,6 +8016,18 @@ PrefabInstance:
       propertyPath: healthMask
       value: 
       objectReference: {fileID: 2033696426}
+    - target: {fileID: 6748821727442966324, guid: af17a6b5eb464d74f84feae0cd057e54, type: 3}
+      propertyPath: 'stock.Array.data[0]'
+      value: 
+      objectReference: {fileID: 95451296}
+    - target: {fileID: 6748821727442966324, guid: af17a6b5eb464d74f84feae0cd057e54, type: 3}
+      propertyPath: 'stock.Array.data[1]'
+      value: 
+      objectReference: {fileID: 95451295}
+    - target: {fileID: 6748821727442966324, guid: af17a6b5eb464d74f84feae0cd057e54, type: 3}
+      propertyPath: 'stock.Array.data[2]'
+      value: 
+      objectReference: {fileID: 95451294}
     - target: {fileID: 6756787433114848480, guid: af17a6b5eb464d74f84feae0cd057e54, type: 3}
       propertyPath: ammoBar
       value: 
