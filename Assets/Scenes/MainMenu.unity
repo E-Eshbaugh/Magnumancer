@@ -4141,6 +4141,9 @@ MonoBehaviour:
   frameRate: 0.1
   selectedWizard: {fileID: 0}
   characterSelectController: {fileID: 0}
+  selectedMap: 0
+  mapSelectController: {fileID: 0}
+  weaponSelectControl: {fileID: 0}
 --- !u!1 &468789739
 GameObject:
   m_ObjectHideFlags: 0
@@ -8377,27 +8380,13 @@ MonoBehaviour:
   weaponWeight: {fileID: 119468453}
   weaponIcon: {fileID: 474080175}
   archonWeapons:
-  - {fileID: 11400000, guid: 7fa214f30a53fc04d95a27b9379ec90b, type: 2}
-  - {fileID: 11400000, guid: 6b0a595098a55b541ae6c1103fa5c0df, type: 2}
-  - {fileID: 11400000, guid: bc12418186f4a394fbea057b19a8c1f6, type: 2}
-  - {fileID: 11400000, guid: 3189b0271755d184797ce6aabf9d67b4, type: 2}
-  - {fileID: 11400000, guid: 83e631a622ea33e4cb35f835c589f457, type: 2}
   - {fileID: 11400000, guid: ba907eeb7f55263498b3ec19d9243e67, type: 2}
-  - {fileID: 11400000, guid: 043da648773b44d49bdb6ef0bc6b57ce, type: 2}
-  - {fileID: 11400000, guid: ee0ee227e7fae4a48984187d620702fb, type: 2}
   ascendantWeapons:
-  - {fileID: 11400000, guid: d5cb97fb7a8cdec4ca908a6b19bcf5fe, type: 2}
-  - {fileID: 11400000, guid: 4338d4f21f1138846a835288a1c6bdcd, type: 2}
-  - {fileID: 11400000, guid: ec5ea3d0336884a4094c89174154072a, type: 2}
-  - {fileID: 11400000, guid: f52eec34bda8d124ea310a5e17d1d0b4, type: 2}
-  - {fileID: 11400000, guid: c345cbe9f03696741a59f1f90f67d0be, type: 2}
-  - {fileID: 11400000, guid: ad1f460280baf004282b07c2deea7117, type: 2}
+  - {fileID: 11400000, guid: 7fa214f30a53fc04d95a27b9379ec90b, type: 2}
   initiateWeapons:
-  - {fileID: 11400000, guid: f78e88cd4070d1f43b3c0b6eed716192, type: 2}
+  - {fileID: 11400000, guid: a9185a17e638c0b43bc9521d7c8a0e2b, type: 2}
   - {fileID: 11400000, guid: da1ae560b6a869f4c8a4cb39d809fe56, type: 2}
   - {fileID: 11400000, guid: e9e3fa9f90558b84d8489bbdeb9f3b7a, type: 2}
-  - {fileID: 11400000, guid: a9185a17e638c0b43bc9521d7c8a0e2b, type: 2}
-  - {fileID: 11400000, guid: 63e9fb7fcbeff3044b79b201290acb25, type: 2}
   magicManagement: {fileID: 0}
   inventorySlots:
   - {fileID: 660321014}
@@ -13520,6 +13509,51 @@ CanvasRenderer:
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 1577225846}
   m_CullTransparentMesh: 1
+--- !u!1 &1601343816
+GameObject:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  serializedVersion: 6
+  m_Component:
+  - component: {fileID: 1601343818}
+  - component: {fileID: 1601343817}
+  m_Layer: 0
+  m_Name: DataManger
+  m_TagString: Untagged
+  m_Icon: {fileID: 0}
+  m_NavMeshLayer: 0
+  m_StaticEditorFlags: 0
+  m_IsActive: 1
+--- !u!114 &1601343817
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1601343816}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 2927296dce814fa41a7aecf499081d15, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  loadout: []
+--- !u!4 &1601343818
+Transform:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1601343816}
+  serializedVersion: 2
+  m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
+  m_LocalPosition: {x: -12.884062, y: 28.112608, z: -10.922254}
+  m_LocalScale: {x: 1, y: 1, z: 1}
+  m_ConstrainProportionsScale: 0
+  m_Children: []
+  m_Father: {fileID: 0}
+  m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
 --- !u!1 &1633099864
 GameObject:
   m_ObjectHideFlags: 0
@@ -16221,3 +16255,4 @@ SceneRoots:
   - {fileID: 930466666}
   - {fileID: 175171929}
   - {fileID: 1968118409}
+  - {fileID: 1601343818}

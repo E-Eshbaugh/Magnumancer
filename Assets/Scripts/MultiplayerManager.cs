@@ -10,9 +10,13 @@ public class MultiplayerManager : MonoBehaviour
     [Tooltip("How many controllers to support.")]
     public int numPlayers = 2;
     public CircleAbilityUI[] uiControllers;
+    public WeaponData[] player1Loadout;
 
     void Start()
     {
+        //loadout assignment
+        player1Loadout = DataManager.Instance.loadout;
+
         Debug.Log("=== MultiplayerManager Setup ===");
 
         // 1) Deactivate all slots
@@ -83,6 +87,8 @@ public class MultiplayerManager : MonoBehaviour
             {
                 ammo.gamepad = pad;
                 Debug.Log($" → Assigned pad {i} to AmmoControl on {ammo.name}");
+                ammo.guns = player1Loadout;
+                Debug.Log($" → Assigned array length {player1Loadout.Length} to ammo.guns");
             }
             else Debug.LogWarning($"No AmmoControl on {go.name} or its children!");
 

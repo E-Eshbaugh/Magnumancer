@@ -82,11 +82,14 @@ public class PlayerHealthControl : MonoBehaviour
         }
     }
 
+    // deactivate the player 
     private void Die()
     {
-        Debug.Log($"[Health] {name} has died.");
+        Debug.Log("[Health] Player has died.");
         OnDeath?.Invoke();
-        // TODO: disable input, play death animation, respawn, etc.
+        // Optionally, you can disable the player character or trigger a respawn
+        gameObject.SetActive(false);
+        // Additional logic for death, like playing an animation or sound, can be added here.
     }
 
     private void StockDamage()

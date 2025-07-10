@@ -27,6 +27,7 @@ public class MenuNavigationControl : MonoBehaviour
     [Header("info")]
     public int selectedMap;
     public MapSelectController mapSelectController;
+    public WeaponSelectControl weaponSelectControl;
 
     private void Awake()
     {
@@ -44,6 +45,7 @@ public class MenuNavigationControl : MonoBehaviour
     {
         if (characterSelectController == null) characterSelectController = FindFirstObjectByType<CharacterSelectController>();
         if (mapSelectController == null) mapSelectController = FindFirstObjectByType<MapSelectController>();
+        if (weaponSelectControl == null) weaponSelectControl = FindFirstObjectByType<WeaponSelectControl>();
 
         page3.SetActive(false);
         page4.SetActive(false);
@@ -80,6 +82,9 @@ public class MenuNavigationControl : MonoBehaviour
                 hasStarted = true;
                 StartCoroutine(pageForwardAnimation(() =>
                 {
+                    //save loadout data
+                    DataManager.Instance.loadout = weaponSelectControl.inventoryData;
+                    
                     page3.SetActive(false);
                     page4.SetActive(false);
                     page5.SetActive(true);

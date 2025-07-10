@@ -17,7 +17,7 @@ MonoBehaviour:
   ammoCapacity: 60
   attackSpeed: 10
   weight: 5
-  orbCost: 5
+  orbCost: 1
   weaponIcon: {fileID: 1987816353, guid: 88365eb93f90dc0448eb4a39ecadd679, type: 3}
   description: An unwieldy behemoth that sprays a relentless hail of bullets. Low
     per-shot damage, but high volume.
@@ -32,3 +32,4 @@ MonoBehaviour:
   akimbo: 0
   specialBulletType: {fileID: 6997994299401861888, guid: 2ec29fc9207248740970443e058a84f0, type: 3}
   baseAmmoType: {fileID: 6997994299401861888, guid: 2ec29fc9207248740970443e058a84f0, type: 3}
+  prefab: {fileID: 0}

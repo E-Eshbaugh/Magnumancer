@@ -17,7 +17,7 @@ MonoBehaviour:
   ammoCapacity: 10
   attackSpeed: 1.2
   weight: 2
-  orbCost: 3
+  orbCost: 1
   weaponIcon: {fileID: 136629142, guid: 88365eb93f90dc0448eb4a39ecadd679, type: 3}
   description: A brutal relic that sends heavy steel with bone-snapping force.
   fireType: semi
@@ -31,3 +31,4 @@ MonoBehaviour:
   akimbo: 0
   specialBulletType: {fileID: 6997994299401861888, guid: 86affdb9b46a4f84a87b8d37eb097266, type: 3}
   baseAmmoType: {fileID: 6997994299401861888, guid: 86affdb9b46a4f84a87b8d37eb097266, type: 3}
+  prefab: {fileID: 0}

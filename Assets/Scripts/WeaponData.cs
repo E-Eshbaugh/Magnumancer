@@ -29,6 +29,7 @@ public class WeaponData : ScriptableObject
     [Header("Bullet Abilities")]
     public GameObject specialBulletType;
     public GameObject baseAmmoType;
+    public GameObject prefab;
 
     // Additional properties can be added as needed
 }

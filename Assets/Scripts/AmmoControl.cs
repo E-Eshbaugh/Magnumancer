@@ -9,7 +9,7 @@ public class AmmoControl : MonoBehaviour
     public Sprite ammoBarFull, ammoBar80, ammoBar60, ammoBar40, ammoBar20, ammoBarEmpty;
 
     [Header("Guns")]
-    public WeaponData[]   guns;
+    public WeaponData[] guns;
     public GunSwapControl gunControl;
 
     [Header("Controller")]
@@ -32,11 +32,15 @@ public class AmmoControl : MonoBehaviour
 
     void Start()
     {
+        guns = gunControl.loadout;
         OnGunEquipped(gunControl.currentGunIndex);
     }
 
     void Update()
     {
+        currentGunIndex = gunControl.currentGunIndex;
+        currentGun = guns[currentGunIndex];
+
         if (gamepad == null || fire == null) return;
 
         float now = Time.time;

@@ -18,6 +18,7 @@ public class GunSwapControl : MonoBehaviour
 
     private GameObject currentGun;
     public  int        currentGunIndex = 0;
+    public WeaponData[] loadout; // 0 - UP | 1 - RIGHT | 2 - DOWN | 3 - LEFT
 
     void Awake()
     {
@@ -34,6 +35,22 @@ public class GunSwapControl : MonoBehaviour
 
     void Start()
     {
+        loadout = DataManager.Instance.loadout;
+        for (int i = 0; i < loadout.Length; i++)
+        {
+            if (loadout[i] == null)
+            {
+                Debug.LogWarning($"GunSwapControl: loadout[{i}] is null, skipping.");
+                continue;
+            }
+            else gunPrefabs[i] = loadout[i].prefab;
+
+        }
+
+        if (gunPrefabs[currentGunIndex] == null)
+        {
+            return;
+        }
         EquipGun(currentGunIndex);
     }
 
@@ -42,21 +59,18 @@ public class GunSwapControl : MonoBehaviour
         //gunHolder.rotation = Quaternion.Euler(gunRotation);
         if (gamepad == null) return;
 
-        if (gamepad.rightShoulder.wasPressedThisFrame) CycleGun(+1);
-        if (gamepad.leftShoulder .wasPressedThisFrame) CycleGun(-1);
-    }
-
-    void CycleGun(int delta)
-    {
-        int len = gunPrefabs.Length;
-        currentGunIndex = (currentGunIndex + delta + len) % len;
-        EquipGun(currentGunIndex);
+        if (gamepad.dpad.up.wasPressedThisFrame && gunPrefabs[0] != null) EquipGun(0);
+        if (gamepad.dpad.right.wasPressedThisFrame && gunPrefabs[1] != null) EquipGun(1);
+        if (gamepad.dpad.down.wasPressedThisFrame && gunPrefabs[2] != null) EquipGun(2);
+        if (gamepad.dpad.left.wasPressedThisFrame && gunPrefabs[3] != null) EquipGun(3);
     }
 
     void EquipGun(int index)
     {
         // destroy old
         if (currentGun != null) Destroy(currentGun);
+
+        currentGunIndex = index;
 
         // instantiate new
         currentGun = Instantiate(gunPrefabs[index], gunHolder);
