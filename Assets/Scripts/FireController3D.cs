@@ -1,3 +1,4 @@
+using System.Collections;
 using UnityEngine;
 using UnityEngine.InputSystem;
 
@@ -8,7 +9,7 @@ public class FireController3D : MonoBehaviour
 
     [Header("Bullet Setup")]
     public Transform firePoint;            // your muzzle or placeholder
-    public float     bulletSpeed = 20f;
+    public float bulletSpeed = 20f;
 
     void Awake()
     {
@@ -19,13 +20,19 @@ public class FireController3D : MonoBehaviour
     /// <summary>
     /// Spawns prefabToUse and propels it down firePoint.forward (with optional spread).
     /// </summary>
-    public void Shoot(GameObject prefabToUse, float spreadAngle)
+    public void Shoot(GameObject prefabToUse, float spreadAngle, float recoil)
     {
         if (prefabToUse == null || firePoint == null)
         {
             Debug.LogError($"{name}: Missing prefab or firePoint in Shoot()");
             return;
         }
+
+        StartCoroutine(HapticRecoil(
+            gamepad,
+            Mathf.Clamp01(recoil * 0.7f),
+            Mathf.Clamp01(recoil * 1.5f)
+        ));
 
         // 1) Compute the flat shooting direction
         Vector3 dir = firePoint.up;
@@ -52,6 +59,15 @@ public class FireController3D : MonoBehaviour
         {
             rb.linearVelocity = dir * bulletSpeed;
         }
+    }
+    
+    private IEnumerator HapticRecoil(Gamepad pad, float low, float high)
+    {
+        pad.SetMotorSpeeds(low * 1.2f, high * 1.5f);
+        yield return new WaitForSeconds(0.05f);
+        pad.SetMotorSpeeds(low * 0.5f, high * 0.7f);
+        yield return new WaitForSeconds(0.1f);
+        pad.SetMotorSpeeds(0f, 0f);
     }
 
 }

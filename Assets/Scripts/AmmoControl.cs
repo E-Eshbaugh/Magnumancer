@@ -84,7 +84,7 @@ public class AmmoControl : MonoBehaviour
                     if (pad.rightTrigger.wasPressedThisFrame)
                     {
                         for (int i = 0; i < currentGun.pelletCount; i++)
-                            fire.Shoot(currentAmmoPrefab, currentGun.spreadAngle);
+                            fire.Shoot(currentAmmoPrefab, currentGun.spreadAngle, currentGun.recoil);
                         didFire = true;
                     }
                     break;
@@ -92,7 +92,7 @@ public class AmmoControl : MonoBehaviour
                 case "semi":
                     if (pad.rightTrigger.wasPressedThisFrame)
                     {
-                        fire.Shoot(currentAmmoPrefab, currentGun.spreadAngle);
+                        fire.Shoot(currentAmmoPrefab, currentGun.spreadAngle, currentGun.recoil);
                         didFire = true;
                     }
                     break;
@@ -100,7 +100,7 @@ public class AmmoControl : MonoBehaviour
                 case "auto":
                     if (pad.rightTrigger.ReadValue() > 0.1f)
                     {
-                        fire.Shoot(currentAmmoPrefab, currentGun.spreadAngle);
+                        fire.Shoot(currentAmmoPrefab, currentGun.spreadAngle, currentGun.recoil);
                         didFire = true;
                     }
                     break;
