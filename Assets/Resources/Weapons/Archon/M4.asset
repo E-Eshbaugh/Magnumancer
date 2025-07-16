@@ -21,7 +21,7 @@ MonoBehaviour:
   weaponIcon: {fileID: -1922479695, guid: 88365eb93f90dc0448eb4a39ecadd679, type: 3}
   description: A versatile killer. Balanced, reliable, and just quiet enough.
   fireType: auto
-  recoil: 0.2
+  recoil: 0.01
   ammoType: {fileID: 6997994299401861888, guid: 2ec29fc9207248740970443e058a84f0, type: 3}
   laserRange: 0
   isShotgun: 0

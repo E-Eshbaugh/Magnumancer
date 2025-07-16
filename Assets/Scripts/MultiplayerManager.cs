@@ -1,3 +1,4 @@
+using Unity.VisualScripting;
 using UnityEngine;
 using UnityEngine.InputSystem;
 using UnityEngine.InputSystem.Users;
@@ -11,11 +12,13 @@ public class MultiplayerManager : MonoBehaviour
     public int numPlayers = 2;
     public CircleAbilityUI[] uiControllers;
     public WeaponData[] player1Loadout;
+    public WizardData player1Wizard;
 
     void Start()
     {
         //loadout assignment
-        player1Loadout = DataManager.Instance.loadout;
+        player1Loadout = DataManager.Instance.p1_loadout;
+        player1Wizard = DataManager.Instance.p1_wizard;
 
         Debug.Log("=== MultiplayerManager Setup ===");
 

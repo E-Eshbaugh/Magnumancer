@@ -2071,10 +2071,6 @@ PrefabInstance:
       propertyPath: Player
       value: 
       objectReference: {fileID: 517988880}
-    - target: {fileID: 4954146844188687794, guid: b5a9cd3f20c4df146b3f8338e69730d4, type: 3}
-      propertyPath: healthMask
-      value: 
-      objectReference: {fileID: 0}
     - target: {fileID: 5557804073826279558, guid: b5a9cd3f20c4df146b3f8338e69730d4, type: 3}
       propertyPath: m_LocalPosition.z
       value: -679.00055

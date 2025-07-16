@@ -16,7 +16,7 @@ MonoBehaviour:
   heartCount: 3
   orbCount: 3
   loadoutOrbs: 8
-  factionEmblem: {fileID: -969096767, guid: 75fdd9b071aefd14fa1922afc36f8c0a, type: 3}
+  factionEmblem: {fileID: 138194782, guid: d812d7af151532745a44f9a32bbfe38a, type: 3}
   charcterImage: {fileID: -1239181586, guid: b0ebbbbb3b6b6d0448687e12fa505137, type: 3}
   passiveAbility: 'Thunderstrike: Bullets can chain to nearby enemies, dealing reduced
     chain damage'

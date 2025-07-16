@@ -35,7 +35,7 @@ public class GunSwapControl : MonoBehaviour
 
     void Start()
     {
-        loadout = DataManager.Instance.loadout;
+        loadout = DataManager.Instance.p1_loadout;
         for (int i = 0; i < loadout.Length; i++)
         {
             if (loadout[i] == null)

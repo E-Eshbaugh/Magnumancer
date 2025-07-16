@@ -16,7 +16,7 @@ MonoBehaviour:
   heartCount: 3
   orbCount: 2
   loadoutOrbs: 6
-  factionEmblem: {fileID: 1148911213, guid: 75fdd9b071aefd14fa1922afc36f8c0a, type: 3}
+  factionEmblem: {fileID: -1385798069, guid: d812d7af151532745a44f9a32bbfe38a, type: 3}
   charcterImage: {fileID: -320323907, guid: 3319322a03244a340a75fcd78da19e5d, type: 3}
   passiveAbility: 'Flameshot: Bullets deal burn damage on contact with enemies or
     leave a burning flame on ground'

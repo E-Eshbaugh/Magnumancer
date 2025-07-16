@@ -16,7 +16,7 @@ MonoBehaviour:
   heartCount: 2
   orbCount: 4
   loadoutOrbs: 10
-  factionEmblem: {fileID: 1012089398, guid: 75fdd9b071aefd14fa1922afc36f8c0a, type: 3}
+  factionEmblem: {fileID: -195318502, guid: d812d7af151532745a44f9a32bbfe38a, type: 3}
   charcterImage: {fileID: -1407414220, guid: cc48c478178a2b84d8ececaa877d2761, type: 3}
   passiveAbility: 'Blight: Bullets apply a poison effect to enemies that can spread
     to nearby targets'

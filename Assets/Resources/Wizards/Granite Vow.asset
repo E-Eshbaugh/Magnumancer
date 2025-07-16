@@ -16,7 +16,7 @@ MonoBehaviour:
   heartCount: 5
   orbCount: 2
   loadoutOrbs: 6
-  factionEmblem: {fileID: -1668397718, guid: 75fdd9b071aefd14fa1922afc36f8c0a, type: 3}
+  factionEmblem: {fileID: 1886968780, guid: d812d7af151532745a44f9a32bbfe38a, type: 3}
   charcterImage: {fileID: -21015154, guid: 966ee461096bb924f91cc201321af6f8, type: 3}
   passiveAbility: 'Heavy Weight: Slams have increas AoE knockback and damage'
   activeAbility: 'Earthwarden''s Bulwark: Summon a powerful stone wall, bloacking

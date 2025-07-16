@@ -16,7 +16,7 @@ MonoBehaviour:
   heartCount: 4
   orbCount: 2
   loadoutOrbs: 6
-  factionEmblem: {fileID: -1969268113, guid: 75fdd9b071aefd14fa1922afc36f8c0a, type: 3}
+  factionEmblem: {fileID: 758042945, guid: d812d7af151532745a44f9a32bbfe38a, type: 3}
   charcterImage: {fileID: 2062932452, guid: 14b3787829e18034195f3cad3ff558b4, type: 3}
   passiveAbility: 'Mistshroud: Every 3rd dash ability triggers a small smoke screen'
   activeAbility: 'Abyssal Vortex: Next bullet fired creates a whirlpool that pulls

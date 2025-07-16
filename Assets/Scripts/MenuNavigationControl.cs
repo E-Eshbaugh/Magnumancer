@@ -69,6 +69,7 @@ public class MenuNavigationControl : MonoBehaviour
                 StartCoroutine(pageForwardAnimation(() =>
                 {
                     selectedWizard = characterSelectController.selectedWizard;
+                    DataManager.Instance.p1_wizard = selectedWizard;
                     page1.SetActive(false);
                     page2.SetActive(false);
                     page3.SetActive(true);
@@ -83,7 +84,7 @@ public class MenuNavigationControl : MonoBehaviour
                 StartCoroutine(pageForwardAnimation(() =>
                 {
                     //save loadout data
-                    DataManager.Instance.loadout = weaponSelectControl.inventoryData;
+                    DataManager.Instance.p1_loadout = weaponSelectControl.inventoryData;
                     
                     page3.SetActive(false);
                     page4.SetActive(false);

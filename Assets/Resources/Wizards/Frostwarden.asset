@@ -16,7 +16,7 @@ MonoBehaviour:
   heartCount: 2
   orbCount: 4
   loadoutOrbs: 10
-  factionEmblem: {fileID: -1983320218, guid: 75fdd9b071aefd14fa1922afc36f8c0a, type: 3}
+  factionEmblem: {fileID: 102104955, guid: d812d7af151532745a44f9a32bbfe38a, type: 3}
   charcterImage: {fileID: -1695864718, guid: 2b157bd54fec28a47a9c6c2e19006362, type: 3}
   passiveAbility: 'Frostarmor: Small chance to deflect bullets back at enemies'
   activeAbility: 'Winter''s Judgement: Fires a piercing ice shard that does extreme

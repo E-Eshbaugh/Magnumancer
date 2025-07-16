@@ -28,6 +28,7 @@ public class CircleAbilityUI : MonoBehaviour
 
     void Start()
     {
+        crestImage.sprite = DataManager.Instance.p1_wizard?.factionEmblem;
         // sample the sprite’s center pixel
         Sprite sprite = crestImage.sprite;
         Texture2D tex = sprite.texture;

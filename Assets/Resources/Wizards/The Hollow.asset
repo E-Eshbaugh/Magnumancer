@@ -16,7 +16,7 @@ MonoBehaviour:
   heartCount: 1
   orbCount: 5
   loadoutOrbs: 12
-  factionEmblem: {fileID: 1339321590, guid: 75fdd9b071aefd14fa1922afc36f8c0a, type: 3}
+  factionEmblem: {fileID: -1861122501, guid: d812d7af151532745a44f9a32bbfe38a, type: 3}
   charcterImage: {fileID: 1591709252, guid: 83fa121b3217fa84ca11623844a0189b, type: 3}
   passiveAbility: 'Shadowshot: 25% chance to fire a shadow bullet that can phase
     through walls and obstacles'

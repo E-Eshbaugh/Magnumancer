@@ -16,7 +16,7 @@ MonoBehaviour:
   heartCount: 4
   orbCount: 3
   loadoutOrbs: 8
-  factionEmblem: {fileID: 1473206808, guid: 75fdd9b071aefd14fa1922afc36f8c0a, type: 3}
+  factionEmblem: {fileID: -2096395893, guid: d812d7af151532745a44f9a32bbfe38a, type: 3}
   charcterImage: {fileID: 409340080, guid: 05fba9a15d23a8e4db95735512ff105e, type: 3}
   passiveAbility: 'Bounty of the Forest: Returns a portion of damage dealt by planted
     thorns as health'

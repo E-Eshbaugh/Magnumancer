@@ -21,7 +21,7 @@ MonoBehaviour:
   weaponIcon: {fileID: -1917225690, guid: 88365eb93f90dc0448eb4a39ecadd679, type: 3}
   description: '[10x3] Each shot a thunderclap. Slower, but bone-breaking.'
   fireType: shotgun
-  recoil: 0.9
+  recoil: 1.5
   ammoType: {fileID: 6997994299401861888, guid: 8de6b050532025b4a891587baeb511f6, type: 3}
   laserRange: 0
   isShotgun: 1
