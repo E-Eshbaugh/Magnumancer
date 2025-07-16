@@ -67,7 +67,8 @@ Transform:
   m_LocalPosition: {x: 0, y: 0.9800001, z: 2.3900013}
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_ConstrainProportionsScale: 0
-  m_Children: []
+  m_Children:
+  - {fileID: 5040858543144988431}
   m_Father: {fileID: 2907260401102680906}
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
 --- !u!114 &5452479204606598543
@@ -83,7 +84,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   player: {fileID: 2907260401102680906}
-  orbitRadius: 0.75
+  orbitRadius: 0.5
   fixedHeight: 0.5
   tilt: -90
   aimDirection: {x: 0, y: 0, z: 1}
@@ -99,7 +100,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 3d2b8dc319f89d742b80446d4197d3ac, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  firePoint: {fileID: 5038500048487318550}
+  firePoint: {fileID: 5040858543144988431}
   bulletSpeed: 20
 --- !u!114 &6173842408804933738
 MonoBehaviour:
@@ -308,6 +309,53 @@ MonoBehaviour:
   mainGunSlot: {fileID: 5038500048487318550}
   secondaryAnchor: {fileID: 2912342247700950833}
   rotationOffsetEuler: {x: 180, y: 0, z: 90}
+--- !u!1 &8667810864407706174
+GameObject:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  serializedVersion: 6
+  m_Component:
+  - component: {fileID: 5040858543144988431}
+  - component: {fileID: 127807598692634969}
+  m_Layer: 3
+  m_Name: firePoint
+  m_TagString: Untagged
+  m_Icon: {fileID: 0}
+  m_NavMeshLayer: 0
+  m_StaticEditorFlags: 0
+  m_IsActive: 1
+--- !u!4 &5040858543144988431
+Transform:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 8667810864407706174}
+  serializedVersion: 2
+  m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
+  m_LocalPosition: {x: 0, y: 0, z: 0}
+  m_LocalScale: {x: 1, y: 1, z: 1}
+  m_ConstrainProportionsScale: 0
+  m_Children: []
+  m_Father: {fileID: 5038500048487318550}
+  m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
+--- !u!114 &127807598692634969
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 8667810864407706174}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 9a8d7fad24932de459a7a212c878e0e9, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  gunFirePoint: {fileID: 0}
+  gunPrefab: {fileID: 0}
+  gunControl: {fileID: 0}
 --- !u!1001 &3445834888638731425
 PrefabInstance:
   m_ObjectHideFlags: 0
@@ -905,6 +953,11 @@ MonoBehaviour:
   - {fileID: 5167352523380930853, guid: 3b223e1e99f294a4392b3ae777722d38, type: 3}
   gunRotation: {x: 0, y: 0, z: 90}
   currentGunIndex: 0
+  loadout:
+  - {fileID: 11400000, guid: ba907eeb7f55263498b3ec19d9243e67, type: 2}
+  - {fileID: 11400000, guid: da1ae560b6a869f4c8a4cb39d809fe56, type: 2}
+  - {fileID: 11400000, guid: a9185a17e638c0b43bc9521d7c8a0e2b, type: 2}
+  - {fileID: 11400000, guid: e9e3fa9f90558b84d8489bbdeb9f3b7a, type: 2}
 --- !u!114 &3952200475238270802
 MonoBehaviour:
   m_ObjectHideFlags: 0

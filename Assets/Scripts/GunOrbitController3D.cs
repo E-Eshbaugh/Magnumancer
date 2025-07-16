@@ -55,7 +55,7 @@ public class GunOrbitController : MonoBehaviour
         worldPos.y = player.position.y + fixedHeight;
         transform.position = worldPos;
 
-        transform.rotation = Quaternion.LookRotation(aimDirection, Vector3.up);
+        transform.rotation = Quaternion.LookRotation(-aimDirection, Vector3.up);
         transform.Rotate(Vector3.right, tilt, Space.Self);
     }
 }

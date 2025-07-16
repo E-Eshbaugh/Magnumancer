@@ -13,7 +13,7 @@ public class GunSwapControl : MonoBehaviour
 
     // we’ll fill these in Awake() so you don’t have to hook them up manually
     private AmmoControl      ammoControl;
-    private FireController3D fireController;
+    public FireController3D fireController;
     private AkimboController akimboControl;
 
     private GameObject currentGun;
@@ -76,12 +76,7 @@ public class GunSwapControl : MonoBehaviour
         currentGun = Instantiate(gunPrefabs[index], gunHolder);
         currentGun.transform.localPosition = Vector3.zero;
         currentGun.transform.localRotation = Quaternion.Euler(gunRotation);
-
-        // re-target the shooter
-        if (fireController != null)
-        {
-            fireController.firePoint = gunHolder;
-        }
+        currentGun.name = "gunClone";
 
         // reset ammo
         if (ammoControl != null)

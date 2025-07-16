@@ -1,0 +1,34 @@
+%YAML 1.1
+%TAG !u! tag:unity3d.com,2011:
+--- !u!114 &11400000
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 3b1075652dd939146a7c0fa3dc80ba42, type: 3}
+  m_Name: LeverAction
+  m_EditorClassIdentifier: 
+  weaponName: Dustbreaker
+  damage: 10
+  ammoCapacity: 5
+  attackSpeed: 1.5
+  weight: 3
+  orbCost: 1
+  weaponIcon: {fileID: -1917225690, guid: 88365eb93f90dc0448eb4a39ecadd679, type: 3}
+  description: '[10x3] Each shot a thunderclap. Slower, but bone-breaking.'
+  fireType: shotgun
+  recoil: 0.9
+  ammoType: {fileID: 6997994299401861888, guid: 8de6b050532025b4a891587baeb511f6, type: 3}
+  laserRange: 0
+  isShotgun: 1
+  pelletCount: 10
+  spreadAngle: 8
+  heavyWeapon: 0
+  akimbo: 0
+  specialBulletType: {fileID: 6997994299401861888, guid: 9a3fa6105bf106d4da479cacbbeb3c55, type: 3}
+  baseAmmoType: {fileID: 6997994299401861888, guid: 8de6b050532025b4a891587baeb511f6, type: 3}
+  prefab: {fileID: 757998253363643933, guid: 53df6c660ea584309aabb523204bed8e, type: 3}

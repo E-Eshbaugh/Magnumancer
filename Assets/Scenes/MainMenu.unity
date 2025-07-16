@@ -8381,8 +8381,14 @@ MonoBehaviour:
   weaponIcon: {fileID: 474080175}
   archonWeapons:
   - {fileID: 11400000, guid: ba907eeb7f55263498b3ec19d9243e67, type: 2}
-  ascendantWeapons:
   - {fileID: 11400000, guid: 7fa214f30a53fc04d95a27b9379ec90b, type: 2}
+  - {fileID: 11400000, guid: bc12418186f4a394fbea057b19a8c1f6, type: 2}
+  - {fileID: 11400000, guid: 6b0a595098a55b541ae6c1103fa5c0df, type: 2}
+  ascendantWeapons:
+  - {fileID: 11400000, guid: 4338d4f21f1138846a835288a1c6bdcd, type: 2}
+  - {fileID: 11400000, guid: c345cbe9f03696741a59f1f90f67d0be, type: 2}
+  - {fileID: 11400000, guid: ec5ea3d0336884a4094c89174154072a, type: 2}
+  - {fileID: 11400000, guid: f52eec34bda8d124ea310a5e17d1d0b4, type: 2}
   initiateWeapons:
   - {fileID: 11400000, guid: a9185a17e638c0b43bc9521d7c8a0e2b, type: 2}
   - {fileID: 11400000, guid: da1ae560b6a869f4c8a4cb39d809fe56, type: 2}

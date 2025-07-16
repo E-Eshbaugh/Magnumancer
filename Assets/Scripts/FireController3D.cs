@@ -28,7 +28,7 @@ public class FireController3D : MonoBehaviour
         }
 
         // 1) Compute the flat shooting direction
-        Vector3 dir = -firePoint.up;
+        Vector3 dir = firePoint.up;
         if (spreadAngle > 0f)
             dir = Quaternion.AngleAxis(
                 Random.Range(-spreadAngle, spreadAngle),

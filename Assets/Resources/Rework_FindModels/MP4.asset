@@ -17,9 +17,18 @@ MonoBehaviour:
   ammoCapacity: 32
   attackSpeed: 8
   weight: 2
-  orbCost: 4
+  orbCost: 1
   weaponIcon: {fileID: -1649607643, guid: 88365eb93f90dc0448eb4a39ecadd679, type: 3}
   description: Sleek and deadly. Balanced fire rate and accuracy in tight quarters.
   fireType: auto
-  recoil: 0
-  ammoType: {fileID: 0}
+  recoil: 0.3
+  ammoType: {fileID: 6997994299401861888, guid: 8de6b050532025b4a891587baeb511f6, type: 3}
+  laserRange: 0
+  isShotgun: 0
+  pelletCount: 5
+  spreadAngle: 15
+  heavyWeapon: 0
+  akimbo: 1
+  specialBulletType: {fileID: 6997994299401861888, guid: 8de6b050532025b4a891587baeb511f6, type: 3}
+  baseAmmoType: {fileID: 6997994299401861888, guid: 8de6b050532025b4a891587baeb511f6, type: 3}
+  prefab: {fileID: 6402438624428262626, guid: f15a895fe7bb29f4a821640ec940f8ed, type: 3}

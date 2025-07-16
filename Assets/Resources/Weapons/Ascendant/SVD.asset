@@ -1,0 +1,34 @@
+%YAML 1.1
+%TAG !u! tag:unity3d.com,2011:
+--- !u!114 &11400000
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 3b1075652dd939146a7c0fa3dc80ba42, type: 3}
+  m_Name: SVD
+  m_EditorClassIdentifier: 
+  weaponName: Runepiercer
+  damage: 28
+  ammoCapacity: 8
+  attackSpeed: 5
+  weight: 3
+  orbCost: 1
+  weaponIcon: {fileID: -666722617, guid: 88365eb93f90dc0448eb4a39ecadd679, type: 3}
+  description: ' Enchanted rounds punch through wards. Deadly from a distance.'
+  fireType: semi
+  recoil: 0.5
+  ammoType: {fileID: 6997994299401861888, guid: 8de6b050532025b4a891587baeb511f6, type: 3}
+  laserRange: 20
+  isShotgun: 0
+  pelletCount: 5
+  spreadAngle: 0
+  heavyWeapon: 0
+  akimbo: 0
+  specialBulletType: {fileID: 6997994299401861888, guid: 8de6b050532025b4a891587baeb511f6, type: 3}
+  baseAmmoType: {fileID: 6997994299401861888, guid: 8de6b050532025b4a891587baeb511f6, type: 3}
+  prefab: {fileID: 5645212007748657471, guid: 2da63f1de39184c8abaa26a18d49e30b, type: 3}

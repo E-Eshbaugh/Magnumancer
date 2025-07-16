@@ -1,0 +1,34 @@
+%YAML 1.1
+%TAG !u! tag:unity3d.com,2011:
+--- !u!114 &11400000
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 3b1075652dd939146a7c0fa3dc80ba42, type: 3}
+  m_Name: AutoSG
+  m_EditorClassIdentifier: 
+  weaponName: Hellthrasher
+  damage: 4
+  ammoCapacity: 12
+  attackSpeed: 2
+  weight: 4
+  orbCost: 1
+  weaponIcon: {fileID: -1675477381, guid: 88365eb93f90dc0448eb4a39ecadd679, type: 3}
+  description: '[4x12] Pumps out shells like a possessed forge. Close-range obliteration.'
+  fireType: shotgun
+  recoil: 2
+  ammoType: {fileID: 6997994299401861888, guid: 2ec29fc9207248740970443e058a84f0, type: 3}
+  laserRange: 0
+  isShotgun: 1
+  pelletCount: 4
+  spreadAngle: 20
+  heavyWeapon: 0
+  akimbo: 0
+  specialBulletType: {fileID: 6997994299401861888, guid: 9a3fa6105bf106d4da479cacbbeb3c55, type: 3}
+  baseAmmoType: {fileID: 6997994299401861888, guid: 2ec29fc9207248740970443e058a84f0, type: 3}
+  prefab: {fileID: 6047593409617330415, guid: 77aeb71bc87054528b83e83ca76aaa13, type: 3}
