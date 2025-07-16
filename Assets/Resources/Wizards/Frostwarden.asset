@@ -25,3 +25,4 @@ MonoBehaviour:
     sanctuaries charged with ancient magic. Their frozen lands shaped them into disciplined
     marksmen who wield precision sniper spells to halt foes in their tracks. Strategic
     and icy in demeanor, they dominate from a distance.
+  material: {fileID: 2100000, guid: e69691b4cf4f8eb4c86f4607dfe3c7dd, type: 2}

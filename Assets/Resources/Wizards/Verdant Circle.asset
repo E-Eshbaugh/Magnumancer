@@ -26,3 +26,4 @@ MonoBehaviour:
     healing with cunning survival tactics. Patient and persistent, they lay traps
     and wield massive weapons to protect the last living Lost Groves. Their strength
     lies in outlasting any foe.
+  material: {fileID: 2100000, guid: ae8c9663d79734e4cbf2bdf668e4f97f, type: 2}

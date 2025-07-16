@@ -69,7 +69,7 @@ public class MenuNavigationControl : MonoBehaviour
                 StartCoroutine(pageForwardAnimation(() =>
                 {
                     selectedWizard = characterSelectController.selectedWizard;
-                    DataManager.Instance.p1_wizard = selectedWizard;
+                    DataManager.Instance.SetWizard(0, selectedWizard);
                     page1.SetActive(false);
                     page2.SetActive(false);
                     page3.SetActive(true);

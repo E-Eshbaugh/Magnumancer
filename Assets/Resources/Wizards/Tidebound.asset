@@ -26,3 +26,4 @@ MonoBehaviour:
     ruins and sea caverns. hardened by amphibious goblin raids during the great war,
     they master the tides with close-range whirlpool attacks and brutal melee spells.
     They crash in like waves\u2014overwhelming and personal."
+  material: {fileID: 2100000, guid: 25ac3a8882121e843b62dcef38a94f6d, type: 2}

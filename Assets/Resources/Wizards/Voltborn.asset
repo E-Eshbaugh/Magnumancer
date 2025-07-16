@@ -27,3 +27,4 @@ MonoBehaviour:
     weapons and gadgets to strike chaos across the battlefield. Volborn\u2019s edge
     is unpredictability\u2014they attack hard and fast then vanishing like lightning,
     their electrified combat style keeps enemies guessing."
+  material: {fileID: 2100000, guid: 3e1004960baa19e4e827561df84af018, type: 2}

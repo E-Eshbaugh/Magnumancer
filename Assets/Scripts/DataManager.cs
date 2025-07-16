@@ -6,7 +6,7 @@ public class DataManager : MonoBehaviour
 
     // the array you want to carry forward
     public WeaponData[] p1_loadout;
-    public WizardData p1_wizard;
+    public WizardData[] selectedWizards = new WizardData[4];
 
     void Awake()
     {
@@ -19,5 +19,16 @@ public class DataManager : MonoBehaviour
         {
             Destroy(gameObject);
         }
+    }
+
+    public void SetWizard(int slot, WizardData data)
+    {
+        if (slot < 0 || slot >= selectedWizards.Length) return;
+        selectedWizards[slot] = data;
+    }
+
+    public WizardData GetWizard(int slot)
+    {
+        return (slot >= 0 && slot < selectedWizards.Length) ? selectedWizards[slot] : null;
     }
 }

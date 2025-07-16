@@ -21,14 +21,12 @@ public class CircleAbilityUI : MonoBehaviour
     [Header("Controller")]
     [Tooltip("The specific gamepad to listen to for ability input")]
     public Gamepad gamepad;         // assign in inspector or from MultiplayerManager
-
     private float timer;
     private Coroutine pulseRoutine;
     private Color sampledCrestColor;
 
     void Start()
     {
-        crestImage.sprite = DataManager.Instance.p1_wizard?.factionEmblem;
         // sample the sprite’s center pixel
         Sprite sprite = crestImage.sprite;
         Texture2D tex = sprite.texture;

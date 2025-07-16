@@ -12,4 +12,5 @@ public class WizardData : ScriptableObject
     public string passiveAbility;
     public string activeAbility;
     public string loreText;
+    public Material material;
 }

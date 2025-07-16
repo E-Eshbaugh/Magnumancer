@@ -26,3 +26,4 @@ MonoBehaviour:
     they carry unmatched durability and power\u2014slow to move but impossible to
     stop, wielding heavy, crushing weapons and firepower to accompany their strong
     fortification spells and will power."
+  material: {fileID: 2100000, guid: 8971174afe209f1418005a206bc72baa, type: 2}

@@ -18,7 +18,7 @@ public class MultiplayerManager : MonoBehaviour
     {
         //loadout assignment
         player1Loadout = DataManager.Instance.p1_loadout;
-        player1Wizard = DataManager.Instance.p1_wizard;
+        player1Wizard = DataManager.Instance.GetWizard(0);
 
         Debug.Log("=== MultiplayerManager Setup ===");
 
@@ -138,6 +138,7 @@ public class MultiplayerManager : MonoBehaviour
             if (i < uiControllers.Length && uiControllers[i] != null)
             {
                 uiControllers[i].gamepad = pad;
+                uiControllers[i].crestImage.sprite = player1Wizard.factionEmblem;
                 Debug.Log($" → Assigned pad {i} to CircleAbilityUI on {uiControllers[i].gameObject.name}");
             }
             else

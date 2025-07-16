@@ -27,3 +27,4 @@ MonoBehaviour:
     forges and ash-choked wastes, they\u2019ve traded elegance for brutal efficiency.
     Their gun spells roar like dragon breath, best suited for ARs and SMGs that mirror
     their ferocity."
+  material: {fileID: 2100000, guid: 8707fa60f1aa2a342902b29bfe61b828, type: 2}

@@ -28,3 +28,4 @@ MonoBehaviour:
     by corruptive spores released by goblin shamans, the powerful healers were warped
     into the Blightward, using their strong magical power and tactical knowledge
     to attack with AoE weapons to slowly poison and decay their enemies.
+  material: {fileID: 2100000, guid: 6da374a2d06ded5499da8399ed5ec7dc, type: 2}
