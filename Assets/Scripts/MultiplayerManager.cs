@@ -146,7 +146,19 @@ public class MultiplayerManager : MonoBehaviour
                 Debug.LogWarning($"No uiControllers[{i}] assigned in the inspector!");
             }
 
-                }
+            var wizAbility = go.GetComponentInChildren<WizardAbilityController>();
+            if (wizAbility != null)
+            {
+                wizAbility.gamepad = pad;
+                wizAbility.wizard = player1Wizard;
+                Debug.Log($" → Assigned pad {i} to WizardAbilityController on {wizAbility.name}");
+            }
+            else
+            {
+                Debug.LogWarning($"No WizardAbilityController on {go.name} or its children!");
+            }
+
+        }
 
         Debug.Log("=== Setup Complete ===");
     }
