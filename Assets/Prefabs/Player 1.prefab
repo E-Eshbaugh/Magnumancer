@@ -323,7 +323,11 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   playerBody: {fileID: 0}
-  grenadePrefab: {fileID: 0}
+  grenadePrefab: {fileID: 3773003613870667637, guid: f85ac6d2f315b94449ab1d365258d680, type: 3}
+  muzzle: {fileID: 5040858543144988431}
+  dashSegmentPrefab: {fileID: 1956128383333637464, guid: 87ca999766dc11b469d18e9a1eedffff, type: 3}
+  segmentPoolSize: 48
+  ringMaterialBase: {fileID: 2100000, guid: ede6a74cdf0481c4ea0c06aaabea7782, type: 2}
   triggerThreshold: 0.2
   stickDeadzone: 0.2
   isoYaw: 45
@@ -333,6 +337,7 @@ MonoBehaviour:
   chargeTime: 1
   upwardBias: 2
   fireCooldown: 0.25
+  launchVelAdjust: {x: 0, y: 0, z: 0}
   gravity: {x: 0, y: -100, z: 0}
   maxSteps: 80
   timeStep: 0.05
@@ -341,7 +346,6 @@ MonoBehaviour:
   collisionMask:
     serializedVersion: 2
     m_Bits: 4294967295
-  segmentPoolSize: 48
   segmentLength: 0.22
   gapLength: 0.14
   dashWidth: 0.06
@@ -352,9 +356,13 @@ MonoBehaviour:
   landingRingColor: {r: 1, g: 0.2, b: 0.1, a: 0.4}
   landingRingPulseSpeed: 3
   landingRingPulseAmp: 0.15
+  ringElevation: 0.05
   tooCloseHitDistance: 1
   shortArcStartColor: {r: 1, g: 0.92156863, b: 0.015686275, a: 1}
   shortArcEndColor: {r: 1, g: 0, b: 0, a: 1}
+  logInit: 0
+  guardMaterials: 0
+  fxLayerName: FX
   grenadeFuseTime: 2.2
   grenadeBlastRadius: 4
   grenadeDamage: 50
