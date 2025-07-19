@@ -158,6 +158,17 @@ public class MultiplayerManager : MonoBehaviour
                 Debug.LogWarning($"No WizardAbilityController on {go.name} or its children!");
             }
 
+            var arAbility = go.GetComponentInChildren<ArAbilityController>();
+            if (arAbility != null)
+            {
+                arAbility.gamepadOverride = pad;
+                Debug.Log($" → Assigned pad {i} to ArAbilityController on {arAbility.name}");
+            }
+            else
+            {
+                Debug.LogWarning($"No ArAbilityController on {go.name} or its children!");
+            }
+
         }
 
         Debug.Log("=== Setup Complete ===");
