@@ -3,51 +3,39 @@ using UnityEngine;
 using UnityEngine.InputSystem;
 using System.Collections.Generic;
 
-/// <summary>
-/// Hold LT to show a dashed ballistic preview + landing ring. Release to throw a grenade
-/// along the exact simulated path (custom gravity supported).
-/// Attach this to your gun / muzzle object.
-/// </summary>
 public class ArAbilityController : MonoBehaviour
 {
     [Header("External Refs (Optional)")]
-    [Tooltip("Override gamepad; if null uses Gamepad.current.")]
     public Gamepad gamepadOverride;
-    [Tooltip("Player root Rigidbody to inherit velocity from (optional).")]
     public Rigidbody playerBody;
-    [Tooltip("Grenade prefab with Rigidbody (optional). If unassigned a temp sphere is created.")]
     public GameObject grenadePrefab;
-    [Tooltip("Optional separate launch origin.")]
     public Transform muzzle;
 
     [SerializeField] GameObject dashSegmentPrefab;
     [SerializeField] int segmentPoolSize = 48;
 
+    // LineRenderer pool
     List<LineRenderer> dashPool = new();
     int activeSegments;
     MaterialPropertyBlock dashMPB;
     public Material ringMaterialBase;
 
-
     [Header("Input")]
     public float triggerThreshold = 0.2f;
     public float stickDeadzone = 0.2f;
-    public float isoYaw = 45f;          // rotate planar aim for isometric camera
+    public float isoYaw = 45f;
 
     [Header("Launch & Charge")]
     public bool chargePower = true;
     public float minSpeed = 6f;
     public float maxSpeed = 12f;
     public float chargeTime = 0.75f;
-    [Tooltip("Added upward component BEFORE normalization. Higher = steeper arc.")]
     public float upwardBias = 0.55f;
-    [Tooltip("Cooldown between throws.")]
     public float fireCooldown = 0.25f;
-    [Tooltip("Additive tweak to final initial velocity (e.g., compensate player movement).")]
     public Vector3 launchVelAdjust = Vector3.zero;
 
     [Header("Physics / Simulation")]
-    public Vector3 gravity = new Vector3(0, -11.5f, 0); // Custom gravity (steeper arc)
+    public Vector3 gravity = new Vector3(0, -11.5f, 0);
     public int maxSteps = 80;
     public float timeStep = 0.05f;
     public float maxSimTime = 2.0f;
@@ -60,6 +48,8 @@ public class ArAbilityController : MonoBehaviour
     public float dashWidth = 0.06f;
     public Color dashStartColor = new Color(1f, 0.35f, 0.15f);
     public Color dashEndColor = new Color(0.85f, 0f, 0f);
+    [Tooltip("Flatten each individual dash to a constant Y (helps ensure a perfectly smooth silhouette).")]
+    public bool flattenEachDash = true;          // *** NEW FLAG ***
 
     [Header("Landing Ring")]
     public bool showLandingRing = false;
@@ -70,17 +60,15 @@ public class ArAbilityController : MonoBehaviour
     public float ringElevation = 0.05f;
 
     [Header("Quality / Edge Cues")]
-    [Tooltip("If first hit is closer than this, show warning colors.")]
     public float tooCloseHitDistance = 1.0f;
     public Color shortArcStartColor = Color.yellow;
     public Color shortArcEndColor = Color.red;
 
     [Header("Diagnostics")]
     public bool logInit = false;
-    public bool guardMaterials = false;     // re-applies correct materials if external scripts overwrite
-    public string fxLayerName = "FX";       // optional layer to isolate from global recolor scripts
+    public bool guardMaterials = false;
+    public string fxLayerName = "FX";
 
-    // --- Runtime State ---
     Gamepad pad;
     bool aiming;
     float aimStartTime;
@@ -92,7 +80,6 @@ public class ArAbilityController : MonoBehaviour
     bool simHit;
     RaycastHit simHitInfo;
 
-    // Ring
     GameObject ringGO;
     Mesh ringMesh;
     MeshRenderer ringRenderer;
@@ -116,8 +103,6 @@ public class ArAbilityController : MonoBehaviour
     {
         dashMPB = new MaterialPropertyBlock();
         ringMPB = new MaterialPropertyBlock();
-
-        // Allocate simulation buffer
         simBuffer = new Vector3[Mathf.Max(8, maxSteps + 4)];
 
         BuildDashPool();
@@ -141,7 +126,6 @@ public class ArAbilityController : MonoBehaviour
         if (showLandingRing && ringGO && ringGO.activeSelf)
             UpdateRingVisual();
     }
-    // ===== Aiming / Launch =====
 
     void StartAiming()
     {
@@ -160,19 +144,16 @@ public class ArAbilityController : MonoBehaviour
     {
         Vector3 startPos = muzzle ? muzzle.position : transform.position;
 
-        // Direction from right stick or forward
         Vector2 rs = pad.rightStick.ReadValue();
         Vector3 dir = (rs.magnitude > stickDeadzone)
             ? Quaternion.Euler(0, isoYaw, 0) * new Vector3(rs.x, 0f, rs.y)
             : transform.forward;
         dir.Normalize();
 
-        // Speed (charging)
         float speed = chargePower
             ? Mathf.Lerp(minSpeed, maxSpeed, Mathf.Clamp01((Time.time - aimStartTime) / chargeTime))
             : Mathf.Lerp(minSpeed, maxSpeed, 0.65f);
 
-        // Build initial velocity
         Vector3 launchDir = (dir + Vector3.up * upwardBias).normalized;
         cachedVelocity = launchDir * speed + launchVelAdjust;
 
@@ -225,7 +206,7 @@ public class ArAbilityController : MonoBehaviour
 
         if (g.TryGetComponent<Rigidbody>(out var rb2))
         {
-            rb2.useGravity = false; // we'll apply custom gravity
+            rb2.useGravity = false;
 #if UNITY_6000_0_OR_NEWER
             rb2.linearVelocity = velocity + (playerBody ? playerBody.linearVelocity : Vector3.zero);
 #else
@@ -240,8 +221,7 @@ public class ArAbilityController : MonoBehaviour
 #endif
     }
 
-    // ===== Simulation =====
-
+    // ===== Simulation (unchanged) =====
     void SimulateArc(Vector3 startPos, Vector3 initVel)
     {
         if (simBuffer == null || simBuffer.Length < maxSteps + 4)
@@ -289,7 +269,6 @@ public class ArAbilityController : MonoBehaviour
             return;
         }
 
-        // Pre‑instantiate pool
         for (int i = 0; i < segmentPoolSize; i++)
         {
             var inst = Instantiate(dashSegmentPrefab, transform);
@@ -302,18 +281,22 @@ public class ArAbilityController : MonoBehaviour
                 continue;
             }
 
-            // Ensure we are in pool baseline state
+            // *** CRITICAL SETTINGS ***
             lr.enabled = false;
             lr.positionCount = 2;
-            // (Optional) override width:
-            // lr.startWidth = lr.endWidth = dashWidth;
+            lr.alignment = LineAlignment.View;        // not View
+            lr.useWorldSpace = true;
+            lr.numCapVertices = 0;
+            lr.numCornerVertices = 0;
+            lr.startWidth = lr.endWidth = dashWidth;        // uniform width
+            inst.transform.rotation = Quaternion.identity;  // ensure no leftover X=90
+
             dashPool.Add(lr);
         }
 
         if (dashMPB == null)
             dashMPB = new MaterialPropertyBlock();
     }
-
 
     void ShowDashes(Color startC, Color endC)
     {
@@ -341,22 +324,39 @@ public class ArAbilityController : MonoBehaviour
             Vector3 p0 = Sample(segStart);
             Vector3 p1 = Sample(segEnd);
 
+            // *** OPTIONAL flatten each dash's own endpoints (stop individual pitch) ***
+            if (flattenEachDash)
+            {
+                float yMid = 0.5f * (p0.y + p1.y);
+                p0.y = p1.y = yMid + 0.01f;
+            }
+
             var lr = dashPool[activeSegments++];
             if (!lr.enabled) lr.enabled = true;
+
+            // *** ORIENT YAW ONLY ***
+            Vector3 horiz = new Vector3(p1.x - p0.x, 0f, p1.z - p0.z);
+            if (horiz.sqrMagnitude < 1e-4f) horiz = Vector3.forward;
+            lr.transform.rotation = Quaternion.LookRotation(horiz.normalized, Vector3.up);
+
             lr.SetPosition(0, p0);
             lr.SetPosition(1, p1);
 
             Color c = Color.Lerp(startC, endC, tNorm);
             ApplyDashColor(lr, c);
+
+            if (activeSegments == 1 && logInit)
+            {
+                float dy = lr.GetPosition(1).y - lr.GetPosition(0).y;
+                Debug.Log($"[DashSeg0] p0={p0} p1={p1} dy={dy:F5} horiz={horiz}");
+            }
         }
 
-        // Disable unused
         for (int i = activeSegments; i < dashPool.Count; i++)
-        {
             if (dashPool[i].enabled)
                 dashPool[i].enabled = false;
-        }
 
+        // Local sampling function
         Vector3 Sample(float dist)
         {
             int idx = cumulative.BinarySearch(dist);
@@ -367,7 +367,6 @@ public class ArAbilityController : MonoBehaviour
             return Vector3.Lerp(simBuffer[idx - 1], simBuffer[idx], t);
         }
     }
-
 
     void HideDashes()
     {
@@ -385,10 +384,7 @@ public class ArAbilityController : MonoBehaviour
         lr.SetPropertyBlock(dashMPB);
     }
 
-
-
-    // ===== Ring =====
-
+    // ===== Ring (unchanged code) =====
     void BuildRing()
     {
         if (!showLandingRing) return;
@@ -405,10 +401,8 @@ public class ArAbilityController : MonoBehaviour
         ringMesh = GenerateDiscMesh(40);
         mf.sharedMesh = ringMesh;
 
-        // Instance so we can set render queue without altering asset
         ringMaterialInstance = Instantiate(ringMaterialBase);
         ringMaterialInstance.name = ringMaterialBase.name + "_Instance";
-        // Force later render (avoid Z-fight); you can adjust 3100 -> 3001 if needed.
         ringMaterialInstance.renderQueue = 3100;
         ringRenderer.sharedMaterial = ringMaterialInstance;
 
@@ -478,7 +472,6 @@ public class ArAbilityController : MonoBehaviour
     }
 
 #if INCLUDE_MINI_GRENADE_CLASS
-    // Minimal internal grenade
     public class MiniGrenade : MonoBehaviour
     {
         [HideInInspector] public float fuseTime;
@@ -536,9 +529,6 @@ public class ArAbilityController : MonoBehaviour
 #endif
 }
 
-/// <summary>
-/// Applies per-frame custom gravity (acceleration) to Rigidbody (gravity off).
-/// </summary>
 public class CustomGravityBody : MonoBehaviour
 {
     public Vector3 gravity = new Vector3(0, -11.5f, 0);

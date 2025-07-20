@@ -16,7 +16,6 @@ public class firePointAdjuster : MonoBehaviour
     {
         gunFirePoint = transform.parent.Find("gunClone").GetChild(0);
         if (gunFirePoint != null)
-            Debug.Log("Got it: " + gunFirePoint.name);
             transform.position = gunFirePoint.position;
         
     }
