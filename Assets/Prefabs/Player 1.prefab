@@ -330,7 +330,7 @@ MonoBehaviour:
   ringMaterialBase: {fileID: 2100000, guid: ede6a74cdf0481c4ea0c06aaabea7782, type: 2}
   triggerThreshold: 0.2
   stickDeadzone: 0.2
-  isoYaw: 45
+  isoYaw: 0
   chargePower: 1
   minSpeed: 8
   maxSpeed: 22
