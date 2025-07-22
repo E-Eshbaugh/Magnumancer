@@ -6,13 +6,14 @@ using UnityEngine.SceneManagement;
 public class MenuNavigationControl : MonoBehaviour
 {
     [Header("-- Menu Pages --")]
-    public GameObject page1;
+    public GameObject page1; //Mode select
     public GameObject page2;
-    public GameObject page3;
+    public GameObject page3; //Character select
     public GameObject page4;
-    public GameObject page5;
+    public GameObject page5;//loadout select
     public GameObject page6;
-
+    public GameObject page7;//map select
+    public GameObject page8;
     [Header("-- Book Opening Animation --")]
     public GameObject[] framesForward;
     public GameObject[] framesBackward;
@@ -51,6 +52,8 @@ public class MenuNavigationControl : MonoBehaviour
         page4.SetActive(false);
         page5.SetActive(false);
         page6.SetActive(false);
+        page7.SetActive(false);
+        page8.SetActive(false);
 
         foreach (var f in framesForward) f.SetActive(false);
         foreach (var f in framesBackward) f.SetActive(false);
@@ -64,7 +67,7 @@ public class MenuNavigationControl : MonoBehaviour
         {
             if (page1.activeSelf)
             {
-                // Proceed to character select -> loadout
+                // Proceed to character select
                 hasStarted = true;
                 StartCoroutine(pageForwardAnimation(() =>
                 {
@@ -79,13 +82,10 @@ public class MenuNavigationControl : MonoBehaviour
             }
             else if (page3.activeSelf)
             {
-                // Proceed to loadout -> map select
+                // Proceed to loadout select
                 hasStarted = true;
                 StartCoroutine(pageForwardAnimation(() =>
-                {
-                    //save loadout data
-                    DataManager.Instance.p1_loadout = weaponSelectControl.inventoryData;
-                    
+                {   
                     page3.SetActive(false);
                     page4.SetActive(false);
                     page5.SetActive(true);
@@ -94,6 +94,22 @@ public class MenuNavigationControl : MonoBehaviour
                 }));
             }
             else if (page5.activeSelf)
+            {
+                // Proceed to map select
+                hasStarted = true;
+                StartCoroutine(pageForwardAnimation(() =>
+                {
+
+                    DataManager.Instance.p1_loadout = weaponSelectControl.inventoryData;
+
+                    page6.SetActive(false);
+                    page5.SetActive(false);
+                    page7.SetActive(true);
+                    page8.SetActive(true);
+                    hasStarted = false;
+                }));
+            }
+            else if (page7.activeSelf)
             {
                 selectedMap = mapSelectController.currentIndex;
                 if (selectedMap == 0)

@@ -1,5 +1,5 @@
 fileFormatVersion: 2
-guid: 989046a58f570ac41add1b2a561aef7e
+guid: 0330dd7c2f9ef3e428ce76ef1384acb1
 TextureImporter:
   internalIDToNameTable: []
   externalObjects: {}
@@ -110,13 +110,13 @@ TextureImporter:
     serializedVersion: 2
     sprites:
     - serializedVersion: 2
-      name: 135_0
+      name: ModeIcons_turquoise_glow_0
       rect:
         serializedVersion: 2
-        x: 0
-        y: 0
-        width: 48
-        height: 32
+        x: 146
+        y: 160
+        width: 317
+        height: 655
       alignment: 0
       pivot: {x: 0, y: 0}
       border: {x: 0, y: 0, z: 0, w: 0}
@@ -125,8 +125,52 @@ TextureImporter:
       physicsShape: []
       tessellationDetail: 0
       bones: []
-      spriteID: b57b81dd2bd34ad4d885421a8aeb3d1a
-      internalID: -67002788
+      spriteID: c62182b8701f0694c986d5a34408c218
+      internalID: -689097725
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: ModeIcons_turquoise_glow_1
+      rect:
+        serializedVersion: 2
+        x: 586
+        y: 160
+        width: 363
+        height: 655
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: 0
+      bones: []
+      spriteID: 10bfda2c4bd7267489efe54d43d32c8f
+      internalID: 609154669
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: ModeIcons_turquoise_glow_2
+      rect:
+        serializedVersion: 2
+        x: 1069
+        y: 160
+        width: 334
+        height: 655
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: 0
+      bones: []
+      spriteID: cb4825a07f70de44e857812a73518d09
+      internalID: 1406984138
       vertices: []
       indices: 
       edges: []
@@ -135,7 +179,7 @@ TextureImporter:
     customData: 
     physicsShape: []
     bones: []
-    spriteID: 5a54e6de93744014db6b63d795c170a1
+    spriteID: 0ee9d5faf06d6d74389617e26c9a3cf7
     internalID: 0
     vertices: []
     indices: 
@@ -145,7 +189,9 @@ TextureImporter:
     spriteCustomMetadata:
       entries: []
     nameFileIdTable:
-      135_0: -67002788
+      ModeIcons_turquoise_glow_0: -689097725
+      ModeIcons_turquoise_glow_1: 609154669
+      ModeIcons_turquoise_glow_2: 1406984138
   mipmapLimitGroupName: 
   pSDRemoveMatte: 0
   userData: 

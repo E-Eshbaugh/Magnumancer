@@ -1,5 +1,5 @@
 fileFormatVersion: 2
-guid: 989046a58f570ac41add1b2a561aef7e
+guid: 567165d3b46c9394cb4c3e42c9780a77
 TextureImporter:
   internalIDToNameTable: []
   externalObjects: {}
@@ -110,13 +110,13 @@ TextureImporter:
     serializedVersion: 2
     sprites:
     - serializedVersion: 2
-      name: 135_0
+      name: ModeIcons_0
       rect:
         serializedVersion: 2
-        x: 0
-        y: 0
-        width: 48
-        height: 32
+        x: 148
+        y: 160
+        width: 317
+        height: 655
       alignment: 0
       pivot: {x: 0, y: 0}
       border: {x: 0, y: 0, z: 0, w: 0}
@@ -125,8 +125,52 @@ TextureImporter:
       physicsShape: []
       tessellationDetail: 0
       bones: []
-      spriteID: b57b81dd2bd34ad4d885421a8aeb3d1a
-      internalID: -67002788
+      spriteID: 7c0e699ed72fdf646a7cc69967bc8773
+      internalID: -1546054114
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: ModeIcons_1
+      rect:
+        serializedVersion: 2
+        x: 589
+        y: 160
+        width: 358
+        height: 653
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: 0
+      bones: []
+      spriteID: 07ce80c03e0053b45958832a98cbe54f
+      internalID: 51689523
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: ModeIcons_2
+      rect:
+        serializedVersion: 2
+        x: 1074
+        y: 160
+        width: 330
+        height: 658
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: 0
+      bones: []
+      spriteID: 977831f20af35264681c16d929c9d01b
+      internalID: 347028361
       vertices: []
       indices: 
       edges: []
@@ -135,7 +179,7 @@ TextureImporter:
     customData: 
     physicsShape: []
     bones: []
-    spriteID: 5a54e6de93744014db6b63d795c170a1
+    spriteID: 7251a9224f65c9f4187ff485245c9807
     internalID: 0
     vertices: []
     indices: 
@@ -145,7 +189,9 @@ TextureImporter:
     spriteCustomMetadata:
       entries: []
     nameFileIdTable:
-      135_0: -67002788
+      ModeIcons_0: -1546054114
+      ModeIcons_1: 51689523
+      ModeIcons_2: 347028361
   mipmapLimitGroupName: 
   pSDRemoveMatte: 0
   userData: 
