@@ -6,7 +6,8 @@ using UnityEngine.UI;
 public class ModeSelectScript : MonoBehaviour
 {
     public Text modeText;
-    public GameObject controllerconnectPanel;
+    public GameObject controllerconnectPanelLocal;
+    public GameObject controllerconnectPanelOnline;
     [Header("Pages")]
     public GameObject onlineModePage;
     public GameObject localModePage;
@@ -65,13 +66,15 @@ public class ModeSelectScript : MonoBehaviour
     {
         onlineModePage.SetActive(true);
         localModePage.SetActive(false);
-        controllerconnectPanel.SetActive(false);
+        controllerconnectPanelLocal.SetActive(false);
+        controllerconnectPanelOnline.SetActive(true);
     }
 
     void ShowLocal()
     {
         onlineModePage.SetActive(false);
         localModePage.SetActive(true);
-        controllerconnectPanel.SetActive(true);
+        controllerconnectPanelLocal.SetActive(true);
+        controllerconnectPanelOnline.SetActive(false);
     }
 }

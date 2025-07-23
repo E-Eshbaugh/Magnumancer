@@ -6,7 +6,12 @@ public class DataManager : MonoBehaviour
 
     // the array you want to carry forward
     public WeaponData[] p1_loadout;
+    public WeaponData[] p2_loadout;
+    public WeaponData[] p3_loadout;
+    public WeaponData[] p4_loadout;
     public WizardData[] selectedWizards = new WizardData[4];
+    public int numPlayers;
+    public int selectedMode = 0; // 0 = DM, 1 = TDM, 2 = Waves
 
     void Awake()
     {

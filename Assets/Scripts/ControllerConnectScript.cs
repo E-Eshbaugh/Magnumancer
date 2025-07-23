@@ -13,6 +13,7 @@ public class ControllerConnectScript : MonoBehaviour
     public Key keyboardJoinKey = Key.Enter;
     public bool autoRemoveOnDisconnect = true;
     public bool autoJoinAllExistingPads = false; // if true, any pads already plugged in join at Start too
+    public int numPlayers = 1;
 
     // Internal
     readonly List<InputDevice> joinedDevices = new();
@@ -78,6 +79,8 @@ public class ControllerConnectScript : MonoBehaviour
             if (Keyboard.current[keyboardJoinKey].wasPressedThisFrame)
                 JoinDevice(Keyboard.current);
         }
+
+        numPlayers = joinedDevices.Count;
     }
 
     void JoinDevice(InputDevice device)

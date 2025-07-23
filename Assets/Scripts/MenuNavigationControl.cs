@@ -30,6 +30,14 @@ public class MenuNavigationControl : MonoBehaviour
     public MapSelectController mapSelectController;
     public WeaponSelectControl weaponSelectControl;
 
+    [Header("-- Players and Mode Select --")]
+    public ModeIconSelectScript[] modeIconSelectScripts;
+    public ControllerConnectScript controllerConnectScript;
+    public int playerCount = 1;
+    public int maxPlayers = 4;
+    public int selectedMode = 0; // 0 = DM, 1 = TDM, 2 = Waves
+
+
     private void Awake()
     {
         if (Instance == null)
@@ -71,8 +79,19 @@ public class MenuNavigationControl : MonoBehaviour
                 hasStarted = true;
                 StartCoroutine(pageForwardAnimation(() =>
                 {
-                    selectedWizard = characterSelectController.selectedWizard;
-                    DataManager.Instance.SetWizard(0, selectedWizard);
+                    playerCount = controllerConnectScript.numPlayers;
+                    DataManager.Instance.numPlayers = playerCount;
+                    if (modeIconSelectScripts[0].isActiveAndEnabled)
+                    {
+                        selectedMode = modeIconSelectScripts[0].currentIndex;
+                        DataManager.Instance.selectedMode = selectedMode;
+                    }
+                    else
+                    {
+                        selectedMode = modeIconSelectScripts[1].currentIndex;
+                        DataManager.Instance.selectedMode = selectedMode;
+                    }
+
                     page1.SetActive(false);
                     page2.SetActive(false);
                     page3.SetActive(true);
@@ -86,6 +105,9 @@ public class MenuNavigationControl : MonoBehaviour
                 hasStarted = true;
                 StartCoroutine(pageForwardAnimation(() =>
                 {   
+                    selectedWizard = characterSelectController.selectedWizard;
+                    DataManager.Instance.SetWizard(0, selectedWizard);
+
                     page3.SetActive(false);
                     page4.SetActive(false);
                     page5.SetActive(true);
