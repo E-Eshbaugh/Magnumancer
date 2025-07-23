@@ -10,7 +10,8 @@ public class ModeIconSelectScript : MonoBehaviour
     public Sprite[] ogModeIcons;       // black
     public Sprite[] altModeIcons;      // glowing blue
     public Text[] modeTexts;           // matching order to icons
-    // public TMP_Text[] modeTMPTexts;  // if using TMP instead
+                                       // public TMP_Text[] modeTMPTexts;  // if using TMP instead
+    public Text playerNumText;
 
     [Header("Colors")]
     public Color normalTextColor = Color.black;
@@ -54,24 +55,33 @@ public class ModeIconSelectScript : MonoBehaviour
         if (gamepad == null) return;
 
         float x = gamepad.leftStick.ReadValue().x;
-        bool rightHeld = x > stickThreshold || gamepad.dpad.right.isPressed;
-        bool leftHeld  = x < -stickThreshold || gamepad.dpad.left.isPressed;
+        bool rightHeld = x > stickThreshold;
+        bool leftHeld = x < -stickThreshold;
 
         float now = Time.unscaledTime;
         if (now >= _nextMoveTime)
         {
             if (rightHeld && !prevRightHeld) { Move(+1); _nextMoveTime = now + repeatDelay; }
-            if (leftHeld  && !prevLeftHeld ) { Move(-1); _nextMoveTime = now + repeatDelay; }
+            if (leftHeld && !prevLeftHeld) { Move(-1); _nextMoveTime = now + repeatDelay; }
         }
 
         prevRightHeld = rightHeld;
-        prevLeftHeld  = leftHeld;
+        prevLeftHeld = leftHeld;
 
         if (gamepad.buttonSouth.wasPressedThisFrame)
         {
             string sel = GetModeName(currentIndex);
             // Do something with sel
             // Debug.Log("Selected: " + sel);
+        }
+
+        if (currentIndex == 2)
+        {
+            playerNumText.text = "1-4 Players";
+        }
+        else
+        {
+            playerNumText.text = "2-4 Players";
         }
     }
 

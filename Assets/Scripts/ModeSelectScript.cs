@@ -1,8 +1,12 @@
 using UnityEngine;
 using UnityEngine.InputSystem;
+using UnityEngine.Rendering.Universal;
+using UnityEngine.UI;
 
 public class ModeSelectScript : MonoBehaviour
 {
+    public Text modeText;
+    public GameObject controllerconnectPanel;
     [Header("Pages")]
     public GameObject onlineModePage;
     public GameObject localModePage;
@@ -38,6 +42,16 @@ public class ModeSelectScript : MonoBehaviour
         {
             TogglePages();
         }
+
+        switch (onlineModePage.activeSelf)
+        {
+            case true:
+                modeText.text = "Online";
+                break;
+            case false:
+                modeText.text = "Local";
+                break;
+        }
     }
 
     void TogglePages()
@@ -51,11 +65,13 @@ public class ModeSelectScript : MonoBehaviour
     {
         onlineModePage.SetActive(true);
         localModePage.SetActive(false);
+        controllerconnectPanel.SetActive(false);
     }
 
     void ShowLocal()
     {
         onlineModePage.SetActive(false);
         localModePage.SetActive(true);
+        controllerconnectPanel.SetActive(true);
     }
 }
