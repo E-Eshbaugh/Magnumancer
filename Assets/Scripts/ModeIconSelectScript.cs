@@ -19,6 +19,7 @@ public class ModeIconSelectScript : MonoBehaviour
 
     [Header("Input")]
     public Gamepad gamepad;
+    public void SetPad(Gamepad pad) => gamepad = pad;
     [SerializeField] float stickThreshold = 0.6f;
 
     [Header("Behaviour")]
@@ -31,8 +32,6 @@ public class ModeIconSelectScript : MonoBehaviour
 
     void Awake()
     {
-        if (gamepad == null) gamepad = Gamepad.current;
-
         if (CompareTag("onlineModes")) maxModes = 2;
         else if (CompareTag("localModes")) maxModes = 3;
         else maxModes = Mathf.Min(modeIcons.Length, ogModeIcons.Length, altModeIcons.Length, modeTexts.Length);

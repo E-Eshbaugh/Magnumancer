@@ -1,174 +1,86 @@
-using Unity.VisualScripting;
+using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.InputSystem;
 using UnityEngine.InputSystem.Users;
 
 public class MultiplayerManager : MonoBehaviour
 {
-    [Tooltip("Drag in your Player GameObjects here (root or prefab instances).")]
+    [Tooltip("Root player objects in spawn/order (size ≥ max players).")]
     public GameObject[] players;
 
-    [Tooltip("How many controllers to support.")]
-    public int numPlayers = 2;
+    [Tooltip("Per‑player UI controllers (same order as players).")]
     public CircleAbilityUI[] uiControllers;
-    public WeaponData[] player1Loadout;
-    public WizardData player1Wizard;
+
+    [Tooltip("Pair devices to users (InputSystem users).")]
+    public bool pairDevicesToUsers = true;
+    public ControllerConnectScript controllerConnectScript;
 
     void Start()
     {
-        //loadout assignment
-        player1Loadout = DataManager.Instance.p1_loadout;
-        player1Wizard = DataManager.Instance.GetWizard(0);
+        int numPlayers = Mathf.Clamp(DataManager.Instance.NumPlayers, 1, players.Length);
 
-        Debug.Log("=== MultiplayerManager Setup ===");
+        // Deactivate all
+        for (int i = 0; i < players.Length; i++) players[i].SetActive(false);
 
-        // 1) Deactivate all slots
-        for (int i = 0; i < players.Length; i++)
+        for (int i = 0; i < numPlayers; i++)
         {
-            players[i].SetActive(false);
-            Debug.Log($"Slot {i} deactivated: {players[i].name}");
-        }
+            var go      = players[i];
+            var device  = DataManager.Instance.GetDevice(i);
+            var pad     = device as Gamepad;        // could be null if keyboard
+            var wizard  = DataManager.Instance.GetWizard(i);
+            var loadout = DataManager.Instance.GetLoadout(i);
 
-        // 2) Grab connected pads
-        var pads = Gamepad.all;
-        Debug.Log($"Found {pads.Count} gamepads");
-
-        var uis  = FindObjectsByType<CircleAbilityUI>(FindObjectsSortMode.None);
-        for (int i = 0; i < uis.Length; i++)
-        {
-            var ui  = uis[i];
-            var pad = (i < pads.Count) ? pads[i] : null;
-            ui.gamepad = pad;
-            Debug.Log($"[Multiplayer] Assigned pad {(pad != null ? pad.displayName : "None")} to UI {ui.name}");
-        }
-
-        // 3) Decide how many to activate
-        int count = Mathf.Min(numPlayers, players.Length, pads.Count);
-        Debug.Log($"Activating {count} player(s)");
-
-        for (int i = 0; i < count; i++)
-        {
-            var pad = pads[i];
-            var go = players[i];
             go.SetActive(true);
-            Debug.Log($"Slot {i} activated: {go.name}");
-
-            // Optional pairing
-            var user = InputUser.CreateUserWithoutPairedDevices();
-            InputUser.PerformPairingWithDevice(pad, user);
 
             // Movement
             var move = go.GetComponentInChildren<PlayerMovement3D>();
-            if (move != null)
-            {
-                move.gamepad = pad;
-                Debug.Log($" → Assigned pad {i} to PlayerMovement3D on {move.name}");
-            }
-            else Debug.LogWarning($"No PlayerMovement3D on {go.name} or its children!");
+            if (move) move.Setup(i, pad, wizard);
 
-            // Weapon swap
             var swap = go.GetComponentInChildren<GunSwapControl>();
-            if (swap != null)
-            {
-                swap.gamepad = pad;
-                Debug.Log($" → Assigned pad {i} to GunSwapControl on {swap.name}");
-            }
-            else Debug.LogWarning($"No GunSwapControl on {go.name} or its children!");
+            if (swap) swap.Setup(pad, loadout);
 
-            // Firing
-            var fire = go.GetComponentInChildren<FireController3D>();
-            if (fire != null)
-            {
-                fire.gamepad = pad;
-                Debug.Log($" → Assigned pad {i} to FireController3D on {fire.name}");
-            }
-            else Debug.LogWarning($"No FireController3D on {go.name} or its children!");
-
-            // Ammo UI
             var ammo = go.GetComponentInChildren<AmmoControl>();
-            if (ammo != null)
-            {
-                ammo.gamepad = pad;
-                Debug.Log($" → Assigned pad {i} to AmmoControl on {ammo.name}");
-                ammo.guns = player1Loadout;
-                Debug.Log($" → Assigned array length {player1Loadout.Length} to ammo.guns");
-            }
-            else Debug.LogWarning($"No AmmoControl on {go.name} or its children!");
+            if (ammo) ammo.Setup(pad, loadout);
 
-            // Orbit
+            // Fire
+            var fire = go.GetComponentInChildren<FireController3D>();
+            if (fire) fire.gamepad = pad;
+
+            // Orbit, misc abilities
             var orbit = go.GetComponentInChildren<GunOrbitController>();
-            if (orbit != null)
+            if (orbit)
             {
                 orbit.gamepad = pad;
-                orbit.player = go.transform;
-                Debug.Log($" → Assigned pad {i} to GunOrbitController on {orbit.name}");
+                orbit.player  = go.transform;
             }
-            else Debug.LogWarning($"No GunOrbitController on {go.name} or its children!");
 
             var over = go.GetComponentInChildren<OverClock>();
-            if (over != null)
-            {
-                over.gamepad = pad;
-                Debug.Log($" → Assigned pad {i} to OverClock on {over.name}");
-            }
+            if (over) over.gamepad = pad;
 
             var laser = go.GetComponentInChildren<LaserScope>();
-            if (laser != null)
-            {
-                laser.gamepad = pad;
-                Debug.Log($" → Assigned pad {i} to LaserScope on {laser.name}");
-            }
-            else
-            {
-                Debug.LogWarning($"No LaserScope on {go.name} or its children!");
-            }
+            if (laser) laser.gamepad = pad;
 
             var akimbo = go.GetComponentInChildren<AkimboController>();
-            if (akimbo != null)
-            {
-                akimbo.gamepad = pad;
-                Debug.Log($" → Assigned pad {i} to AkimboController on {akimbo.name}");
-            }
-            else
-            {
-                Debug.LogWarning($"No AkimboController on {go.name} or its children!");
-            }
-
-            // Attempt to use the player's tag, or fallback to a default
-            if (i < uiControllers.Length && uiControllers[i] != null)
-            {
-                uiControllers[i].gamepad = pad;
-                uiControllers[i].crestImage.sprite = player1Wizard.factionEmblem;
-                Debug.Log($" → Assigned pad {i} to CircleAbilityUI on {uiControllers[i].gameObject.name}");
-            }
-            else
-            {
-                Debug.LogWarning($"No uiControllers[{i}] assigned in the inspector!");
-            }
+            if (akimbo) akimbo.gamepad = pad;
 
             var wizAbility = go.GetComponentInChildren<WizardAbilityController>();
-            if (wizAbility != null)
+            if (wizAbility)
             {
                 wizAbility.gamepad = pad;
-                wizAbility.wizard = player1Wizard;
-                Debug.Log($" → Assigned pad {i} to WizardAbilityController on {wizAbility.name}");
-            }
-            else
-            {
-                Debug.LogWarning($"No WizardAbilityController on {go.name} or its children!");
+                wizAbility.wizard  = wizard;
             }
 
             var arAbility = go.GetComponentInChildren<ArAbilityController>();
-            if (arAbility != null)
+            if (arAbility) arAbility.gamepadOverride = pad;
+
+            // Per‑player ability UI
+            if (i < uiControllers.Length && uiControllers[i] != null)
             {
-                arAbility.gamepadOverride = pad;
-                Debug.Log($" → Assigned pad {i} to ArAbilityController on {arAbility.name}");
-            }
-            else
-            {
-                Debug.LogWarning($"No ArAbilityController on {go.name} or its children!");
+                uiControllers[i].gamepad = pad;
+                if (wizard) uiControllers[i].crestImage.sprite = wizard.factionEmblem;
             }
 
+            Debug.Log($"Player {i} wired. Pad: {pad?.displayName ?? "None"}, Wizard: {wizard?.wizardName ?? "NULL"}, Guns: {loadout?.Length ?? 0}");
         }
 
         Debug.Log("=== Setup Complete ===");

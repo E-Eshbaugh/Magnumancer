@@ -1,7 +1,7 @@
-using UnityEngine;
-using UnityEngine.UI;
-using UnityEngine.InputSystem;
 using System.Collections.Generic;
+using UnityEngine;
+using UnityEngine.InputSystem;
+using UnityEngine.UI;
 
 public class ControllerConnectScript : MonoBehaviour
 {
@@ -10,85 +10,97 @@ public class ControllerConnectScript : MonoBehaviour
 
     [Header("Options")]
     public bool allowKeyboardJoin = false;
-    public Key keyboardJoinKey = Key.Enter;
+    public Key  keyboardJoinKey   = Key.Enter;
     public bool autoRemoveOnDisconnect = true;
-    public bool autoJoinAllExistingPads = false; // if true, any pads already plugged in join at Start too
-    public int numPlayers = 1;
 
-    // Internal
+    public int numPlayers => joinedDevices.Count;
+    public IReadOnlyList<InputDevice> JoinedDevices => joinedDevices;
+
     readonly List<InputDevice> joinedDevices = new();
+    readonly List<(InputDevice dev, double time)> pending = new();
+
+    InputAction joinPadAction;
+    InputAction joinKbAction;
+
     const float checkInterval = 0.1f;
     float nextCheck;
+
+    void Awake()
+    {
+        // Pad join: strictly X / West button
+        joinPadAction = new InputAction("JoinPad", binding: "<Gamepad>/buttonWest");
+        joinPadAction.performed += ctx =>
+        {
+            var dev = ctx.control.device;
+            if (!joinedDevices.Contains(dev))
+                pending.Add((dev, ctx.time));
+        };
+
+        if (allowKeyboardJoin)
+        {
+            joinKbAction = new InputAction("JoinKB", binding: $"<Keyboard>/{keyboardJoinKey}");
+            joinKbAction.performed += ctx =>
+            {
+                var dev = ctx.control.device;
+                if (!joinedDevices.Contains(dev))
+                    pending.Add((dev, ctx.time));
+            };
+        }
+    }
 
     void OnEnable()
     {
         InputSystem.onDeviceChange += OnDeviceChange;
+        joinPadAction.Enable();
+        joinKbAction?.Enable();
     }
 
     void OnDisable()
     {
         InputSystem.onDeviceChange -= OnDeviceChange;
+        joinPadAction.Disable();
+        joinKbAction?.Disable();
     }
 
     void Start()
     {
-        // 1) Always reserve Player 1 for the "current" controller (or first pad found)
-        var firstPad = Gamepad.current ?? (Gamepad.all.Count > 0 ? Gamepad.all[0] : null);
-        if (firstPad != null) JoinDevice(firstPad);
-
-        // 2) Optionally auto-join any other pads already connected
-        if (autoJoinAllExistingPads)
-        {
-            foreach (var pad in Gamepad.all)
-            {
-                if (pad != firstPad && !joinedDevices.Contains(pad))
-                    JoinDevice(pad);
-            }
-        }
-
-        // 3) Optional keyboard as last resort (P? slot)
-        if (allowKeyboardJoin && Keyboard.current != null && !joinedDevices.Contains(Keyboard.current))
-        {
-            // Comment this out if you want keyboard to press a key instead of auto-join
-            // JoinDevice(Keyboard.current);
-        }
-
         UpdateUI();
     }
 
     void Update()
     {
-        // Throttle cleanup checks
+        // cleanup
         if (Time.unscaledTime >= nextCheck)
         {
             nextCheck = Time.unscaledTime + checkInterval;
             CleanupMissingDevices();
         }
 
-        // Join on X (buttonWest) for pads not yet joined
-        foreach (var pad in Gamepad.all)
+        // process one join per frame, oldest first
+        if (pending.Count > 0)
         {
-            if (pad == null || joinedDevices.Contains(pad)) continue;
-            if (pad.buttonWest.wasPressedThisFrame)
-                JoinDevice(pad);
+            pending.Sort((a, b) => a.time.CompareTo(b.time));
+            var rec = pending[0];
+            pending.RemoveAt(0);
+            if (!joinedDevices.Contains(rec.dev))
+                JoinDevice(rec.dev);
         }
-
-        // Optional keyboard join
-        if (allowKeyboardJoin && Keyboard.current != null && !joinedDevices.Contains(Keyboard.current))
-        {
-            if (Keyboard.current[keyboardJoinKey].wasPressedThisFrame)
-                JoinDevice(Keyboard.current);
-        }
-
-        numPlayers = joinedDevices.Count;
     }
+    public System.Action<InputDevice> OnFirstPlayerJoined;
 
     void JoinDevice(InputDevice device)
     {
-        if (joinedDevices.Count >= playerConnected.Length) return; // no slots left
+        if (joinedDevices.Count >= playerConnected.Length) return;
+
         joinedDevices.Add(device);
         UpdateUI();
-        Debug.Log($"[Join] {device.displayName}");
+        Debug.Log($"[Join] {device.displayName} -> P{joinedDevices.Count}");
+
+        if (joinedDevices.Count == 1)
+        {
+            DataManager.Instance.SetMasterDevice(device);   // store P1
+            OnFirstPlayerJoined?.Invoke(device);            // notify listeners
+        }
     }
 
     void RemoveDevice(InputDevice device)
@@ -105,7 +117,7 @@ public class ControllerConnectScript : MonoBehaviour
         for (int i = 0; i < playerConnected.Length; i++)
         {
             bool active = i < joinedDevices.Count;
-            if (playerConnected[i] != null)
+            if (playerConnected[i])
                 playerConnected[i].gameObject.SetActive(active);
         }
     }
@@ -113,14 +125,8 @@ public class ControllerConnectScript : MonoBehaviour
     void OnDeviceChange(InputDevice device, InputDeviceChange change)
     {
         if (!autoRemoveOnDisconnect) return;
-
-        switch (change)
-        {
-            case InputDeviceChange.Disconnected:
-            case InputDeviceChange.Removed:
-                RemoveDevice(device);
-                break;
-        }
+        if (change == InputDeviceChange.Disconnected || change == InputDeviceChange.Removed)
+            RemoveDevice(device);
     }
 
     void CleanupMissingDevices()
@@ -133,8 +139,13 @@ public class ControllerConnectScript : MonoBehaviour
         }
     }
 
-    // Helper if you need to map device -> player index elsewhere
-    public int GetPlayerIndex(InputDevice device) => joinedDevices.IndexOf(device); // 0-based
+    // Helpers
+    public int GetPlayerIndex(InputDevice device) => joinedDevices.IndexOf(device);
     public InputDevice GetDeviceForPlayer(int index) =>
         (index >= 0 && index < joinedDevices.Count) ? joinedDevices[index] : null;
+
+    public void SaveToDataManager()
+    {
+        DataManager.Instance.SetInputs(JoinedDevices);
+    }
 }

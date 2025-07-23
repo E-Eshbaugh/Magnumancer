@@ -123,7 +123,7 @@ MonoBehaviour:
   ammoBar20: {fileID: -1783010620, guid: 833c3ffd2f7675845aac0c2232d739b8, type: 3}
   ammoBarEmpty: {fileID: 1552931491, guid: 833c3ffd2f7675845aac0c2232d739b8, type: 3}
   guns:
-  - {fileID: 11400000, guid: a9185a17e638c0b43bc9521d7c8a0e2b, type: 2}
+  - {fileID: 11400000, guid: ba907eeb7f55263498b3ec19d9243e67, type: 2}
   - {fileID: 11400000, guid: e9e3fa9f90558b84d8489bbdeb9f3b7a, type: 2}
   - {fileID: 11400000, guid: ba907eeb7f55263498b3ec19d9243e67, type: 2}
   - {fileID: 11400000, guid: 7fa214f30a53fc04d95a27b9379ec90b, type: 2}
@@ -131,6 +131,8 @@ MonoBehaviour:
   currentGunIndex: 0
   currentGun: {fileID: 0}
   ammoCount: 0
+  nextFireTime: 0
+  currentAmmoPrefab: {fileID: 0}
 --- !u!114 &8038730249821315990
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -942,7 +944,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   animator: {fileID: 6053484011819442065}
-  moveSpeed: 5
+  baseMoveSpeed: 5
   gravity: -14
   jumpForce: 5
   maxJumps: 2
@@ -957,6 +959,8 @@ MonoBehaviour:
   - {fileID: 1937444487, guid: 833c3ffd2f7675845aac0c2232d739b8, type: 3}
   - {fileID: -474014879, guid: 833c3ffd2f7675845aac0c2232d739b8, type: 3}
   - {fileID: -1592719621, guid: 833c3ffd2f7675845aac0c2232d739b8, type: 3}
+  playerIndex: 0
+  wizard: {fileID: 0}
 --- !u!136 &3502903092251883525
 CapsuleCollider:
   m_ObjectHideFlags: 0
@@ -1015,12 +1019,12 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   gunHolder: {fileID: 5038500048487318550}
+  gunRotation: {x: 0, y: 0, z: 90}
   gunPrefabs:
   - {fileID: 8929761037137178150, guid: f7d3eb3902e70d048b658d11462d0b00, type: 3}
   - {fileID: 890660743820011744, guid: 1edea87fafd4eda479b04ef1c1f8ed95, type: 3}
   - {fileID: 550212131937212752, guid: c4cdf604f3862674ca2f584e4983859a, type: 3}
   - {fileID: 5167352523380930853, guid: 3b223e1e99f294a4392b3ae777722d38, type: 3}
-  gunRotation: {x: 0, y: 0, z: 90}
   fireController: {fileID: 0}
   currentGunIndex: 0
   loadout:

@@ -1,15 +1,20 @@
-using System;
 using UnityEngine;
 using UnityEngine.InputSystem;
 using UnityEngine.UI;
 
 public class WeaponSelectControl : MonoBehaviour
 {
+    [Header("-- External Refs --")]
     public TierTextControl tierTextControl;
+    public MagicManagement magicManagement;               // UI for orbs
+    public Gamepad activePad;                              // set by MenuNavigationControl
+    public int activePlayerIndex = 0;
+
     [Header("-- Controller Settings --")]
     public float stickThreshold = 0.5f;
-    public float inputCooldown = 0.25f;
+    public float inputCooldown  = 0.25f;
     private float lastInputTime = 0f;
+
     [Header("-- UI --")]
     public Text weaponNameText;
     public Text weaponDescriptionText;
@@ -19,268 +24,285 @@ public class WeaponSelectControl : MonoBehaviour
     public RectTransform weaponAttackSpeed;
     public RectTransform weaponWeight;
     public Image weaponIcon;
-    [Header("-- Archon Weapons --")]
-    public WeaponData[] archonWeapons;
-    [Header("-- Ascendant Weapons --")]
-    public WeaponData[] ascendantWeapons;
-    [Header("-- Initiate Weapons --")]
+
+    [Header("-- Weapons by Tier --")]
     public WeaponData[] initiateWeapons;
-    [Header("-- Orbs --")]
-    public MAgicManagement magicManagement;
+    public WeaponData[] ascendantWeapons;
+    public WeaponData[] archonWeapons;
+
     [Header("-- Inventory Settings --")]
     [Tooltip("0 - UP | 1 - RIGHT | 2 - DOWN | 3 - LEFT")]
-    public Image[] inventorySlots = new Image[4];
-    public WeaponData[] inventoryData = new WeaponData[4];
-    public WeaponData InventoryPlaceHolder;
-    public bool clear = false;
-    private float minX = -614f; //5%
-    private float maxX = -211f; //99%
+    public Image[]     inventorySlots = new Image[4];
+    public WeaponData[] inventoryData  = new WeaponData[4];
+    public WeaponData   InventoryPlaceHolder;
 
+    [Header("-- Fillbar Settings --")]
+    [Tooltip("Anchored X positions (min->max) for stat bars")]
+    public float minX = -614f;
+    public float maxX = -211f;
 
-    private Array currentWeaponArray;
+    // Runtime
+    private WeaponData[] currentList;
     private int currentWeaponIndex = 0;
-    private int prevTier = 0;
-    public float ammoPercent = 0;
-    private float damagePercent = 0;
-    private float attackSpeedPercent = 0;
-    private float weightPercent = 0;
+    private int prevTier = -1;
+
+    // Wizard info
+    private WizardData myWizard;
+    private int totalOrbs;
+
+    // cached stat percents (debug only)
+    public float ammoPercent        { get; private set; }
+    public float damagePercent      { get; private set; }
+    public float attackSpeedPercent { get; private set; }
+    public float weightPercent      { get; private set; }
+
+    #region Unity
     void Start()
     {
-        currentWeaponArray = initiateWeapons;
-        tierTextControl = FindFirstObjectByType<TierTextControl>();
-        magicManagement = FindFirstObjectByType<MAgicManagement>();
+        if (!tierTextControl)  tierTextControl  = FindFirstObjectByType<TierTextControl>();
+        if (!magicManagement)  magicManagement  = FindFirstObjectByType<MagicManagement>();
 
+        // Init inventory placeholders
         for (int i = 0; i < inventorySlots.Length; i++)
         {
-            inventorySlots[i].enabled = false;
+            if (inventorySlots[i]) inventorySlots[i].enabled = false;
+            inventoryData[i] = InventoryPlaceHolder;
         }
 
+        UpdateTierList(true);
         UpdateWeaponDisplay();
     }
 
-    // Update is called once per frame
     void Update()
     {
-        //get new tier from tierTextControl (reset currentWeaponIndex if changed)
-        if (tierTextControl.currentTier == 0)
-        {
-            currentWeaponArray = initiateWeapons;
-            if (prevTier != tierTextControl.currentTier)
-            {
-                currentWeaponIndex = 0;
-                prevTier = tierTextControl.currentTier;
-                UpdateWeaponDisplay();
-            }
-        }
-        else if (tierTextControl.currentTier == 1)
-        {
-            currentWeaponArray = ascendantWeapons;
-            if (prevTier != tierTextControl.currentTier)
-            {
-                currentWeaponIndex = 0;
-                prevTier = tierTextControl.currentTier;
-                UpdateWeaponDisplay();
-            }
-        }
-        else if (tierTextControl.currentTier == 2)
-        {
-            currentWeaponArray = archonWeapons;
-            if (prevTier != tierTextControl.currentTier)
-            {
-                currentWeaponIndex = 0;
-                prevTier = tierTextControl.currentTier;
-                UpdateWeaponDisplay();
-            }
-        }
+        if (activePad == null) return;
 
-        // Handle input for weapon scrolling
-        float x = Gamepad.current.rightStick.ReadValue().x;
+        // 1) Tier change?
+        UpdateTierList(false);
+
+        // 2) Horizontal scroll
+        float x = activePad.rightStick.ReadValue().x;
         float time = Time.time;
 
         if (time - lastInputTime > inputCooldown)
         {
-            if (x > stickThreshold)
-            {
-                ScrollRight();
-                lastInputTime = time;
-            }
-            else if (x < -stickThreshold)
-            {
-                ScrollLeft();
-                lastInputTime = time;
-            }
+            if (x > stickThreshold)       { ScrollRight(); lastInputTime = time; }
+            else if (x < -stickThreshold) { ScrollLeft();  lastInputTime = time; }
         }
 
-        //weapon selection with DPad to put in inventory slots
+        // 3) Inventory input
+        bool clearMode = activePad.buttonWest.isPressed; // hold X to clear
 
-        if (Gamepad.current.buttonWest.IsPressed())
-        {
-            if (Gamepad.current.dpad.up.wasPressedThisFrame)
-            {
-                ClearWeapon(0);
-            }
-            else if (Gamepad.current.dpad.right.wasPressedThisFrame)
-            {
-                ClearWeapon(1);
-                clear = true;
-            }
-            else if (Gamepad.current.dpad.down.wasPressedThisFrame)
-            {
-                ClearWeapon(2);
-            }
-            else if (Gamepad.current.dpad.left.wasPressedThisFrame)
-            {
-                ClearWeapon(3);
-            }
-        }
-        else if (Gamepad.current.dpad.up.wasPressedThisFrame)
-        {
-            SelectWeapon(0);
-        }
-        else if (Gamepad.current.dpad.right.wasPressedThisFrame)
-        {
-            SelectWeapon(1);
-        }
-        else if (Gamepad.current.dpad.down.wasPressedThisFrame)
-        {
-            SelectWeapon(2);
-        }
-        else if (Gamepad.current.dpad.left.wasPressedThisFrame)
-        {
-            SelectWeapon(3);
-        }
+        if (activePad.dpad.up.wasPressedThisFrame)        HandleSlotInput(0, clearMode);
+        else if (activePad.dpad.right.wasPressedThisFrame) HandleSlotInput(1, clearMode);
+        else if (activePad.dpad.down.wasPressedThisFrame)  HandleSlotInput(2, clearMode);
+        else if (activePad.dpad.left.wasPressedThisFrame)  HandleSlotInput(3, clearMode);
+    }
+    #endregion
+
+    #region Public API
+    /// Called by MenuNavigationControl when this player starts picking.
+    public void SetActivePlayer(int playerIndex, Gamepad pad)
+    {
+        activePlayerIndex = playerIndex;
+        activePad         = pad;
+
+        // Cache wizard + orbs
+        myWizard  = DataManager.Instance.GetWizard(playerIndex);
+        totalOrbs = myWizard ? myWizard.loadoutOrbs : 0;
+
+        // sync MAgicManagement
+        if (magicManagement) magicManagement.SetPlayer(playerIndex);
+
+        // Optional: ResetSelection();
     }
 
-    void ScrollRight()
+    public void ResetSelection()
     {
-        currentWeaponIndex = currentWeaponIndex + 1;
-        if (currentWeaponIndex >= currentWeaponArray.Length)
-        {
-            currentWeaponIndex = 0;
-        }
-
+        currentWeaponIndex = 0;
+        prevTier = -1;
+        UpdateTierList(true);
         UpdateWeaponDisplay();
-    }
 
-    void ScrollLeft()
-    {
-        currentWeaponIndex = currentWeaponIndex - 1;
-        if (currentWeaponIndex < 0)
-        {
-            currentWeaponIndex = currentWeaponArray.Length - 1;
-        }
-
-        UpdateWeaponDisplay();
-    }
-
-    void UpdateWeaponDisplay()
-    {
-        weaponNameText.text = ((WeaponData)currentWeaponArray.GetValue(currentWeaponIndex)).weaponName;
-        weaponOrbCostText.text = ((WeaponData)currentWeaponArray.GetValue(currentWeaponIndex)).orbCost.ToString();
-        weaponDescriptionText.text = ((WeaponData)currentWeaponArray.GetValue(currentWeaponIndex)).description;
-        weaponIcon.sprite = ((WeaponData)currentWeaponArray.GetValue(currentWeaponIndex)).weaponIcon;
-
-        //stats
-        //damage [0-50]
-        //ammo [0-60]
-        //rof [0-15]
-        //weight [0-5]
-        UpdateFillPercent();
-
-    }
-
-    void UpdateFillPercent()
-    {
-        ammoPercent = ((WeaponData)currentWeaponArray.GetValue(currentWeaponIndex)).ammoCapacity / 60f;
-        damagePercent = ((WeaponData)currentWeaponArray.GetValue(currentWeaponIndex)).damage / 40f;
-        attackSpeedPercent = ((WeaponData)currentWeaponArray.GetValue(currentWeaponIndex)).attackSpeed / 15f;
-        weightPercent = ((WeaponData)currentWeaponArray.GetValue(currentWeaponIndex)).weight / 5f;
-
-        float fillBarRange = maxX - minX;
-
-        //ammo
-        float ammoX = minX + (ammoPercent * fillBarRange);
-        if (ammoX < minX) ammoX = minX;
-        if (ammoX > maxX) ammoX = maxX;
-        weaponAmmo.anchoredPosition = new Vector2(ammoX, weaponAmmo.anchoredPosition.y);
-
-        //damage
-        float damageX = minX + (damagePercent * fillBarRange);
-        if (damageX < minX) damageX = minX;
-        if (damageX > maxX) damageX = maxX;
-        weaponDamage.anchoredPosition = new Vector2(damageX, weaponDamage.anchoredPosition.y);
-
-        //attack speed
-        float attackSpeedX = minX + (attackSpeedPercent * fillBarRange);
-        if (attackSpeedX < minX) attackSpeedX = minX;
-        if (attackSpeedX > maxX) attackSpeedX = maxX;
-        weaponAttackSpeed.anchoredPosition = new Vector2(attackSpeedX, weaponAttackSpeed.anchoredPosition.y);
-
-        //weight
-        float weightX = minX + (weightPercent * fillBarRange);
-        if (weightX < minX) weightX = minX;
-        if (weightX > maxX) weightX = maxX;
-        weaponWeight.anchoredPosition = new Vector2(weightX, weaponWeight.anchoredPosition.y);
-    }
-
-    void SelectWeapon(int slotIndex)
-    {
-        int remainingOrbs = magicManagement.numOrbs - ((WeaponData)currentWeaponArray.GetValue(currentWeaponIndex)).orbCost;
-
-        //already in inventory?
         for (int i = 0; i < inventorySlots.Length; i++)
         {
-            if (inventorySlots[i].enabled && inventorySlots[i].sprite == ((WeaponData)currentWeaponArray.GetValue(currentWeaponIndex)).weaponIcon)
-            {
-                return;
-            }
+            if (inventorySlots[i]) inventorySlots[i].enabled = false;
+            inventoryData[i] = InventoryPlaceHolder;
+        }
+        PushSpentToUI();
+    }
+    #endregion
+
+    #region Input Helpers
+    private void HandleSlotInput(int slotIndex, bool clearMode)
+    {
+        if (clearMode) ClearWeapon(slotIndex);
+        else           SelectWeapon(slotIndex);
+    }
+
+    private void ScrollRight()
+    {
+        if (currentList == null || currentList.Length == 0) return;
+        currentWeaponIndex = (currentWeaponIndex + 1) % currentList.Length;
+        UpdateWeaponDisplay();
+    }
+
+    private void ScrollLeft()
+    {
+        if (currentList == null || currentList.Length == 0) return;
+        currentWeaponIndex--;
+        if (currentWeaponIndex < 0) currentWeaponIndex = currentList.Length - 1;
+        UpdateWeaponDisplay();
+    }
+    #endregion
+
+    #region Tier & Display
+    private void UpdateTierList(bool force)
+    {
+        int tier = tierTextControl ? tierTextControl.currentTier : 0;
+        if (!force && tier == prevTier) return;
+
+        switch (tier)
+        {
+            case 0: currentList = initiateWeapons;  break;
+            case 1: currentList = ascendantWeapons; break;
+            case 2: currentList = archonWeapons;    break;
+            default: currentList = initiateWeapons;  break;
         }
 
-        if (remainingOrbs >= 0)
+        currentWeaponIndex = 0;
+        prevTier = tier;
+
+        UpdateWeaponDisplay();
+    }
+
+    private void UpdateWeaponDisplay()
+    {
+        if (currentList == null || currentList.Length == 0)
         {
-            inventorySlots[slotIndex].sprite = ((WeaponData)currentWeaponArray.GetValue(currentWeaponIndex)).weaponIcon;
-            inventorySlots[slotIndex].enabled = true;
-            inventoryData[slotIndex] = (WeaponData)currentWeaponArray.GetValue(currentWeaponIndex);
-            magicManagement.spentOrbs = CountInventoryCost();
+            weaponNameText.text        = "---";
+            weaponOrbCostText.text     = "0";
+            weaponDescriptionText.text = "No weapons";
+            weaponIcon.sprite          = null;
+            return;
+        }
+
+        WeaponData wd = currentList[currentWeaponIndex];
+
+        weaponNameText.text        = wd.weaponName;
+        weaponOrbCostText.text     = wd.orbCost.ToString();
+        weaponDescriptionText.text = wd.description;
+        weaponIcon.sprite          = wd.weaponIcon;
+
+        UpdateFillPercent(wd);
+    }
+
+    private void UpdateFillPercent(WeaponData wd)
+    {
+        ammoPercent        = Mathf.Clamp01(wd.ammoCapacity   / 60f);
+        damagePercent      = Mathf.Clamp01(wd.damage         / 40f);
+        attackSpeedPercent = Mathf.Clamp01(wd.attackSpeed    / 15f);
+        weightPercent      = Mathf.Clamp01(wd.weight         / 5f);
+
+        float range = maxX - minX;
+        SetBar(weaponAmmo,        ammoPercent,        range);
+        SetBar(weaponDamage,      damagePercent,      range);
+        SetBar(weaponAttackSpeed, attackSpeedPercent, range);
+        SetBar(weaponWeight,      weightPercent,      range);
+    }
+
+    private void SetBar(RectTransform bar, float pct, float range)
+    {
+        if (!bar) return;
+        float x = Mathf.Clamp(minX + pct * range, minX, maxX);
+        bar.anchoredPosition = new Vector2(x, bar.anchoredPosition.y);
+    }
+    #endregion
+
+    #region Inventory
+    private void SelectWeapon(int slotIndex)
+    {
+        if (!SlotIndexValid(slotIndex)) return;
+        if (currentList == null || currentList.Length == 0) return;
+
+        WeaponData chosen = currentList[currentWeaponIndex];
+        if (chosen == null) return;
+
+        // block duplicates
+        for (int i = 0; i < inventorySlots.Length; i++)
+        {
+            if (inventorySlots[i].enabled && inventoryData[i] == chosen)
+                return;
+        }
+
+        int currentCost = CountInventoryCost();
+        int afterAdd    = currentCost + chosen.orbCost;
+
+        if (afterAdd <= totalOrbs)
+        {
+            ApplySlot(slotIndex, chosen);
         }
         else
         {
+            // try swap
             if (inventorySlots[slotIndex].enabled)
             {
-                int swappedPrice = remainingOrbs + ((WeaponData)inventoryData.GetValue(slotIndex)).orbCost;
-                if (swappedPrice >= 0)
-                {
-                    inventorySlots[slotIndex].sprite = ((WeaponData)currentWeaponArray.GetValue(currentWeaponIndex)).weaponIcon;
-                    inventorySlots[slotIndex].enabled = true;
-                    inventoryData[slotIndex] = (WeaponData)currentWeaponArray.GetValue(currentWeaponIndex);
-                    magicManagement.spentOrbs = CountInventoryCost();
-                }
-                else return;
-            }
-            else return;
-        }
+                int refund   = (inventoryData[slotIndex] != null && inventoryData[slotIndex] != InventoryPlaceHolder)
+                                ? inventoryData[slotIndex].orbCost : 0;
+                int afterSwap = currentCost - refund + chosen.orbCost;
 
+                if (afterSwap <= totalOrbs)
+                    ApplySlot(slotIndex, chosen);
+            }
+        }
     }
 
-    void ClearWeapon(int slotIndex)
+    private void ClearWeapon(int slotIndex)
     {
+        if (!SlotIndexValid(slotIndex)) return;
+
         if (inventorySlots[slotIndex].enabled)
         {
             inventorySlots[slotIndex].enabled = false;
-            inventoryData[slotIndex] = InventoryPlaceHolder;
-            magicManagement.spentOrbs = CountInventoryCost();
+            inventorySlots[slotIndex].sprite  = null;
+            inventoryData[slotIndex]          = InventoryPlaceHolder;
+            PushSpentToUI();
         }
-        else return;
     }
 
-    int CountInventoryCost()
+    private void ApplySlot(int slotIndex, WeaponData data)
     {
-        int orbCount = 0;
-        for (int i = 0; i < inventorySlots.Length; i++)
-        {
-            orbCount += ((WeaponData)inventoryData.GetValue(i)).orbCost;
-        }
-
-        return orbCount;
+        inventorySlots[slotIndex].sprite  = data.weaponIcon;
+        inventorySlots[slotIndex].enabled = true;
+        inventoryData[slotIndex]          = data;
+        PushSpentToUI();
     }
+
+    private int CountInventoryCost()
+    {
+        int cost = 0;
+        for (int i = 0; i < inventoryData.Length; i++)
+        {
+            var w = inventoryData[i];
+            if (w != null && w != InventoryPlaceHolder)
+                cost += w.orbCost;
+        }
+        return cost;
+    }
+
+    private bool SlotIndexValid(int idx) => idx >= 0 && idx < inventorySlots.Length;
+
+    private void PushSpentToUI()
+    {
+        int spent = CountInventoryCost();
+        if (magicManagement != null)
+        {
+            // If you implemented OnSpentChanged
+            if (magicManagement.GetType().GetMethod("OnSpentChanged") != null)
+                magicManagement.OnSpentChanged(spent);
+            else
+                magicManagement.spentOrbs = spent; // legacy fallback
+        }
+    }
+    #endregion
 }

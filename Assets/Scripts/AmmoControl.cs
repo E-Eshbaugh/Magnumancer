@@ -9,79 +9,65 @@ public class AmmoControl : MonoBehaviour
     public Sprite ammoBarFull, ammoBar80, ammoBar60, ammoBar40, ammoBar20, ammoBarEmpty;
 
     [Header("Guns")]
-    public WeaponData[] guns;
-    public GunSwapControl gunControl;
+    public WeaponData[] guns;          // set by MultiplayerManager OR by GunSwapControl.Setup
+    public GunSwapControl gunControl;  // assign in prefab
 
     [Header("Controller")]
-    public Gamepad gamepad;   // set by MultiplayerManager
+    public Gamepad gamepad;
 
-    // Internal state
+    // Internal
     private FireController3D fire;
     public int currentGunIndex;
     public WeaponData currentGun;
     public int ammoCount;
-    private float nextFireTime;
-    private GameObject currentAmmoPrefab;
+    public float nextFireTime;
+    public GameObject currentAmmoPrefab;
 
     void Awake()
     {
         fire = GetComponent<FireController3D>();
-        if (fire == null)
-            Debug.LogError($"{name}: No FireController3D found!");
+        if (!fire) Debug.LogError($"{name}: No FireController3D found!");
     }
 
-    void Start()
+    public void Setup(Gamepad pad, WeaponData[] srcLoadout)
     {
-        guns = gunControl.loadout;
-        OnGunEquipped(gunControl.currentGunIndex);
+        gamepad = pad;
+        guns    = srcLoadout != null ? (WeaponData[])srcLoadout.Clone() : new WeaponData[4];
+        OnGunEquipped(0); // or whatever swap.currentGunIndex is after swap.Setup
     }
 
     void Update()
     {
-        currentGunIndex = gunControl.currentGunIndex;
-        currentGun = guns[currentGunIndex];
+        if (gamepad == null || fire == null) return;
 
-        if (gamepad == null || fire == null || currentGun == null) return;
-
-        float now = Time.time;
-        var pad = gamepad;
-
-        // Detect swap
-        if (gunControl.currentGunIndex != currentGunIndex)
+        // Sync with swaps
+        if (currentGunIndex != gunControl.currentGunIndex)
             OnGunEquipped(gunControl.currentGunIndex);
 
-        // 2) Slug‐round toggle on LT (press once to switch to slug, next press or next swap returns to base)
-        if (currentGun.isShotgun && pad.leftTrigger.wasPressedThisFrame)
+        float now = Time.time;
+
+        // Shotgun toggle
+        if (currentGun.isShotgun && gamepad.leftTrigger.wasPressedThisFrame)
         {
             ammoCount = currentGun.ammoCapacity;
-            // Flip between base and special
-            if (currentAmmoPrefab == currentGun.baseAmmoType)
-                currentAmmoPrefab = currentGun.specialBulletType;   // slug
-            else
-                currentAmmoPrefab = currentGun.baseAmmoType;         // back to shells
+            currentAmmoPrefab = (currentAmmoPrefab == currentGun.baseAmmoType)
+                ? currentGun.specialBulletType
+                : currentGun.baseAmmoType;
 
-            Debug.Log($"{name}: Toggled shotgun ammo to '{currentAmmoPrefab.name}'");
-            // Reset cooldown so you can shoot right away if you like
             nextFireTime = now;
             UpdateAmmoBar();
         }
 
-
-        // Fire if ready
+        // Fire logic
         if (ammoCount > 0 && now >= nextFireTime)
         {
             bool didFire = false;
-
-            string fireType = currentGun.fireType;
-            if (currentAmmoPrefab.tag == "slug")
-            {
-                fireType = "semi";
-            }
+            string fireType = currentAmmoPrefab.tag == "slug" ? "semi" : currentGun.fireType;
 
             switch (fireType)
             {
                 case "shotgun":
-                    if (pad.rightTrigger.wasPressedThisFrame)
+                    if (gamepad.rightTrigger.wasPressedThisFrame)
                     {
                         for (int i = 0; i < currentGun.pelletCount; i++)
                             fire.Shoot(currentAmmoPrefab, currentGun.spreadAngle, currentGun.recoil);
@@ -90,7 +76,7 @@ public class AmmoControl : MonoBehaviour
                     break;
 
                 case "semi":
-                    if (pad.rightTrigger.wasPressedThisFrame)
+                    if (gamepad.rightTrigger.wasPressedThisFrame)
                     {
                         fire.Shoot(currentAmmoPrefab, currentGun.spreadAngle, currentGun.recoil);
                         didFire = true;
@@ -98,7 +84,7 @@ public class AmmoControl : MonoBehaviour
                     break;
 
                 case "auto":
-                    if (pad.rightTrigger.ReadValue() > 0.1f)
+                    if (gamepad.rightTrigger.ReadValue() > 0.1f)
                     {
                         fire.Shoot(currentAmmoPrefab, currentGun.spreadAngle, currentGun.recoil);
                         didFire = true;
@@ -115,44 +101,37 @@ public class AmmoControl : MonoBehaviour
         }
 
         if (gamepad.buttonWest.wasPressedThisFrame)
-        {
-            reloadAmmo();
-        }
+            ReloadAmmo();
     }
 
     public void OnGunEquipped(int index)
     {
-        currentGunIndex = index;
-        currentGun = guns[index];
-        ammoCount = currentGun.ammoCapacity;
+        currentGunIndex   = index;
+        currentGun        = guns[index];
+        ammoCount         = currentGun.ammoCapacity;
         currentAmmoPrefab = currentGun.baseAmmoType;
-        nextFireTime = Time.time;
-        Debug.Log($"{name}: Equipped '{currentGun.name}' (base ammo: '{currentAmmoPrefab.name}')");
+        nextFireTime      = Time.time;
         UpdateAmmoBar();
     }
 
     void UpdateAmmoBar()
     {
-        float pct = currentGun.ammoCapacity > 0
-            ? (float)ammoCount / currentGun.ammoCapacity
-            : 0f;
+        if (!ammoBar) return;
+        float pct = currentGun.ammoCapacity > 0 ? (float)ammoCount / currentGun.ammoCapacity : 0f;
 
-        if (pct >= 0.8f) ammoBar.sprite = ammoBarFull;
+        if      (pct >= 0.8f) ammoBar.sprite = ammoBarFull;
         else if (pct >= 0.6f) ammoBar.sprite = ammoBar80;
         else if (pct >= 0.4f) ammoBar.sprite = ammoBar60;
         else if (pct >= 0.2f) ammoBar.sprite = ammoBar40;
-        else if (ammoCount > 0) ammoBar.sprite = ammoBar20;
-        else ammoBar.sprite = ammoBarEmpty;
+        else if (ammoCount>0) ammoBar.sprite = ammoBar20;
+        else                  ammoBar.sprite = ammoBarEmpty;
     }
-    
-    void reloadAmmo()
-    {
-        if (currentGun == null) return;
 
-        ammoCount = currentGun.ammoCapacity;
-        nextFireTime = Time.time; // Reset fire cooldown
-        currentAmmoPrefab = currentGun.baseAmmoType; // Reset to base ammo
+    void ReloadAmmo()
+    {
+        ammoCount         = currentGun.ammoCapacity;
+        nextFireTime      = Time.time;
+        currentAmmoPrefab = currentGun.baseAmmoType;
         UpdateAmmoBar();
-        Debug.Log($"{name}: Reloaded '{currentGun.name}' with {ammoCount} rounds.");
     }
 }

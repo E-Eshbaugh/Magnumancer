@@ -1,217 +1,293 @@
-using System.Reflection;
+using System;
 using UnityEngine;
 using UnityEngine.InputSystem;
 using UnityEngine.SceneManagement;
 
 public class MenuNavigationControl : MonoBehaviour
 {
+    #region Inspector
     [Header("-- Menu Pages --")]
-    public GameObject page1; //Mode select
-    public GameObject page2;
-    public GameObject page3; //Character select
-    public GameObject page4;
-    public GameObject page5;//loadout select
-    public GameObject page6;
-    public GameObject page7;//map select
-    public GameObject page8;
+    public GameObject page1, page2, page3, page4, page5, page6, page7, page8;
+
     [Header("-- Book Opening Animation --")]
     public GameObject[] framesForward;
     public GameObject[] framesBackward;
     public float frameRate = 0.01f;
+
+    [Header("-- Controllers & Subsystems --")]
+    public ControllerConnectScript controllerConnectScript;
+    public ModeIconSelectScript[]  modeIconSelectScripts;
+    public CharacterSelectController characterSelectController;
+    public WeaponSelectControl weaponSelectControl;
+    public MapSelectController mapSelectController;
+    public MagicManagement magicManagement;
+    #endregion
+
+    #region Internal
+    private enum MenuPhase { ModeJoin, WizardPick, LoadoutPick, MapPick }
+    private MenuPhase phase = MenuPhase.ModeJoin;
+
+    private int currentPicker = 0;
+    private bool[] wizardLocked;
+    private bool[] loadoutLocked;
+
     private int currentBookIndex = 0;
     private bool hasStarted = false;
-    public WizardData selectedWizard;
 
-    [Header("-- Character Select --")]
-    public CharacterSelectController characterSelectController;
+    private int playerCount = 1;
+    private int selectedMode = 0;
+    private int selectedMap  = 0;
+
+    private Gamepad masterPad;
+    #endregion
+
+    #region Singleton
     public static MenuNavigationControl Instance { get; private set; }
-    [Header("info")]
-    public int selectedMap;
-    public MapSelectController mapSelectController;
-    public WeaponSelectControl weaponSelectControl;
-
-    [Header("-- Players and Mode Select --")]
-    public ModeIconSelectScript[] modeIconSelectScripts;
-    public ControllerConnectScript controllerConnectScript;
-    public int playerCount = 1;
-    public int maxPlayers = 4;
-    public int selectedMode = 0; // 0 = DM, 1 = TDM, 2 = Waves
-
-
     private void Awake()
     {
-        if (Instance == null)
-        {
-            Instance = this;
-        }
-        else if (Instance != this)
-        {
-            Destroy(gameObject);
-        }
+        if (Instance == null) Instance = this;
+        else { Destroy(gameObject); return; }
+    }
+    #endregion
+
+    private void OnEnable()
+    {
+        if (controllerConnectScript != null)
+            controllerConnectScript.OnFirstPlayerJoined += HandleFirstJoin;
+    }
+
+    private void OnDisable()
+    {
+        if (controllerConnectScript != null)
+            controllerConnectScript.OnFirstPlayerJoined -= HandleFirstJoin;
     }
 
     void Start()
     {
-        if (characterSelectController == null) characterSelectController = FindFirstObjectByType<CharacterSelectController>();
-        if (mapSelectController == null) mapSelectController = FindFirstObjectByType<MapSelectController>();
-        if (weaponSelectControl == null) weaponSelectControl = FindFirstObjectByType<WeaponSelectControl>();
+        if (!characterSelectController) characterSelectController = FindFirstObjectByType<CharacterSelectController>();
+        if (!mapSelectController)       mapSelectController       = FindFirstObjectByType<MapSelectController>();
+        if (!weaponSelectControl)       weaponSelectControl       = FindFirstObjectByType<WeaponSelectControl>();
+        if (!magicManagement)           magicManagement           = FindFirstObjectByType<MagicManagement>();
 
-        page3.SetActive(false);
-        page4.SetActive(false);
-        page5.SetActive(false);
-        page6.SetActive(false);
-        page7.SetActive(false);
-        page8.SetActive(false);
+        page3.SetActive(false); page4.SetActive(false);
+        page5.SetActive(false); page6.SetActive(false);
+        page7.SetActive(false); page8.SetActive(false);
 
-        foreach (var f in framesForward) f.SetActive(false);
-        foreach (var f in framesBackward) f.SetActive(false);
+        foreach (var f in framesForward)  if (f) f.SetActive(false);
+        foreach (var f in framesBackward) if (f) f.SetActive(false);
+
+        phase = MenuPhase.ModeJoin;
+    }
+
+    void HandleFirstJoin(InputDevice dev)
+    {
+        masterPad = dev as Gamepad;
+        DataManager.Instance.SetMasterDevice(dev);
+
+        foreach (var mis in modeIconSelectScripts)
+            if (mis) mis.SetPad(masterPad);
     }
 
     void Update()
     {
         if (hasStarted) return;
 
-        if (Gamepad.current.aButton.wasPressedThisFrame)
+        Gamepad pad = ResolveActivePad();
+        if (pad == null)
         {
-            if (page1.activeSelf)
-            {
-                // Proceed to character select
-                hasStarted = true;
-                StartCoroutine(pageForwardAnimation(() =>
-                {
-                    playerCount = controllerConnectScript.numPlayers;
-                    DataManager.Instance.numPlayers = playerCount;
-                    if (modeIconSelectScripts[0].isActiveAndEnabled)
-                    {
-                        selectedMode = modeIconSelectScripts[0].currentIndex;
-                        DataManager.Instance.selectedMode = selectedMode;
-                    }
-                    else
-                    {
-                        selectedMode = modeIconSelectScripts[1].currentIndex;
-                        DataManager.Instance.selectedMode = selectedMode;
-                    }
+            // Only spam once per phase if needed
+            // Debug.LogWarning($"[MenuNav] pad NULL | phase:{phase} picker:{currentPicker} inputs:{DataManager.Instance.Inputs?.Length}");
+            return;
+        }
 
-                    page1.SetActive(false);
-                    page2.SetActive(false);
-                    page3.SetActive(true);
-                    page4.SetActive(true);
-                    hasStarted = false;
-                }));
-            }
-            else if (page3.activeSelf)
+        if (pad.aButton.wasPressedThisFrame)
+        {
+            switch (phase)
             {
-                // Proceed to loadout select
-                hasStarted = true;
-                StartCoroutine(pageForwardAnimation(() =>
-                {   
-                    selectedWizard = characterSelectController.selectedWizard;
-                    DataManager.Instance.SetWizard(0, selectedWizard);
-
-                    page3.SetActive(false);
-                    page4.SetActive(false);
-                    page5.SetActive(true);
-                    page6.SetActive(true);
-                    hasStarted = false;
-                }));
-            }
-            else if (page5.activeSelf)
-            {
-                // Proceed to map select
-                hasStarted = true;
-                StartCoroutine(pageForwardAnimation(() =>
-                {
-
-                    DataManager.Instance.p1_loadout = weaponSelectControl.inventoryData;
-
-                    page6.SetActive(false);
-                    page5.SetActive(false);
-                    page7.SetActive(true);
-                    page8.SetActive(true);
-                    hasStarted = false;
-                }));
-            }
-            else if (page7.activeSelf)
-            {
-                selectedMap = mapSelectController.currentIndex;
-                if (selectedMap == 0)
-                {
-                    //old woods
-                    SceneManager.LoadScene("Oldwoods3D");
-                }
-                else if (selectedMap == 1)
-                {
-                    //stormspire
-                    SceneManager.LoadScene("Stormspire");
-                }
-                else if (selectedMap == 2)
-                {
-                    //fungal hollow
-                    SceneManager.LoadScene("FungalHollow");
-                }
-                else if (selectedMap == 3)
-                {
-                    //riftforge bastion
-                    SceneManager.LoadScene("Riftforge");
-                }
-                else if (selectedMap == 4)
-                {
-                    //cinder crucible
-                    SceneManager.LoadScene("CinderCrucible");
-                }
-                else if (selectedMap == 5)
-                {
-                    //drowned sanctum
-                    SceneManager.LoadScene("DrownedSanctum");
-                }
-                else if (selectedMap == 6)
-                {
-                    //the black osuary
-                    SceneManager.LoadScene("BlackOsuary");
-                }
-                else if (selectedMap == 7)
-                {
-                    //frostgrave citadel
-                    SceneManager.LoadScene("Frostgrave");
-                }
+                case MenuPhase.ModeJoin:    HandleModeJoinConfirm(); break;
+                case MenuPhase.WizardPick:  ConfirmWizard();          break;
+                case MenuPhase.LoadoutPick: ConfirmLoadout();         break;
+                case MenuPhase.MapPick:     ConfirmMap();             break;
             }
         }
-        else if (Gamepad.current.bButton.wasPressedThisFrame)
+        else if (pad.bButton.wasPressedThisFrame)
         {
-            if (page5.activeSelf)
+            switch (phase)
             {
-                hasStarted = true;
-                StartCoroutine(pageBackwardAnimation(() =>
-                {
-                    page6.SetActive(false);
-                    page5.SetActive(false);
-                    page4.SetActive(true);
-                    page3.SetActive(true);
-                    hasStarted = false;
-                }));
-            }
-            else if (page3.activeSelf)
-            {
-                hasStarted = true;
-                StartCoroutine(pageBackwardAnimation(() =>
-                {
-                    page3.SetActive(false);
-                    page4.SetActive(false);
-                    page2.SetActive(true);
-                    page1.SetActive(true);
-                    hasStarted = false;
-                }));
-            }
-            else if (page1.activeSelf)
-            {
-                Debug.Log("Book is closed. Exit menu?");
-                // Maybe add game exit logic later to close book?
+                case MenuPhase.LoadoutPick: BackToWizard();      break;
+                case MenuPhase.WizardPick:  BackToModeJoin();    break;
+                case MenuPhase.MapPick:     BackToLastLoadout(); break;
             }
         }
     }
 
-    System.Collections.IEnumerator pageForwardAnimation(System.Action onComplete)
+    #region Phase handlers
+    private void HandleModeJoinConfirm()
     {
+        if (masterPad == null) return;
+
+        // How many players actually joined
+        playerCount = Mathf.Clamp(controllerConnectScript.numPlayers, 1, 4);
+
+        // Determine selected mode
+        selectedMode = 0;
+        if (modeIconSelectScripts != null)
+            foreach (var mis in modeIconSelectScripts)
+                if (mis && mis.isActiveAndEnabled) { selectedMode = mis.currentIndex; break; }
+
+        // Save device order THEN init arrays (InitPlayers does NOT wipe Inputs)
+        DataManager.Instance.SetInputs(controllerConnectScript.JoinedDevices);
+        DataManager.Instance.InitPlayers(playerCount);
+        DataManager.Instance.SelectedMode = selectedMode;
+
+        wizardLocked  = new bool[playerCount];
+        loadoutLocked = new bool[playerCount];
+        currentPicker = 0;
+
+        hasStarted = true;
+        StartCoroutine(pageForwardAnimation(() =>
+        {
+            page1.SetActive(false);
+            page2.SetActive(false);
+
+            phase = MenuPhase.WizardPick;
+            SetWizardSelectActive(true);
+
+            characterSelectController.activePad = DataManager.Instance.GetPad(currentPicker);
+            hasStarted = false;
+        }));
+    }
+
+    private void ConfirmWizard()
+    {
+        var wiz = characterSelectController.selectedWizard;
+        DataManager.Instance.SetWizard(currentPicker, wiz);
+        wizardLocked[currentPicker] = true;
+
+        phase = MenuPhase.LoadoutPick;
+        hasStarted = true;
+        StartCoroutine(pageForwardAnimation(() =>
+        {
+            SetWizardSelectActive(false);
+            SetLoadoutSelectActive(true);
+
+            var pad = DataManager.Instance.GetPad(currentPicker);
+            weaponSelectControl.SetActivePlayer(currentPicker, pad);
+            magicManagement.SetPlayer(currentPicker);
+
+            hasStarted = false;
+        }));
+    }
+
+    private void ConfirmLoadout()
+    {
+        var src  = weaponSelectControl.inventoryData;
+        var copy = (WeaponData[])src.Clone();
+        DataManager.Instance.SetLoadout(currentPicker, copy);
+        loadoutLocked[currentPicker] = true;
+
+        weaponSelectControl.ResetSelection();
+        magicManagement.OnSpentChanged(0);
+
+        if (currentPicker < playerCount - 1)
+        {
+            currentPicker++;
+            phase = MenuPhase.WizardPick;
+
+            hasStarted = true;
+            StartCoroutine(pageForwardAnimation(() =>
+            {
+                SetLoadoutSelectActive(false);
+                SetWizardSelectActive(true);
+
+                characterSelectController.activePad = DataManager.Instance.GetPad(currentPicker);
+                hasStarted = false;
+            }));
+        }
+        else
+        {
+            phase = MenuPhase.MapPick;
+            characterSelectController.activePad = null;
+
+            hasStarted = true;
+            StartCoroutine(pageForwardAnimation(() =>
+            {
+                SetLoadoutSelectActive(false);
+                SetMapSelectActive(true);
+
+                mapSelectController.SetActivePad(masterPad);
+                hasStarted = false;
+            }));
+        }
+    }
+
+    private void ConfirmMap()
+    {
+        selectedMap = mapSelectController.currentIndex;
+        DataManager.Instance.SelectedMap = selectedMap;
+
+        string sceneName = mapSelectController.SceneNameForIndex(selectedMap);
+        SceneManager.LoadScene(sceneName);
+    }
+    #endregion
+
+    #region Back nav
+    private void BackToWizard()
+    {
+        phase = MenuPhase.WizardPick;
+        characterSelectController.activePad = DataManager.Instance.GetPad(currentPicker);
+
+        hasStarted = true;
+        StartCoroutine(pageBackwardAnimation(() =>
+        {
+            SetLoadoutSelectActive(false);
+            SetWizardSelectActive(true);
+            hasStarted = false;
+        }));
+    }
+
+    private void BackToModeJoin()
+    {
+        phase = MenuPhase.ModeJoin;
+        currentPicker = 0;
+        characterSelectController.activePad = null;
+
+        hasStarted = true;
+        StartCoroutine(pageBackwardAnimation(() =>
+        {
+            SetWizardSelectActive(false);
+            page2.SetActive(true);
+            page1.SetActive(true);
+            hasStarted = false;
+        }));
+    }
+
+    private void BackToLastLoadout()
+    {
+        phase = MenuPhase.LoadoutPick;
+        currentPicker = playerCount - 1;
+
+        hasStarted = true;
+        StartCoroutine(pageBackwardAnimation(() =>
+        {
+            SetMapSelectActive(false);
+            SetLoadoutSelectActive(true);
+            hasStarted = false;
+        }));
+    }
+    #endregion
+
+    #region UI toggles
+    private void SetWizardSelectActive(bool on){ page3.SetActive(on); page4.SetActive(on); }
+    private void SetLoadoutSelectActive(bool on){ page5.SetActive(on); page6.SetActive(on); }
+    private void SetMapSelectActive(bool on){ page7.SetActive(on); page8.SetActive(on); }
+    #endregion
+
+    #region Anim
+    System.Collections.IEnumerator pageForwardAnimation(Action onComplete)
+    {
+        if (framesForward == null || framesForward.Length == 0){ onComplete?.Invoke(); yield break; }
+
         framesForward[currentBookIndex].SetActive(true);
         while (currentBookIndex < framesForward.Length - 1)
         {
@@ -219,14 +295,15 @@ public class MenuNavigationControl : MonoBehaviour
             framesForward[currentBookIndex++].SetActive(false);
             framesForward[currentBookIndex].SetActive(true);
         }
-
         ResetFrames(framesForward);
         currentBookIndex = 0;
         onComplete?.Invoke();
     }
 
-    System.Collections.IEnumerator pageBackwardAnimation(System.Action onComplete)
+    System.Collections.IEnumerator pageBackwardAnimation(Action onComplete)
     {
+        if (framesBackward == null || framesBackward.Length == 0){ onComplete?.Invoke(); yield break; }
+
         framesBackward[currentBookIndex].SetActive(true);
         while (currentBookIndex < framesBackward.Length - 1)
         {
@@ -234,14 +311,20 @@ public class MenuNavigationControl : MonoBehaviour
             framesBackward[currentBookIndex++].SetActive(false);
             framesBackward[currentBookIndex].SetActive(true);
         }
-
         ResetFrames(framesBackward);
         currentBookIndex = 0;
         onComplete?.Invoke();
     }
 
-    void ResetFrames(GameObject[] frames)
+    void ResetFrames(GameObject[] frames){ foreach (var f in frames) if (f) f.SetActive(false); }
+    #endregion
+
+    #region Pads
+    private Gamepad ResolveActivePad()
     {
-        foreach (var f in frames) f.SetActive(false);
+        if (phase == MenuPhase.ModeJoin || phase == MenuPhase.MapPick)
+            return masterPad ?? DataManager.Instance.GetMasterPad();
+        return DataManager.Instance.GetPad(currentPicker);
     }
+    #endregion
 }

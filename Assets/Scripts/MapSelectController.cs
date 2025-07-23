@@ -3,63 +3,96 @@ using UnityEngine.InputSystem;
 
 public class MapSelectController : MonoBehaviour
 {
+    [Header("-- Grid --")]
     public Transform[] mapTiles;
+    public int columns = 4;
     public Transform selectorIcon;
-    public int currentIndex = 0;
+
+    [Header("-- Input --")]
     public float inputCooldown = 0.2f;
+    public float stickDeadzone = 0.5f;
 
-    private float inputTimer = 0f;
+    private float inputTimer;
+    private Gamepad pad;
 
-    //0 - old woods
-    //1 - stormspire
-    //2 - fungal hollow
-    //3 - riftforge bastion
-    //4 - cinder crucible
-    //5 - drowned sanctum
-    //6 - the black osuary
-    //7 - frostgrave citadel
+    public int currentIndex { get; private set; }
+
+    void OnEnable()
+    {
+        // keep selector on correct tile when page opens
+        if (selectorIcon && mapTiles.Length > 0)
+            selectorIcon.position = mapTiles[currentIndex].position;
+        inputTimer = 0f;
+    }
+
     void Update()
     {
-        inputTimer += Time.deltaTime;
+        if (pad == null) return;                      // <-- if this is null, you forgot SetActivePad
 
-        Vector2 rightStick = new Vector2(Gamepad.current.rightStick.ReadValue().x, Gamepad.current.rightStick.ReadValue().y);
+        inputTimer += Time.deltaTime;
 
         if (inputTimer >= inputCooldown)
         {
-            if (Mathf.Abs(rightStick.x) > 0.5f)
-            {
-                if (rightStick.x > 0)
-                    TryMove(1);
-                else
-                    TryMove(-1);
+            Vector2 rs = pad.rightStick.ReadValue();
+            Vector2 dp = pad.dpad.ReadValue();        // let dpad work too
 
+            if (Mathf.Abs(rs.x) > stickDeadzone || Mathf.Abs(dp.x) > 0.5f)
+            {
+                TryMove((rs.x > 0 || dp.x > 0.5f) ? 1 : -1);
                 inputTimer = 0f;
             }
-            else if (Mathf.Abs(rightStick.y) > 0.5f)
+            else if (Mathf.Abs(rs.y) > stickDeadzone || Mathf.Abs(dp.y) > 0.5f)
             {
-                if (rightStick.y > 0)
-                    TryMove(-4);
-                else
-                    TryMove(4);
-
+                TryMove((rs.y > 0 || dp.y > 0.5f) ? -columns : columns);
                 inputTimer = 0f;
             }
         }
 
-        selectorIcon.position = mapTiles[currentIndex].position;
+        if (selectorIcon && mapTiles.Length > 0)
+            selectorIcon.position = mapTiles[currentIndex].position;
     }
 
     void TryMove(int delta)
     {
         int newIndex = currentIndex + delta;
+        if (newIndex < 0 || newIndex >= mapTiles.Length) return;
 
+        // horizontal row clamp
         if (Mathf.Abs(delta) == 1)
         {
-            int row = currentIndex / 4;
-            if (newIndex / 4 != row) return;
+            int oldRow = currentIndex / columns;
+            int newRow = newIndex / columns;
+            if (oldRow != newRow) return;
         }
 
-        if (newIndex >= 0 && newIndex < mapTiles.Length)
-            currentIndex = newIndex;
+        currentIndex = newIndex;
+        // (optional SFX/animation hook here)
+    }
+
+    // --- Called by MenuNavigationControl ---
+    public void SetActivePad(Gamepad activePad)
+    {
+        pad = activePad;
+    }
+
+    public void ResetInput()
+    {
+        inputTimer = 0f;
+    }
+
+    public string SceneNameForIndex(int idx)
+    {
+        switch (idx)
+        {
+            case 0: return "Oldwoods3D";
+            case 1: return "Stormspire";
+            case 2: return "FungalHollow";
+            case 3: return "Riftforge";
+            case 4: return "CinderCrucible";
+            case 5: return "DrownedSanctum";
+            case 6: return "BlackOsuary";
+            case 7: return "Frostgrave";
+            default: return "Oldwoods3D";
+        }
     }
 }

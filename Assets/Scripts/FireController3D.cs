@@ -63,11 +63,13 @@ public class FireController3D : MonoBehaviour
     
     private IEnumerator HapticRecoil(Gamepad pad, float low, float high)
     {
+        if (pad == null) yield break;
         pad.SetMotorSpeeds(low * 1.2f, high * 1.5f);
         yield return new WaitForSeconds(0.05f);
         pad.SetMotorSpeeds(low * 0.5f, high * 0.7f);
         yield return new WaitForSeconds(0.1f);
         pad.SetMotorSpeeds(0f, 0f);
     }
+
 
 }

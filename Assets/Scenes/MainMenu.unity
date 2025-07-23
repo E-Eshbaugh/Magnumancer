@@ -5477,7 +5477,6 @@ RectTransform:
   m_Children:
   - {fileID: 713246613}
   - {fileID: 791082470}
-  - {fileID: 771607430}
   - {fileID: 405194803}
   - {fileID: 211167760}
   - {fileID: 868785363}
@@ -5529,18 +5528,14 @@ MonoBehaviour:
   - {fileID: 480621548}
   - {fileID: 1893235959}
   frameRate: 0.1
-  selectedWizard: {fileID: 0}
-  characterSelectController: {fileID: 0}
-  selectedMap: 0
-  mapSelectController: {fileID: 0}
-  weaponSelectControl: {fileID: 0}
+  controllerConnectScript: {fileID: 1672197917}
   modeIconSelectScripts:
   - {fileID: 2070972156}
   - {fileID: 204535131}
-  controllerConnectScript: {fileID: 1672197917}
-  playerCount: 1
-  maxPlayers: 4
-  selectedMode: 0
+  characterSelectController: {fileID: 0}
+  weaponSelectControl: {fileID: 0}
+  mapSelectController: {fileID: 0}
+  magicManagement: {fileID: 645243049}
 --- !u!1 &468789739
 GameObject:
   m_ObjectHideFlags: 0
@@ -7576,7 +7571,6 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   elementalEmblem: {fileID: 1792172178}
-  menuNavigationControl: {fileID: 447137998}
   Orbs:
   - {fileID: 956193113}
   - {fileID: 828405100}
@@ -7590,8 +7584,8 @@ MonoBehaviour:
   - {fileID: 1558185662}
   - {fileID: 181966918}
   - {fileID: 641437233}
+  playerIndex: 0
   spentOrbs: 0
-  numOrbs: 0
 --- !u!1 &645585898
 GameObject:
   m_ObjectHideFlags: 0
@@ -7653,9 +7647,10 @@ MonoBehaviour:
   - {fileID: 233059317}
   - {fileID: 1798729049}
   - {fileID: 1534914522}
+  columns: 4
   selectorIcon: {fileID: 1637971918}
-  currentIndex: 0
   inputCooldown: 0.2
+  stickDeadzone: 0.5
 --- !u!1 &656749266
 GameObject:
   m_ObjectHideFlags: 0
@@ -9086,6 +9081,7 @@ RectTransform:
   - {fileID: 1672197916}
   - {fileID: 168363000}
   - {fileID: 658856908}
+  - {fileID: 771607430}
   m_Father: {fileID: 447137997}
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
   m_AnchorMin: {x: 0.5, y: 0.5}
@@ -10863,6 +10859,8 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   tierTextControl: {fileID: 0}
+  magicManagement: {fileID: 0}
+  activePlayerIndex: 0
   stickThreshold: 0.5
   inputCooldown: 0.25
   weaponNameText: {fileID: 1471131786}
@@ -10873,21 +10871,20 @@ MonoBehaviour:
   weaponAttackSpeed: {fileID: 711988815}
   weaponWeight: {fileID: 119468453}
   weaponIcon: {fileID: 474080175}
-  archonWeapons:
-  - {fileID: 11400000, guid: ba907eeb7f55263498b3ec19d9243e67, type: 2}
-  - {fileID: 11400000, guid: 7fa214f30a53fc04d95a27b9379ec90b, type: 2}
-  - {fileID: 11400000, guid: bc12418186f4a394fbea057b19a8c1f6, type: 2}
-  - {fileID: 11400000, guid: 6b0a595098a55b541ae6c1103fa5c0df, type: 2}
+  initiateWeapons:
+  - {fileID: 11400000, guid: a9185a17e638c0b43bc9521d7c8a0e2b, type: 2}
+  - {fileID: 11400000, guid: da1ae560b6a869f4c8a4cb39d809fe56, type: 2}
+  - {fileID: 11400000, guid: e9e3fa9f90558b84d8489bbdeb9f3b7a, type: 2}
   ascendantWeapons:
   - {fileID: 11400000, guid: 4338d4f21f1138846a835288a1c6bdcd, type: 2}
   - {fileID: 11400000, guid: c345cbe9f03696741a59f1f90f67d0be, type: 2}
   - {fileID: 11400000, guid: ec5ea3d0336884a4094c89174154072a, type: 2}
   - {fileID: 11400000, guid: f52eec34bda8d124ea310a5e17d1d0b4, type: 2}
-  initiateWeapons:
-  - {fileID: 11400000, guid: a9185a17e638c0b43bc9521d7c8a0e2b, type: 2}
-  - {fileID: 11400000, guid: da1ae560b6a869f4c8a4cb39d809fe56, type: 2}
-  - {fileID: 11400000, guid: e9e3fa9f90558b84d8489bbdeb9f3b7a, type: 2}
-  magicManagement: {fileID: 0}
+  archonWeapons:
+  - {fileID: 11400000, guid: ba907eeb7f55263498b3ec19d9243e67, type: 2}
+  - {fileID: 11400000, guid: 7fa214f30a53fc04d95a27b9379ec90b, type: 2}
+  - {fileID: 11400000, guid: bc12418186f4a394fbea057b19a8c1f6, type: 2}
+  - {fileID: 11400000, guid: 6b0a595098a55b541ae6c1103fa5c0df, type: 2}
   inventorySlots:
   - {fileID: 660321014}
   - {fileID: 530307342}
@@ -10899,8 +10896,8 @@ MonoBehaviour:
   - {fileID: 11400000, guid: 39dc9dbba0c274e4bbb0acd7bd5eab1d, type: 2}
   - {fileID: 11400000, guid: 39dc9dbba0c274e4bbb0acd7bd5eab1d, type: 2}
   InventoryPlaceHolder: {fileID: 11400000, guid: 39dc9dbba0c274e4bbb0acd7bd5eab1d, type: 2}
-  clear: 0
-  ammoPercent: 0
+  minX: -614
+  maxX: -211
 --- !u!1 &956193113
 GameObject:
   m_ObjectHideFlags: 0
@@ -15866,7 +15863,7 @@ PrefabInstance:
   serializedVersion: 2
   m_Modification:
     serializedVersion: 3
-    m_TransformParent: {fileID: 447137997}
+    m_TransformParent: {fileID: 791082470}
     m_Modifications:
     - target: {fileID: 4380751595090069825, guid: 1659bf7df6872584ca658a02611126ef, type: 3}
       propertyPath: m_AnchoredPosition.x
@@ -15942,15 +15939,15 @@ PrefabInstance:
       objectReference: {fileID: 0}
     - target: {fileID: 7376621359566105258, guid: 1659bf7df6872584ca658a02611126ef, type: 3}
       propertyPath: m_LocalRotation.x
-      value: 0
+      value: -0
       objectReference: {fileID: 0}
     - target: {fileID: 7376621359566105258, guid: 1659bf7df6872584ca658a02611126ef, type: 3}
       propertyPath: m_LocalRotation.y
-      value: 0
+      value: -0
       objectReference: {fileID: 0}
     - target: {fileID: 7376621359566105258, guid: 1659bf7df6872584ca658a02611126ef, type: 3}
       propertyPath: m_LocalRotation.z
-      value: 0
+      value: -0
       objectReference: {fileID: 0}
     - target: {fileID: 7376621359566105258, guid: 1659bf7df6872584ca658a02611126ef, type: 3}
       propertyPath: m_AnchoredPosition.x
@@ -17512,17 +17509,6 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 2927296dce814fa41a7aecf499081d15, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  p1_loadout: []
-  p2_loadout: []
-  p3_loadout: []
-  p4_loadout: []
-  selectedWizards:
-  - {fileID: 0}
-  - {fileID: 0}
-  - {fileID: 0}
-  - {fileID: 0}
-  numPlayers: 1
-  selectedMode: 0
 --- !u!4 &1601343818
 Transform:
   m_ObjectHideFlags: 0
@@ -17829,8 +17815,6 @@ MonoBehaviour:
   allowKeyboardJoin: 0
   keyboardJoinKey: 2
   autoRemoveOnDisconnect: 1
-  autoJoinAllExistingPads: 0
-  numPlayers: 1
 --- !u!224 &1675768329 stripped
 RectTransform:
   m_CorrespondingSourceObject: {fileID: 3540353165229735616, guid: ca752f13d3fcb864193cff970374bbf4, type: 3}

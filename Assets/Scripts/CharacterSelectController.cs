@@ -4,7 +4,9 @@ using UnityEngine.InputSystem;
 using UnityEngine.UI;
 
 public class CharacterSelectController : MonoBehaviour
+
 {
+    public Gamepad activePad;
     [Header("-- Wizard Setup --")]
     public WizardData[] allWizards; // Set these in Inspector
     public Image mainWiz;
@@ -33,8 +35,13 @@ public class CharacterSelectController : MonoBehaviour
 
     void Update()
     {
-        bool isPressedR = Gamepad.current.rightShoulder.isPressed;
-        bool isPressedL = Gamepad.current.leftShoulder.isPressed;
+        if (activePad != null && (activePad.leftShoulder.wasPressedThisFrame || activePad.rightShoulder.wasPressedThisFrame))
+        Debug.Log($"Wizard scroll from {activePad.displayName}");
+
+        if (activePad == null) return;
+
+        bool isPressedR = activePad.rightShoulder.isPressed;
+        bool isPressedL = activePad.leftShoulder.isPressed;
 
         if (rightPressed && !isPressedR)
         {
