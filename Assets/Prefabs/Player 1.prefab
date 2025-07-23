@@ -327,6 +327,8 @@ MonoBehaviour:
   playerBody: {fileID: 0}
   grenadePrefab: {fileID: 3773003613870667637, guid: f85ac6d2f315b94449ab1d365258d680, type: 3}
   muzzle: {fileID: 5040858543144988431}
+  currentGun: {fileID: 0}
+  gunSwapControl: {fileID: 303219725969431144}
   dashSegmentPrefab: {fileID: 1956128383333637464, guid: 87ca999766dc11b469d18e9a1eedffff, type: 3}
   segmentPoolSize: 48
   ringMaterialBase: {fileID: 2100000, guid: ede6a74cdf0481c4ea0c06aaabea7782, type: 2}

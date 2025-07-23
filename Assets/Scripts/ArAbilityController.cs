@@ -10,6 +10,8 @@ public class ArAbilityController : MonoBehaviour
     public Rigidbody playerBody;
     public GameObject grenadePrefab;
     public Transform muzzle;
+    public WeaponData currentGun;
+    public GunSwapControl gunSwapControl;
 
     [SerializeField] GameObject dashSegmentPrefab;
     [SerializeField] int segmentPoolSize = 48;
@@ -111,6 +113,9 @@ public class ArAbilityController : MonoBehaviour
 
     void Update()
     {
+        currentGun = gunSwapControl.loadout[gunSwapControl.currentGunIndex];
+        if (!currentGun.grenadeLauncher) return;
+
         pad = gamepadOverride ?? Gamepad.current;
         if (pad == null) { if (aiming) CancelAiming(); return; }
 

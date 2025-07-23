@@ -26,6 +26,9 @@ public class WeaponData : ScriptableObject
     [Header("Smg Abilities")]
     public bool akimbo;
 
+    [Header("AR Abilities")]
+    public bool grenadeLauncher;
+
     [Header("Bullet Abilities")]
     public GameObject specialBulletType;
     public GameObject baseAmmoType;
