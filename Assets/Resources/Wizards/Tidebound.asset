@@ -18,12 +18,31 @@ MonoBehaviour:
   loadoutOrbs: 6
   factionEmblem: {fileID: 758042945, guid: d812d7af151532745a44f9a32bbfe38a, type: 3}
   charcterImage: {fileID: 2062932452, guid: 14b3787829e18034195f3cad3ff558b4, type: 3}
-  passiveAbility: 'Mistshroud: Every 3rd dash ability triggers a small smoke screen'
-  activeAbility: 'Abyssal Vortex: Next bullet fired creates a whirlpool that pulls
-    enemies in, trapping them in place and dealing damage over time'
+  passiveAbilityTxt: 'Undercurrent: Dash cooldown is reduced by 30%. After dashing,
+    gain a brief movement boost.'
+  activeAbilityTxt: 'Ves''shara''s Reflection: Summon a mirrored illusion of yourself
+    for 5 seconds. It mimics your movement in reversed directions but cannot deal
+    damage. Use it to confuse foes, mask your retreat, or mislead enemies in the
+    heat of battle.'
   loreText: "Once peaceful stewards of healing springs and coastal sanctuaries, the
     Tidebound have evolved into relentless close-combatants hidden deep in flooded
     ruins and sea caverns. hardened by amphibious goblin raids during the great war,
     they master the tides with close-range whirlpool attacks and brutal melee spells.
     They crash in like waves\u2014overwhelming and personal."
   material: {fileID: 2100000, guid: 25ac3a8882121e843b62dcef38a94f6d, type: 2}
+  firePassive: 0
+  fireActive: 0
+  icePassive: 0
+  iceActive: 0
+  lightningPassive: 0
+  lightningActive: 0
+  waterPassive: 1
+  waterActive: 1
+  earthPassive: 0
+  earthActive: 0
+  poisonActive: 0
+  poisonPassive: 0
+  naturePassive: 0
+  natureActive: 0
+  darknessPassive: 0
+  darknessActive: 0

@@ -28,9 +28,21 @@ public class DataManager : MonoBehaviour
 
     void Awake()
     {
-        if (Instance == null) { Instance = this; DontDestroyOnLoad(gameObject); }
-        else Destroy(gameObject);
+        Debug.Log($"[DataManager] Awake in scene '{UnityEngine.SceneManagement.SceneManager.GetActiveScene().name}'");
+
+        if (Instance == null)
+        {
+            Instance = this;
+            DontDestroyOnLoad(gameObject);
+            Debug.Log("[DataManager] New instance created.");
+        }
+        else
+        {
+            Destroy(gameObject);
+            Debug.Log("[DataManager] Duplicate destroyed.");
+        }
     }
+
 
     public void InitPlayers(int count)
     {

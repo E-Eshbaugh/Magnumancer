@@ -27,7 +27,15 @@ public class CircleAbilityUI : MonoBehaviour
 
     void Start()
     {
-        // sample the sprite’s center pixel
+        if (crestImage == null || crestImage.sprite == null)
+        {
+            Debug.Log("Crest image or sprite is not assigned!");
+            glowImage.enabled = false;
+            enabled = false;
+            return;
+        }
+
+        // Sample the sprite’s center pixel
         Sprite sprite = crestImage.sprite;
         Texture2D tex = sprite.texture;
         Rect r = sprite.rect;
@@ -36,9 +44,32 @@ public class CircleAbilityUI : MonoBehaviour
         sampledCrestColor = tex.GetPixel(x, y);
         sampledCrestColor.a = 1f;
 
-        // set fixed scale
+        // Set fixed scale
         glowImage.rectTransform.localScale = Vector3.one * scale;
     }
+
+    public void Setup(Gamepad pad, Sprite crest)
+    {
+        gamepad = pad;
+        if (crestImage != null)
+        {
+            crestImage.sprite = crest;
+
+            // Re-sample crest color
+            Sprite sprite = crestImage.sprite;
+            if (sprite != null)
+            {
+                Rect r = sprite.rect;
+                Texture2D tex = sprite.texture;
+                int x = Mathf.FloorToInt(r.x + r.width * 0.5f);
+                int y = Mathf.FloorToInt(r.y + r.height * 0.5f);
+                sampledCrestColor = tex.GetPixel(x, y);
+                sampledCrestColor.a = 1f;
+            }
+        }
+    }
+
+
 
     void Update()
     {
@@ -109,7 +140,6 @@ public class CircleAbilityUI : MonoBehaviour
             pulseRoutine = null;
         }
 
-        Debug.Log("Ability used!");
         // TODO: your ability activation logic
     }
 }

@@ -5,16 +5,22 @@ public class GunOrbitController : MonoBehaviour
 {
     [Header("Player & Orbit Settings")]
     public Transform player;
-    public float     orbitRadius = 2f;
-    public float     fixedHeight = 1.5f;
-    public float     tilt        = 0f;
+    public float orbitRadius = 2f;
+    public float fixedHeight = 1.5f;
+    public float tilt = 0f;
 
     [Header("Controller")]
     public Gamepad gamepad;
 
     private Vector3 currentWorldOffset;
     public Vector3 aimDirection = Vector3.forward;  // flat XZ aim
-    private bool    _logged;
+    private bool _logged;
+
+    public void Setup(Gamepad pad, Transform playerTransform)
+    {
+        gamepad = pad;
+        player = playerTransform;
+    }
 
     void Awake()
     {
@@ -27,9 +33,11 @@ public class GunOrbitController : MonoBehaviour
 
     void Start()
     {
-        // initialize offset
-        currentWorldOffset = transform.position - player.position;
-        currentWorldOffset.y = 0f;
+        if (player != null)
+        {
+            currentWorldOffset = transform.position - player.position;
+            currentWorldOffset.y = 0f;
+        }
     }
 
     void Update()
@@ -43,6 +51,7 @@ public class GunOrbitController : MonoBehaviour
             float angle = Mathf.Atan2(stick.x, stick.y);
             aimDirection = new Vector3(Mathf.Sin(angle), 0, Mathf.Cos(angle));
             currentWorldOffset = aimDirection * orbitRadius;
+
             if (!_logged)
             {
                 Debug.Log($"[{name}] aimDirection = {aimDirection}");

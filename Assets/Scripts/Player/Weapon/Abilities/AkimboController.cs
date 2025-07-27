@@ -6,29 +6,34 @@ using System.Collections;
 public class AkimboController : MonoBehaviour
 {
     [Header("References")]
-    public AmmoControl    ammoControl;       // your existing primary‐gun manager
-    public Gamepad        gamepad;           // assigned by MultiplayerManager
-    public Transform      secondaryAnchor;   // off‐hand muzzle placeholder
-    public GameObject     secondaryPrefab;   // off‐hand gun model prefab
-    public WeaponAbilityControl   weaponAbility;       // optional UI feedback
+    public AmmoControl ammoControl;       // your existing primary‐gun manager
+    public Gamepad gamepad;               // assigned by MultiplayerManager
+    public Transform secondaryAnchor;     // off‐hand muzzle placeholder
+    public GameObject secondaryPrefab;    // off‐hand gun model prefab
+    public WeaponAbilityControl weaponAbility; // optional UI feedback
 
     [Header("Akimbo Settings")]
-    public float bulletSpeed     = 20f;
-    public float fireThreshold   = 0.1f;     // LT deadzone
-    public float cooldown        = 10f;      // before you can re‐Akimbo
+    public float bulletSpeed = 20f;
+    public float fireThreshold = 0.1f;     // LT deadzone
+    public float cooldown = 10f;           // before you can re‐Akimbo
 
     // state
-    public bool   akimboActive;
-    public int    secondaryAmmo;
-    public float  nextAkimboReadyTime;
-    public float  nextSecondaryFireTime;
+    public bool akimboActive;
+    public int secondaryAmmo;
+    public float nextAkimboReadyTime;
+    public float nextSecondaryFireTime;
 
-    private GameObject         secondaryInstance;
+    private GameObject secondaryInstance;
     private GunOrbitController orbit;
+
+    public void Setup(Gamepad pad)
+    {
+        gamepad = pad;
+        ammoControl = GetComponent<AmmoControl>();
+    }
 
     void Awake()
     {
-        // cache your orbit so you get the precise flat aim
         orbit = GetComponentInChildren<GunOrbitController>();
         if (orbit == null)
             Debug.LogError($"{name}: No GunOrbitController found!");
@@ -37,22 +42,22 @@ public class AkimboController : MonoBehaviour
     void Update()
     {
         if (ammoControl == null || gamepad == null || orbit == null) return;
+
         var weapon = ammoControl.currentGun;
         if (weapon == null || !weapon.akimbo) return;
 
         float now = Time.time;
-        var   pad = gamepad;
 
         // 1) Activate Akimbo
-        if (!akimboActive && pad.leftTrigger.wasPressedThisFrame && now >= nextAkimboReadyTime)
+        if (!akimboActive && gamepad.leftTrigger.wasPressedThisFrame && now >= nextAkimboReadyTime)
             StartAkimbo(weapon, now);
 
-        // 2) While Akimbo is active, fire off‐hand on LT hold
+        // 2) Fire off‐hand while Akimbo is active
         if (akimboActive)
         {
-            if (pad.leftTrigger.ReadValue() > fireThreshold 
-             && now >= nextSecondaryFireTime
-             && secondaryAmmo > 0)
+            if (gamepad.leftTrigger.ReadValue() > fireThreshold &&
+                now >= nextSecondaryFireTime &&
+                secondaryAmmo > 0)
             {
                 FireSecondary(weapon, now);
                 secondaryAmmo--;
@@ -66,12 +71,12 @@ public class AkimboController : MonoBehaviour
 
     private void StartAkimbo(WeaponData weapon, float now)
     {
-        weaponAbility?.TriggerAbilityFill(); // optional UI feedback
-        akimboActive         = true;
-        secondaryAmmo        = weapon.ammoCapacity;
-        ammoControl.ammoCount= weapon.ammoCapacity;
-        nextSecondaryFireTime= 0f;
-        nextAkimboReadyTime  = now + cooldown;
+        weaponAbility?.TriggerAbilityFill();
+        akimboActive = true;
+        secondaryAmmo = weapon.ammoCapacity;
+        ammoControl.ammoCount = weapon.ammoCapacity;
+        nextSecondaryFireTime = 0f;
+        nextAkimboReadyTime = now + cooldown;
 
         if (secondaryInstance == null)
         {
@@ -100,21 +105,16 @@ public class AkimboController : MonoBehaviour
         var prefab = weapon.ammoType;
         if (prefab == null) return;
 
-        // 1) Use the flat aim direction from orbit
         Vector3 dir = -orbit.aimDirection;
-
-        // 2) Spawn at the off‐hand muzzle
         Vector3 spawnPos = secondaryAnchor.position + dir * 0.5f;
-        Quaternion rot   = Quaternion.LookRotation(dir, Vector3.up);
+        Quaternion rot = Quaternion.LookRotation(dir, Vector3.up);
         var proj = Instantiate(prefab, spawnPos, rot);
 
-        // 3) Propel or initialize
         if (proj.TryGetComponent<Bullet>(out var mover))
             mover.Initialize(dir);
         else if (proj.TryGetComponent<Rigidbody>(out var rb))
             rb.linearVelocity = dir * bulletSpeed;
 
-        // 4) Haptic recoil on the correct pad
         StartCoroutine(HapticRecoil(
             gamepad,
             Mathf.Clamp01(weapon.recoil * 0.7f),

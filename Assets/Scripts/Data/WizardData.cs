@@ -1,3 +1,4 @@
+using UnityEditor;
 using UnityEngine;
 
 [CreateAssetMenu(menuName = "Mangumancer/Wizard")]
@@ -9,8 +10,9 @@ public class WizardData : ScriptableObject
     public int loadoutOrbs;
     public Sprite factionEmblem;
     public Sprite charcterImage;
-    public string passiveAbility;
-    public string activeAbility;
+    public string passiveAbilityTxt;
+    public string activeAbilityTxt;
     public string loreText;
     public Material material;
+    public GameObject activeAbilityPrefab;
 }

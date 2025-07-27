@@ -18,14 +18,29 @@ MonoBehaviour:
   loadoutOrbs: 12
   factionEmblem: {fileID: -1861122501, guid: d812d7af151532745a44f9a32bbfe38a, type: 3}
   charcterImage: {fileID: 1591709252, guid: 83fa121b3217fa84ca11623844a0189b, type: 3}
-  passiveAbility: 'Shadowshot: 25% chance to fire a shadow bullet that can phase
-    through walls and obstacles'
-  activeAbility: 'Forsaken Bargain: Next bullet fired curses hit enemy, causing them
-    to take 2x damage from you. However, all other incoming damage is instead dealt
-    to you. Curse lasts 5 sec.'
+  passiveAbilityTxt: 'Last Rites: When on last life stock, every 30 seconds gain
+    3 seconds of invinciblity and double damage.'
+  activeAbilityTxt: 'Soulfracture Beam: Fire a piercing void ray that marks hit enemies.
+    Marked enemies explode on death or loss of next life stock, dealing area damage.'
   loreText: Wielders of forsaken magics, the Hollow were not an original Great Faction,
     instead abandoned their kin of various factions to chase unspeakable power. Hidden
     in cursed ruins and shadowed tunnels, they mastered every form of magnumancy,
     bringing upon an eternal dark curse to their whole faction. Ruthless and unpredictable,
     they walk the line between mastery and madness.
   material: {fileID: 2100000, guid: a33d8e2725f6d0e4aa41f0e158762194, type: 2}
+  firePassive: 0
+  fireActive: 0
+  icePassive: 0
+  iceActive: 0
+  lightningPassive: 0
+  lightningActive: 0
+  waterPassive: 0
+  waterActive: 0
+  earthPassive: 0
+  earthActive: 0
+  poisonActive: 0
+  poisonPassive: 0
+  naturePassive: 0
+  natureActive: 0
+  darknessPassive: 1
+  darknessActive: 1

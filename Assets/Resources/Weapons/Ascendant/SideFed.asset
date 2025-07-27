@@ -29,6 +29,7 @@ MonoBehaviour:
   spreadAngle: 10
   heavyWeapon: 0
   akimbo: 0
+  grenadeLauncher: 1
   specialBulletType: {fileID: 6997994299401861888, guid: 8de6b050532025b4a891587baeb511f6, type: 3}
   baseAmmoType: {fileID: 6997994299401861888, guid: 8de6b050532025b4a891587baeb511f6, type: 3}
   prefab: {fileID: 5216182394429181200, guid: a4dd615d14edd44d59d7750a7f50cb40, type: 3}

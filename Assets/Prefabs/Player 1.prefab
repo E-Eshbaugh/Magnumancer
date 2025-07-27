@@ -421,8 +421,8 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 9a8d7fad24932de459a7a212c878e0e9, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  gunFirePoint: {fileID: 0}
-  gunControl: {fileID: 0}
+  gunFirePoint: {fileID: 5040858543144988431}
+  gunControl: {fileID: 303219725969431144}
 --- !u!1001 &3445834888638731425
 PrefabInstance:
   m_ObjectHideFlags: 0
@@ -743,7 +743,7 @@ PrefabInstance:
       addedObject: {fileID: -5282650154607575597}
     - targetCorrespondingSourceObject: {fileID: 919132149155446097, guid: 231007177a16e5b4da2f96f9c54e101a, type: 3}
       insertIndex: -1
-      addedObject: {fileID: -5984406860451053273}
+      addedObject: {fileID: -2574138627279102326}
   m_SourcePrefab: {fileID: 100100000, guid: 231007177a16e5b4da2f96f9c54e101a, type: 3}
 --- !u!1 &2527497144285833712 stripped
 GameObject:
@@ -1066,9 +1066,8 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   targetRenderers: []
-  playerSlot: 0
   bodyMatIndex: 0
---- !u!114 &-5984406860451053273
+--- !u!114 &-2574138627279102326
 MonoBehaviour:
   m_ObjectHideFlags: 0
   m_CorrespondingSourceObject: {fileID: 0}
@@ -1077,14 +1076,11 @@ MonoBehaviour:
   m_GameObject: {fileID: 2527497144285833712}
   m_Enabled: 1
   m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 574255461cf3912409a2ac06fa6ee87e, type: 3}
+  m_Script: {fileID: 11500000, guid: 86c53e20adcb0c04d8efc7203b5c4792, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  wizard: {fileID: 0}
+  wizardData: {fileID: 0}
   isUsingAbility: 0
-  fireDashDistance: 8
-  fireDashTime: 0.15
-  fireDashIsoYaw: 45
 --- !u!4 &2907260401102680906 stripped
 Transform:
   m_CorrespondingSourceObject: {fileID: -8679921383154817045, guid: 231007177a16e5b4da2f96f9c54e101a, type: 3}

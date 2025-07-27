@@ -18,12 +18,29 @@ MonoBehaviour:
   loadoutOrbs: 6
   factionEmblem: {fileID: 1886968780, guid: d812d7af151532745a44f9a32bbfe38a, type: 3}
   charcterImage: {fileID: -21015154, guid: 966ee461096bb924f91cc201321af6f8, type: 3}
-  passiveAbility: 'Heavy Weight: Slams have increas AoE knockback and damage'
-  activeAbility: 'Earthwarden''s Bulwark: Summon a powerful stone wall, bloacking
-    incoming bullets and providing cover until destroyed'
+  passiveAbilityTxt: 'Stonebind: Reduced knockback and recoil. Standing still builds
+    armor, increasing damage resistance.'
+  activeAbilityTxt: 'Seismic Judgement: Smash the gorund, sending out a shockwave
+    that knocks enemies back, damaging and briefly stunning them.'
   loreText: "Forged in canyon fortresses, the Granite Vow are elite engineer-soldiers
     bound by strength and discipline. Raised on the frontlines of the Dark Rifts,
     they carry unmatched durability and power\u2014slow to move but impossible to
     stop, wielding heavy, crushing weapons and firepower to accompany their strong
     fortification spells and will power."
   material: {fileID: 2100000, guid: 8971174afe209f1418005a206bc72baa, type: 2}
+  firePassive: 0
+  fireActive: 0
+  icePassive: 0
+  iceActive: 0
+  lightningPassive: 0
+  lightningActive: 0
+  waterPassive: 0
+  waterActive: 0
+  earthPassive: 1
+  earthActive: 1
+  poisonActive: 0
+  poisonPassive: 0
+  naturePassive: 0
+  natureActive: 0
+  darknessPassive: 0
+  darknessActive: 0

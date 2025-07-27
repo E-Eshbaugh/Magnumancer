@@ -4,35 +4,23 @@ using UnityEngine.InputSystem;
 public class GunSwapControl : MonoBehaviour
 {
     [Header("Controller")]
-    public Gamepad gamepad;  // set via Setup()
+    public Gamepad gamepad;
 
     [Header("Gun Setup")]
     public Transform gunHolder;
-    public Vector3   gunRotation;
+    public Vector3 gunRotation;
     public GameObject[] gunPrefabs = new GameObject[4];
 
     // Runtime
-    private AmmoControl      ammoControl;
-    public  FireController3D fireController;
+    private AmmoControl ammoControl;
+    public FireController3D fireController;
     private AkimboController akimboControl;
 
     private GameObject currentGun;
-    public  int        currentGunIndex = 0;
-    public  WeaponData[] loadout;   // set via Setup()
+    public int currentGunIndex = 0;
+    public WeaponData[] loadout;
 
-    public void Setup(Gamepad pad, WeaponData[] srcLoadout)
-    {
-        gamepad  = pad;
-        loadout  = srcLoadout != null ? (WeaponData[])srcLoadout.Clone() : new WeaponData[4];
-
-        // map prefabs
-        for (int i = 0; i < gunPrefabs.Length; i++)
-            gunPrefabs[i] = (i < loadout.Length && loadout[i] != null) ? loadout[i].prefab : null;
-
-        // Equip first valid gun
-        int first = FindFirstValidIndex();
-        if (first >= 0) EquipGun(first);
-    }
+    private bool isInitialized = false;
 
     void Awake()
     {
@@ -41,14 +29,28 @@ public class GunSwapControl : MonoBehaviour
         akimboControl  = GetComponentInChildren<AkimboController>();
     }
 
+    public void Setup(Gamepad pad, WeaponData[] srcLoadout)
+    {
+        gamepad = pad;
+        loadout = srcLoadout != null ? (WeaponData[])srcLoadout.Clone() : new WeaponData[4];
+
+        for (int i = 0; i < gunPrefabs.Length; i++)
+            gunPrefabs[i] = (i < loadout.Length && loadout[i] != null) ? loadout[i].prefab : null;
+
+        int first = FindFirstValidIndex();
+        if (first >= 0) EquipGun(first);
+
+        isInitialized = true;
+    }
+
     void Update()
     {
-        if (gamepad == null) return;
+        if (!isInitialized || gamepad == null) return;
 
-        if (gamepad.dpad.up.wasPressedThisFrame    && gunPrefabs[0] != null) EquipGun(0);
+        if (gamepad.dpad.up.wasPressedThisFrame && gunPrefabs[0] != null) EquipGun(0);
         if (gamepad.dpad.right.wasPressedThisFrame && gunPrefabs[1] != null) EquipGun(1);
-        if (gamepad.dpad.down.wasPressedThisFrame  && gunPrefabs[2] != null) EquipGun(2);
-        if (gamepad.dpad.left.wasPressedThisFrame  && gunPrefabs[3] != null) EquipGun(3);
+        if (gamepad.dpad.down.wasPressedThisFrame && gunPrefabs[2] != null) EquipGun(2);
+        if (gamepad.dpad.left.wasPressedThisFrame && gunPrefabs[3] != null) EquipGun(3);
     }
 
     void EquipGun(int index)
@@ -63,8 +65,8 @@ public class GunSwapControl : MonoBehaviour
         currentGun.transform.localRotation = Quaternion.Euler(gunRotation);
         currentGun.name = "gunClone";
 
-        // Notify others
         ammoControl?.OnGunEquipped(index);
+
         if (akimboControl)
         {
             akimboControl.EndAkimbo();

@@ -18,13 +18,14 @@ MonoBehaviour:
   loadoutOrbs: 6
   factionEmblem: {fileID: -1385798069, guid: d812d7af151532745a44f9a32bbfe38a, type: 3}
   charcterImage: {fileID: -320323907, guid: 3319322a03244a340a75fcd78da19e5d, type: 3}
-  passiveAbility: 'Flameshot: Bullets deal burn damage on contact with enemies or
-    leave a burning flame on ground'
-  activeAbility: 'Hephaestus''s Blessing: Ignite yourself in flames, igniting all
-    enemies you come into contact with and burn away incoming bullets'
+  passiveAbilityTxt: 'Brand of Flereous: Each attack brands your target with fire.
+    At five brands, ignite them in a burst of flame.'
+  activeAbilityTxt: 'Blazing Ruin: Supercharged dash, leaving a trail of molten fire.
+    Enemies caught burn and slow in its wake.'
   loreText: "Once revered for forging metal and inspiring awe through flame, the
     Emberguard have turned their craft into a weapon of war. Dwelling in volcanic
     forges and ash-choked wastes, they\u2019ve traded elegance for brutal efficiency.
     Their gun spells roar like dragon breath, best suited for ARs and SMGs that mirror
     their ferocity."
   material: {fileID: 2100000, guid: 8707fa60f1aa2a342902b29bfe61b828, type: 2}
+  activeAbilityPrefab: {fileID: 8764547679241398014, guid: 50080926565b4ef448fd640f94f31775, type: 3}

@@ -18,11 +18,29 @@ MonoBehaviour:
   loadoutOrbs: 10
   factionEmblem: {fileID: 102104955, guid: d812d7af151532745a44f9a32bbfe38a, type: 3}
   charcterImage: {fileID: -1695864718, guid: 2b157bd54fec28a47a9c6c2e19006362, type: 3}
-  passiveAbility: 'Frostarmor: Small chance to deflect bullets back at enemies'
-  activeAbility: 'Winter''s Judgement: Fires a piercing ice shard that does extreme
-    damage and freezes enemy in place'
+  passiveAbilityTxt: 'Fractalshot Shield: Hits on enemies apply freeze counters,
+    slowing enemies. Stack 5 freezes on an enemy to gain a weak ice shield. Can be
+    strengthened by freezing more enemies.'
+  activeAbilityTxt: 'Covenant of Frostgrave: Summon a wall of ice to block enemies
+    and incoming damage.'
   loreText: Descendants of the ancient cryomancers, the Frostwardens dwell in glacial
     sanctuaries charged with ancient magic. Their frozen lands shaped them into disciplined
     marksmen who wield precision sniper spells to halt foes in their tracks. Strategic
     and icy in demeanor, they dominate from a distance.
   material: {fileID: 2100000, guid: e69691b4cf4f8eb4c86f4607dfe3c7dd, type: 2}
+  firePassive: 0
+  fireActive: 0
+  icePassive: 1
+  iceActive: 1
+  lightningPassive: 0
+  lightningActive: 0
+  waterPassive: 0
+  waterActive: 0
+  earthPassive: 0
+  earthActive: 0
+  poisonActive: 0
+  poisonPassive: 0
+  naturePassive: 0
+  natureActive: 0
+  darknessPassive: 0
+  darknessActive: 0

@@ -18,13 +18,29 @@ MonoBehaviour:
   loadoutOrbs: 8
   factionEmblem: {fileID: 138194782, guid: d812d7af151532745a44f9a32bbfe38a, type: 3}
   charcterImage: {fileID: -1239181586, guid: b0ebbbbb3b6b6d0448687e12fa505137, type: 3}
-  passiveAbility: 'Thunderstrike: Bullets can chain to nearby enemies, dealing reduced
-    chain damage'
-  activeAbility: 'Thunderfall: Slam down, creating a shockwave that damages and stuns
-    enemies in a large radius sendin chaining damage out to nearby enemies'
+  passiveAbilityTxt: 'Lightning Reflex: After dashing or teleporting, your first
+    attack within 2 seconds fires a high-speed piercing lightning bolt.'
+  activeAbilityTxt: 'Blinkstorm: Teleport an extended distance, releasing a damaging
+    and stunning shock pulse at teleport start and end.'
   loreText: "Living among storm-wracked peaks, Voltborn are speed and chaos incarnate.
     Balanced in both stats, they prefer SMGs and high rate of fire, mobility-enhancing
     weapons and gadgets to strike chaos across the battlefield. Volborn\u2019s edge
     is unpredictability\u2014they attack hard and fast then vanishing like lightning,
     their electrified combat style keeps enemies guessing."
   material: {fileID: 2100000, guid: 3e1004960baa19e4e827561df84af018, type: 2}
+  firePassive: 0
+  fireActive: 0
+  icePassive: 0
+  iceActive: 0
+  lightningPassive: 1
+  lightningActive: 1
+  waterPassive: 0
+  waterActive: 0
+  earthPassive: 0
+  earthActive: 0
+  poisonActive: 0
+  poisonPassive: 0
+  naturePassive: 0
+  natureActive: 0
+  darknessPassive: 0
+  darknessActive: 0

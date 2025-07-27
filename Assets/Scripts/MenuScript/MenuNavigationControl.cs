@@ -161,6 +161,7 @@ public class MenuNavigationControl : MonoBehaviour
     private void ConfirmWizard()
     {
         var wiz = characterSelectController.selectedWizard;
+        Debug.Log($"[Menu] Player {currentPicker} selected wizard: {(wiz ? wiz.wizardName : "NULL")}");
         DataManager.Instance.SetWizard(currentPicker, wiz);
         wizardLocked[currentPicker] = true;
 

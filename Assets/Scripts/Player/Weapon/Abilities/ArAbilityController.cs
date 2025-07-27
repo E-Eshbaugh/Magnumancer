@@ -111,12 +111,18 @@ public class ArAbilityController : MonoBehaviour
         if (showLandingRing) BuildRing();
     }
 
+    public void Setup(Gamepad pad)
+    {
+        this.gamepadOverride = pad;
+    }
+
+
     void Update()
     {
         currentGun = gunSwapControl.loadout[gunSwapControl.currentGunIndex];
         if (!currentGun.grenadeLauncher) return;
 
-        pad = gamepadOverride ?? Gamepad.current;
+        pad = gamepadOverride;
         if (pad == null) { if (aiming) CancelAiming(); return; }
 
         float trig = pad.leftTrigger.ReadValue();

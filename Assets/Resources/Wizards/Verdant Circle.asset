@@ -18,12 +18,29 @@ MonoBehaviour:
   loadoutOrbs: 8
   factionEmblem: {fileID: -2096395893, guid: d812d7af151532745a44f9a32bbfe38a, type: 3}
   charcterImage: {fileID: 409340080, guid: 05fba9a15d23a8e4db95735512ff105e, type: 3}
-  passiveAbility: 'Bounty of the Forest: Returns a portion of damage dealt by planted
-    thorns as health'
-  activeAbility: 'Spinebloom Mine: Deploy a mine that ensnares enemies caught in
-    it''s radius. Explodes after a period of time, releasing thorn spikes'
+  passiveAbilityTxt: 'Verdant Resurgance: Avoiding damage for 6 seconds triggers
+    slow healing effect.'
+  activeAbilityTxt: 'Seed of Aloria: Deploy a healing totem that pulses healing energy
+    to allies in it''s area. The fewer allies in the healing ring, the faster the
+    healing effect. Explodes on destruction, sending out damaging thorns.'
   loreText: Guardians of the Old Woods, the secretive Verdant Circle blend ancient
     healing with cunning survival tactics. Patient and persistent, they lay traps
     and wield massive weapons to protect the last living Lost Groves. Their strength
     lies in outlasting any foe.
   material: {fileID: 2100000, guid: ae8c9663d79734e4cbf2bdf668e4f97f, type: 2}
+  firePassive: 0
+  fireActive: 0
+  icePassive: 0
+  iceActive: 0
+  lightningPassive: 0
+  lightningActive: 0
+  waterPassive: 0
+  waterActive: 0
+  earthPassive: 0
+  earthActive: 0
+  poisonActive: 0
+  poisonPassive: 0
+  naturePassive: 1
+  natureActive: 1
+  darknessPassive: 0
+  darknessActive: 0

@@ -64,8 +64,8 @@ public class CharacterSelectController : MonoBehaviour
 
         nameText.text = selectedWizard.wizardName;
         loreText.text = selectedWizard.loreText;
-        passiveTextUI.text = selectedWizard.passiveAbility;
-        activeTextUI.text = selectedWizard.activeAbility;
+        passiveTextUI.text = selectedWizard.passiveAbilityTxt;
+        activeTextUI.text = selectedWizard.activeAbilityTxt;
         mainWiz.sprite = selectedWizard.charcterImage;
         centerIcon.sprite = selectedWizard.factionEmblem;
 

@@ -11,30 +11,35 @@ public class LaserScope : MonoBehaviour
     public LayerMask hitLayers = ~0;
 
     [Header("Controller")]
-    public Gamepad gamepad;   // set by MultiplayerManager
+    public Gamepad gamepad;   // assigned via MultiplayerManager
 
     [Header("Appearance")]
     public Material mat;      // assign your unlit red here!
 
     private LineRenderer lr;
     private GunOrbitController orbit;
-    private AmmoControl       ammoControl;
+    private AmmoControl ammoControl;
+
+    public void Setup(Gamepad pad)
+    {
+        gamepad = pad;
+    }
 
     void Awake()
     {
-        lr          = GetComponent<LineRenderer>();
-        orbit       = GetComponentInChildren<GunOrbitController>();
+        lr = GetComponent<LineRenderer>();
+        orbit = GetComponentInChildren<GunOrbitController>();
         ammoControl = GetComponentInParent<AmmoControl>();
     }
 
     void OnEnable()
     {
         // Always re-apply material & gradient whenever we turn on
-        lr.enabled        = false;
-        lr.material       = mat;
-        lr.positionCount  = 2;
-        lr.useWorldSpace  = true;
-        lr.startWidth     = lr.endWidth = 0.1f;
+        lr.enabled = false;
+        lr.material = mat;
+        lr.positionCount = 2;
+        lr.useWorldSpace = true;
+        lr.startWidth = lr.endWidth = 0.1f;
 
         var gradient = new Gradient
         {
@@ -71,7 +76,7 @@ public class LaserScope : MonoBehaviour
         if (gamepad.leftTrigger.ReadValue() > 0.1f)
         {
             Vector3 origin = firePoint.position;
-            Vector3 dir    = orbit.aimDirection;
+            Vector3 dir = orbit.aimDirection;
 
             if (Physics.Raycast(origin, dir, out var hit, laserRange, hitLayers))
                 lr.SetPosition(1, hit.point);
