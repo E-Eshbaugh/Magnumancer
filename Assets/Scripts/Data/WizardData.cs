@@ -15,4 +15,5 @@ public class WizardData : ScriptableObject
     public string loreText;
     public Material material;
     public GameObject activeAbilityPrefab;
+    public GameObject customBulletPrefab;
 }

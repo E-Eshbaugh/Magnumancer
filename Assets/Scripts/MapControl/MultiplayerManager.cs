@@ -38,7 +38,7 @@ public class MultiplayerManager : MonoBehaviour
 
             go.GetComponentInChildren<PlayerMovement3D>()?.Setup(i, pad, wizard);
             go.GetComponentInChildren<GunSwapControl>()?.Setup(pad, loadout);
-            go.GetComponentInChildren<AmmoControl>()?.Setup(pad, loadout);
+            go.GetComponentInChildren<AmmoControl>()?.Setup(pad, loadout, wizard);
             go.GetComponentInChildren<FireController3D>()?.Setup(pad);
             go.GetComponentInChildren<GunOrbitController>()?.Setup(pad, go.transform);
             go.GetComponentInChildren<OverClock>()?.Setup(pad);

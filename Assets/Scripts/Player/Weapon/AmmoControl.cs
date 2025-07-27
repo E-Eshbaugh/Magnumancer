@@ -11,9 +11,12 @@ public class AmmoControl : MonoBehaviour
     [Header("Guns")]
     public WeaponData[] guns;          // set by MultiplayerManager OR by GunSwapControl.Setup
     public GunSwapControl gunControl;  // assign in prefab
+    public GameObject fireBulletPrefab;
+    public GameObject iceBulletPrefab;
 
     [Header("Controller")]
     public Gamepad gamepad;
+    public WizardData wizard;
 
     // Internal
     private FireController3D fire;
@@ -29,12 +32,14 @@ public class AmmoControl : MonoBehaviour
         if (!fire) Debug.LogError($"{name}: No FireController3D found!");
     }
 
-    public void Setup(Gamepad pad, WeaponData[] srcLoadout)
+    public void Setup(Gamepad pad, WeaponData[] srcLoadout, WizardData wiz)
     {
         gamepad = pad;
-        guns    = srcLoadout != null ? (WeaponData[])srcLoadout.Clone() : new WeaponData[4];
-        OnGunEquipped(0); // or whatever swap.currentGunIndex is after swap.Setup
+        wizard = wiz;
+        guns = srcLoadout != null ? (WeaponData[])srcLoadout.Clone() : new WeaponData[4];
+        OnGunEquipped(0);
     }
+
 
     void Update()
     {
@@ -50,9 +55,18 @@ public class AmmoControl : MonoBehaviour
         if (currentGun.isShotgun && gamepad.leftTrigger.wasPressedThisFrame)
         {
             ammoCount = currentGun.ammoCapacity;
-            currentAmmoPrefab = (currentAmmoPrefab == currentGun.baseAmmoType)
-                ? currentGun.specialBulletType
-                : currentGun.baseAmmoType;
+
+            // Swap between base and special bullet — unless wizard overrides
+            if (wizard != null && wizard.customBulletPrefab != null)
+            {
+                currentAmmoPrefab = wizard.customBulletPrefab;
+            }
+            else
+            {
+                currentAmmoPrefab = (currentAmmoPrefab == currentGun.baseAmmoType)
+                    ? currentGun.specialBulletType
+                    : currentGun.baseAmmoType;
+            }
 
             nextFireTime = now;
             UpdateAmmoBar();
@@ -64,13 +78,17 @@ public class AmmoControl : MonoBehaviour
             bool didFire = false;
             string fireType = currentAmmoPrefab.tag == "slug" ? "semi" : currentGun.fireType;
 
+            GameObject bulletToShoot = (wizard != null && wizard.customBulletPrefab != null)
+                ? wizard.customBulletPrefab
+                : currentAmmoPrefab;
+
             switch (fireType)
             {
                 case "shotgun":
                     if (gamepad.rightTrigger.wasPressedThisFrame)
                     {
                         for (int i = 0; i < currentGun.pelletCount; i++)
-                            fire.Shoot(currentAmmoPrefab, currentGun.spreadAngle, currentGun.recoil);
+                            fire.Shoot(bulletToShoot, currentGun.spreadAngle, currentGun.recoil);
                         didFire = true;
                     }
                     break;
@@ -78,7 +96,7 @@ public class AmmoControl : MonoBehaviour
                 case "semi":
                     if (gamepad.rightTrigger.wasPressedThisFrame)
                     {
-                        fire.Shoot(currentAmmoPrefab, currentGun.spreadAngle, currentGun.recoil);
+                        fire.Shoot(bulletToShoot, currentGun.spreadAngle, currentGun.recoil);
                         didFire = true;
                     }
                     break;
@@ -86,7 +104,7 @@ public class AmmoControl : MonoBehaviour
                 case "auto":
                     if (gamepad.rightTrigger.ReadValue() > 0.1f)
                     {
-                        fire.Shoot(currentAmmoPrefab, currentGun.spreadAngle, currentGun.recoil);
+                        fire.Shoot(bulletToShoot, currentGun.spreadAngle, currentGun.recoil);
                         didFire = true;
                     }
                     break;
@@ -100,17 +118,31 @@ public class AmmoControl : MonoBehaviour
             }
         }
 
+        // Manual reload
         if (gamepad.buttonWest.wasPressedThisFrame)
             ReloadAmmo();
     }
 
     public void OnGunEquipped(int index)
     {
-        currentGunIndex   = index;
-        currentGun        = guns[index];
-        ammoCount         = currentGun.ammoCapacity;
-        currentAmmoPrefab = currentGun.baseAmmoType;
-        nextFireTime      = Time.time;
+        currentGunIndex = index;
+        currentGun = guns[index];
+        ammoCount = currentGun.ammoCapacity;
+        currentAmmoPrefab = (wizard != null && wizard.customBulletPrefab != null)
+            ? wizard.customBulletPrefab
+            : currentGun.baseAmmoType;
+
+        nextFireTime = Time.time;
+        UpdateAmmoBar();
+    }
+
+    void ReloadAmmo()
+    {
+        ammoCount = currentGun.ammoCapacity;
+        nextFireTime = Time.time;
+        currentAmmoPrefab = (wizard != null && wizard.customBulletPrefab != null)
+            ? wizard.customBulletPrefab
+            : currentGun.baseAmmoType;
         UpdateAmmoBar();
     }
 
@@ -123,15 +155,7 @@ public class AmmoControl : MonoBehaviour
         else if (pct >= 0.6f) ammoBar.sprite = ammoBar80;
         else if (pct >= 0.4f) ammoBar.sprite = ammoBar60;
         else if (pct >= 0.2f) ammoBar.sprite = ammoBar40;
-        else if (ammoCount>0) ammoBar.sprite = ammoBar20;
-        else                  ammoBar.sprite = ammoBarEmpty;
-    }
-
-    void ReloadAmmo()
-    {
-        ammoCount         = currentGun.ammoCapacity;
-        nextFireTime      = Time.time;
-        currentAmmoPrefab = currentGun.baseAmmoType;
-        UpdateAmmoBar();
+        else if (ammoCount > 0) ammoBar.sprite = ammoBar20;
+        else ammoBar.sprite = ammoBarEmpty;
     }
 }

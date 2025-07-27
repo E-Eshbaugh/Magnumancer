@@ -128,6 +128,9 @@ MonoBehaviour:
   - {fileID: 11400000, guid: ba907eeb7f55263498b3ec19d9243e67, type: 2}
   - {fileID: 11400000, guid: 7fa214f30a53fc04d95a27b9379ec90b, type: 2}
   gunControl: {fileID: 303219725969431144}
+  fireBulletPrefab: {fileID: 6997994299401861888, guid: 4d849fc1976060946ae9958de4546af5, type: 3}
+  iceBulletPrefab: {fileID: 6997994299401861888, guid: 86affdb9b46a4f84a87b8d37eb097266, type: 3}
+  wizard: {fileID: 0}
   currentGunIndex: 0
   currentGun: {fileID: 0}
   ammoCount: 0

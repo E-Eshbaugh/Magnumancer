@@ -19,13 +19,13 @@ public class WizardAbilityController : MonoBehaviour
 
         if (wizardData == null)
         {
-            Debug.LogError("[WizardAbilityController on " + gameObject.name + "] wizardData is NULL in Setup()!");
+            Debug.LogWarning("[WizardAbilityController on " + gameObject.name + "] wizardData is NULL in Setup()!");
             return;
         }
 
         if (wizardData.activeAbilityPrefab == null)
         {
-            Debug.LogError("[WizardAbilityController on " + gameObject.name + "] activeAbilityPrefab is NULL in Setup()!");
+            Debug.LogWarning("[WizardAbilityController on " + gameObject.name + "] activeAbilityPrefab is NULL in Setup()!");
             return;
         }
 
@@ -33,7 +33,7 @@ public class WizardAbilityController : MonoBehaviour
         abilityInstance = abilityObj.GetComponent<IActiveAbility>();
         if (abilityInstance == null)
         {
-            Debug.LogError("[WizardAbilityController on " + gameObject.name + "] ability prefab does not implement IActiveAbility!");
+            Debug.LogWarning("[WizardAbilityController on " + gameObject.name + "] ability prefab does not implement IActiveAbility!");
         }
 
         isInitialized = true;
