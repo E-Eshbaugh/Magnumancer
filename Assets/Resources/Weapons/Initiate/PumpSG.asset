@@ -22,7 +22,7 @@ MonoBehaviour:
   description: '[5x7] Jagged metal and raw force. Fires fast, hits messy.'
   fireType: shotgun
   recoil: 0.75
-  fireSound: {fileID: 8300000, guid: 35019b066571fb444a90a0cc456e5ab8, type: 3}
+  fireSound: {fileID: 8300000, guid: 7c6b2327a4b94f24ca0d17e66f52ff16, type: 3}
   reloadSound: {fileID: 8300000, guid: acde2cdebf711fb479be076a7f1b4c91, type: 3}
   ammoType: {fileID: 6997994299401861888, guid: 998a6807997784c46a5f2fb027daf411, type: 3}
   laserRange: 0

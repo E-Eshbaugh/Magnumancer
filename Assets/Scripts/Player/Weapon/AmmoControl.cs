@@ -85,10 +85,26 @@ public class AmmoControl : MonoBehaviour
             switch (fireType)
             {
                 case "shotgun":
-                    if (gamepad.rightTrigger.wasPressedThisFrame)
+                    if (gamepad.rightTrigger.wasPressedThisFrame && !audioSource.isPlaying)
                     {
                         for (int i = 0; i < currentGun.pelletCount; i++)
                             fire.Shoot(bulletToShoot, currentGun.spreadAngle, currentGun.recoil);
+
+                        if (audioSource && currentGun.fireSound)
+                        {
+                            audioSource.PlayOneShot(currentGun.fireSound);
+                            if (ammoCount != 1)
+                                StartCoroutine(PlayReloadSoundAfter(currentGun.fireSound.length));
+                        }
+
+                        didFire = true;
+                    }
+                    break;
+
+                case "shotgunA":
+                    if (gamepad.rightTrigger.ReadValue() > 0.1f)
+                    {
+                        fire.Shoot(bulletToShoot, currentGun.spreadAngle, currentGun.recoil);
                         audioSource?.PlayOneShot(currentGun.fireSound);
                         didFire = true;
                     }
@@ -157,11 +173,18 @@ public class AmmoControl : MonoBehaviour
         if (!ammoBar) return;
         float pct = currentGun.ammoCapacity > 0 ? (float)ammoCount / currentGun.ammoCapacity : 0f;
 
-        if      (pct >= 0.8f) ammoBar.sprite = ammoBarFull;
+        if (pct >= 0.8f) ammoBar.sprite = ammoBarFull;
         else if (pct >= 0.6f) ammoBar.sprite = ammoBar80;
         else if (pct >= 0.4f) ammoBar.sprite = ammoBar60;
         else if (pct >= 0.2f) ammoBar.sprite = ammoBar40;
         else if (ammoCount > 0) ammoBar.sprite = ammoBar20;
         else ammoBar.sprite = ammoBarEmpty;
+    }
+    
+    private System.Collections.IEnumerator PlayReloadSoundAfter(float delay)
+    {
+        yield return new WaitForSeconds(delay);
+        if (audioSource && currentGun.reloadSound)
+            audioSource.PlayOneShot(currentGun.reloadSound);
     }
 }

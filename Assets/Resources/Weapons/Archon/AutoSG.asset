@@ -20,8 +20,10 @@ MonoBehaviour:
   orbCost: 1
   weaponIcon: {fileID: -1675477381, guid: 88365eb93f90dc0448eb4a39ecadd679, type: 3}
   description: '[4x12] Pumps out shells like a possessed forge. Close-range obliteration.'
-  fireType: shotgun
+  fireType: shotgunA
   recoil: 2
+  fireSound: {fileID: 8300000, guid: a5ea8a4a2de7ed4439952ab7cd355f5c, type: 3}
+  reloadSound: {fileID: 8300000, guid: f4f2a5e7d39adf84bbf677f5bb0d7011, type: 3}
   ammoType: {fileID: 6997994299401861888, guid: 2ec29fc9207248740970443e058a84f0, type: 3}
   laserRange: 0
   isShotgun: 1
@@ -29,6 +31,7 @@ MonoBehaviour:
   spreadAngle: 20
   heavyWeapon: 0
   akimbo: 0
+  grenadeLauncher: 0
   specialBulletType: {fileID: 6997994299401861888, guid: 9a3fa6105bf106d4da479cacbbeb3c55, type: 3}
   baseAmmoType: {fileID: 6997994299401861888, guid: 2ec29fc9207248740970443e058a84f0, type: 3}
   prefab: {fileID: 6047593409617330415, guid: 77aeb71bc87054528b83e83ca76aaa13, type: 3}
