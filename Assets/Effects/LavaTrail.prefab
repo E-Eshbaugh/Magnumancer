@@ -13,8 +13,6 @@ GameObject:
   - component: {fileID: 4527994431642569176}
   - component: {fileID: 7871931050781051759}
   - component: {fileID: 7633218765613460220}
-  - component: {fileID: 4194265777714272140}
-  - component: {fileID: 4938816030687667161}
   m_Layer: 1
   m_Name: LavaTrail
   m_TagString: Hazard
@@ -4871,48 +4869,17 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: e9b14a94f761caf48850ef2d896f5ba7, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  damage: 40
-  tickRate: 1
-  lifetime: 10
-  enemyLayer:
-    serializedVersion: 2
-    m_Bits: 8
---- !u!114 &4194265777714272140
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 681016819850604103}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 44c06cb200126764cbb7cab4a9d90543, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
   fallSpeed: 8
-  groundCheckDistance: 0.1
+  groundCheckDistance: 10
   offsetY: 0.02
   groundMask:
     serializedVersion: 2
     m_Bits: 4294967295
---- !u!114 &4938816030687667161
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 681016819850604103}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: ace83d7221383e6459342b2335ebb8ba, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
   damagePerTick: 10
   tickInterval: 1
   slowMultiplier: 0.5
+  lifetime: 10
   playerTag: Player
-  rumbleLow: 0.1
-  rumbleHigh: 0.2
 --- !u!1 &5883570255969103452
 GameObject:
   m_ObjectHideFlags: 0

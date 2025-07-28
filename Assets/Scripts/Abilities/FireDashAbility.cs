@@ -2,16 +2,13 @@ using UnityEngine;
 using Magnumancer.Abilities;
 using UnityEngine.InputSystem;
 using System.Collections.Generic;
-using UnityEngine.Rendering.Universal; // or your actual namespace
+using UnityEngine.Rendering.Universal;
 
 public class FireDashAbility : MonoBehaviour, IActiveAbility
 {
-    [Tooltip("Meters to travel if unobstructed.")]
     [SerializeField] float fireDashDistance = 8f;
-    [Tooltip("Seconds dash takes to complete.")]
     [SerializeField] float fireDashTime = 0.15f;
     [SerializeField] float lavaLifeTime = 5f;
-    [Tooltip("Rotate stick input for isometric worlds.")]
     [SerializeField] float fireDashIsoYaw = 45f;
     public PlayerHealthControl playerHealthControl;
     public CharacterController _cc;
@@ -20,7 +17,6 @@ public class FireDashAbility : MonoBehaviour, IActiveAbility
     [SerializeField] LayerMask enemyLayer;
     [SerializeField] float enemyHitboxRadius = 1f;
     [SerializeField] int dashDamage = 40;
-    [SerializeField] float lavaSpawnInterval = 0.05f;
 
     void Awake()
     {
@@ -35,9 +31,7 @@ public class FireDashAbility : MonoBehaviour, IActiveAbility
         Vector2 stick = Vector2.zero;
         var playerInput = caster.GetComponent<PlayerInput>();
         if (playerInput != null && Gamepad.current != null)
-        {
             stick = Gamepad.current.leftStick.ReadValue();
-        }
 
         Vector3 dir3 = new Vector3(stick.x, 0f, stick.y);
 
@@ -47,7 +41,6 @@ public class FireDashAbility : MonoBehaviour, IActiveAbility
         {
             if (Mathf.Abs(fireDashIsoYaw) > 0.01f)
                 dir3 = Quaternion.Euler(0f, fireDashIsoYaw, 0f) * dir3;
-
             dir3.Normalize();
         }
 
@@ -61,19 +54,10 @@ public class FireDashAbility : MonoBehaviour, IActiveAbility
         var phc = caster.GetComponent<PlayerHealthControl>();
         if (phc != null) phc.invincible = true;
 
-        // Spawn 1 lava trail at the start of dash — snap to ground if possible
+        // ✅ Always spawn lava trail slightly above player (let it fall)
         Quaternion rotation = Quaternion.LookRotation(dir);
-        Vector3 rayOrigin = caster.transform.position + Vector3.up * 1f;
-        if (Physics.Raycast(rayOrigin, Vector3.down, out RaycastHit hit, 3f))
-        {
-            Vector3 spawnPos = hit.point + Vector3.up * 0.02f;
-            Instantiate(lavaTrailPrefab, spawnPos, rotation);
-        }
-        else
-        {
-            Vector3 fallbackPos = caster.transform.position + Vector3.up * 0.2f;
-            Instantiate(lavaTrailPrefab, fallbackPos, rotation);
-        }
+        Vector3 spawnPos = caster.transform.position + Vector3.up * 0.5f;
+        Instantiate(lavaTrailPrefab, spawnPos, rotation);
 
         float elapsed = 0f;
         Vector3 startPos = caster.transform.position;
@@ -111,7 +95,6 @@ public class FireDashAbility : MonoBehaviour, IActiveAbility
             yield return null;
         }
 
-        // Snap to final position
         Vector3 desiredEnd = startPos + dir * totalDist;
         Vector3 remain = desiredEnd - caster.transform.position;
 
@@ -122,10 +105,7 @@ public class FireDashAbility : MonoBehaviour, IActiveAbility
 
         _fireDashing = false;
 
-        // Remove invincibility after lava life
         yield return new WaitForSeconds(lavaLifeTime);
         if (phc != null) phc.invincible = false;
     }
-
-
 }
