@@ -60,8 +60,20 @@ public class FireDashAbility : MonoBehaviour, IActiveAbility
         _fireDashing = true;
         var phc = caster.GetComponent<PlayerHealthControl>();
         if (phc != null) phc.invincible = true;
-        Quaternion rotation = Quaternion.LookRotation(dir); 
-        Instantiate(lavaTrailPrefab, caster.transform.position, rotation);
+
+        // Spawn 1 lava trail at the start of dash — snap to ground if possible
+        Quaternion rotation = Quaternion.LookRotation(dir);
+        Vector3 rayOrigin = caster.transform.position + Vector3.up * 1f;
+        if (Physics.Raycast(rayOrigin, Vector3.down, out RaycastHit hit, 3f))
+        {
+            Vector3 spawnPos = hit.point + Vector3.up * 0.02f;
+            Instantiate(lavaTrailPrefab, spawnPos, rotation);
+        }
+        else
+        {
+            Vector3 fallbackPos = caster.transform.position + Vector3.up * 0.2f;
+            Instantiate(lavaTrailPrefab, fallbackPos, rotation);
+        }
 
         float elapsed = 0f;
         Vector3 startPos = caster.transform.position;
@@ -69,56 +81,30 @@ public class FireDashAbility : MonoBehaviour, IActiveAbility
         Vector3 stepVel = dir * (totalDist / fireDashTime);
 
         CharacterController cc = caster.GetComponent<CharacterController>();
-
         HashSet<GameObject> hitEnemies = new HashSet<GameObject>();
-        float lavaTimer = 0f;
 
         while (elapsed < fireDashTime)
         {
             float dt = Time.deltaTime;
             Vector3 step = stepVel * dt;
 
-            // Move the player
             if (cc != null)
                 cc.Move(step);
             else
                 caster.transform.position += step;
 
-            // Damage enemies in path
             Collider[] hits = Physics.OverlapSphere(caster.transform.position, enemyHitboxRadius, enemyLayer);
-            foreach (var hit in hits)
+            foreach (var h in hits)
             {
-                if (!hitEnemies.Contains(hit.gameObject))
+                if (!hitEnemies.Contains(h.gameObject))
                 {
-                    var enemyHealth = hit.GetComponent<PlayerHealthControl>();
+                    var enemyHealth = h.GetComponent<PlayerHealthControl>();
                     if (enemyHealth != null)
                     {
                         enemyHealth.TakeDamage(dashDamage);
-                        hitEnemies.Add(hit.gameObject);
+                        hitEnemies.Add(h.gameObject);
                     }
                 }
-            }
-
-            // Leave lava trail
-            lavaTimer += dt;
-            rotation = Quaternion.LookRotation(dir); 
-            if (lavaTimer >= lavaSpawnInterval && elapsed < fireDashTime * 0.5f)
-            {
-                Vector3 rayOrigin = caster.transform.position + Vector3.up * 1f;  // Cast from just above the player
-                if (Physics.Raycast(rayOrigin, Vector3.down, out RaycastHit hit, 3f))
-                {
-                    Vector3 spawnPos = hit.point + Vector3.up * 0.02f; // Slight offset to prevent clipping
-                    Instantiate(lavaTrailPrefab, spawnPos, rotation);
-                }
-                else
-                {
-                    // Fallback if no ground detected (rare)
-                    Vector3 spawnPos = caster.transform.position + Vector3.up * 0.2f;
-                    Instantiate(lavaTrailPrefab, spawnPos, rotation);
-                }
-
-
-                lavaTimer = 0f;
             }
 
             elapsed += dt;
@@ -136,9 +122,10 @@ public class FireDashAbility : MonoBehaviour, IActiveAbility
 
         _fireDashing = false;
 
-        // Lava persists, then remove invincibility
+        // Remove invincibility after lava life
         yield return new WaitForSeconds(lavaLifeTime);
         if (phc != null) phc.invincible = false;
     }
+
 
 }

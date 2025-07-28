@@ -39,7 +39,7 @@ public class PlayerMovement3D : MonoBehaviour
     float dashCooldownTimer = 0f;
     Coroutine dashRefill;
 
-    float currentMoveSpeed;
+    public float currentMoveSpeed;
 
     #region Public API
     /// <summary>Call from MultiplayerManager AFTER spawning/activating this player.</summary>
