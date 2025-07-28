@@ -5,12 +5,12 @@ using System;
 public class PlayerHealthControl : MonoBehaviour
 {
     [Header("Health Settings")]
-    public int maxHealth = 100;
+    public float maxHealth = 100f;
 
     // Initialize inline so it’s never left at zero.
-    public int currentHealth { get; private set; } = 100;
+    public float currentHealth { get; private set; } = 100f;
 
-    public event Action<int, int> OnHealthChanged;
+    public event Action<float, float> OnHealthChanged;
     public event Action OnDeath;
 
     [Header("UI")]
@@ -43,7 +43,7 @@ public class PlayerHealthControl : MonoBehaviour
     /// <summary>
     /// Called by the Bullet on hit.
     /// </summary>
-    public void TakeDamage(int amount)
+    public void TakeDamage(float amount)
     {
         Debug.Log($"[Health] TakeDamage( {amount} ) called; before = {currentHealth}/{maxHealth}");
 
