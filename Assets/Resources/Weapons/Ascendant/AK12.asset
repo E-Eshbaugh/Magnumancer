@@ -22,6 +22,8 @@ MonoBehaviour:
   description: Hungers for battle. Heavy recoil, heavier impact.
   fireType: auto
   recoil: 0.3
+  fireSound: {fileID: 8300000, guid: 9d72cb3859b4f4e4fa51e2bfdf0c33d6, type: 3}
+  reloadSound: {fileID: 8300000, guid: 23e7f1390c8c64f459fe0d95ff706067, type: 3}
   ammoType: {fileID: 6997994299401861888, guid: 8de6b050532025b4a891587baeb511f6, type: 3}
   laserRange: 0
   isShotgun: 0
@@ -29,6 +31,7 @@ MonoBehaviour:
   spreadAngle: 15
   heavyWeapon: 0
   akimbo: 0
+  grenadeLauncher: 0
   specialBulletType: {fileID: 6997994299401861888, guid: 8de6b050532025b4a891587baeb511f6, type: 3}
   baseAmmoType: {fileID: 6997994299401861888, guid: 8de6b050532025b4a891587baeb511f6, type: 3}
   prefab: {fileID: 2596619664835935745, guid: 7d440741a3699482480f9ca15dd1e644, type: 3}

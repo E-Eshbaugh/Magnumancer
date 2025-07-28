@@ -22,6 +22,8 @@ MonoBehaviour:
   description: ' Enchanted rounds punch through wards. Deadly from a distance.'
   fireType: semi
   recoil: 0.5
+  fireSound: {fileID: 8300000, guid: 4f696f98f2271c4438c955918cd1bdb0, type: 3}
+  reloadSound: {fileID: 8300000, guid: aa32fc21dec68634cbf6ecf7ef06db71, type: 3}
   ammoType: {fileID: 6997994299401861888, guid: 8de6b050532025b4a891587baeb511f6, type: 3}
   laserRange: 20
   isShotgun: 0
@@ -29,6 +31,7 @@ MonoBehaviour:
   spreadAngle: 0
   heavyWeapon: 0
   akimbo: 0
+  grenadeLauncher: 0
   specialBulletType: {fileID: 6997994299401861888, guid: 8de6b050532025b4a891587baeb511f6, type: 3}
   baseAmmoType: {fileID: 6997994299401861888, guid: 8de6b050532025b4a891587baeb511f6, type: 3}
   prefab: {fileID: 5645212007748657471, guid: 2da63f1de39184c8abaa26a18d49e30b, type: 3}

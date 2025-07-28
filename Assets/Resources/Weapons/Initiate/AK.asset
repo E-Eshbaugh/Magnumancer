@@ -22,6 +22,8 @@ MonoBehaviour:
   description: Unpolished but fierce. Roars with every pull of the trigger.
   fireType: auto
   recoil: 0.2
+  fireSound: {fileID: 8300000, guid: d762ace56fe98ad4ba020361b889c73f, type: 3}
+  reloadSound: {fileID: 8300000, guid: 1280b4d2829a85e44b0462f77a6f5694, type: 3}
   ammoType: {fileID: 6997994299401861888, guid: 998a6807997784c46a5f2fb027daf411, type: 3}
   laserRange: 0
   isShotgun: 0

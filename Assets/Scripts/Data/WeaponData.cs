@@ -14,6 +14,8 @@ public class WeaponData : ScriptableObject
     public string description;
     public string fireType;
     public float recoil;
+    public AudioClip fireSound;
+    public AudioClip reloadSound;
     public GameObject ammoType;
     [Header("Sniper Abilitites")]
     public float laserRange;

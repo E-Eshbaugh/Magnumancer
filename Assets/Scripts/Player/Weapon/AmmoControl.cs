@@ -17,7 +17,7 @@ public class AmmoControl : MonoBehaviour
     [Header("Controller")]
     public Gamepad gamepad;
     public WizardData wizard;
-
+    public AudioSource audioSource;
     // Internal
     private FireController3D fire;
     public int currentGunIndex;
@@ -89,6 +89,7 @@ public class AmmoControl : MonoBehaviour
                     {
                         for (int i = 0; i < currentGun.pelletCount; i++)
                             fire.Shoot(bulletToShoot, currentGun.spreadAngle, currentGun.recoil);
+                        audioSource?.PlayOneShot(currentGun.fireSound);
                         didFire = true;
                     }
                     break;
@@ -97,6 +98,7 @@ public class AmmoControl : MonoBehaviour
                     if (gamepad.rightTrigger.wasPressedThisFrame)
                     {
                         fire.Shoot(bulletToShoot, currentGun.spreadAngle, currentGun.recoil);
+                        audioSource?.PlayOneShot(currentGun.fireSound);
                         didFire = true;
                     }
                     break;
@@ -105,6 +107,7 @@ public class AmmoControl : MonoBehaviour
                     if (gamepad.rightTrigger.ReadValue() > 0.1f)
                     {
                         fire.Shoot(bulletToShoot, currentGun.spreadAngle, currentGun.recoil);
+                        audioSource?.PlayOneShot(currentGun.fireSound);
                         didFire = true;
                     }
                     break;
@@ -119,8 +122,11 @@ public class AmmoControl : MonoBehaviour
         }
 
         // Manual reload
-        if (gamepad.buttonWest.wasPressedThisFrame)
+        if (gamepad.buttonWest.wasPressedThisFrame && audioSource && currentGun.reloadSound && ammoCount < currentGun.ammoCapacity)
+        {
+            audioSource.PlayOneShot(currentGun.reloadSound);
             ReloadAmmo();
+        }
     }
 
     public void OnGunEquipped(int index)

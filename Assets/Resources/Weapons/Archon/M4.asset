@@ -22,6 +22,8 @@ MonoBehaviour:
   description: A versatile killer. Balanced, reliable, and just quiet enough.
   fireType: auto
   recoil: 0.01
+  fireSound: {fileID: 8300000, guid: 1ef531b5677829043b6d50699cb7d098, type: 3}
+  reloadSound: {fileID: 8300000, guid: dc24a3a858b4ee1419af6498c4425a53, type: 3}
   ammoType: {fileID: 6997994299401861888, guid: 2ec29fc9207248740970443e058a84f0, type: 3}
   laserRange: 0
   isShotgun: 0
