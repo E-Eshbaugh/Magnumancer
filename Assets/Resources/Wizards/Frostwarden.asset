@@ -28,5 +28,5 @@ MonoBehaviour:
     marksmen who wield precision sniper spells to halt foes in their tracks. Strategic
     and icy in demeanor, they dominate from a distance.
   material: {fileID: 2100000, guid: e69691b4cf4f8eb4c86f4607dfe3c7dd, type: 2}
-  activeAbilityPrefab: {fileID: 0}
+  activeAbilityPrefab: {fileID: 5952689688775455035, guid: 5145027600256894793402b35b2c5e7f, type: 3}
   customBulletPrefab: {fileID: 6997994299401861888, guid: 86affdb9b46a4f84a87b8d37eb097266, type: 3}

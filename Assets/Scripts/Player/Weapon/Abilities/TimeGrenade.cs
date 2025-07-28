@@ -49,29 +49,63 @@ public class GrenadeExplodeAfterDelay : MonoBehaviour
         Collider[] affected = Physics.OverlapSphere(transform.position, explosionRadius, damageLayers);
         foreach (Collider nearby in affected)
         {
+            Transform target = nearby.transform;
+            Vector3 direction = (target.position - transform.position).normalized;
+            float distance = Vector3.Distance(transform.position, target.position);
+
+            // Check if explosion is blocked
+            if (Physics.Linecast(transform.position, target.position, out RaycastHit hit))
+            {
+                // Case: Ice wall is blocking line of sight
+                var wallBlock = hit.transform.GetComponent<IceWallEffect>();
+                if (wallBlock != null && hit.transform != target)
+                {
+                    // Damage the wall
+                    wallBlock.TakeDamage(Mathf.RoundToInt(maxDamage));
+
+                    // Do NOT damage the player or other target behind it
+                    continue;
+                }
+
+                // Case: something else is blocking (e.g., real wall)
+                if (hit.transform != target)
+                {
+                    continue;
+                }
+            }
+
+            // ✅ Line of sight is clear — apply damage
+            float distancePercent = Mathf.Clamp01(1f - (distance / explosionRadius));
+            float damageToApply = maxDamage * distancePercent;
+
+            // Explosion force
             Rigidbody rb = nearby.attachedRigidbody;
-            var movement = nearby.GetComponent<PlayerMovement3D>();
             if (rb != null)
                 rb.AddExplosionForce(explosionForce, transform.position, explosionRadius);
 
-            float distance = Vector3.Distance(transform.position, nearby.transform.position);
-            float distancePercent = Mathf.Clamp01(1f - (distance / explosionRadius));
-            float damageToApply = maxDamage * distancePercent;
-            float intensity = distancePercent;
-            float low = 0.2f * intensity;
-            float high = 0.9f * intensity;
-            float duration = 0.3f;
-
+            // Controller rumble
+            var movement = nearby.GetComponent<PlayerMovement3D>();
             if (movement != null && movement.gamepad != null)
             {
+                float intensity = distancePercent;
+                float low = 0.2f * intensity;
+                float high = 0.9f * intensity;
+                float duration = 0.3f;
                 movement.gamepad.SetMotorSpeeds(low, high);
                 StartCoroutine(StopRumble(movement.gamepad, duration));
             }
 
+            // Damage player or object
             var health = nearby.GetComponent<PlayerHealthControl>();
             if (health != null)
                 health.TakeDamage(damageToApply);
+
+            // Also damage ice wall directly if it’s the target
+            var wall = nearby.GetComponent<IceWallEffect>();
+            if (wall != null)
+                wall.TakeDamage(Mathf.RoundToInt(damageToApply));
         }
+
 
         if (destroyAfterExplosion)
         {

@@ -142,7 +142,7 @@ GameObject:
   - component: {fileID: 151256892}
   - component: {fileID: 151256891}
   - component: {fileID: 151256895}
-  m_Layer: 0
+  m_Layer: 4
   m_Name: UpperGround (3)
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -313,6 +313,10 @@ PrefabInstance:
       propertyPath: m_Name
       value: pillar (3)
       objectReference: {fileID: 0}
+    - target: {fileID: 919132149155446097, guid: e2076684d16c69148b47bc6cb81626bd, type: 3}
+      propertyPath: m_Layer
+      value: 4
+      objectReference: {fileID: 0}
     m_RemovedComponents: []
     m_RemovedGameObjects: []
     m_AddedGameObjects: []
@@ -383,7 +387,7 @@ GameObject:
   - component: {fileID: 268747441}
   - component: {fileID: 268747440}
   - component: {fileID: 268747444}
-  m_Layer: 0
+  m_Layer: 4
   m_Name: UpperGround (2)
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -579,6 +583,10 @@ PrefabInstance:
       propertyPath: m_Name
       value: Rock_Medium_3
       objectReference: {fileID: 0}
+    - target: {fileID: 919132149155446097, guid: 5bb691cecefdadb40b3982a071561f1e, type: 3}
+      propertyPath: m_Layer
+      value: 4
+      objectReference: {fileID: 0}
     m_RemovedComponents: []
     m_RemovedGameObjects: []
     m_AddedGameObjects: []
@@ -610,7 +618,7 @@ GameObject:
   - component: {fileID: 341813695}
   - component: {fileID: 341813694}
   - component: {fileID: 341813696}
-  m_Layer: 0
+  m_Layer: 4
   m_Name: LavaGlow (2)
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -760,7 +768,7 @@ GameObject:
   - component: {fileID: 350809972}
   - component: {fileID: 350809971}
   - component: {fileID: 350809974}
-  m_Layer: 0
+  m_Layer: 4
   m_Name: WaterfallLava (1)
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -1160,6 +1168,10 @@ PrefabInstance:
       propertyPath: m_Name
       value: Rock_Medium_3 (2)
       objectReference: {fileID: 0}
+    - target: {fileID: 919132149155446097, guid: 5bb691cecefdadb40b3982a071561f1e, type: 3}
+      propertyPath: m_Layer
+      value: 4
+      objectReference: {fileID: 0}
     m_RemovedComponents: []
     m_RemovedGameObjects: []
     m_AddedGameObjects: []
@@ -1223,7 +1235,7 @@ GameObject:
   - component: {fileID: 628205241}
   - component: {fileID: 628205240}
   - component: {fileID: 628205243}
-  m_Layer: 0
+  m_Layer: 4
   m_Name: WaterfallLava (3)
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -1353,7 +1365,7 @@ GameObject:
   - component: {fileID: 630064624}
   - component: {fileID: 630064623}
   - component: {fileID: 630064622}
-  m_Layer: 0
+  m_Layer: 4
   m_Name: Terrain
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -1453,7 +1465,7 @@ GameObject:
   - component: {fileID: 661923143}
   - component: {fileID: 661923142}
   - component: {fileID: 661923146}
-  m_Layer: 0
+  m_Layer: 4
   m_Name: GroundLava
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -1667,6 +1679,10 @@ PrefabInstance:
       propertyPath: m_Name
       value: stairs_wide
       objectReference: {fileID: 0}
+    - target: {fileID: 919132149155446097, guid: e65ccec1bb104344baa35578298514db, type: 3}
+      propertyPath: m_Layer
+      value: 4
+      objectReference: {fileID: 0}
     m_RemovedComponents: []
     m_RemovedGameObjects: []
     m_AddedGameObjects: []
@@ -1753,6 +1769,10 @@ PrefabInstance:
       propertyPath: m_Name
       value: Rock_Medium_1 (2)
       objectReference: {fileID: 0}
+    - target: {fileID: 919132149155446097, guid: 544613f49a0cf6a47b36cdfd9eec3150, type: 3}
+      propertyPath: m_Layer
+      value: 4
+      objectReference: {fileID: 0}
     m_RemovedComponents: []
     m_RemovedGameObjects: []
     m_AddedGameObjects: []
@@ -1818,6 +1838,10 @@ PrefabInstance:
       propertyPath: m_Name
       value: banner_shield_red
       objectReference: {fileID: 0}
+    - target: {fileID: 919132149155446097, guid: 6c4beefc7c8b5e349be6bc693cb3a7d5, type: 3}
+      propertyPath: m_Layer
+      value: 4
+      objectReference: {fileID: 0}
     m_RemovedComponents: []
     m_RemovedGameObjects: []
     m_AddedGameObjects: []
@@ -1860,7 +1884,7 @@ GameObject:
   - component: {fileID: 820756322}
   - component: {fileID: 820756321}
   - component: {fileID: 820756325}
-  m_Layer: 0
+  m_Layer: 4
   m_Name: UpperGround (1)
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -2405,6 +2429,10 @@ PrefabInstance:
       propertyPath: m_Name
       value: resource_stone
       objectReference: {fileID: 0}
+    - target: {fileID: 919132149155446097, guid: 8c236c4422951524bb58cc1f7a25fd92, type: 3}
+      propertyPath: m_Layer
+      value: 4
+      objectReference: {fileID: 0}
     m_RemovedComponents: []
     m_RemovedGameObjects: []
     m_AddedGameObjects: []
@@ -2468,6 +2496,10 @@ PrefabInstance:
     - target: {fileID: 919132149155446097, guid: 5bb691cecefdadb40b3982a071561f1e, type: 3}
       propertyPath: m_Name
       value: Rock_Medium_3 (1)
+      objectReference: {fileID: 0}
+    - target: {fileID: 919132149155446097, guid: 5bb691cecefdadb40b3982a071561f1e, type: 3}
+      propertyPath: m_Layer
+      value: 4
       objectReference: {fileID: 0}
     m_RemovedComponents: []
     m_RemovedGameObjects: []
@@ -2545,6 +2577,10 @@ PrefabInstance:
       propertyPath: m_Name
       value: Rock_Medium_3 (6)
       objectReference: {fileID: 0}
+    - target: {fileID: 919132149155446097, guid: 5bb691cecefdadb40b3982a071561f1e, type: 3}
+      propertyPath: m_Layer
+      value: 4
+      objectReference: {fileID: 0}
     m_RemovedComponents: []
     m_RemovedGameObjects: []
     m_AddedGameObjects: []
@@ -2566,7 +2602,7 @@ GameObject:
   - component: {fileID: 1072569699}
   - component: {fileID: 1072569698}
   - component: {fileID: 1072569702}
-  m_Layer: 0
+  m_Layer: 4
   m_Name: UpperGround
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -2725,7 +2761,7 @@ GameObject:
   - component: {fileID: 1100755311}
   - component: {fileID: 1100755310}
   - component: {fileID: 1100755313}
-  m_Layer: 0
+  m_Layer: 4
   m_Name: WaterfallLava
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -2906,6 +2942,10 @@ PrefabInstance:
       propertyPath: m_Name
       value: pillar (6)
       objectReference: {fileID: 0}
+    - target: {fileID: 919132149155446097, guid: e2076684d16c69148b47bc6cb81626bd, type: 3}
+      propertyPath: m_Layer
+      value: 4
+      objectReference: {fileID: 0}
     m_RemovedComponents: []
     m_RemovedGameObjects: []
     m_AddedGameObjects: []
@@ -2926,7 +2966,7 @@ GameObject:
   - component: {fileID: 1148323412}
   - component: {fileID: 1148323411}
   - component: {fileID: 1148323414}
-  m_Layer: 0
+  m_Layer: 4
   m_Name: Bubbling
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -7810,7 +7850,7 @@ GameObject:
   - component: {fileID: 1178397957}
   - component: {fileID: 1178397956}
   - component: {fileID: 1178397959}
-  m_Layer: 0
+  m_Layer: 4
   m_Name: WaterfallLava (2)
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -8017,6 +8057,10 @@ PrefabInstance:
       propertyPath: m_Name
       value: Rock_Medium_3 (5)
       objectReference: {fileID: 0}
+    - target: {fileID: 919132149155446097, guid: 5bb691cecefdadb40b3982a071561f1e, type: 3}
+      propertyPath: m_Layer
+      value: 4
+      objectReference: {fileID: 0}
     m_RemovedComponents: []
     m_RemovedGameObjects: []
     m_AddedGameObjects: []
@@ -8080,6 +8124,10 @@ PrefabInstance:
     - target: {fileID: 919132149155446097, guid: 46da72020c13c5040ba8bddd3c066849, type: 3}
       propertyPath: m_Name
       value: rubble_large
+      objectReference: {fileID: 0}
+    - target: {fileID: 919132149155446097, guid: 46da72020c13c5040ba8bddd3c066849, type: 3}
+      propertyPath: m_Layer
+      value: 4
       objectReference: {fileID: 0}
     m_RemovedComponents: []
     m_RemovedGameObjects: []
@@ -8214,6 +8262,10 @@ PrefabInstance:
       propertyPath: m_Name
       value: rubble_large (2)
       objectReference: {fileID: 0}
+    - target: {fileID: 919132149155446097, guid: 46da72020c13c5040ba8bddd3c066849, type: 3}
+      propertyPath: m_Layer
+      value: 4
+      objectReference: {fileID: 0}
     m_RemovedComponents: []
     m_RemovedGameObjects: []
     m_AddedGameObjects: []
@@ -8316,6 +8368,10 @@ PrefabInstance:
     - target: {fileID: 919132149155446097, guid: 724abd0485268544d95619b2a6b631ec, type: 3}
       propertyPath: m_Name
       value: barrier
+      objectReference: {fileID: 0}
+    - target: {fileID: 919132149155446097, guid: 724abd0485268544d95619b2a6b631ec, type: 3}
+      propertyPath: m_Layer
+      value: 4
       objectReference: {fileID: 0}
     m_RemovedComponents: []
     m_RemovedGameObjects: []
@@ -8467,6 +8523,10 @@ PrefabInstance:
       propertyPath: m_Name
       value: Rock_Medium_1 (1)
       objectReference: {fileID: 0}
+    - target: {fileID: 919132149155446097, guid: 544613f49a0cf6a47b36cdfd9eec3150, type: 3}
+      propertyPath: m_Layer
+      value: 4
+      objectReference: {fileID: 0}
     m_RemovedComponents: []
     m_RemovedGameObjects: []
     m_AddedGameObjects: []
@@ -8538,6 +8598,10 @@ PrefabInstance:
     - target: {fileID: 919132149155446097, guid: 8c236c4422951524bb58cc1f7a25fd92, type: 3}
       propertyPath: m_Name
       value: resource_stone (1)
+      objectReference: {fileID: 0}
+    - target: {fileID: 919132149155446097, guid: 8c236c4422951524bb58cc1f7a25fd92, type: 3}
+      propertyPath: m_Layer
+      value: 4
       objectReference: {fileID: 0}
     m_RemovedComponents: []
     m_RemovedGameObjects: []
@@ -8631,6 +8695,10 @@ PrefabInstance:
       propertyPath: m_Name
       value: pillar (4)
       objectReference: {fileID: 0}
+    - target: {fileID: 919132149155446097, guid: e2076684d16c69148b47bc6cb81626bd, type: 3}
+      propertyPath: m_Layer
+      value: 4
+      objectReference: {fileID: 0}
     m_RemovedComponents: []
     m_RemovedGameObjects: []
     m_AddedGameObjects: []
@@ -8666,7 +8734,7 @@ GameObject:
   - component: {fileID: 1547057759}
   - component: {fileID: 1547057758}
   - component: {fileID: 1547057760}
-  m_Layer: 0
+  m_Layer: 4
   m_Name: LavaGlow (4)
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -9183,6 +9251,10 @@ PrefabInstance:
       propertyPath: m_Name
       value: Rock_Medium_3 (7)
       objectReference: {fileID: 0}
+    - target: {fileID: 919132149155446097, guid: 5bb691cecefdadb40b3982a071561f1e, type: 3}
+      propertyPath: m_Layer
+      value: 4
+      objectReference: {fileID: 0}
     m_RemovedComponents: []
     m_RemovedGameObjects: []
     m_AddedGameObjects: []
@@ -9286,6 +9358,10 @@ PrefabInstance:
       propertyPath: m_Name
       value: Rock_Medium_1 (3)
       objectReference: {fileID: 0}
+    - target: {fileID: 919132149155446097, guid: 544613f49a0cf6a47b36cdfd9eec3150, type: 3}
+      propertyPath: m_Layer
+      value: 4
+      objectReference: {fileID: 0}
     m_RemovedComponents: []
     m_RemovedGameObjects: []
     m_AddedGameObjects: []
@@ -9345,6 +9421,10 @@ PrefabInstance:
     - target: {fileID: 919132149155446097, guid: e2076684d16c69148b47bc6cb81626bd, type: 3}
       propertyPath: m_Name
       value: pillar (1)
+      objectReference: {fileID: 0}
+    - target: {fileID: 919132149155446097, guid: e2076684d16c69148b47bc6cb81626bd, type: 3}
+      propertyPath: m_Layer
+      value: 4
       objectReference: {fileID: 0}
     m_RemovedComponents: []
     m_RemovedGameObjects: []
@@ -9406,6 +9486,10 @@ PrefabInstance:
       propertyPath: m_Name
       value: pillar (7)
       objectReference: {fileID: 0}
+    - target: {fileID: 919132149155446097, guid: e2076684d16c69148b47bc6cb81626bd, type: 3}
+      propertyPath: m_Layer
+      value: 4
+      objectReference: {fileID: 0}
     m_RemovedComponents: []
     m_RemovedGameObjects: []
     m_AddedGameObjects: []
@@ -9466,6 +9550,10 @@ PrefabInstance:
       propertyPath: m_Name
       value: pillar (5)
       objectReference: {fileID: 0}
+    - target: {fileID: 919132149155446097, guid: e2076684d16c69148b47bc6cb81626bd, type: 3}
+      propertyPath: m_Layer
+      value: 4
+      objectReference: {fileID: 0}
     m_RemovedComponents: []
     m_RemovedGameObjects: []
     m_AddedGameObjects: []
@@ -9510,7 +9598,7 @@ GameObject:
   serializedVersion: 6
   m_Component:
   - component: {fileID: 1823784100}
-  m_Layer: 0
+  m_Layer: 4
   m_Name: Environment
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -9589,7 +9677,7 @@ GameObject:
   - component: {fileID: 1827973517}
   - component: {fileID: 1827973516}
   - component: {fileID: 1827973518}
-  m_Layer: 0
+  m_Layer: 4
   m_Name: LavaGlow (1)
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -9776,6 +9864,10 @@ PrefabInstance:
     - target: {fileID: 919132149155446097, guid: 544613f49a0cf6a47b36cdfd9eec3150, type: 3}
       propertyPath: m_Name
       value: Rock_Medium_1
+      objectReference: {fileID: 0}
+    - target: {fileID: 919132149155446097, guid: 544613f49a0cf6a47b36cdfd9eec3150, type: 3}
+      propertyPath: m_Layer
+      value: 4
       objectReference: {fileID: 0}
     m_RemovedComponents: []
     m_RemovedGameObjects: []
@@ -9974,6 +10066,10 @@ PrefabInstance:
       propertyPath: m_Name
       value: Rock_Medium_3 (3)
       objectReference: {fileID: 0}
+    - target: {fileID: 919132149155446097, guid: 5bb691cecefdadb40b3982a071561f1e, type: 3}
+      propertyPath: m_Layer
+      value: 4
+      objectReference: {fileID: 0}
     m_RemovedComponents: []
     m_RemovedGameObjects: []
     m_AddedGameObjects: []
@@ -10033,6 +10129,10 @@ PrefabInstance:
     - target: {fileID: 919132149155446097, guid: e2076684d16c69148b47bc6cb81626bd, type: 3}
       propertyPath: m_Name
       value: pillar (2)
+      objectReference: {fileID: 0}
+    - target: {fileID: 919132149155446097, guid: e2076684d16c69148b47bc6cb81626bd, type: 3}
+      propertyPath: m_Layer
+      value: 4
       objectReference: {fileID: 0}
     m_RemovedComponents: []
     m_RemovedGameObjects: []
@@ -10163,6 +10263,10 @@ PrefabInstance:
       propertyPath: m_Name
       value: rubble_large (1)
       objectReference: {fileID: 0}
+    - target: {fileID: 919132149155446097, guid: 46da72020c13c5040ba8bddd3c066849, type: 3}
+      propertyPath: m_Layer
+      value: 4
+      objectReference: {fileID: 0}
     m_RemovedComponents: []
     m_RemovedGameObjects: []
     m_AddedGameObjects: []
@@ -10255,6 +10359,10 @@ PrefabInstance:
       propertyPath: m_Name
       value: pillar
       objectReference: {fileID: 0}
+    - target: {fileID: 919132149155446097, guid: e2076684d16c69148b47bc6cb81626bd, type: 3}
+      propertyPath: m_Layer
+      value: 4
+      objectReference: {fileID: 0}
     m_RemovedComponents: []
     m_RemovedGameObjects: []
     m_AddedGameObjects: []
@@ -10345,6 +10453,10 @@ PrefabInstance:
     - target: {fileID: 919132149155446097, guid: 5bb691cecefdadb40b3982a071561f1e, type: 3}
       propertyPath: m_Name
       value: Rock_Medium_3 (4)
+      objectReference: {fileID: 0}
+    - target: {fileID: 919132149155446097, guid: 5bb691cecefdadb40b3982a071561f1e, type: 3}
+      propertyPath: m_Layer
+      value: 4
       objectReference: {fileID: 0}
     m_RemovedComponents: []
     m_RemovedGameObjects: []
@@ -10437,6 +10549,10 @@ PrefabInstance:
       propertyPath: m_Name
       value: rubble_large (3)
       objectReference: {fileID: 0}
+    - target: {fileID: 919132149155446097, guid: 46da72020c13c5040ba8bddd3c066849, type: 3}
+      propertyPath: m_Layer
+      value: 4
+      objectReference: {fileID: 0}
     m_RemovedComponents: []
     m_RemovedGameObjects: []
     m_AddedGameObjects: []
@@ -10516,7 +10632,7 @@ GameObject:
   - component: {fileID: 2122143235}
   - component: {fileID: 2122143234}
   - component: {fileID: 2122143236}
-  m_Layer: 0
+  m_Layer: 4
   m_Name: LavaGlow
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -10716,6 +10832,10 @@ PrefabInstance:
       propertyPath: m_Name
       value: Rock_Medium_1 (4)
       objectReference: {fileID: 0}
+    - target: {fileID: 919132149155446097, guid: 544613f49a0cf6a47b36cdfd9eec3150, type: 3}
+      propertyPath: m_Layer
+      value: 4
+      objectReference: {fileID: 0}
     m_RemovedComponents: []
     m_RemovedGameObjects: []
     m_AddedGameObjects: []
@@ -10751,6 +10871,63 @@ MeshCollider:
   m_Convex: 1
   m_CookingOptions: 30
   m_Mesh: {fileID: -8907757473011522176, guid: e2076684d16c69148b47bc6cb81626bd, type: 3}
+--- !u!1001 &720452552036930565
+PrefabInstance:
+  m_ObjectHideFlags: 0
+  serializedVersion: 2
+  m_Modification:
+    serializedVersion: 3
+    m_TransformParent: {fileID: 0}
+    m_Modifications:
+    - target: {fileID: 4675670969438644892, guid: 5145027600256894793402b35b2c5e7f, type: 3}
+      propertyPath: m_LocalPosition.x
+      value: 3.5440142
+      objectReference: {fileID: 0}
+    - target: {fileID: 4675670969438644892, guid: 5145027600256894793402b35b2c5e7f, type: 3}
+      propertyPath: m_LocalPosition.y
+      value: 96.18739
+      objectReference: {fileID: 0}
+    - target: {fileID: 4675670969438644892, guid: 5145027600256894793402b35b2c5e7f, type: 3}
+      propertyPath: m_LocalPosition.z
+      value: -7.6839123
+      objectReference: {fileID: 0}
+    - target: {fileID: 4675670969438644892, guid: 5145027600256894793402b35b2c5e7f, type: 3}
+      propertyPath: m_LocalRotation.w
+      value: 1
+      objectReference: {fileID: 0}
+    - target: {fileID: 4675670969438644892, guid: 5145027600256894793402b35b2c5e7f, type: 3}
+      propertyPath: m_LocalRotation.x
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 4675670969438644892, guid: 5145027600256894793402b35b2c5e7f, type: 3}
+      propertyPath: m_LocalRotation.y
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 4675670969438644892, guid: 5145027600256894793402b35b2c5e7f, type: 3}
+      propertyPath: m_LocalRotation.z
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 4675670969438644892, guid: 5145027600256894793402b35b2c5e7f, type: 3}
+      propertyPath: m_LocalEulerAnglesHint.x
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 4675670969438644892, guid: 5145027600256894793402b35b2c5e7f, type: 3}
+      propertyPath: m_LocalEulerAnglesHint.y
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 4675670969438644892, guid: 5145027600256894793402b35b2c5e7f, type: 3}
+      propertyPath: m_LocalEulerAnglesHint.z
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 5952689688775455035, guid: 5145027600256894793402b35b2c5e7f, type: 3}
+      propertyPath: m_Name
+      value: IceWall
+      objectReference: {fileID: 0}
+    m_RemovedComponents: []
+    m_RemovedGameObjects: []
+    m_AddedGameObjects: []
+    m_AddedComponents: []
+  m_SourcePrefab: {fileID: 100100000, guid: 5145027600256894793402b35b2c5e7f, type: 3}
 --- !u!1001 &3492768703045300137
 PrefabInstance:
   m_ObjectHideFlags: 0
@@ -11101,3 +11278,4 @@ SceneRoots:
   - {fileID: 1823784100}
   - {fileID: 3492768703045300137}
   - {fileID: 432555874}
+  - {fileID: 720452552036930565}

@@ -4874,7 +4874,7 @@ MonoBehaviour:
   offsetY: 0.02
   groundMask:
     serializedVersion: 2
-    m_Bits: 4294967295
+    m_Bits: 16
   damagePerTick: 10
   tickInterval: 1
   slowMultiplier: 0.5
