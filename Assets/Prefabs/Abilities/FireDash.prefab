@@ -44,6 +44,16 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 574255461cf3912409a2ac06fa6ee87e, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  fireDashDistance: 8
-  fireDashTime: 0.15
+  fireDashDistance: 10
+  fireDashTime: 0.1
+  lavaLifeTime: 10
   fireDashIsoYaw: 45
+  playerHealthControl: {fileID: 0}
+  _cc: {fileID: 0}
+  lavaTrailPrefab: {fileID: 681016819850604103, guid: e6405c0d5b9659a4090a4658c0b3e942, type: 3}
+  enemyLayer:
+    serializedVersion: 2
+    m_Bits: 8
+  enemyHitboxRadius: 1
+  dashDamage: 40
+  lavaSpawnInterval: 0.05

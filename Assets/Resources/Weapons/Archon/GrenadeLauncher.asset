@@ -33,7 +33,7 @@ MonoBehaviour:
   heavyWeapon: 0
   akimbo: 0
   grenadeLauncher: 0
-  megaBomb: 0
+  megaBomb: 1
   specialBulletType: {fileID: 3773003613870667637, guid: 228047014f7b36848a6ea2a0bdecd43d, type: 3}
   baseAmmoType: {fileID: 3773003613870667637, guid: 228047014f7b36848a6ea2a0bdecd43d, type: 3}
   prefab: {fileID: 757998253363643933, guid: 53df6c660ea584309aabb523204bed8e, type: 3}

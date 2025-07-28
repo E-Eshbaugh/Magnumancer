@@ -57,7 +57,7 @@ public class AmmoControl : MonoBehaviour
         if (currentGun.isShotgun && gamepad.leftTrigger.wasPressedThisFrame)
         {
             ammoCount = currentGun.ammoCapacity;
-            if (wizard != null && wizard.customBulletPrefab != null)
+            if (wizard != null && wizard.customBulletPrefab != null && !currentGun.megaBomb)
                 currentAmmoPrefab = wizard.customBulletPrefab;
             else
                 currentAmmoPrefab = (currentAmmoPrefab == currentGun.baseAmmoType)
@@ -73,7 +73,7 @@ public class AmmoControl : MonoBehaviour
             bool didFire = false;
             string fireType = currentAmmoPrefab.tag == "slug" ? "semi" : currentGun.fireType;
 
-            GameObject bulletToShoot = (wizard != null && wizard.customBulletPrefab != null)
+            GameObject bulletToShoot = (wizard != null && wizard.customBulletPrefab != null && !currentGun.megaBomb)
                 ? wizard.customBulletPrefab
                 : currentAmmoPrefab;
 
@@ -159,7 +159,7 @@ public class AmmoControl : MonoBehaviour
 
         currentGunIndex = index;
         currentGun = guns[index];
-        currentAmmoPrefab = (wizard != null && wizard.customBulletPrefab != null)
+        currentAmmoPrefab = (wizard != null && wizard.customBulletPrefab != null && !currentGun.megaBomb)
             ? wizard.customBulletPrefab
             : currentGun.baseAmmoType;
 
