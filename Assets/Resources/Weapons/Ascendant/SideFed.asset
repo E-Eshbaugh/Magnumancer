@@ -22,6 +22,7 @@ MonoBehaviour:
   description: A janky marvel of war. Spits bullets faster than it should.
   fireType: auto
   recoil: 0.2
+  reloadTime: 1.5
   fireSound: {fileID: 8300000, guid: c12bc10dadc48864987bf6e62042df18, type: 3}
   reloadSound: {fileID: 8300000, guid: 906e9c635237c064881504f7dcf6c8cf, type: 3}
   ammoType: {fileID: 6997994299401861888, guid: 8de6b050532025b4a891587baeb511f6, type: 3}
@@ -32,6 +33,7 @@ MonoBehaviour:
   heavyWeapon: 0
   akimbo: 0
   grenadeLauncher: 1
+  megaBomb: 0
   specialBulletType: {fileID: 6997994299401861888, guid: 8de6b050532025b4a891587baeb511f6, type: 3}
   baseAmmoType: {fileID: 6997994299401861888, guid: 8de6b050532025b4a891587baeb511f6, type: 3}
   prefab: {fileID: 5216182394429181200, guid: a4dd615d14edd44d59d7750a7f50cb40, type: 3}

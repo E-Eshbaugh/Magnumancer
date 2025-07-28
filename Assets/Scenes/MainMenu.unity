@@ -10885,6 +10885,7 @@ MonoBehaviour:
   - {fileID: 11400000, guid: 7fa214f30a53fc04d95a27b9379ec90b, type: 2}
   - {fileID: 11400000, guid: bc12418186f4a394fbea057b19a8c1f6, type: 2}
   - {fileID: 11400000, guid: 6b0a595098a55b541ae6c1103fa5c0df, type: 2}
+  - {fileID: 11400000, guid: ecb09edd8cf8b9b44b92cf15aa5091f2, type: 2}
   inventorySlots:
   - {fileID: 660321014}
   - {fileID: 530307342}

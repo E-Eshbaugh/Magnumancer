@@ -122,14 +122,17 @@ MonoBehaviour:
   ammoBar40: {fileID: 1520874318, guid: 833c3ffd2f7675845aac0c2232d739b8, type: 3}
   ammoBar20: {fileID: -1783010620, guid: 833c3ffd2f7675845aac0c2232d739b8, type: 3}
   ammoBarEmpty: {fileID: 1552931491, guid: 833c3ffd2f7675845aac0c2232d739b8, type: 3}
+  normalColor: {r: 1, g: 1, b: 1, a: 1}
+  emptyColor: {r: 0.5, g: 0.5, b: 0.5, a: 1}
   guns:
-  - {fileID: 11400000, guid: ba907eeb7f55263498b3ec19d9243e67, type: 2}
+  - {fileID: 11400000, guid: 39dc9dbba0c274e4bbb0acd7bd5eab1d, type: 2}
   - {fileID: 11400000, guid: e9e3fa9f90558b84d8489bbdeb9f3b7a, type: 2}
   - {fileID: 11400000, guid: ba907eeb7f55263498b3ec19d9243e67, type: 2}
   - {fileID: 11400000, guid: 7fa214f30a53fc04d95a27b9379ec90b, type: 2}
   gunControl: {fileID: 303219725969431144}
   fireBulletPrefab: {fileID: 6997994299401861888, guid: 4d849fc1976060946ae9958de4546af5, type: 3}
   iceBulletPrefab: {fileID: 6997994299401861888, guid: 86affdb9b46a4f84a87b8d37eb097266, type: 3}
+  isReloading: 0
   wizard: {fileID: 0}
   audioSource: {fileID: 8850547571341032136}
   currentGunIndex: 0
@@ -1181,6 +1184,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   maxHealth: 100
+  invincible: 0
   healthMask: {fileID: 0}
   stock:
   - {fileID: 0}

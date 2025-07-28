@@ -14,6 +14,7 @@ public class WeaponData : ScriptableObject
     public string description;
     public string fireType;
     public float recoil;
+    public float reloadTime;
     public AudioClip fireSound;
     public AudioClip reloadSound;
     public GameObject ammoType;
@@ -30,6 +31,8 @@ public class WeaponData : ScriptableObject
 
     [Header("AR Abilities")]
     public bool grenadeLauncher;
+    [Header("Explosion/Special")]
+    public bool megaBomb;
 
     [Header("Bullet Abilities")]
     public GameObject specialBulletType;

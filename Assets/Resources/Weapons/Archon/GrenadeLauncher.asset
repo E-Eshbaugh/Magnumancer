@@ -1,0 +1,39 @@
+%YAML 1.1
+%TAG !u! tag:unity3d.com,2011:
+--- !u!114 &11400000
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 3b1075652dd939146a7c0fa3dc80ba42, type: 3}
+  m_Name: GrenadeLauncher
+  m_EditorClassIdentifier: 
+  weaponName: Emberblast
+  damage: 40
+  ammoCapacity: 5
+  attackSpeed: 2.5
+  weight: 0
+  orbCost: 1
+  weaponIcon: {fileID: 608442159, guid: 88365eb93f90dc0448eb4a39ecadd679, type: 3}
+  description: 
+  fireType: grenade
+  recoil: 0
+  reloadTime: 5
+  fireSound: {fileID: 8300000, guid: acc6798c4c232844e894890e76b45821, type: 3}
+  reloadSound: {fileID: 8300000, guid: a091a8dc3102dce4599e7238d0dc6f1c, type: 3}
+  ammoType: {fileID: 3773003613870667637, guid: 228047014f7b36848a6ea2a0bdecd43d, type: 3}
+  laserRange: 0
+  isShotgun: 0
+  pelletCount: 5
+  spreadAngle: 15
+  heavyWeapon: 0
+  akimbo: 0
+  grenadeLauncher: 0
+  megaBomb: 0
+  specialBulletType: {fileID: 3773003613870667637, guid: 228047014f7b36848a6ea2a0bdecd43d, type: 3}
+  baseAmmoType: {fileID: 3773003613870667637, guid: 228047014f7b36848a6ea2a0bdecd43d, type: 3}
+  prefab: {fileID: 757998253363643933, guid: 53df6c660ea584309aabb523204bed8e, type: 3}

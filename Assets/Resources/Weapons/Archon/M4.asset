@@ -22,6 +22,7 @@ MonoBehaviour:
   description: A versatile killer. Balanced, reliable, and just quiet enough.
   fireType: auto
   recoil: 0.01
+  reloadTime: 1
   fireSound: {fileID: 8300000, guid: 1ef531b5677829043b6d50699cb7d098, type: 3}
   reloadSound: {fileID: 8300000, guid: dc24a3a858b4ee1419af6498c4425a53, type: 3}
   ammoType: {fileID: 6997994299401861888, guid: 2ec29fc9207248740970443e058a84f0, type: 3}
@@ -32,6 +33,7 @@ MonoBehaviour:
   heavyWeapon: 0
   akimbo: 0
   grenadeLauncher: 1
+  megaBomb: 0
   specialBulletType: {fileID: 6997994299401861888, guid: 2ec29fc9207248740970443e058a84f0, type: 3}
   baseAmmoType: {fileID: 6997994299401861888, guid: 2ec29fc9207248740970443e058a84f0, type: 3}
   prefab: {fileID: 4370589886874216762, guid: 0ad417df5fc7145e99c8fe7a5fd06fe7, type: 3}

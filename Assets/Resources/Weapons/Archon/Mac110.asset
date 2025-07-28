@@ -22,6 +22,7 @@ MonoBehaviour:
   description: A torrent of crimson lead. Fast, chaotic, and close-range lethal.
   fireType: auto
   recoil: 0.2
+  reloadTime: 1
   fireSound: {fileID: 8300000, guid: 16df531e981a634499e2139f8fa98d7c, type: 3}
   reloadSound: {fileID: 8300000, guid: 58fa9c5a5295c0d4ca4b17425f97095f, type: 3}
   ammoType: {fileID: 6997994299401861888, guid: 2ec29fc9207248740970443e058a84f0, type: 3}
@@ -32,6 +33,7 @@ MonoBehaviour:
   heavyWeapon: 0
   akimbo: 1
   grenadeLauncher: 0
+  megaBomb: 0
   specialBulletType: {fileID: 6997994299401861888, guid: 2ec29fc9207248740970443e058a84f0, type: 3}
   baseAmmoType: {fileID: 6997994299401861888, guid: 2ec29fc9207248740970443e058a84f0, type: 3}
   prefab: {fileID: 5167352523380930853, guid: 3b223e1e99f294a4392b3ae777722d38, type: 3}

@@ -14,7 +14,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   weaponName: Iron Tempest
   damage: 3
-  ammoCapacity: 60
+  ammoCapacity: 50
   attackSpeed: 10
   weight: 5
   orbCost: 1
@@ -23,6 +23,7 @@ MonoBehaviour:
     per-shot damage, but high volume.
   fireType: auto
   recoil: 0.5
+  reloadTime: 4
   fireSound: {fileID: 8300000, guid: 69f0e7727d0a83b468d8a2973b0b8ece, type: 3}
   reloadSound: {fileID: 8300000, guid: 1280b4d2829a85e44b0462f77a6f5694, type: 3}
   ammoType: {fileID: 6997994299401861888, guid: 2ec29fc9207248740970443e058a84f0, type: 3}
@@ -33,6 +34,7 @@ MonoBehaviour:
   heavyWeapon: 1
   akimbo: 0
   grenadeLauncher: 0
+  megaBomb: 0
   specialBulletType: {fileID: 6997994299401861888, guid: 2ec29fc9207248740970443e058a84f0, type: 3}
   baseAmmoType: {fileID: 6997994299401861888, guid: 2ec29fc9207248740970443e058a84f0, type: 3}
   prefab: {fileID: 905326525755269311, guid: f01fb24e74f0f4dbfa3f109f9d593c22, type: 3}

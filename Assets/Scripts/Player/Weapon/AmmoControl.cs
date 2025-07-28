@@ -1,16 +1,19 @@
 using UnityEngine;
 using UnityEngine.InputSystem;
 using UnityEngine.UI;
+using System.Collections;
 
 public class AmmoControl : MonoBehaviour
 {
     [Header("UI")]
     public Image ammoBar;
     public Sprite ammoBarFull, ammoBar80, ammoBar60, ammoBar40, ammoBar20, ammoBarEmpty;
+    public Color normalColor = Color.white;
+    public Color reloadingColor = Color.gray;
 
     [Header("Guns")]
-    public WeaponData[] guns;          // set by MultiplayerManager OR by GunSwapControl.Setup
-    public GunSwapControl gunControl;  // assign in prefab
+    public WeaponData[] guns;
+    public GunSwapControl gunControl;
     public GameObject fireBulletPrefab;
     public GameObject iceBulletPrefab;
 
@@ -18,13 +21,15 @@ public class AmmoControl : MonoBehaviour
     public Gamepad gamepad;
     public WizardData wizard;
     public AudioSource audioSource;
-    // Internal
+
     private FireController3D fire;
     public int currentGunIndex;
     public WeaponData currentGun;
     public int ammoCount;
     public float nextFireTime;
     public GameObject currentAmmoPrefab;
+    private bool isReloading = false;
+    private Coroutine reloadCoroutine;
 
     void Awake()
     {
@@ -40,39 +45,29 @@ public class AmmoControl : MonoBehaviour
         OnGunEquipped(0);
     }
 
-
     void Update()
     {
-        if (gamepad == null || fire == null) return;
+        if (gamepad == null || fire == null || isReloading) return;
 
-        // Sync with swaps
         if (currentGunIndex != gunControl.currentGunIndex)
             OnGunEquipped(gunControl.currentGunIndex);
 
         float now = Time.time;
 
-        // Shotgun toggle
         if (currentGun.isShotgun && gamepad.leftTrigger.wasPressedThisFrame)
         {
             ammoCount = currentGun.ammoCapacity;
-
-            // Swap between base and special bullet — unless wizard overrides
             if (wizard != null && wizard.customBulletPrefab != null)
-            {
                 currentAmmoPrefab = wizard.customBulletPrefab;
-            }
             else
-            {
                 currentAmmoPrefab = (currentAmmoPrefab == currentGun.baseAmmoType)
                     ? currentGun.specialBulletType
                     : currentGun.baseAmmoType;
-            }
 
             nextFireTime = now;
             UpdateAmmoBar();
         }
 
-        // Fire logic
         if (ammoCount > 0 && now >= nextFireTime)
         {
             bool didFire = false;
@@ -100,7 +95,6 @@ public class AmmoControl : MonoBehaviour
                         didFire = true;
                     }
                     break;
-
                 case "shotgunA":
                     if (gamepad.rightTrigger.ReadValue() > 0.1f)
                     {
@@ -109,7 +103,14 @@ public class AmmoControl : MonoBehaviour
                         didFire = true;
                     }
                     break;
-
+                case "grenade":
+                    if (gamepad.rightTrigger.wasPressedThisFrame)
+                    {
+                        fire.Shoot(bulletToShoot, 0f, currentGun.recoil);
+                        audioSource?.PlayOneShot(currentGun.fireSound);
+                        didFire = true;
+                    }
+                    break;
                 case "semi":
                     if (gamepad.rightTrigger.wasPressedThisFrame)
                     {
@@ -118,7 +119,6 @@ public class AmmoControl : MonoBehaviour
                         didFire = true;
                     }
                     break;
-
                 case "auto":
                     if (gamepad.rightTrigger.ReadValue() > 0.1f)
                     {
@@ -137,35 +137,78 @@ public class AmmoControl : MonoBehaviour
             }
         }
 
-        // Manual reload
         if (gamepad.buttonWest.wasPressedThisFrame && audioSource && currentGun.reloadSound && ammoCount < currentGun.ammoCapacity)
         {
-            audioSource.PlayOneShot(currentGun.reloadSound);
-            ReloadAmmo();
+            ammoCount = 0;
+            if (reloadCoroutine != null)
+                StopCoroutine(reloadCoroutine);
+
+            reloadCoroutine = StartCoroutine(ReloadAmmoIncremental());
         }
     }
 
     public void OnGunEquipped(int index)
     {
+        if (reloadCoroutine != null)
+        {
+            StopCoroutine(reloadCoroutine);
+            isReloading = false;
+            ammoBar.color = normalColor;
+            reloadCoroutine = null;
+        }
+
         currentGunIndex = index;
         currentGun = guns[index];
-        ammoCount = currentGun.ammoCapacity;
         currentAmmoPrefab = (wizard != null && wizard.customBulletPrefab != null)
             ? wizard.customBulletPrefab
             : currentGun.baseAmmoType;
 
         nextFireTime = Time.time;
         UpdateAmmoBar();
+
+        // Optional: start reload immediately for new gun if needed
+        ammoCount = 0;
+        if (ammoCount < currentGun.ammoCapacity && audioSource && currentGun.reloadSound)
+            reloadCoroutine = StartCoroutine(ReloadAmmoIncremental());
     }
 
-    void ReloadAmmo()
+    private IEnumerator ReloadAmmoIncremental()
     {
-        ammoCount = currentGun.ammoCapacity;
-        nextFireTime = Time.time;
-        currentAmmoPrefab = (wizard != null && wizard.customBulletPrefab != null)
-            ? wizard.customBulletPrefab
-            : currentGun.baseAmmoType;
-        UpdateAmmoBar();
+        isReloading = true;
+
+        if (ammoBar)
+            ammoBar.color = reloadingColor;
+
+        int missingAmmo = currentGun.ammoCapacity - ammoCount;
+        float perBulletDelay = currentGun.reloadTime / currentGun.ammoCapacity;
+
+        bool isShotgun = currentGun.fireType == "shotgun" || currentGun.fireType == "grenade";
+        float soundLength = currentGun.reloadSound != null ? currentGun.reloadSound.length : 0f;
+        float nextSoundTime = 0f;
+        float elapsed = 0f;
+
+        if (!isShotgun && audioSource && currentGun.reloadSound)
+            audioSource.PlayOneShot(currentGun.reloadSound);
+
+        for (int i = 0; i < missingAmmo; i++)
+        {
+            if (isShotgun && audioSource && currentGun.reloadSound && elapsed >= nextSoundTime)
+            {
+                audioSource.PlayOneShot(currentGun.reloadSound);
+                nextSoundTime = elapsed + soundLength;
+            }
+
+            yield return new WaitForSeconds(perBulletDelay);
+            ammoCount++;
+            UpdateAmmoBar();
+            elapsed += perBulletDelay;
+        }
+
+        if (ammoBar)
+            ammoBar.color = normalColor;
+
+        isReloading = false;
+        reloadCoroutine = null;
     }
 
     void UpdateAmmoBar()
@@ -180,8 +223,8 @@ public class AmmoControl : MonoBehaviour
         else if (ammoCount > 0) ammoBar.sprite = ammoBar20;
         else ammoBar.sprite = ammoBarEmpty;
     }
-    
-    private System.Collections.IEnumerator PlayReloadSoundAfter(float delay)
+
+    private IEnumerator PlayReloadSoundAfter(float delay)
     {
         yield return new WaitForSeconds(delay);
         if (audioSource && currentGun.reloadSound)

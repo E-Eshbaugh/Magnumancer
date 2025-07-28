@@ -22,6 +22,7 @@ MonoBehaviour:
   description: A brutal relic that sends heavy steel with bone-snapping force.
   fireType: semi
   recoil: 0.3
+  reloadTime: 1
   fireSound: {fileID: 8300000, guid: 50581fdf10ddad24d992acd4eac16b75, type: 3}
   reloadSound: {fileID: 8300000, guid: e9de008865fc88644b991b9746254196, type: 3}
   ammoType: {fileID: 6997994299401861888, guid: 998a6807997784c46a5f2fb027daf411, type: 3}
@@ -32,6 +33,7 @@ MonoBehaviour:
   heavyWeapon: 0
   akimbo: 0
   grenadeLauncher: 0
+  megaBomb: 0
   specialBulletType: {fileID: 6997994299401861888, guid: 998a6807997784c46a5f2fb027daf411, type: 3}
   baseAmmoType: {fileID: 6997994299401861888, guid: 998a6807997784c46a5f2fb027daf411, type: 3}
   prefab: {fileID: 3338143055111419170, guid: 39db3344800ad4c87aafe4f7eaa94adc, type: 3}
