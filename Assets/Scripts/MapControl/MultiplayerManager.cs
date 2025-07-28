@@ -46,7 +46,6 @@ public class MultiplayerManager : MonoBehaviour
             go.GetComponentInChildren<AkimboController>()?.Setup(pad);
             go.GetComponentInChildren<WizardAbilityController>()?.Setup(pad, wizard);
             go.GetComponentInChildren<ArAbilityController>()?.Setup(pad);
-            go.GetComponentInChildren<PlayerRumbleTarget>()?.Setup(pad);
 
             // Appearance
             var appearance = go.GetComponentInChildren<PlayerAppearance>();

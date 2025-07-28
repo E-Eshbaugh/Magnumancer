@@ -152,11 +152,11 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   explosionRadius: 3
   explosionForce: 700
-  maxDamage: 40
+  maxDamage: 80
   damageLayers:
     serializedVersion: 2
     m_Bits: 8
-  explosionEffect: {fileID: 4593184484909914552, guid: 2e1e9506f5904a64b81744324fb7cd50, type: 3}
+  explosionEffect: {fileID: 725748389856807714, guid: 4bda94453d2ca7444a0fff05b2d425f5, type: 3}
   audioSource: {fileID: -8799716467336794840}
   explosionSound: {fileID: 8300000, guid: 94ba382d5b199c249844a339cdef6943, type: 3}
   renderersToHide:

@@ -12,6 +12,7 @@ public class PlayerHealthControl : MonoBehaviour
 
     public event Action<float, float> OnHealthChanged;
     public event Action OnDeath;
+    public bool invincible = false;
 
     [Header("UI")]
     [Tooltip("Crest UI controller for the health mask")]
@@ -47,7 +48,7 @@ public class PlayerHealthControl : MonoBehaviour
     {
         Debug.Log($"[Health] TakeDamage( {amount} ) called; before = {currentHealth}/{maxHealth}");
 
-        if (amount <= 0)
+        if (amount <= 0 || invincible)
             return;
 
         currentHealth = Mathf.Max(currentHealth - amount, 0);
@@ -116,5 +117,15 @@ public class PlayerHealthControl : MonoBehaviour
         currentHealth = maxHealth;
         UpdateUI();
         OnHealthChanged?.Invoke(currentHealth, maxHealth);
+
+        //0.5 second invincibility after stock damage
+        invincible = true;
+        Invoke(nameof(ResetInvincibility), 0.1f);
+    }
+
+    private void ResetInvincibility()
+    {
+        invincible = false;
+        Debug.Log("[Health] Invincibility reset.");
     }
 }
