@@ -50,3 +50,5 @@ MonoBehaviour:
   groundMask:
     serializedVersion: 2
     m_Bits: 16
+  thunderSound: {fileID: 8300000, guid: d67bd6f2d3888d843825c997bc83c138, type: 3}
+  audioSource: {fileID: 0}

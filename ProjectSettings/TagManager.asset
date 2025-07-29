@@ -18,6 +18,7 @@ TagManager:
   - localModes
   - onlineModes
   - Hazard
+  - Audio
   layers:
   - Default
   - TransparentFX

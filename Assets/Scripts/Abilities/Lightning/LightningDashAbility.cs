@@ -9,6 +9,8 @@ public class LightningTeleportAbility : MonoBehaviour, IActiveAbility
     [SerializeField] float isoYaw = 45f;
     [SerializeField] GameObject lightningStrikeEffectPrefab;
     [SerializeField] LayerMask groundMask;
+    public AudioClip thunderSound;
+    public AudioSource audioSource;
 
     public void Activate(GameObject caster)
     {
@@ -25,6 +27,19 @@ public class LightningTeleportAbility : MonoBehaviour, IActiveAbility
                     break; // only trigger the first matching gamepad
                 }
             }
+        }
+
+        audioSource = caster.GetComponent<AudioSource>();
+        if (audioSource && thunderSound)
+        {
+            audioSource.pitch = Random.Range(0.95f, 1.05f);
+            audioSource.PlayOneShot(thunderSound);
+        }
+        else if (!audioSource)
+        {
+            Debug.LogWarning("LightningTeleport: No AudioSource found on caster.");
+            if (!thunderSound)
+                Debug.LogWarning("LightningTeleport: Thunder sound will not play because AudioClip is missing.");
         }
 
         // 🦶 Grab the feet transform from the caster
