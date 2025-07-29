@@ -28,19 +28,5 @@ MonoBehaviour:
     is unpredictability\u2014they attack hard and fast then vanishing like lightning,
     their electrified combat style keeps enemies guessing."
   material: {fileID: 2100000, guid: 3e1004960baa19e4e827561df84af018, type: 2}
-  firePassive: 0
-  fireActive: 0
-  icePassive: 0
-  iceActive: 0
-  lightningPassive: 1
-  lightningActive: 1
-  waterPassive: 0
-  waterActive: 0
-  earthPassive: 0
-  earthActive: 0
-  poisonActive: 0
-  poisonPassive: 0
-  naturePassive: 0
-  natureActive: 0
-  darknessPassive: 0
-  darknessActive: 0
+  activeAbilityPrefab: {fileID: 187213004098624151, guid: 5713f7fb4a4a6764aba95991e5df3c9b, type: 3}
+  customBulletPrefab: {fileID: 0}

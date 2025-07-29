@@ -31,6 +31,37 @@ Transform:
   m_Children: []
   m_Father: {fileID: 2907260401102680906}
   m_LocalEulerAnglesHint: {x: -20.398, y: 204.925, z: -9.2}
+--- !u!1 &1603217082567586764
+GameObject:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  serializedVersion: 6
+  m_Component:
+  - component: {fileID: 5947322113299391254}
+  m_Layer: 0
+  m_Name: PlayerFeetPos
+  m_TagString: Untagged
+  m_Icon: {fileID: 0}
+  m_NavMeshLayer: 0
+  m_StaticEditorFlags: 0
+  m_IsActive: 1
+--- !u!4 &5947322113299391254
+Transform:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1603217082567586764}
+  serializedVersion: 2
+  m_LocalRotation: {x: -0, y: 0.9130302, z: -0, w: -0.40789196}
+  m_LocalPosition: {x: 0, y: 0, z: 0}
+  m_LocalScale: {x: 2.3402038, y: 2.340204, z: 2.3402038}
+  m_ConstrainProportionsScale: 0
+  m_Children: []
+  m_Father: {fileID: 2907260401102680906}
+  m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
 --- !u!1 &3554888735566003284
 GameObject:
   m_ObjectHideFlags: 0
@@ -123,7 +154,7 @@ MonoBehaviour:
   ammoBar20: {fileID: -1783010620, guid: 833c3ffd2f7675845aac0c2232d739b8, type: 3}
   ammoBarEmpty: {fileID: 1552931491, guid: 833c3ffd2f7675845aac0c2232d739b8, type: 3}
   normalColor: {r: 1, g: 1, b: 1, a: 1}
-  emptyColor: {r: 0.5, g: 0.5, b: 0.5, a: 1}
+  reloadingColor: {r: 0.5, g: 0.5, b: 0.5, a: 1}
   guns:
   - {fileID: 11400000, guid: 39dc9dbba0c274e4bbb0acd7bd5eab1d, type: 2}
   - {fileID: 11400000, guid: e9e3fa9f90558b84d8489bbdeb9f3b7a, type: 2}
@@ -132,7 +163,6 @@ MonoBehaviour:
   gunControl: {fileID: 303219725969431144}
   fireBulletPrefab: {fileID: 6997994299401861888, guid: 4d849fc1976060946ae9958de4546af5, type: 3}
   iceBulletPrefab: {fileID: 6997994299401861888, guid: 86affdb9b46a4f84a87b8d37eb097266, type: 3}
-  isReloading: 0
   wizard: {fileID: 0}
   audioSource: {fileID: 8850547571341032136}
   currentGunIndex: 0
@@ -853,6 +883,9 @@ PrefabInstance:
     - targetCorrespondingSourceObject: {fileID: -8679921383154817045, guid: 231007177a16e5b4da2f96f9c54e101a, type: 3}
       insertIndex: -1
       addedObject: {fileID: 2912342247700950833}
+    - targetCorrespondingSourceObject: {fileID: -8679921383154817045, guid: 231007177a16e5b4da2f96f9c54e101a, type: 3}
+      insertIndex: -1
+      addedObject: {fileID: 5947322113299391254}
     m_AddedComponents:
     - targetCorrespondingSourceObject: {fileID: 919132149155446097, guid: 231007177a16e5b4da2f96f9c54e101a, type: 3}
       insertIndex: -1
@@ -1100,6 +1133,7 @@ MonoBehaviour:
   - {fileID: -1592719621, guid: 833c3ffd2f7675845aac0c2232d739b8, type: 3}
   playerIndex: 0
   wizard: {fileID: 0}
+  currentMoveSpeed: 0
 --- !u!136 &3502903092251883525
 CapsuleCollider:
   m_ObjectHideFlags: 0
