@@ -9,16 +9,17 @@ public class PlayerMovement3D : MonoBehaviour
     [Header("Movement")]
     public Animator animator;
     public float baseMoveSpeed = 5f;
+    public float moveSpeedMultiplier = 1f;
 
     [Header("Jumping")]
-    public float gravity   = -9.81f;
+    public float gravity = -9.81f;
     public float jumpForce = 5f;
-    public int   maxJumps  = 2;
+    public int maxJumps = 2;
 
     [Header("Dash")]
-    public float dashSpeed     = 12f;
-    public float dashDuration  = 0.2f;
-    public float dashCooldown  = 1.0f;
+    public float dashSpeed = 12f;
+    public float dashDuration = 0.2f;
+    public float dashCooldown = 1.0f;
     public Image dashBar;
     public Sprite[] dashBarSprites;
 
@@ -29,12 +30,12 @@ public class PlayerMovement3D : MonoBehaviour
 
     // Internal
     CharacterController controller;
-    int    jumpsRemaining;
-    float  verticalVelocity = 0f;
-    Vector3 lastDirection   = Vector3.forward;
+    int jumpsRemaining;
+    float verticalVelocity = 0f;
+    Vector3 lastDirection = Vector3.forward;
     static readonly Quaternion IsoRotation = Quaternion.Euler(0, 45f, 0);
 
-    bool  isDashing = false;
+    bool isDashing = false;
     float dashTimer = 0f;
     float dashCooldownTimer = 0f;
     Coroutine dashRefill;
@@ -46,20 +47,20 @@ public class PlayerMovement3D : MonoBehaviour
     public void Setup(int index, Gamepad pad, WizardData wiz = null)
     {
         playerIndex = index;
-        gamepad     = pad;
-        wizard      = wiz;
+        gamepad = pad;
+        wizard = wiz;
 
         // If wizard modifies stats, do it here:
         currentMoveSpeed = baseMoveSpeed;
         // Example: currentMoveSpeed += (wiz ? wiz.speedBonus : 0f);
 
         // Reset state (e.g. when reusing prefab)
-        jumpsRemaining     = maxJumps;
-        verticalVelocity   = -0.5f;
-        isDashing          = false;
-        dashTimer          = 0f;
-        dashCooldownTimer  = 0f;
-        lastDirection      = Vector3.forward;
+        jumpsRemaining = maxJumps;
+        verticalVelocity = -0.5f;
+        isDashing = false;
+        dashTimer = 0f;
+        dashCooldownTimer = 0f;
+        lastDirection = Vector3.forward;
 
         // UI reset
         if (dashBar && dashBarSprites != null && dashBarSprites.Length > 0)
@@ -77,6 +78,7 @@ public class PlayerMovement3D : MonoBehaviour
     void Update()
     {
         if (gamepad == null) return;
+        currentMoveSpeed = baseMoveSpeed * moveSpeedMultiplier;
 
         // Cooldowns
         dashCooldownTimer = Mathf.Max(0f, dashCooldownTimer - Time.deltaTime);
@@ -107,8 +109,8 @@ public class PlayerMovement3D : MonoBehaviour
         }
 
         // Direction
-        Vector3 planar  = new Vector3(stick.x, 0, stick.y).normalized;
-        Vector3 isoDir  = IsoRotation * planar;
+        Vector3 planar = new Vector3(stick.x, 0, stick.y).normalized;
+        Vector3 isoDir = IsoRotation * planar;
         if (isoDir.sqrMagnitude > 0.01f && !isDashing)
             lastDirection = isoDir;
 
@@ -144,8 +146,8 @@ public class PlayerMovement3D : MonoBehaviour
 
     void StartDash()
     {
-        isDashing         = true;
-        dashTimer         = dashDuration;
+        isDashing = true;
+        dashTimer = dashDuration;
         dashCooldownTimer = dashCooldown;
         StartDashRefill();
         // TODO: dash FX / SFX
@@ -176,5 +178,10 @@ public class PlayerMovement3D : MonoBehaviour
         }
 
         dashRefill = null;
+    }
+    
+    public void SetMoveSpeedMultiplier(float value)
+    {
+        moveSpeedMultiplier = value;
     }
 }

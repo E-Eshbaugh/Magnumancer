@@ -119,6 +119,7 @@ MonoBehaviour:
   orbitRadius: 0.5
   fixedHeight: 0.5
   tilt: -90
+  orbitSpeedMultiplier: 1
   aimDirection: {x: 0, y: 0, z: 1}
 --- !u!114 &1172201437893101653
 MonoBehaviour:
@@ -920,6 +921,9 @@ PrefabInstance:
     - targetCorrespondingSourceObject: {fileID: 919132149155446097, guid: 231007177a16e5b4da2f96f9c54e101a, type: 3}
       insertIndex: -1
       addedObject: {fileID: 7548698939869446439}
+    - targetCorrespondingSourceObject: {fileID: 919132149155446097, guid: 231007177a16e5b4da2f96f9c54e101a, type: 3}
+      insertIndex: -1
+      addedObject: {fileID: 1360916796335833138}
   m_SourcePrefab: {fileID: 100100000, guid: 231007177a16e5b4da2f96f9c54e101a, type: 3}
 --- !u!1 &2527497144285833712 stripped
 GameObject:
@@ -1123,6 +1127,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   animator: {fileID: 6053484011819442065}
   baseMoveSpeed: 5
+  moveSpeedMultiplier: 1
   gravity: -14
   jumpForce: 5
   maxJumps: 2
@@ -1374,6 +1379,18 @@ MonoBehaviour:
     serializedVersion: 2
     m_Bits: 8
   explosionForce: 10
+--- !u!114 &1360916796335833138
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 2527497144285833712}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: f00bd7eee63daf549a45047ccf59f469, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
 --- !u!4 &2907260401102680906 stripped
 Transform:
   m_CorrespondingSourceObject: {fileID: -8679921383154817045, guid: 231007177a16e5b4da2f96f9c54e101a, type: 3}

@@ -8,6 +8,7 @@ public class GunOrbitController : MonoBehaviour
     public float orbitRadius = 2f;
     public float fixedHeight = 1.5f;
     public float tilt = 0f;
+    public float orbitSpeedMultiplier = 1f;
 
     [Header("Controller")]
     public Gamepad gamepad;
@@ -15,6 +16,9 @@ public class GunOrbitController : MonoBehaviour
     private Vector3 currentWorldOffset;
     public Vector3 aimDirection = Vector3.forward;  // flat XZ aim
     private bool _logged;
+
+    // Isometric rotation offset (45 degrees clockwise)
+    private static readonly Quaternion isoRotation = Quaternion.Euler(0, 45f, 0);
 
     public void Setup(Gamepad pad, Transform playerTransform)
     {
@@ -49,8 +53,16 @@ public class GunOrbitController : MonoBehaviour
         if (stick.magnitude > 0.1f)
         {
             float angle = Mathf.Atan2(stick.x, stick.y);
-            aimDirection = new Vector3(Mathf.Sin(angle), 0, Mathf.Cos(angle));
-            currentWorldOffset = aimDirection * orbitRadius;
+            Vector3 targetDirection = new Vector3(Mathf.Sin(angle), 0, Mathf.Cos(angle));
+
+            // Apply isometric 45° rotation
+            targetDirection = isoRotation * targetDirection;
+
+            // Smooth aim direction based on orbit speed
+            float orbitLerpSpeed = Mathf.Lerp(0.5f, 10f, orbitSpeedMultiplier);
+            aimDirection = Vector3.Slerp(aimDirection, targetDirection, orbitLerpSpeed * Time.deltaTime);
+
+            currentWorldOffset = aimDirection.normalized * orbitRadius;
 
             if (!_logged)
             {
@@ -66,5 +78,10 @@ public class GunOrbitController : MonoBehaviour
 
         transform.rotation = Quaternion.LookRotation(-aimDirection, Vector3.up);
         transform.Rotate(Vector3.right, tilt, Space.Self);
+    }
+
+    public void SetOrbitSpeedMultiplier(float value)
+    {
+        orbitSpeedMultiplier = value;
     }
 }

@@ -55,6 +55,10 @@ public class LightningBlastDamage : MonoBehaviour
             var health = nearby.GetComponent<PlayerHealthControl>();
             if (health != null)
                 health.TakeDamage(damageToApply);
+            
+            var stun = nearby.GetComponent<StunEffect>();
+            if (stun != null)
+                stun.ApplyStun(0.2f, 0.2f, 5f); 
 
             // Direct hit to ice wall
             var wall = nearby.GetComponent<IceWallEffect>();
