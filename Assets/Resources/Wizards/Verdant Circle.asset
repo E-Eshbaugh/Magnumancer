@@ -22,25 +22,11 @@ MonoBehaviour:
     slow healing effect.'
   activeAbilityTxt: 'Seed of Aloria: Deploy a healing totem that pulses healing energy
     to allies in it''s area. The fewer allies in the healing ring, the faster the
-    healing effect. Explodes on destruction, sending out damaging thorns.'
+    healing effect.'
   loreText: Guardians of the Old Woods, the secretive Verdant Circle blend ancient
     healing with cunning survival tactics. Patient and persistent, they lay traps
     and wield massive weapons to protect the last living Lost Groves. Their strength
     lies in outlasting any foe.
   material: {fileID: 2100000, guid: ae8c9663d79734e4cbf2bdf668e4f97f, type: 2}
-  firePassive: 0
-  fireActive: 0
-  icePassive: 0
-  iceActive: 0
-  lightningPassive: 0
-  lightningActive: 0
-  waterPassive: 0
-  waterActive: 0
-  earthPassive: 0
-  earthActive: 0
-  poisonActive: 0
-  poisonPassive: 0
-  naturePassive: 1
-  natureActive: 1
-  darknessPassive: 0
-  darknessActive: 0
+  activeAbilityPrefab: {fileID: 0}
+  customBulletPrefab: {fileID: 0}
