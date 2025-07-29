@@ -13,7 +13,7 @@ MonoBehaviour:
   m_Name: GrenadeLauncher
   m_EditorClassIdentifier: 
   weaponName: Emberblast
-  damage: 40
+  damage: 20
   ammoCapacity: 5
   attackSpeed: 2.5
   weight: 0

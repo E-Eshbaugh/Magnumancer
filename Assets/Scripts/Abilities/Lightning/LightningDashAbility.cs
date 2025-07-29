@@ -14,6 +14,12 @@ public class LightningTeleportAbility : MonoBehaviour, IActiveAbility
 
     public void Activate(GameObject caster)
     {
+        //damage at start
+        var blast = caster.GetComponent<LightningBlastDamage>();
+        if (blast != null)
+        {
+            blast.TriggerBlast(caster.transform.position, caster);
+        }
         Debug.Log("LightningTeleport activated!");
         var playerInput = caster.GetComponent<PlayerInput>();
         if (playerInput != null)
@@ -92,6 +98,13 @@ public class LightningTeleportAbility : MonoBehaviour, IActiveAbility
 
         Debug.Log("Player position end: " + caster.transform.position);
         Debug.Log("Feet position end: " + feetEnd);
+
+        //damage at end part
+        if (blast != null)
+        {
+            blast.TriggerBlast(caster.transform.position, caster);
+        }
+
     }
 
     IEnumerator StopRumble(Gamepad gamepad)

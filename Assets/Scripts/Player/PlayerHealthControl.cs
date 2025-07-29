@@ -46,14 +46,14 @@ public class PlayerHealthControl : MonoBehaviour
     /// </summary>
     public void TakeDamage(float amount)
     {
-        Debug.Log($"[Health] TakeDamage( {amount} ) called; before = {currentHealth}/{maxHealth}");
+        Debug.Log($"[Health] {tag} TakeDamage( {amount} ) called; before = {currentHealth}/{maxHealth}");
 
         if (amount <= 0 || invincible)
             return;
 
         currentHealth = Mathf.Max(currentHealth - amount, 0);
 
-        Debug.Log($"[Health] After damage: currentHealth = {currentHealth}/{maxHealth}");
+        Debug.Log($"[Health] {tag} After damage: currentHealth = {currentHealth}/{maxHealth}");
 
         UpdateUI();
         OnHealthChanged?.Invoke(currentHealth, maxHealth);

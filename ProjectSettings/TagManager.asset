@@ -19,6 +19,7 @@ TagManager:
   - onlineModes
   - Hazard
   - Audio
+  - IceWall
   layers:
   - Default
   - TransparentFX

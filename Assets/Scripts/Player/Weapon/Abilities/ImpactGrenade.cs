@@ -6,7 +6,7 @@ public class GrenadeExplodeOnImpact : MonoBehaviour
     [Header("Explosion Settings")]
     public float explosionRadius = 5f;
     public float explosionForce = 700f;
-    public float maxDamage = 100f;
+    private float maxDamage = 25f;
     public LayerMask damageLayers;
 
     [Header("Audio & VFX")]
