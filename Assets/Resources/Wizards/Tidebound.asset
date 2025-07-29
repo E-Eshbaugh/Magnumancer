@@ -30,19 +30,5 @@ MonoBehaviour:
     they master the tides with close-range whirlpool attacks and brutal melee spells.
     They crash in like waves\u2014overwhelming and personal."
   material: {fileID: 2100000, guid: 25ac3a8882121e843b62dcef38a94f6d, type: 2}
-  firePassive: 0
-  fireActive: 0
-  icePassive: 0
-  iceActive: 0
-  lightningPassive: 0
-  lightningActive: 0
-  waterPassive: 1
-  waterActive: 1
-  earthPassive: 0
-  earthActive: 0
-  poisonActive: 0
-  poisonPassive: 0
-  naturePassive: 0
-  natureActive: 0
-  darknessPassive: 0
-  darknessActive: 0
+  activeAbilityPrefab: {fileID: 6621311588407131760, guid: a6cc53738622afe4d93c7fe152af4005, type: 3}
+  customBulletPrefab: {fileID: 0}

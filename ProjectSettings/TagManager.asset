@@ -63,5 +63,8 @@ TagManager:
   - name: Gun/Firing
     uniqueID: 2119602375
     locked: 0
+  - name: VFX
+    uniqueID: 1720070905
+    locked: 0
   m_RenderingLayers:
   - Default
