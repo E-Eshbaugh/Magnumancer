@@ -28,5 +28,5 @@ MonoBehaviour:
     and wield massive weapons to protect the last living Lost Groves. Their strength
     lies in outlasting any foe.
   material: {fileID: 2100000, guid: ae8c9663d79734e4cbf2bdf668e4f97f, type: 2}
-  activeAbilityPrefab: {fileID: 0}
+  activeAbilityPrefab: {fileID: 4533276989616956427, guid: 552cfd2e2793958408fce5c056cd0172, type: 3}
   customBulletPrefab: {fileID: 0}

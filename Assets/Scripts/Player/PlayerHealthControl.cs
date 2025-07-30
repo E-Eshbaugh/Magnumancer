@@ -66,13 +66,29 @@ public class PlayerHealthControl : MonoBehaviour
 
     public void Heal(int amount)
     {
-        if (amount <= 0) return;
+        if (amount <= 0 || currentHealth <= 0)
+        {
+            Debug.Log($"[Health] Heal blocked: amount={amount}, currentHealth={currentHealth}");
+            return;
+        }
 
+        float before = currentHealth;
         currentHealth = Mathf.Min(currentHealth + amount, maxHealth);
-        Debug.Log($"[Health] Healed: currentHealth = {currentHealth}/{maxHealth}");
-        UpdateUI();
-        OnHealthChanged?.Invoke(currentHealth, maxHealth);
+        float healed = currentHealth - before;
+
+        if (healed > 0)
+        {
+            Debug.Log($"[Health] {gameObject.name} healed +{healed}, now at {currentHealth}/{maxHealth}");
+            UpdateUI();
+            OnHealthChanged?.Invoke(currentHealth, maxHealth);
+        }
+        else
+        {
+            Debug.Log($"[Health] Heal had no effect — already at max.");
+        }
     }
+
+
 
     private void UpdateUI()
     {

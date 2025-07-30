@@ -83,10 +83,18 @@ public class Bullet : MonoBehaviour
             ph.TakeDamage(damage);
 
         //iceWall effect
-        var wall = hitCollider.GetComponent<IceWallEffect>();
-        if (wall != null)
+        var iceWall = hitCollider.GetComponent<IceWallEffect>();
+        if (iceWall != null)
         {
-            wall.TakeDamage(damage);
+            iceWall.TakeDamage(damage);
+        }
+        else
+        {
+            var crystal = hitCollider.GetComponentInParent<CrystalHealth>();
+            if (crystal != null)
+            {
+                crystal.TakeDamage(damage);
+            }
         }
 
         // 3) snap both target and actual to impact

@@ -6,7 +6,7 @@ public class CloneMovement : MonoBehaviour
 {
     [Header("Setup")]
     public Gamepad gamepad;       // Assigned from caster
-    public float moveSpeed = 8f;
+    public float moveSpeed = 5f;
     public float gravity = -20f;
     public float jumpForce = 10f;
     public float dashSpeed = 20f;

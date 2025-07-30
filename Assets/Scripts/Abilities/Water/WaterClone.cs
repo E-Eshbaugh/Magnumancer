@@ -32,6 +32,7 @@ public class WaterClone : MonoBehaviour, IActiveAbility
         if (cloneMovement != null)
         {
             cloneMovement.gamepad = caster.GetComponent<PlayerMovement3D>().gamepad;
+            cloneMovement.moveSpeed = caster.GetComponent<PlayerMovement3D>().currentMoveSpeed;
         }
 
         var orbit = clone.GetComponentInChildren<CloneGunOrbit>();
