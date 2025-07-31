@@ -20,13 +20,14 @@ MonoBehaviour:
   charcterImage: {fileID: -1407414220, guid: cc48c478178a2b84d8ececaa877d2761, type: 3}
   passiveAbilityTxt: 'Virulent Shroud:  When enemies die nearby, they burst into
     poisonous spores, corrupting enemies nearby.'
-  activeAbilityTxt: 'Mireblast: Launch a powerful spore bomb that explodes into a
-    toxic haze, slowing and corrupting foes for 10 seconds.'
+  activeAbilityTxt: 'Viper''s Nest: Fire three proximity mines that activate on plant.
+    Mines explode when players get near, releasing a cloud of poison that damages
+    players and lingers for 10 seconds. Can also be destroyed to trigger.'
   loreText: Magicians of medicine during the Great Goblin War, the Viridant Order
     of medical mages healed their wizard brothers on field. After being corrupted
     by corruptive spores released by goblin shamans, the powerful healers were warped
     into the Blightward, using their strong magical power and tactical knowledge
     to attack with AoE weapons to slowly poison and decay their enemies.
   material: {fileID: 2100000, guid: 6da374a2d06ded5499da8399ed5ec7dc, type: 2}
-  activeAbilityPrefab: {fileID: 0}
+  activeAbilityPrefab: {fileID: 2889606402612515821, guid: a335416b0155f0b4893450d1830ba771, type: 3}
   customBulletPrefab: {fileID: 0}
