@@ -12,6 +12,8 @@ GameObject:
   - component: {fileID: 5277856173487156085}
   - component: {fileID: 7258050655923170115}
   - component: {fileID: -155277679489765746}
+  - component: {fileID: 9194392079290683366}
+  - component: {fileID: 6938940212086526584}
   m_Layer: 0
   m_Name: VoidShot
   m_TagString: Untagged
@@ -4862,6 +4864,40 @@ Rigidbody:
   m_Interpolate: 0
   m_Constraints: 0
   m_CollisionDetection: 0
+--- !u!65 &9194392079290683366
+BoxCollider:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 147798454077762232}
+  m_Material: {fileID: 0}
+  m_IncludeLayers:
+    serializedVersion: 2
+    m_Bits: 0
+  m_ExcludeLayers:
+    serializedVersion: 2
+    m_Bits: 0
+  m_LayerOverridePriority: 0
+  m_IsTrigger: 1
+  m_ProvidesContacts: 0
+  m_Enabled: 1
+  serializedVersion: 3
+  m_Size: {x: 1.2593244, y: 0.09379578, z: 0.7925552}
+  m_Center: {x: -0.018308284, y: 0.5739746, z: -0.22726949}
+--- !u!114 &6938940212086526584
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 147798454077762232}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: cd0a61d8d38cfe845a6931949e54aacb, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  damage: 50
 --- !u!1 &6387378082862450852
 GameObject:
   m_ObjectHideFlags: 0

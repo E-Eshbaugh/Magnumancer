@@ -22,6 +22,7 @@ public class VoidShotActivator : MonoBehaviour, IActiveAbility
 
         // Instantiate the shot at gun position
         GameObject shot = Instantiate(voidShotPrefab, firePosition, Quaternion.LookRotation(fireDirection));
+        shot.GetComponent<VoidShotProjectile>().caster = caster;
 
         // Fire the projectile
         Rigidbody rb = shot.GetComponent<Rigidbody>();
