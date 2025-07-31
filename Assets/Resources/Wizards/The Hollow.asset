@@ -28,19 +28,5 @@ MonoBehaviour:
     bringing upon an eternal dark curse to their whole faction. Ruthless and unpredictable,
     they walk the line between mastery and madness.
   material: {fileID: 2100000, guid: a33d8e2725f6d0e4aa41f0e158762194, type: 2}
-  firePassive: 0
-  fireActive: 0
-  icePassive: 0
-  iceActive: 0
-  lightningPassive: 0
-  lightningActive: 0
-  waterPassive: 0
-  waterActive: 0
-  earthPassive: 0
-  earthActive: 0
-  poisonActive: 0
-  poisonPassive: 0
-  naturePassive: 0
-  natureActive: 0
-  darknessPassive: 1
-  darknessActive: 1
+  activeAbilityPrefab: {fileID: 5727223826685956371, guid: ca8800aa210c3704d9c16bd566fdc034, type: 3}
+  customBulletPrefab: {fileID: 0}
