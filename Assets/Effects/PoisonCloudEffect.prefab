@@ -10,6 +10,8 @@ GameObject:
   m_Component:
   - component: {fileID: 4681091211595441445}
   - component: {fileID: 329481961293530036}
+  - component: {fileID: 2333166069320683016}
+  - component: {fileID: 5204417217078602732}
   m_Layer: 0
   m_Name: PoisonCloudEffect
   m_TagString: Untagged
@@ -48,6 +50,48 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   activeDuration: 10
   destroyDelay: 3
+--- !u!136 &2333166069320683016
+CapsuleCollider:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 4127868346728538963}
+  m_Material: {fileID: 0}
+  m_IncludeLayers:
+    serializedVersion: 2
+    m_Bits: 0
+  m_ExcludeLayers:
+    serializedVersion: 2
+    m_Bits: 0
+  m_LayerOverridePriority: 0
+  m_IsTrigger: 0
+  m_ProvidesContacts: 0
+  m_Enabled: 1
+  serializedVersion: 2
+  m_Radius: 1.2802796
+  m_Height: 2.5605593
+  m_Direction: 1
+  m_Center: {x: -0.15475106, y: 1.3300743, z: 0}
+--- !u!114 &5204417217078602732
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 4127868346728538963}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: df15ed84419a1ab4ca3d093c2cc0d220, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  damagePerSecond: 10
+  tickInterval: 1
+  playerTags:
+  - Player1
+  - Player2
+  - Player3
+  - Player4
 --- !u!1 &4391894505192790014
 GameObject:
   m_ObjectHideFlags: 0

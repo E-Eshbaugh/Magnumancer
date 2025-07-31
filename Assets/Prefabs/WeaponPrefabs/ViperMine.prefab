@@ -138,7 +138,6 @@ GameObject:
   - component: {fileID: 410370934578594009}
   - component: {fileID: 1992694128250794562}
   - component: {fileID: 3897669118367874784}
-  - component: {fileID: -2766014434719788021}
   - component: {fileID: -8656855225342385193}
   - component: {fileID: 8738800648268863720}
   - component: {fileID: 5746748154045715824}
@@ -238,20 +237,6 @@ MonoBehaviour:
   cameraShakeIntensity: 0.3
   cameraShakeDuration: 0.2
   explosionClip: {fileID: 8300000, guid: e78e5a0c24ceb6f45a2ed8c3ed6d1a92, type: 3}
---- !u!114 &-2766014434719788021
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 3864040131030938675}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 668c5442ba724a7468d630698bb0b8a9, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
-  activeDuration: 10
-  destroyDelay: 3
 --- !u!96 &-8656855225342385193
 TrailRenderer:
   serializedVersion: 3
@@ -380,12 +365,10 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 5050649ae136b0246b5db08f6795e73c, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  checkDistance: 1.5
   groundMask:
     serializedVersion: 2
     m_Bits: 16
-  stopThreshold: 0.5
-  alignDelay: 0.1
+  alignOffset: 0.01
 --- !u!65 &5746748154045715824
 BoxCollider:
   m_ObjectHideFlags: 0
