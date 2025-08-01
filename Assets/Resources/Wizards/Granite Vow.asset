@@ -28,19 +28,5 @@ MonoBehaviour:
     stop, wielding heavy, crushing weapons and firepower to accompany their strong
     fortification spells and will power."
   material: {fileID: 2100000, guid: 8971174afe209f1418005a206bc72baa, type: 2}
-  firePassive: 0
-  fireActive: 0
-  icePassive: 0
-  iceActive: 0
-  lightningPassive: 0
-  lightningActive: 0
-  waterPassive: 0
-  waterActive: 0
-  earthPassive: 1
-  earthActive: 1
-  poisonActive: 0
-  poisonPassive: 0
-  naturePassive: 0
-  natureActive: 0
-  darknessPassive: 0
-  darknessActive: 0
+  activeAbilityPrefab: {fileID: 9117129773369675752, guid: 5de43fb3f2671df4d952dce6b785b0cf, type: 3}
+  customBulletPrefab: {fileID: 0}
