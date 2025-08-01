@@ -42,7 +42,7 @@ public class EarthquakeAbility : MonoBehaviour, IActiveAbility
         if (movement != null && movement.gamepad != null)
         {
             movement.gamepad.SetMotorSpeeds(0.6f, 1.0f);
-            StartCoroutine(StopRumble(movement.gamepad, 0.4f));
+            StartCoroutine(StopRumble(movement.gamepad, 1f));
         }
 
         // Start damage over time
