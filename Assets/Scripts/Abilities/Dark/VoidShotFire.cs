@@ -1,11 +1,15 @@
 using UnityEngine;
 using Magnumancer.Abilities;
+using UnityEngine.InputSystem;
 
 public class VoidShotActivator : MonoBehaviour, IActiveAbility
 {
     public GameObject voidShotPrefab;
     public float launchForce = 100f;
     public float yOffset = 0;
+    public float rumbleLow = 0.2f;
+    public float rumbleHigh = 0.6f;
+    public float rumbleDuration = 0.25f;
 
     public void Activate(GameObject caster)
     {
@@ -34,5 +38,18 @@ public class VoidShotActivator : MonoBehaviour, IActiveAbility
         {
             Debug.LogWarning("[VoidShotActivator] VoidShot prefab is missing a Rigidbody.");
         }
+
+        // Rumble the controller
+        if (orbit.gamepad != null)
+        {
+            orbit.gamepad.SetMotorSpeeds(rumbleLow, rumbleHigh);
+            caster.GetComponent<MonoBehaviour>().StartCoroutine(StopRumbleAfterDelay(orbit.gamepad, rumbleDuration));
+        }
+    }
+
+    private System.Collections.IEnumerator StopRumbleAfterDelay(Gamepad pad, float delay)
+    {
+        yield return new WaitForSeconds(delay);
+        pad.SetMotorSpeeds(0f, 0f);
     }
 }
