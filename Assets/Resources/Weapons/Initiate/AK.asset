@@ -13,11 +13,11 @@ MonoBehaviour:
   m_Name: AK
   m_EditorClassIdentifier: 
   weaponName: Ironchant
-  damage: 9
-  ammoCapacity: 25
+  damage: 11
+  ammoCapacity: 30
   attackSpeed: 5.5
   weight: 3
-  orbCost: 3
+  orbCost: 2
   weaponIcon: {fileID: 1835304517, guid: 88365eb93f90dc0448eb4a39ecadd679, type: 3}
   description: Unpolished but fierce. Roars with every pull of the trigger.
   fireType: auto

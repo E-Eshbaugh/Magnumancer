@@ -14,15 +14,15 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   weaponName: Emberblast
   damage: 20
-  ammoCapacity: 5
+  ammoCapacity: 3
   attackSpeed: 2.5
   weight: 0
-  orbCost: 1
+  orbCost: 4
   weaponIcon: {fileID: 608442159, guid: 88365eb93f90dc0448eb4a39ecadd679, type: 3}
   description: 
   fireType: grenade
   recoil: 0
-  reloadTime: 5
+  reloadTime: 4
   fireSound: {fileID: 8300000, guid: acc6798c4c232844e894890e76b45821, type: 3}
   reloadSound: {fileID: 8300000, guid: a091a8dc3102dce4599e7238d0dc6f1c, type: 3}
   ammoType: {fileID: 3773003613870667637, guid: 228047014f7b36848a6ea2a0bdecd43d, type: 3}

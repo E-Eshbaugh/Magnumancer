@@ -17,7 +17,7 @@ MonoBehaviour:
   ammoCapacity: 30
   attackSpeed: 6
   weight: 3
-  orbCost: 1
+  orbCost: 5
   weaponIcon: {fileID: -1922479695, guid: 88365eb93f90dc0448eb4a39ecadd679, type: 3}
   description: A versatile killer. Balanced, reliable, and just quiet enough.
   fireType: auto
@@ -29,7 +29,7 @@ MonoBehaviour:
   laserRange: 0
   isShotgun: 0
   pelletCount: 5
-  spreadAngle: 8
+  spreadAngle: 5
   heavyWeapon: 0
   akimbo: 0
   grenadeLauncher: 1

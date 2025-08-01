@@ -13,22 +13,22 @@ MonoBehaviour:
   m_Name: LeverAction
   m_EditorClassIdentifier: 
   weaponName: Dustbreaker
-  damage: 10
+  damage: 30
   ammoCapacity: 5
   attackSpeed: 1.5
   weight: 3
-  orbCost: 1
+  orbCost: 3
   weaponIcon: {fileID: -1917225690, guid: 88365eb93f90dc0448eb4a39ecadd679, type: 3}
-  description: '[10x3] Each shot a thunderclap. Slower, but bone-breaking.'
+  description: '[6x5] Each shot a thunderclap. Slower, but bone-breaking.'
   fireType: shotgun
   recoil: 1.5
-  reloadTime: 2
+  reloadTime: 2.5
   fireSound: {fileID: 8300000, guid: f91ab7a23556f4b4b82cad0b027d2759, type: 3}
   reloadSound: {fileID: 8300000, guid: 4f972653294fa5f44a654cd68bf65117, type: 3}
   ammoType: {fileID: 6997994299401861888, guid: 8de6b050532025b4a891587baeb511f6, type: 3}
   laserRange: 0
   isShotgun: 1
-  pelletCount: 10
+  pelletCount: 6
   spreadAngle: 8
   heavyWeapon: 0
   akimbo: 0

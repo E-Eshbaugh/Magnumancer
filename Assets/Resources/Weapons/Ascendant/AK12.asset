@@ -14,15 +14,15 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   weaponName: Blackmaw
   damage: 12
-  ammoCapacity: 20
+  ammoCapacity: 25
   attackSpeed: 5
   weight: 2
-  orbCost: 1
+  orbCost: 3
   weaponIcon: {fileID: -854721862, guid: 88365eb93f90dc0448eb4a39ecadd679, type: 3}
   description: Hungers for battle. Heavy recoil, heavier impact.
   fireType: auto
   recoil: 0.3
-  reloadTime: 1
+  reloadTime: 1.5
   fireSound: {fileID: 8300000, guid: 9d72cb3859b4f4e4fa51e2bfdf0c33d6, type: 3}
   reloadSound: {fileID: 8300000, guid: 23e7f1390c8c64f459fe0d95ff706067, type: 3}
   ammoType: {fileID: 6997994299401861888, guid: 8de6b050532025b4a891587baeb511f6, type: 3}

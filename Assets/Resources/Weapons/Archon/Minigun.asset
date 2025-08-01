@@ -13,9 +13,9 @@ MonoBehaviour:
   m_Name: Minigun
   m_EditorClassIdentifier: 
   weaponName: Iron Tempest
-  damage: 3
-  ammoCapacity: 50
-  attackSpeed: 10
+  damage: 5
+  ammoCapacity: 100
+  attackSpeed: 15
   weight: 5
   orbCost: 1
   weaponIcon: {fileID: 1987816353, guid: 88365eb93f90dc0448eb4a39ecadd679, type: 3}

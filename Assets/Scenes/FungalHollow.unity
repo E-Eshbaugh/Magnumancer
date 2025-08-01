@@ -135,7 +135,7 @@ GameObject:
   - component: {fileID: 19744957}
   - component: {fileID: 19744959}
   - component: {fileID: 19744958}
-  m_Layer: 0
+  m_Layer: 4
   m_Name: Spot Light
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -315,9 +315,17 @@ PrefabInstance:
       propertyPath: m_LocalEulerAnglesHint.z
       value: 0
       objectReference: {fileID: 0}
+    - target: {fileID: -1247101158649034354, guid: f8b80aca38e25574aaf948ab88c43dd3, type: 3}
+      propertyPath: m_Layer
+      value: 4
+      objectReference: {fileID: 0}
     - target: {fileID: 919132149155446097, guid: f8b80aca38e25574aaf948ab88c43dd3, type: 3}
       propertyPath: m_Name
       value: Fly_Agaric_Group_2
+      objectReference: {fileID: 0}
+    - target: {fileID: 919132149155446097, guid: f8b80aca38e25574aaf948ab88c43dd3, type: 3}
+      propertyPath: m_Layer
+      value: 4
       objectReference: {fileID: 0}
     m_RemovedComponents: []
     m_RemovedGameObjects: []
@@ -10192,6 +10200,10 @@ PrefabInstance:
       propertyPath: m_Name
       value: DeadTree_2
       objectReference: {fileID: 0}
+    - target: {fileID: 919132149155446097, guid: 464506ba3eb5b324a9bbfd1802ca8d90, type: 3}
+      propertyPath: m_Layer
+      value: 4
+      objectReference: {fileID: 0}
     m_RemovedComponents: []
     m_RemovedGameObjects: []
     m_AddedGameObjects: []
@@ -10216,7 +10228,7 @@ GameObject:
   - component: {fileID: 239120350}
   - component: {fileID: 239120352}
   - component: {fileID: 239120351}
-  m_Layer: 0
+  m_Layer: 4
   m_Name: Spot Light (6)
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -15264,9 +15276,17 @@ PrefabInstance:
       propertyPath: m_LocalEulerAnglesHint.z
       value: 0
       objectReference: {fileID: 0}
+    - target: {fileID: -6211446455858370162, guid: e262752790cfd1a49b32d5357f27a522, type: 3}
+      propertyPath: m_Layer
+      value: 4
+      objectReference: {fileID: 0}
     - target: {fileID: 919132149155446097, guid: e262752790cfd1a49b32d5357f27a522, type: 3}
       propertyPath: m_Name
       value: Inky_Cap_Group_2 (1)
+      objectReference: {fileID: 0}
+    - target: {fileID: 919132149155446097, guid: e262752790cfd1a49b32d5357f27a522, type: 3}
+      propertyPath: m_Layer
+      value: 4
       objectReference: {fileID: 0}
     m_RemovedComponents: []
     m_RemovedGameObjects: []
@@ -15336,9 +15356,17 @@ PrefabInstance:
       propertyPath: m_LocalEulerAnglesHint.z
       value: 0
       objectReference: {fileID: 0}
+    - target: {fileID: -3676464667890971561, guid: 738f31856ee6bb74881483f4b62fc71f, type: 3}
+      propertyPath: m_Layer
+      value: 4
+      objectReference: {fileID: 0}
     - target: {fileID: 919132149155446097, guid: 738f31856ee6bb74881483f4b62fc71f, type: 3}
       propertyPath: m_Name
       value: Fly_Agaric_Small (2)
+      objectReference: {fileID: 0}
+    - target: {fileID: 919132149155446097, guid: 738f31856ee6bb74881483f4b62fc71f, type: 3}
+      propertyPath: m_Layer
+      value: 4
       objectReference: {fileID: 0}
     m_RemovedComponents: []
     m_RemovedGameObjects: []
@@ -15359,7 +15387,7 @@ GameObject:
   - component: {fileID: 363766427}
   - component: {fileID: 363766429}
   - component: {fileID: 363766428}
-  m_Layer: 0
+  m_Layer: 4
   m_Name: Spot Light (5)
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -15535,6 +15563,10 @@ PrefabInstance:
     - target: {fileID: 919132149155446097, guid: ffd9dc36ba6fb25489f877b12386d4de, type: 3}
       propertyPath: m_Name
       value: DeadTree_3
+      objectReference: {fileID: 0}
+    - target: {fileID: 919132149155446097, guid: ffd9dc36ba6fb25489f877b12386d4de, type: 3}
+      propertyPath: m_Layer
+      value: 4
       objectReference: {fileID: 0}
     m_RemovedComponents: []
     m_RemovedGameObjects: []
@@ -15764,6 +15796,10 @@ PrefabInstance:
       propertyPath: m_Name
       value: DeadTree_3 (2)
       objectReference: {fileID: 0}
+    - target: {fileID: 919132149155446097, guid: ffd9dc36ba6fb25489f877b12386d4de, type: 3}
+      propertyPath: m_Layer
+      value: 4
+      objectReference: {fileID: 0}
     m_RemovedComponents: []
     m_RemovedGameObjects: []
     m_AddedGameObjects: []
@@ -15870,9 +15906,17 @@ PrefabInstance:
       propertyPath: m_LocalEulerAnglesHint.z
       value: 0
       objectReference: {fileID: 0}
+    - target: {fileID: -7763080723849257608, guid: bbadd1ec1a72afa40b4cb915fd77a425, type: 3}
+      propertyPath: m_Layer
+      value: 4
+      objectReference: {fileID: 0}
     - target: {fileID: 919132149155446097, guid: bbadd1ec1a72afa40b4cb915fd77a425, type: 3}
       propertyPath: m_Name
       value: Inky_Cap_Big (12)
+      objectReference: {fileID: 0}
+    - target: {fileID: 919132149155446097, guid: bbadd1ec1a72afa40b4cb915fd77a425, type: 3}
+      propertyPath: m_Layer
+      value: 4
       objectReference: {fileID: 0}
     m_RemovedComponents: []
     m_RemovedGameObjects: []
@@ -20859,9 +20903,17 @@ PrefabInstance:
       propertyPath: m_LocalEulerAnglesHint.z
       value: 0
       objectReference: {fileID: 0}
+    - target: {fileID: -7763080723849257608, guid: bbadd1ec1a72afa40b4cb915fd77a425, type: 3}
+      propertyPath: m_Layer
+      value: 4
+      objectReference: {fileID: 0}
     - target: {fileID: 919132149155446097, guid: bbadd1ec1a72afa40b4cb915fd77a425, type: 3}
       propertyPath: m_Name
       value: Inky_Cap_Big (8)
+      objectReference: {fileID: 0}
+    - target: {fileID: 919132149155446097, guid: bbadd1ec1a72afa40b4cb915fd77a425, type: 3}
+      propertyPath: m_Layer
+      value: 4
       objectReference: {fileID: 0}
     m_RemovedComponents: []
     m_RemovedGameObjects: []
@@ -20977,6 +21029,14 @@ PrefabInstance:
     - target: {fileID: 919132149155446097, guid: c24166413b5cc5648bb14848cce15456, type: 3}
       propertyPath: m_Name
       value: Fly_Agaric_Big (6)
+      objectReference: {fileID: 0}
+    - target: {fileID: 919132149155446097, guid: c24166413b5cc5648bb14848cce15456, type: 3}
+      propertyPath: m_Layer
+      value: 4
+      objectReference: {fileID: 0}
+    - target: {fileID: 3931043582033232251, guid: c24166413b5cc5648bb14848cce15456, type: 3}
+      propertyPath: m_Layer
+      value: 4
       objectReference: {fileID: 0}
     m_RemovedComponents: []
     m_RemovedGameObjects: []
@@ -21129,6 +21189,14 @@ PrefabInstance:
       propertyPath: m_Name
       value: Fly_Agaric_Big (13)
       objectReference: {fileID: 0}
+    - target: {fileID: 919132149155446097, guid: c24166413b5cc5648bb14848cce15456, type: 3}
+      propertyPath: m_Layer
+      value: 4
+      objectReference: {fileID: 0}
+    - target: {fileID: 3931043582033232251, guid: c24166413b5cc5648bb14848cce15456, type: 3}
+      propertyPath: m_Layer
+      value: 4
+      objectReference: {fileID: 0}
     m_RemovedComponents: []
     m_RemovedGameObjects: []
     m_AddedGameObjects: []
@@ -21244,6 +21312,14 @@ PrefabInstance:
       propertyPath: m_Name
       value: Fly_Agaric_Big
       objectReference: {fileID: 0}
+    - target: {fileID: 919132149155446097, guid: c24166413b5cc5648bb14848cce15456, type: 3}
+      propertyPath: m_Layer
+      value: 4
+      objectReference: {fileID: 0}
+    - target: {fileID: 3931043582033232251, guid: c24166413b5cc5648bb14848cce15456, type: 3}
+      propertyPath: m_Layer
+      value: 4
+      objectReference: {fileID: 0}
     m_RemovedComponents: []
     m_RemovedGameObjects: []
     m_AddedGameObjects: []
@@ -21315,6 +21391,14 @@ PrefabInstance:
     - target: {fileID: 919132149155446097, guid: c24166413b5cc5648bb14848cce15456, type: 3}
       propertyPath: m_Name
       value: Fly_Agaric_Big (11)
+      objectReference: {fileID: 0}
+    - target: {fileID: 919132149155446097, guid: c24166413b5cc5648bb14848cce15456, type: 3}
+      propertyPath: m_Layer
+      value: 4
+      objectReference: {fileID: 0}
+    - target: {fileID: 3931043582033232251, guid: c24166413b5cc5648bb14848cce15456, type: 3}
+      propertyPath: m_Layer
+      value: 4
       objectReference: {fileID: 0}
     m_RemovedComponents: []
     m_RemovedGameObjects: []
@@ -21438,9 +21522,17 @@ PrefabInstance:
       propertyPath: m_LocalEulerAnglesHint.z
       value: 0
       objectReference: {fileID: 0}
+    - target: {fileID: -3676464667890971561, guid: 738f31856ee6bb74881483f4b62fc71f, type: 3}
+      propertyPath: m_Layer
+      value: 4
+      objectReference: {fileID: 0}
     - target: {fileID: 919132149155446097, guid: 738f31856ee6bb74881483f4b62fc71f, type: 3}
       propertyPath: m_Name
       value: Fly_Agaric_Small
+      objectReference: {fileID: 0}
+    - target: {fileID: 919132149155446097, guid: 738f31856ee6bb74881483f4b62fc71f, type: 3}
+      propertyPath: m_Layer
+      value: 4
       objectReference: {fileID: 0}
     m_RemovedComponents: []
     m_RemovedGameObjects: []
@@ -21557,6 +21649,14 @@ PrefabInstance:
       propertyPath: m_Name
       value: Fly_Agaric_Big (7)
       objectReference: {fileID: 0}
+    - target: {fileID: 919132149155446097, guid: c24166413b5cc5648bb14848cce15456, type: 3}
+      propertyPath: m_Layer
+      value: 4
+      objectReference: {fileID: 0}
+    - target: {fileID: 3931043582033232251, guid: c24166413b5cc5648bb14848cce15456, type: 3}
+      propertyPath: m_Layer
+      value: 4
+      objectReference: {fileID: 0}
     m_RemovedComponents: []
     m_RemovedGameObjects: []
     m_AddedGameObjects: []
@@ -21629,6 +21729,14 @@ PrefabInstance:
       propertyPath: m_Name
       value: Fly_Agaric_Big (5)
       objectReference: {fileID: 0}
+    - target: {fileID: 919132149155446097, guid: c24166413b5cc5648bb14848cce15456, type: 3}
+      propertyPath: m_Layer
+      value: 4
+      objectReference: {fileID: 0}
+    - target: {fileID: 3931043582033232251, guid: c24166413b5cc5648bb14848cce15456, type: 3}
+      propertyPath: m_Layer
+      value: 4
+      objectReference: {fileID: 0}
     m_RemovedComponents: []
     m_RemovedGameObjects: []
     m_AddedGameObjects: []
@@ -21697,9 +21805,17 @@ PrefabInstance:
       propertyPath: m_LocalEulerAnglesHint.z
       value: 0
       objectReference: {fileID: 0}
+    - target: {fileID: -1247101158649034354, guid: f8b80aca38e25574aaf948ab88c43dd3, type: 3}
+      propertyPath: m_Layer
+      value: 4
+      objectReference: {fileID: 0}
     - target: {fileID: 919132149155446097, guid: f8b80aca38e25574aaf948ab88c43dd3, type: 3}
       propertyPath: m_Name
       value: Fly_Agaric_Group_2 (4)
+      objectReference: {fileID: 0}
+    - target: {fileID: 919132149155446097, guid: f8b80aca38e25574aaf948ab88c43dd3, type: 3}
+      propertyPath: m_Layer
+      value: 4
       objectReference: {fileID: 0}
     m_RemovedComponents: []
     m_RemovedGameObjects: []
@@ -21792,7 +21908,7 @@ GameObject:
   - component: {fileID: 915712350}
   - component: {fileID: 915712352}
   - component: {fileID: 915712351}
-  m_Layer: 0
+  m_Layer: 4
   m_Name: Spot Light (11)
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -21977,9 +22093,17 @@ PrefabInstance:
       propertyPath: m_LocalEulerAnglesHint.z
       value: 0
       objectReference: {fileID: 0}
+    - target: {fileID: -7763080723849257608, guid: bbadd1ec1a72afa40b4cb915fd77a425, type: 3}
+      propertyPath: m_Layer
+      value: 4
+      objectReference: {fileID: 0}
     - target: {fileID: 919132149155446097, guid: bbadd1ec1a72afa40b4cb915fd77a425, type: 3}
       propertyPath: m_Name
       value: Inky_Cap_Big (7)
+      objectReference: {fileID: 0}
+    - target: {fileID: 919132149155446097, guid: bbadd1ec1a72afa40b4cb915fd77a425, type: 3}
+      propertyPath: m_Layer
+      value: 4
       objectReference: {fileID: 0}
     m_RemovedComponents: []
     m_RemovedGameObjects: []
@@ -22060,9 +22184,17 @@ PrefabInstance:
       propertyPath: m_LocalEulerAnglesHint.z
       value: 0
       objectReference: {fileID: 0}
+    - target: {fileID: -1247101158649034354, guid: f8b80aca38e25574aaf948ab88c43dd3, type: 3}
+      propertyPath: m_Layer
+      value: 4
+      objectReference: {fileID: 0}
     - target: {fileID: 919132149155446097, guid: f8b80aca38e25574aaf948ab88c43dd3, type: 3}
       propertyPath: m_Name
       value: Fly_Agaric_Group_2 (2)
+      objectReference: {fileID: 0}
+    - target: {fileID: 919132149155446097, guid: f8b80aca38e25574aaf948ab88c43dd3, type: 3}
+      propertyPath: m_Layer
+      value: 4
       objectReference: {fileID: 0}
     m_RemovedComponents: []
     m_RemovedGameObjects: []
@@ -22191,9 +22323,17 @@ PrefabInstance:
       propertyPath: m_LocalEulerAnglesHint.z
       value: 0
       objectReference: {fileID: 0}
+    - target: {fileID: -7763080723849257608, guid: bbadd1ec1a72afa40b4cb915fd77a425, type: 3}
+      propertyPath: m_Layer
+      value: 4
+      objectReference: {fileID: 0}
     - target: {fileID: 919132149155446097, guid: bbadd1ec1a72afa40b4cb915fd77a425, type: 3}
       propertyPath: m_Name
       value: Inky_Cap_Big (4)
+      objectReference: {fileID: 0}
+    - target: {fileID: 919132149155446097, guid: bbadd1ec1a72afa40b4cb915fd77a425, type: 3}
+      propertyPath: m_Layer
+      value: 4
       objectReference: {fileID: 0}
     m_RemovedComponents: []
     m_RemovedGameObjects: []
@@ -27101,9 +27241,17 @@ PrefabInstance:
       propertyPath: m_LocalEulerAnglesHint.z
       value: 0
       objectReference: {fileID: 0}
+    - target: {fileID: -7763080723849257608, guid: bbadd1ec1a72afa40b4cb915fd77a425, type: 3}
+      propertyPath: m_Layer
+      value: 4
+      objectReference: {fileID: 0}
     - target: {fileID: 919132149155446097, guid: bbadd1ec1a72afa40b4cb915fd77a425, type: 3}
       propertyPath: m_Name
       value: Inky_Cap_Big (2)
+      objectReference: {fileID: 0}
+    - target: {fileID: 919132149155446097, guid: bbadd1ec1a72afa40b4cb915fd77a425, type: 3}
+      propertyPath: m_Layer
+      value: 4
       objectReference: {fileID: 0}
     m_RemovedComponents: []
     m_RemovedGameObjects: []
@@ -27290,9 +27438,17 @@ PrefabInstance:
       propertyPath: m_LocalEulerAnglesHint.z
       value: 0
       objectReference: {fileID: 0}
+    - target: {fileID: -7763080723849257608, guid: bbadd1ec1a72afa40b4cb915fd77a425, type: 3}
+      propertyPath: m_Layer
+      value: 4
+      objectReference: {fileID: 0}
     - target: {fileID: 919132149155446097, guid: bbadd1ec1a72afa40b4cb915fd77a425, type: 3}
       propertyPath: m_Name
       value: Inky_Cap_Big
+      objectReference: {fileID: 0}
+    - target: {fileID: 919132149155446097, guid: bbadd1ec1a72afa40b4cb915fd77a425, type: 3}
+      propertyPath: m_Layer
+      value: 4
       objectReference: {fileID: 0}
     m_RemovedComponents: []
     m_RemovedGameObjects: []
@@ -27403,6 +27559,14 @@ PrefabInstance:
       propertyPath: m_Name
       value: Fly_Agaric_Big (8)
       objectReference: {fileID: 0}
+    - target: {fileID: 919132149155446097, guid: c24166413b5cc5648bb14848cce15456, type: 3}
+      propertyPath: m_Layer
+      value: 4
+      objectReference: {fileID: 0}
+    - target: {fileID: 3931043582033232251, guid: c24166413b5cc5648bb14848cce15456, type: 3}
+      propertyPath: m_Layer
+      value: 4
+      objectReference: {fileID: 0}
     m_RemovedComponents: []
     m_RemovedGameObjects: []
     m_AddedGameObjects: []
@@ -27454,7 +27618,7 @@ GameObject:
   - component: {fileID: 1154203862}
   - component: {fileID: 1154203861}
   - component: {fileID: 1154203860}
-  m_Layer: 0
+  m_Layer: 4
   m_Name: Terrain
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -27908,6 +28072,14 @@ PrefabInstance:
       propertyPath: m_Name
       value: Fly_Agaric_Big (3)
       objectReference: {fileID: 0}
+    - target: {fileID: 919132149155446097, guid: c24166413b5cc5648bb14848cce15456, type: 3}
+      propertyPath: m_Layer
+      value: 4
+      objectReference: {fileID: 0}
+    - target: {fileID: 3931043582033232251, guid: c24166413b5cc5648bb14848cce15456, type: 3}
+      propertyPath: m_Layer
+      value: 4
+      objectReference: {fileID: 0}
     m_RemovedComponents: []
     m_RemovedGameObjects: []
     m_AddedGameObjects: []
@@ -27927,7 +28099,7 @@ GameObject:
   - component: {fileID: 1236949479}
   - component: {fileID: 1236949481}
   - component: {fileID: 1236949480}
-  m_Layer: 0
+  m_Layer: 4
   m_Name: Spot Light (9)
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -32966,6 +33138,14 @@ PrefabInstance:
       propertyPath: m_Name
       value: Fly_Agaric_Big (9)
       objectReference: {fileID: 0}
+    - target: {fileID: 919132149155446097, guid: c24166413b5cc5648bb14848cce15456, type: 3}
+      propertyPath: m_Layer
+      value: 4
+      objectReference: {fileID: 0}
+    - target: {fileID: 3931043582033232251, guid: c24166413b5cc5648bb14848cce15456, type: 3}
+      propertyPath: m_Layer
+      value: 4
+      objectReference: {fileID: 0}
     m_RemovedComponents: []
     m_RemovedGameObjects: []
     m_AddedGameObjects: []
@@ -33037,6 +33217,14 @@ PrefabInstance:
     - target: {fileID: 919132149155446097, guid: c24166413b5cc5648bb14848cce15456, type: 3}
       propertyPath: m_Name
       value: Fly_Agaric_Big (1)
+      objectReference: {fileID: 0}
+    - target: {fileID: 919132149155446097, guid: c24166413b5cc5648bb14848cce15456, type: 3}
+      propertyPath: m_Layer
+      value: 4
+      objectReference: {fileID: 0}
+    - target: {fileID: 3931043582033232251, guid: c24166413b5cc5648bb14848cce15456, type: 3}
+      propertyPath: m_Layer
+      value: 4
       objectReference: {fileID: 0}
     m_RemovedComponents: []
     m_RemovedGameObjects: []
@@ -33137,6 +33325,14 @@ PrefabInstance:
       propertyPath: m_Name
       value: Fly_Agaric_Big (2)
       objectReference: {fileID: 0}
+    - target: {fileID: 919132149155446097, guid: c24166413b5cc5648bb14848cce15456, type: 3}
+      propertyPath: m_Layer
+      value: 4
+      objectReference: {fileID: 0}
+    - target: {fileID: 3931043582033232251, guid: c24166413b5cc5648bb14848cce15456, type: 3}
+      propertyPath: m_Layer
+      value: 4
+      objectReference: {fileID: 0}
     m_RemovedComponents: []
     m_RemovedGameObjects: []
     m_AddedGameObjects: []
@@ -33232,9 +33428,17 @@ PrefabInstance:
       propertyPath: m_LocalEulerAnglesHint.z
       value: 0
       objectReference: {fileID: 0}
+    - target: {fileID: -6211446455858370162, guid: e262752790cfd1a49b32d5357f27a522, type: 3}
+      propertyPath: m_Layer
+      value: 4
+      objectReference: {fileID: 0}
     - target: {fileID: 919132149155446097, guid: e262752790cfd1a49b32d5357f27a522, type: 3}
       propertyPath: m_Name
       value: Inky_Cap_Group_2
+      objectReference: {fileID: 0}
+    - target: {fileID: 919132149155446097, guid: e262752790cfd1a49b32d5357f27a522, type: 3}
+      propertyPath: m_Layer
+      value: 4
       objectReference: {fileID: 0}
     m_RemovedComponents: []
     m_RemovedGameObjects: []
@@ -33295,6 +33499,10 @@ PrefabInstance:
     - target: {fileID: 919132149155446097, guid: 92e5570a6877c5b42a29e62b28144565, type: 3}
       propertyPath: m_Name
       value: DeadTree_1 (1)
+      objectReference: {fileID: 0}
+    - target: {fileID: 919132149155446097, guid: 92e5570a6877c5b42a29e62b28144565, type: 3}
+      propertyPath: m_Layer
+      value: 4
       objectReference: {fileID: 0}
     m_RemovedComponents: []
     m_RemovedGameObjects: []
@@ -33418,9 +33626,17 @@ PrefabInstance:
       propertyPath: m_LocalEulerAnglesHint.z
       value: 0
       objectReference: {fileID: 0}
+    - target: {fileID: -7763080723849257608, guid: bbadd1ec1a72afa40b4cb915fd77a425, type: 3}
+      propertyPath: m_Layer
+      value: 4
+      objectReference: {fileID: 0}
     - target: {fileID: 919132149155446097, guid: bbadd1ec1a72afa40b4cb915fd77a425, type: 3}
       propertyPath: m_Name
       value: Inky_Cap_Big (11)
+      objectReference: {fileID: 0}
+    - target: {fileID: 919132149155446097, guid: bbadd1ec1a72afa40b4cb915fd77a425, type: 3}
+      propertyPath: m_Layer
+      value: 4
       objectReference: {fileID: 0}
     m_RemovedComponents: []
     m_RemovedGameObjects: []
@@ -33532,7 +33748,7 @@ GameObject:
   - component: {fileID: 1430718838}
   - component: {fileID: 1430718840}
   - component: {fileID: 1430718839}
-  m_Layer: 0
+  m_Layer: 4
   m_Name: Spot Light (10)
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -33712,9 +33928,17 @@ PrefabInstance:
       propertyPath: m_LocalEulerAnglesHint.z
       value: 0
       objectReference: {fileID: 0}
+    - target: {fileID: -7763080723849257608, guid: bbadd1ec1a72afa40b4cb915fd77a425, type: 3}
+      propertyPath: m_Layer
+      value: 4
+      objectReference: {fileID: 0}
     - target: {fileID: 919132149155446097, guid: bbadd1ec1a72afa40b4cb915fd77a425, type: 3}
       propertyPath: m_Name
       value: Inky_Cap_Big (5)
+      objectReference: {fileID: 0}
+    - target: {fileID: 919132149155446097, guid: bbadd1ec1a72afa40b4cb915fd77a425, type: 3}
+      propertyPath: m_Layer
+      value: 4
       objectReference: {fileID: 0}
     m_RemovedComponents: []
     m_RemovedGameObjects: []
@@ -33808,6 +34032,10 @@ PrefabInstance:
       propertyPath: m_Name
       value: DeadTree_1
       objectReference: {fileID: 0}
+    - target: {fileID: 919132149155446097, guid: 92e5570a6877c5b42a29e62b28144565, type: 3}
+      propertyPath: m_Layer
+      value: 4
+      objectReference: {fileID: 0}
     m_RemovedComponents: []
     m_RemovedGameObjects: []
     m_AddedGameObjects: []
@@ -33880,6 +34108,14 @@ PrefabInstance:
       propertyPath: m_Name
       value: Fly_Agaric_Big (10)
       objectReference: {fileID: 0}
+    - target: {fileID: 919132149155446097, guid: c24166413b5cc5648bb14848cce15456, type: 3}
+      propertyPath: m_Layer
+      value: 4
+      objectReference: {fileID: 0}
+    - target: {fileID: 3931043582033232251, guid: c24166413b5cc5648bb14848cce15456, type: 3}
+      propertyPath: m_Layer
+      value: 4
+      objectReference: {fileID: 0}
     m_RemovedComponents: []
     m_RemovedGameObjects: []
     m_AddedGameObjects: []
@@ -33951,6 +34187,14 @@ PrefabInstance:
     - target: {fileID: 919132149155446097, guid: c24166413b5cc5648bb14848cce15456, type: 3}
       propertyPath: m_Name
       value: Fly_Agaric_Big (12)
+      objectReference: {fileID: 0}
+    - target: {fileID: 919132149155446097, guid: c24166413b5cc5648bb14848cce15456, type: 3}
+      propertyPath: m_Layer
+      value: 4
+      objectReference: {fileID: 0}
+    - target: {fileID: 3931043582033232251, guid: c24166413b5cc5648bb14848cce15456, type: 3}
+      propertyPath: m_Layer
+      value: 4
       objectReference: {fileID: 0}
     m_RemovedComponents: []
     m_RemovedGameObjects: []
@@ -34036,9 +34280,17 @@ PrefabInstance:
       propertyPath: m_LocalEulerAnglesHint.z
       value: 0
       objectReference: {fileID: 0}
+    - target: {fileID: -7763080723849257608, guid: bbadd1ec1a72afa40b4cb915fd77a425, type: 3}
+      propertyPath: m_Layer
+      value: 4
+      objectReference: {fileID: 0}
     - target: {fileID: 919132149155446097, guid: bbadd1ec1a72afa40b4cb915fd77a425, type: 3}
       propertyPath: m_Name
       value: Inky_Cap_Big (3)
+      objectReference: {fileID: 0}
+    - target: {fileID: 919132149155446097, guid: bbadd1ec1a72afa40b4cb915fd77a425, type: 3}
+      propertyPath: m_Layer
+      value: 4
       objectReference: {fileID: 0}
     m_RemovedComponents: []
     m_RemovedGameObjects: []
@@ -34176,6 +34428,10 @@ PrefabInstance:
     - target: {fileID: 919132149155446097, guid: 9809a857577fc924caab2a1dc456b659, type: 3}
       propertyPath: m_Name
       value: Mushroom_Laetiporus
+      objectReference: {fileID: 0}
+    - target: {fileID: 919132149155446097, guid: 9809a857577fc924caab2a1dc456b659, type: 3}
+      propertyPath: m_Layer
+      value: 4
       objectReference: {fileID: 0}
     m_RemovedComponents: []
     m_RemovedGameObjects: []
@@ -34546,9 +34802,17 @@ PrefabInstance:
       propertyPath: m_LocalEulerAnglesHint.z
       value: 0
       objectReference: {fileID: 0}
+    - target: {fileID: -3676464667890971561, guid: 738f31856ee6bb74881483f4b62fc71f, type: 3}
+      propertyPath: m_Layer
+      value: 4
+      objectReference: {fileID: 0}
     - target: {fileID: 919132149155446097, guid: 738f31856ee6bb74881483f4b62fc71f, type: 3}
       propertyPath: m_Name
       value: Fly_Agaric_Small (1)
+      objectReference: {fileID: 0}
+    - target: {fileID: 919132149155446097, guid: 738f31856ee6bb74881483f4b62fc71f, type: 3}
+      propertyPath: m_Layer
+      value: 4
       objectReference: {fileID: 0}
     m_RemovedComponents: []
     m_RemovedGameObjects: []
@@ -34623,7 +34887,7 @@ GameObject:
   - component: {fileID: 1663114862}
   - component: {fileID: 1663114864}
   - component: {fileID: 1663114863}
-  m_Layer: 0
+  m_Layer: 4
   m_Name: Spot Light (7)
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -34793,9 +35057,17 @@ PrefabInstance:
       propertyPath: m_LocalEulerAnglesHint.z
       value: 0
       objectReference: {fileID: 0}
+    - target: {fileID: -7763080723849257608, guid: bbadd1ec1a72afa40b4cb915fd77a425, type: 3}
+      propertyPath: m_Layer
+      value: 4
+      objectReference: {fileID: 0}
     - target: {fileID: 919132149155446097, guid: bbadd1ec1a72afa40b4cb915fd77a425, type: 3}
       propertyPath: m_Name
       value: Inky_Cap_Big (6)
+      objectReference: {fileID: 0}
+    - target: {fileID: 919132149155446097, guid: bbadd1ec1a72afa40b4cb915fd77a425, type: 3}
+      propertyPath: m_Layer
+      value: 4
       objectReference: {fileID: 0}
     m_RemovedComponents: []
     m_RemovedGameObjects: []
@@ -34869,6 +35141,10 @@ PrefabInstance:
       propertyPath: m_Name
       value: TwistedTree_1
       objectReference: {fileID: 0}
+    - target: {fileID: 919132149155446097, guid: 14b8e64672325324095eed05b3b3ff96, type: 3}
+      propertyPath: m_Layer
+      value: 4
+      objectReference: {fileID: 0}
     m_RemovedComponents: []
     m_RemovedGameObjects: []
     m_AddedGameObjects: []
@@ -34888,7 +35164,7 @@ GameObject:
   - component: {fileID: 1680758232}
   - component: {fileID: 1680758234}
   - component: {fileID: 1680758233}
-  m_Layer: 0
+  m_Layer: 4
   m_Name: Spot Light (4)
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -35062,6 +35338,14 @@ PrefabInstance:
       propertyPath: m_Name
       value: Fly_Agaric_Big (4)
       objectReference: {fileID: 0}
+    - target: {fileID: 919132149155446097, guid: c24166413b5cc5648bb14848cce15456, type: 3}
+      propertyPath: m_Layer
+      value: 4
+      objectReference: {fileID: 0}
+    - target: {fileID: 3931043582033232251, guid: c24166413b5cc5648bb14848cce15456, type: 3}
+      propertyPath: m_Layer
+      value: 4
+      objectReference: {fileID: 0}
     m_RemovedComponents: []
     m_RemovedGameObjects: []
     m_AddedGameObjects: []
@@ -35135,7 +35419,7 @@ GameObject:
   - component: {fileID: 1739311262}
   - component: {fileID: 1739311264}
   - component: {fileID: 1739311263}
-  m_Layer: 0
+  m_Layer: 4
   m_Name: Spot Light (12)
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -35256,7 +35540,7 @@ GameObject:
   - component: {fileID: 1752638247}
   - component: {fileID: 1752638249}
   - component: {fileID: 1752638248}
-  m_Layer: 0
+  m_Layer: 4
   m_Name: Spot Light (3)
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -35445,6 +35729,10 @@ PrefabInstance:
       propertyPath: m_Name
       value: DeadTree_2 (3)
       objectReference: {fileID: 0}
+    - target: {fileID: 919132149155446097, guid: 464506ba3eb5b324a9bbfd1802ca8d90, type: 3}
+      propertyPath: m_Layer
+      value: 4
+      objectReference: {fileID: 0}
     m_RemovedComponents: []
     m_RemovedGameObjects: []
     m_AddedGameObjects: []
@@ -35513,9 +35801,17 @@ PrefabInstance:
       propertyPath: m_LocalEulerAnglesHint.z
       value: 0
       objectReference: {fileID: 0}
+    - target: {fileID: -7763080723849257608, guid: bbadd1ec1a72afa40b4cb915fd77a425, type: 3}
+      propertyPath: m_Layer
+      value: 4
+      objectReference: {fileID: 0}
     - target: {fileID: 919132149155446097, guid: bbadd1ec1a72afa40b4cb915fd77a425, type: 3}
       propertyPath: m_Name
       value: Inky_Cap_Big (1)
+      objectReference: {fileID: 0}
+    - target: {fileID: 919132149155446097, guid: bbadd1ec1a72afa40b4cb915fd77a425, type: 3}
+      propertyPath: m_Layer
+      value: 4
       objectReference: {fileID: 0}
     m_RemovedComponents: []
     m_RemovedGameObjects: []
@@ -35545,7 +35841,7 @@ GameObject:
   serializedVersion: 6
   m_Component:
   - component: {fileID: 1823784100}
-  m_Layer: 0
+  m_Layer: 4
   m_Name: Environment
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -35743,9 +36039,17 @@ PrefabInstance:
       propertyPath: m_LocalEulerAnglesHint.z
       value: 0
       objectReference: {fileID: 0}
+    - target: {fileID: -1247101158649034354, guid: f8b80aca38e25574aaf948ab88c43dd3, type: 3}
+      propertyPath: m_Layer
+      value: 4
+      objectReference: {fileID: 0}
     - target: {fileID: 919132149155446097, guid: f8b80aca38e25574aaf948ab88c43dd3, type: 3}
       propertyPath: m_Name
       value: Fly_Agaric_Group_2 (1)
+      objectReference: {fileID: 0}
+    - target: {fileID: 919132149155446097, guid: f8b80aca38e25574aaf948ab88c43dd3, type: 3}
+      propertyPath: m_Layer
+      value: 4
       objectReference: {fileID: 0}
     m_RemovedComponents: []
     m_RemovedGameObjects: []
@@ -35886,6 +36190,10 @@ PrefabInstance:
       propertyPath: m_Name
       value: DeadTree_2 (1)
       objectReference: {fileID: 0}
+    - target: {fileID: 919132149155446097, guid: 464506ba3eb5b324a9bbfd1802ca8d90, type: 3}
+      propertyPath: m_Layer
+      value: 4
+      objectReference: {fileID: 0}
     m_RemovedComponents: []
     m_RemovedGameObjects: []
     m_AddedGameObjects: []
@@ -35946,6 +36254,10 @@ PrefabInstance:
       propertyPath: m_Name
       value: DeadTree_3 (1)
       objectReference: {fileID: 0}
+    - target: {fileID: 919132149155446097, guid: ffd9dc36ba6fb25489f877b12386d4de, type: 3}
+      propertyPath: m_Layer
+      value: 4
+      objectReference: {fileID: 0}
     m_RemovedComponents: []
     m_RemovedGameObjects: []
     m_AddedGameObjects: []
@@ -35970,7 +36282,7 @@ GameObject:
   - component: {fileID: 1894555501}
   - component: {fileID: 1894555503}
   - component: {fileID: 1894555502}
-  m_Layer: 0
+  m_Layer: 4
   m_Name: Spot Light (8)
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -36129,7 +36441,7 @@ GameObject:
   - component: {fileID: 1899871105}
   - component: {fileID: 1899871107}
   - component: {fileID: 1899871106}
-  m_Layer: 0
+  m_Layer: 4
   m_Name: Spot Light (1)
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -36383,9 +36695,17 @@ PrefabInstance:
       propertyPath: m_LocalEulerAnglesHint.z
       value: 0
       objectReference: {fileID: 0}
+    - target: {fileID: -7763080723849257608, guid: bbadd1ec1a72afa40b4cb915fd77a425, type: 3}
+      propertyPath: m_Layer
+      value: 4
+      objectReference: {fileID: 0}
     - target: {fileID: 919132149155446097, guid: bbadd1ec1a72afa40b4cb915fd77a425, type: 3}
       propertyPath: m_Name
       value: Inky_Cap_Big (9)
+      objectReference: {fileID: 0}
+    - target: {fileID: 919132149155446097, guid: bbadd1ec1a72afa40b4cb915fd77a425, type: 3}
+      propertyPath: m_Layer
+      value: 4
       objectReference: {fileID: 0}
     m_RemovedComponents: []
     m_RemovedGameObjects: []
@@ -36494,7 +36814,7 @@ GameObject:
   - component: {fileID: 2006707488}
   - component: {fileID: 2006707487}
   - component: {fileID: 2006707490}
-  m_Layer: 0
+  m_Layer: 4
   m_Name: River
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -36624,7 +36944,7 @@ GameObject:
   - component: {fileID: 2013488765}
   - component: {fileID: 2013488767}
   - component: {fileID: 2013488766}
-  m_Layer: 0
+  m_Layer: 4
   m_Name: Spot Light (2)
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -36848,9 +37168,17 @@ PrefabInstance:
       propertyPath: m_LocalEulerAnglesHint.z
       value: 0
       objectReference: {fileID: 0}
+    - target: {fileID: -1247101158649034354, guid: f8b80aca38e25574aaf948ab88c43dd3, type: 3}
+      propertyPath: m_Layer
+      value: 4
+      objectReference: {fileID: 0}
     - target: {fileID: 919132149155446097, guid: f8b80aca38e25574aaf948ab88c43dd3, type: 3}
       propertyPath: m_Name
       value: Fly_Agaric_Group_2 (3)
+      objectReference: {fileID: 0}
+    - target: {fileID: 919132149155446097, guid: f8b80aca38e25574aaf948ab88c43dd3, type: 3}
+      propertyPath: m_Layer
+      value: 4
       objectReference: {fileID: 0}
     m_RemovedComponents: []
     m_RemovedGameObjects: []
@@ -36911,6 +37239,10 @@ PrefabInstance:
     - target: {fileID: 919132149155446097, guid: 464506ba3eb5b324a9bbfd1802ca8d90, type: 3}
       propertyPath: m_Name
       value: DeadTree_2 (2)
+      objectReference: {fileID: 0}
+    - target: {fileID: 919132149155446097, guid: 464506ba3eb5b324a9bbfd1802ca8d90, type: 3}
+      propertyPath: m_Layer
+      value: 4
       objectReference: {fileID: 0}
     m_RemovedComponents: []
     m_RemovedGameObjects: []
@@ -36980,9 +37312,17 @@ PrefabInstance:
       propertyPath: m_LocalEulerAnglesHint.z
       value: 0
       objectReference: {fileID: 0}
+    - target: {fileID: -7763080723849257608, guid: bbadd1ec1a72afa40b4cb915fd77a425, type: 3}
+      propertyPath: m_Layer
+      value: 4
+      objectReference: {fileID: 0}
     - target: {fileID: 919132149155446097, guid: bbadd1ec1a72afa40b4cb915fd77a425, type: 3}
       propertyPath: m_Name
       value: Inky_Cap_Big (10)
+      objectReference: {fileID: 0}
+    - target: {fileID: 919132149155446097, guid: bbadd1ec1a72afa40b4cb915fd77a425, type: 3}
+      propertyPath: m_Layer
+      value: 4
       objectReference: {fileID: 0}
     m_RemovedComponents: []
     m_RemovedGameObjects: []

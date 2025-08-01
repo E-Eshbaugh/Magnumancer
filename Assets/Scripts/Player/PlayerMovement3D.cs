@@ -24,7 +24,7 @@ public class PlayerMovement3D : MonoBehaviour
     public Image dashBar;
     public Sprite[] dashBarSprites;
 
-    [Header("Controller (set at runtime)")]
+    [Header("Controller")]
     public Gamepad gamepad = null;
     public int playerIndex = 0;
     public WizardData wizard;
@@ -32,6 +32,7 @@ public class PlayerMovement3D : MonoBehaviour
     CharacterController controller;
     int jumpsRemaining;
     float verticalVelocity = 0f;
+    Vector3 moveDirection = Vector3.zero;
     Vector3 lastDirection = Vector3.forward;
     static readonly Quaternion IsoRotation = Quaternion.Euler(0, 45f, 0);
 
@@ -42,7 +43,7 @@ public class PlayerMovement3D : MonoBehaviour
 
     public float currentMoveSpeed;
 
-    // Knockback handling
+    // Knockback
     Vector3 knockbackVelocity = Vector3.zero;
     float knockbackDecayRate = 10f;
 
@@ -78,14 +79,8 @@ public class PlayerMovement3D : MonoBehaviour
     void Update()
     {
         if (gamepad == null) return;
-        currentMoveSpeed = baseMoveSpeed * moveSpeedMultiplier;
 
         dashCooldownTimer = Mathf.Max(0f, dashCooldownTimer - Time.deltaTime);
-        if (isDashing)
-        {
-            dashTimer -= Time.deltaTime;
-            if (dashTimer <= 0f) isDashing = false;
-        }
 
         Vector2 stick = gamepad.leftStick.ReadValue();
         if (stick.sqrMagnitude < 0.01f) stick = Vector2.zero;
@@ -106,16 +101,13 @@ public class PlayerMovement3D : MonoBehaviour
 
         Vector3 planar = new Vector3(stick.x, 0, stick.y).normalized;
         Vector3 isoDir = IsoRotation * planar;
+
         if (isoDir.sqrMagnitude > 0.01f && !isDashing)
             lastDirection = isoDir;
 
-        Vector3 horiz = isDashing
-            ? lastDirection * dashSpeed
-            : lastDirection * currentMoveSpeed * stick.magnitude;
-
-        if (controller.isGrounded)
+        if (controller.isGrounded && verticalVelocity < 0f)
         {
-            if (verticalVelocity < 0f) verticalVelocity = -0.5f;
+            verticalVelocity = -0.5f;
             jumpsRemaining = maxJumps - 1;
         }
         else
@@ -123,18 +115,11 @@ public class PlayerMovement3D : MonoBehaviour
             verticalVelocity += gravity * Time.deltaTime;
         }
 
-        // === Apply knockback ===
-        Vector3 motion = new Vector3(horiz.x, verticalVelocity, horiz.z) + knockbackVelocity;
-        controller.Move(motion * Time.deltaTime);
+        Vector3 horiz = isDashing
+            ? lastDirection * dashSpeed
+            : lastDirection * currentMoveSpeed * stick.magnitude;
 
-        if (knockbackVelocity.sqrMagnitude > 0.01f)
-        {
-            knockbackVelocity = Vector3.Lerp(knockbackVelocity, Vector3.zero, knockbackDecayRate * Time.deltaTime);
-        }
-        else
-        {
-            knockbackVelocity = Vector3.zero;
-        }
+        moveDirection = new Vector3(horiz.x, verticalVelocity, horiz.z);
 
         if (stick.sqrMagnitude > 0.01f && !isDashing)
         {
@@ -143,6 +128,29 @@ public class PlayerMovement3D : MonoBehaviour
         }
 
         if (animator) animator.SetFloat("Speed", isDashing ? 1f : stick.magnitude);
+    }
+
+    void FixedUpdate()
+    {
+        if (controller == null || gamepad == null) return;
+
+        Vector3 finalMotion = moveDirection + knockbackVelocity;
+        controller.Move(finalMotion * Time.fixedDeltaTime);
+
+        if (knockbackVelocity.sqrMagnitude > 0.01f)
+        {
+            knockbackVelocity = Vector3.Lerp(knockbackVelocity, Vector3.zero, knockbackDecayRate * Time.fixedDeltaTime);
+        }
+        else
+        {
+            knockbackVelocity = Vector3.zero;
+        }
+
+        if (isDashing)
+        {
+            dashTimer -= Time.fixedDeltaTime;
+            if (dashTimer <= 0f) isDashing = false;
+        }
     }
 
     void StartDash()

@@ -13,16 +13,16 @@ MonoBehaviour:
   m_Name: SideFed
   m_EditorClassIdentifier: 
   weaponName: Scrapwind
-  damage: 9
-  ammoCapacity: 35
+  damage: 15
+  ammoCapacity: 25
   attackSpeed: 6.5
   weight: 3
-  orbCost: 1
+  orbCost: 3
   weaponIcon: {fileID: 981701276, guid: 88365eb93f90dc0448eb4a39ecadd679, type: 3}
   description: A janky marvel of war. Spits bullets faster than it should.
   fireType: auto
   recoil: 0.2
-  reloadTime: 1.5
+  reloadTime: 1.8
   fireSound: {fileID: 8300000, guid: c12bc10dadc48864987bf6e62042df18, type: 3}
   reloadSound: {fileID: 8300000, guid: 906e9c635237c064881504f7dcf6c8cf, type: 3}
   ammoType: {fileID: 6997994299401861888, guid: 8de6b050532025b4a891587baeb511f6, type: 3}
