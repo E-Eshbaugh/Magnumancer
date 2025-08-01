@@ -4900,6 +4900,7 @@ GameObject:
   serializedVersion: 6
   m_Component:
   - component: {fileID: 8039411072200692746}
+  - component: {fileID: 2888653046290964443}
   m_Layer: 0
   m_Name: EarthquakeEffect
   m_TagString: Untagged
@@ -4925,6 +4926,29 @@ Transform:
   - {fileID: 1541488591532976464}
   m_Father: {fileID: 0}
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
+--- !u!136 &2888653046290964443
+CapsuleCollider:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 8112580466174709235}
+  m_Material: {fileID: 0}
+  m_IncludeLayers:
+    serializedVersion: 2
+    m_Bits: 0
+  m_ExcludeLayers:
+    serializedVersion: 2
+    m_Bits: 0
+  m_LayerOverridePriority: 0
+  m_IsTrigger: 1
+  m_ProvidesContacts: 0
+  m_Enabled: 1
+  serializedVersion: 2
+  m_Radius: 4.5975585
+  m_Height: 9.195117
+  m_Direction: 1
+  m_Center: {x: -0.05483198, y: 0, z: 0.04386902}
 --- !u!1 &8812811328296446944
 GameObject:
   m_ObjectHideFlags: 0

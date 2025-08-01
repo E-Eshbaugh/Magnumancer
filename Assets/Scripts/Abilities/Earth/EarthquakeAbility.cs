@@ -1,3 +1,4 @@
+// === EarthquakeAbility.cs ===
 using System.Collections;
 using Magnumancer.Abilities;
 using UnityEngine;
@@ -7,9 +8,11 @@ public class EarthquakeAbility : MonoBehaviour, IActiveAbility
 {
     [Header("Earthquake Settings")]
     public float quakeRadius = 6f;
-    public float maxDamage = 100f;
     public float knockbackForce = 25f;
     public LayerMask damageLayers;
+    public float tickInterval = 0.25f;
+    public int damagePerTick = 25;
+    public float totalDuration = 1f;
 
     [Header("Effects")]
     public GameObject quakeVFX;
@@ -31,67 +34,83 @@ public class EarthquakeAbility : MonoBehaviour, IActiveAbility
         if (audioSource != null && quakeSFX != null)
             audioSource.PlayOneShot(quakeSFX);
 
-        CameraShake.Shake(0.4f, 1f);
+        // Camera shake
+        CameraShake.Shake(0.4f, 1.25f);
 
-
-        // AoE hit detection
-        Collider[] affected = Physics.OverlapSphere(origin, quakeRadius, damageLayers);
-        foreach (Collider nearby in affected)
+        // Rumble for the caster
+        var movement = caster.GetComponent<PlayerMovement3D>();
+        if (movement != null && movement.gamepad != null)
         {
-            Transform target = nearby.transform;
-            Vector3 direction = (target.position - origin).normalized;
-            float distance = Vector3.Distance(target.position, origin);
-
-            // Line-of-sight check
-            if (Physics.Linecast(origin, target.position, out RaycastHit hit))
-            {
-                // Ice wall block
-                IceWallEffect wallBlock = hit.transform.GetComponent<IceWallEffect>();
-                if (wallBlock != null && hit.transform != target)
-                {
-                    wallBlock.TakeDamage(Mathf.RoundToInt(maxDamage));
-                    continue;
-                }
-
-                if (hit.transform != target)
-                    continue;
-            }
-
-            // Damage falloff
-            float distancePercent = Mathf.Clamp01(1f - (distance / quakeRadius));
-            float damageToApply = maxDamage * distancePercent;
-
-            // Apply knockback force
-            Rigidbody rb = nearby.attachedRigidbody;
-            if (rb != null)
-                rb.AddForce(direction * knockbackForce * distancePercent, ForceMode.Impulse);
-
-            // Controller rumble
-            var movement = nearby.GetComponent<PlayerMovement3D>();
-            if (movement != null && movement.gamepad != null)
-            {
-                float low = 0.3f * distancePercent;
-                float high = 0.8f * distancePercent;
-                float duration = 0.4f;
-                movement.gamepad.SetMotorSpeeds(low, high);
-                StartCoroutine(StopRumble(movement.gamepad, duration));
-            }
-
-            // Damage players
-            var health = nearby.GetComponent<PlayerHealthControl>();
-            if (health != null)
-                health.TakeDamage(damageToApply);
-
-            // Damage ice wall directly if it's the actual target
-            var wall = nearby.GetComponent<IceWallEffect>();
-            if (wall != null)
-                wall.TakeDamage(Mathf.RoundToInt(damageToApply));
+            movement.gamepad.SetMotorSpeeds(0.6f, 1.0f);
+            StartCoroutine(StopRumble(movement.gamepad, 0.4f));
         }
+
+        // Start damage over time
+        StartCoroutine(DamageOverTime(caster, origin));
 
         if (destroyAfterImpact)
         {
             float delay = (quakeSFX != null) ? quakeSFX.length : 0f;
             Destroy(gameObject, delay);
+        }
+    }
+
+    private IEnumerator DamageOverTime(GameObject caster, Vector3 origin)
+    {
+        float elapsed = 0f;
+
+        while (elapsed < totalDuration)
+        {
+            Collider[] affected = Physics.OverlapSphere(origin, quakeRadius, damageLayers);
+            foreach (Collider nearby in affected)
+            {
+                GameObject target = nearby.gameObject;
+                if (target == caster) continue;
+
+                Vector3 direction = (target.transform.position - origin).normalized;
+                float distance = Vector3.Distance(target.transform.position, origin);
+
+                // Line-of-sight check
+                if (Physics.Linecast(origin, target.transform.position, out RaycastHit hit))
+                {
+                    IceWallEffect wallBlock = hit.transform.GetComponent<IceWallEffect>();
+                    if (wallBlock != null && hit.transform != target.transform)
+                    {
+                        wallBlock.TakeDamage(damagePerTick);
+                        continue;
+                    }
+
+                    if (hit.transform != target.transform)
+                        continue;
+                }
+
+                // Apply knockback (once on first tick only)
+                var movementScript = target.GetComponentInParent<PlayerMovement3D>();
+                if (elapsed == 0f && movementScript != null)
+                    movementScript.ApplyKnockback(direction * knockbackForce);
+
+                // Damage players
+                var health = target.GetComponentInParent<PlayerHealthControl>();
+                if (health != null)
+                    health.TakeDamage(damagePerTick);
+
+                // Rumble
+                if (movementScript != null && movementScript.gamepad != null)
+                {
+                    float low = 0.2f;
+                    float high = 0.6f;
+                    movementScript.gamepad.SetMotorSpeeds(low, high);
+                    StartCoroutine(StopRumble(movementScript.gamepad, 0.25f));
+                }
+
+                // Ice wall damage
+                var wall = target.GetComponentInParent<IceWallEffect>();
+                if (wall != null)
+                    wall.TakeDamage(damagePerTick);
+            }
+
+            elapsed += tickInterval;
+            yield return new WaitForSeconds(tickInterval);
         }
     }
 

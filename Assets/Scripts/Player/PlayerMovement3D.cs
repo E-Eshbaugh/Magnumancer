@@ -1,3 +1,4 @@
+// === PlayerMovement3D.cs ===
 using System.Collections;
 using UnityEngine;
 using UnityEngine.InputSystem;
@@ -26,9 +27,8 @@ public class PlayerMovement3D : MonoBehaviour
     [Header("Controller (set at runtime)")]
     public Gamepad gamepad = null;
     public int playerIndex = 0;
-    public WizardData wizard;        // optional if you want wizard stats to tweak movement
+    public WizardData wizard;
 
-    // Internal
     CharacterController controller;
     int jumpsRemaining;
     float verticalVelocity = 0f;
@@ -42,19 +42,21 @@ public class PlayerMovement3D : MonoBehaviour
 
     public float currentMoveSpeed;
 
-    #region Public API
-    /// <summary>Call from MultiplayerManager AFTER spawning/activating this player.</summary>
+    // Knockback handling
+    Vector3 knockbackVelocity = Vector3.zero;
+    float knockbackDecayRate = 10f;
+
+    public void ApplyKnockback(Vector3 force)
+    {
+        knockbackVelocity = force;
+    }
+
     public void Setup(int index, Gamepad pad, WizardData wiz = null)
     {
         playerIndex = index;
         gamepad = pad;
         wizard = wiz;
-
-        // If wizard modifies stats, do it here:
         currentMoveSpeed = baseMoveSpeed;
-        // Example: currentMoveSpeed += (wiz ? wiz.speedBonus : 0f);
-
-        // Reset state (e.g. when reusing prefab)
         jumpsRemaining = maxJumps;
         verticalVelocity = -0.5f;
         isDashing = false;
@@ -62,11 +64,9 @@ public class PlayerMovement3D : MonoBehaviour
         dashCooldownTimer = 0f;
         lastDirection = Vector3.forward;
 
-        // UI reset
         if (dashBar && dashBarSprites != null && dashBarSprites.Length > 0)
-            dashBar.sprite = dashBarSprites[^1]; // full bar
+            dashBar.sprite = dashBarSprites[^1];
     }
-    #endregion
 
     void Awake()
     {
@@ -80,7 +80,6 @@ public class PlayerMovement3D : MonoBehaviour
         if (gamepad == null) return;
         currentMoveSpeed = baseMoveSpeed * moveSpeedMultiplier;
 
-        // Cooldowns
         dashCooldownTimer = Mathf.Max(0f, dashCooldownTimer - Time.deltaTime);
         if (isDashing)
         {
@@ -88,11 +87,9 @@ public class PlayerMovement3D : MonoBehaviour
             if (dashTimer <= 0f) isDashing = false;
         }
 
-        // Input
         Vector2 stick = gamepad.leftStick.ReadValue();
         if (stick.sqrMagnitude < 0.01f) stick = Vector2.zero;
 
-        // Jump
         if (!isDashing && gamepad.buttonSouth.wasPressedThisFrame &&
             (controller.isGrounded || jumpsRemaining > 0))
         {
@@ -100,7 +97,6 @@ public class PlayerMovement3D : MonoBehaviour
             if (!controller.isGrounded) jumpsRemaining--;
         }
 
-        // Dash
         if (!isDashing && dashCooldownTimer <= 0f &&
             stick.sqrMagnitude > 0.01f &&
             gamepad.buttonEast.wasPressedThisFrame)
@@ -108,7 +104,6 @@ public class PlayerMovement3D : MonoBehaviour
             StartDash();
         }
 
-        // Direction
         Vector3 planar = new Vector3(stick.x, 0, stick.y).normalized;
         Vector3 isoDir = IsoRotation * planar;
         if (isoDir.sqrMagnitude > 0.01f && !isDashing)
@@ -118,29 +113,35 @@ public class PlayerMovement3D : MonoBehaviour
             ? lastDirection * dashSpeed
             : lastDirection * currentMoveSpeed * stick.magnitude;
 
-        // Gravity & jump reset
         if (controller.isGrounded)
         {
             if (verticalVelocity < 0f) verticalVelocity = -0.5f;
-            jumpsRemaining = maxJumps - 1; // you already used one when you jumped
+            jumpsRemaining = maxJumps - 1;
         }
         else
         {
             verticalVelocity += gravity * Time.deltaTime;
         }
 
-        // Move
-        Vector3 motion = new Vector3(horiz.x, verticalVelocity, horiz.z);
+        // === Apply knockback ===
+        Vector3 motion = new Vector3(horiz.x, verticalVelocity, horiz.z) + knockbackVelocity;
         controller.Move(motion * Time.deltaTime);
 
-        // Rotate
+        if (knockbackVelocity.sqrMagnitude > 0.01f)
+        {
+            knockbackVelocity = Vector3.Lerp(knockbackVelocity, Vector3.zero, knockbackDecayRate * Time.deltaTime);
+        }
+        else
+        {
+            knockbackVelocity = Vector3.zero;
+        }
+
         if (stick.sqrMagnitude > 0.01f && !isDashing)
         {
             Quaternion targetRot = Quaternion.LookRotation(lastDirection);
             transform.rotation = Quaternion.Slerp(transform.rotation, targetRot, 10f * Time.deltaTime);
         }
 
-        // Anim
         if (animator) animator.SetFloat("Speed", isDashing ? 1f : stick.magnitude);
     }
 
@@ -150,7 +151,6 @@ public class PlayerMovement3D : MonoBehaviour
         dashTimer = dashDuration;
         dashCooldownTimer = dashCooldown;
         StartDashRefill();
-        // TODO: dash FX / SFX
     }
 
     void StartDashRefill()
@@ -158,7 +158,7 @@ public class PlayerMovement3D : MonoBehaviour
         if (!dashBar || dashBarSprites == null || dashBarSprites.Length == 0)
             return;
 
-        dashBar.sprite = dashBarSprites[0];     // empty immediately
+        dashBar.sprite = dashBarSprites[0];
 
         if (dashRefill != null) StopCoroutine(dashRefill);
         dashRefill = StartCoroutine(DiscreteRefillCoroutine());
@@ -179,7 +179,7 @@ public class PlayerMovement3D : MonoBehaviour
 
         dashRefill = null;
     }
-    
+
     public void SetMoveSpeedMultiplier(float value)
     {
         moveSpeedMultiplier = value;
