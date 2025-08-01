@@ -30,4 +30,5 @@ MonoBehaviour:
     to attack with AoE weapons to slowly poison and decay their enemies.
   material: {fileID: 2100000, guid: 6da374a2d06ded5499da8399ed5ec7dc, type: 2}
   activeAbilityPrefab: {fileID: 2889606402612515821, guid: a335416b0155f0b4893450d1830ba771, type: 3}
+  abilityCooldown: 14
   customBulletPrefab: {fileID: 0}

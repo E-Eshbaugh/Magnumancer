@@ -31,4 +31,5 @@ MonoBehaviour:
     They crash in like waves\u2014overwhelming and personal."
   material: {fileID: 2100000, guid: 25ac3a8882121e843b62dcef38a94f6d, type: 2}
   activeAbilityPrefab: {fileID: 6621311588407131760, guid: a6cc53738622afe4d93c7fe152af4005, type: 3}
+  abilityCooldown: 20
   customBulletPrefab: {fileID: 0}

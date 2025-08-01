@@ -6,34 +6,42 @@ public class WizardAbilityController : MonoBehaviour
 {
     public WizardData wizardData;
     private IActiveAbility abilityInstance;
+    private AbilityCooldown cooldown;
     public Gamepad gamepad;
-    public bool isUsingAbility = false;
 
     private bool isInitialized = false;
 
-    public void Setup(Gamepad pad, WizardData wiz)
+    public void Setup(Gamepad pad, WizardData wiz, CircleAbilityUI ui)
     {
         gamepad = pad;
         wizardData = wiz;
-        isUsingAbility = false;
 
         if (wizardData == null)
         {
-            Debug.LogWarning("[WizardAbilityController on " + gameObject.name + "] wizardData is NULL in Setup()!");
+            Debug.LogWarning("[WizardAbilityController] WizardData is NULL!");
             return;
         }
 
         if (wizardData.activeAbilityPrefab == null)
         {
-            Debug.LogWarning("[WizardAbilityController on " + gameObject.name + "] activeAbilityPrefab is NULL in Setup()!");
+            Debug.LogWarning("[WizardAbilityController] activeAbilityPrefab is NULL!");
             return;
         }
 
+        // Instantiate ability object as a child
         GameObject abilityObj = Instantiate(wizardData.activeAbilityPrefab, transform);
         abilityInstance = abilityObj.GetComponent<IActiveAbility>();
+        cooldown = abilityObj.GetComponent<AbilityCooldown>();
+
         if (abilityInstance == null)
         {
-            Debug.LogWarning("[WizardAbilityController on " + gameObject.name + "] ability prefab does not implement IActiveAbility!");
+            Debug.LogWarning("[WizardAbilityController] ability prefab does not implement IActiveAbility!");
+        }
+
+        if (cooldown != null)
+        {
+            cooldown.cooldownTime = wizardData.abilityCooldown;
+            cooldown.ui = ui;
         }
 
         isInitialized = true;
@@ -45,7 +53,13 @@ public class WizardAbilityController : MonoBehaviour
 
         if (gamepad.buttonNorth.wasPressedThisFrame)
         {
+            if (cooldown != null && cooldown.IsOnCooldown())
+                return;
+
             abilityInstance?.Activate(gameObject);
+
+            if (cooldown != null)
+                cooldown.TriggerCooldown();
         }
     }
 }

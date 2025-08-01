@@ -32,6 +32,15 @@ public class MultiplayerManager : MonoBehaviour
 
             Debug.Log($"[MPM] Player {i} wizard: {(wizard != null ? wizard.wizardName : "NULL")}");
 
+            // === UI SETUP ===
+            if (i < uiControllers.Length && uiControllers[i] != null)
+            {
+                if (wizard != null)
+                    uiControllers[i].Setup(pad, wizard.factionEmblem);
+                else
+                    Debug.LogWarning($"[MPM] WizardData missing for player {i}, cannot assign crest sprite.");
+            }
+
             go.SetActive(true);
 
             // === SETUP SEQUENCE ===
@@ -44,21 +53,12 @@ public class MultiplayerManager : MonoBehaviour
             go.GetComponentInChildren<OverClock>()?.Setup(pad);
             go.GetComponentInChildren<LaserScope>()?.Setup(pad);
             go.GetComponentInChildren<AkimboController>()?.Setup(pad);
-            go.GetComponentInChildren<WizardAbilityController>()?.Setup(pad, wizard);
+            go.GetComponentInChildren<WizardAbilityController>()?.Setup(pad, wizard, uiControllers[i]);
             go.GetComponentInChildren<ArAbilityController>()?.Setup(pad);
 
             // Appearance
             var appearance = go.GetComponentInChildren<PlayerAppearance>();
             if (appearance != null) appearance.Setup(wizard);
-
-            // === UI SETUP ===
-            if (i < uiControllers.Length && uiControllers[i] != null)
-            {
-                if (wizard != null)
-                    uiControllers[i].Setup(pad, wizard.factionEmblem);
-                else
-                    Debug.LogWarning($"[MPM] WizardData missing for player {i}, cannot assign crest sprite.");
-            }
 
             Debug.Log($"Player {i} wired. Pad: {pad?.displayName ?? "None"}, Wizard: {wizard?.wizardName ?? "NULL"}, Guns: {loadout?.Length ?? 0}");
         }

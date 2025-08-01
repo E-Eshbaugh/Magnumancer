@@ -10,6 +10,7 @@ GameObject:
   m_Component:
   - component: {fileID: 2653668608608075578}
   - component: {fileID: 7523976680696313646}
+  - component: {fileID: 8447066676480572348}
   m_Layer: 0
   m_Name: WaterClone
   m_TagString: Untagged
@@ -46,4 +47,19 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   clonePrefab: {fileID: 2527497144285833712, guid: 12ebd03ee76826746996067ebd386779, type: 3}
   cloneDuration: 5
+  cloneOffset: {x: 1, y: 0, z: 0}
   smoke: {fileID: 5686695778626776538, guid: a4b7b272db0ba8c44b1c5cbd688a4ac2, type: 3}
+--- !u!114 &8447066676480572348
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 6621311588407131760}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 2a6ef723b6652b742b66d8037ab32029, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  cooldownTime: 15
+  ui: {fileID: 0}

@@ -29,4 +29,5 @@ MonoBehaviour:
     fortification spells and will power."
   material: {fileID: 2100000, guid: 8971174afe209f1418005a206bc72baa, type: 2}
   activeAbilityPrefab: {fileID: 9117129773369675752, guid: 5de43fb3f2671df4d952dce6b785b0cf, type: 3}
+  abilityCooldown: 15
   customBulletPrefab: {fileID: 0}

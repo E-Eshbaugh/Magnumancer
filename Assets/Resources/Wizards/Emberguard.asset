@@ -29,4 +29,5 @@ MonoBehaviour:
     their ferocity."
   material: {fileID: 2100000, guid: 8707fa60f1aa2a342902b29bfe61b828, type: 2}
   activeAbilityPrefab: {fileID: 8764547679241398014, guid: 50080926565b4ef448fd640f94f31775, type: 3}
+  abilityCooldown: 10
   customBulletPrefab: {fileID: 6997994299401861888, guid: 4d849fc1976060946ae9958de4546af5, type: 3}

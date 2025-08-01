@@ -10,6 +10,7 @@ GameObject:
   m_Component:
   - component: {fileID: 2201160408438549584}
   - component: {fileID: 4085566244843752278}
+  - component: {fileID: 1137297761995933430}
   m_Layer: 0
   m_Name: VoidShotAbility
   m_TagString: Untagged
@@ -47,3 +48,20 @@ MonoBehaviour:
   voidShotPrefab: {fileID: 147798454077762232, guid: 40ba2129c3638ac47b529d99a760cfaf, type: 3}
   launchForce: 100
   yOffset: -0.5
+  rumbleLow: 0.2
+  rumbleHigh: 0.6
+  rumbleDuration: 0.25
+--- !u!114 &1137297761995933430
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 5727223826685956371}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 2a6ef723b6652b742b66d8037ab32029, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  cooldownTime: 20
+  ui: {fileID: 0}

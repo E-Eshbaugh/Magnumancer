@@ -10,6 +10,7 @@ GameObject:
   m_Component:
   - component: {fileID: 1442736100712184697}
   - component: {fileID: -6756498310858124208}
+  - component: {fileID: -6544783158362599209}
   m_Layer: 0
   m_Name: HealCircleSummoner
   m_TagString: Untagged
@@ -45,3 +46,17 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   healCirclePrefab: {fileID: 8517108947949986111, guid: 2e82b3f884564d74f88bcd958956eddc, type: 3}
+--- !u!114 &-6544783158362599209
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 4533276989616956427}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 2a6ef723b6652b742b66d8037ab32029, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  cooldownTime: 20
+  ui: {fileID: 0}

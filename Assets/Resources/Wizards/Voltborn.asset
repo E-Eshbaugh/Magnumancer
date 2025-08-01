@@ -29,4 +29,5 @@ MonoBehaviour:
     their electrified combat style keeps enemies guessing."
   material: {fileID: 2100000, guid: 3e1004960baa19e4e827561df84af018, type: 2}
   activeAbilityPrefab: {fileID: 187213004098624151, guid: 5713f7fb4a4a6764aba95991e5df3c9b, type: 3}
+  abilityCooldown: 12
   customBulletPrefab: {fileID: 0}

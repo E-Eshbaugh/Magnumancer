@@ -10,6 +10,7 @@ GameObject:
   m_Component:
   - component: {fileID: 2819988891718968694}
   - component: {fileID: 2776232428599996713}
+  - component: {fileID: 2037228109593159900}
   m_Layer: 0
   m_Name: ViperMine
   m_TagString: Untagged
@@ -51,3 +52,17 @@ MonoBehaviour:
   mineCount: 3
   spinSpeed: 720
   spreadAngleDegrees: 20
+--- !u!114 &2037228109593159900
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 2889606402612515821}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 2a6ef723b6652b742b66d8037ab32029, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  cooldownTime: 14
+  ui: {fileID: 0}

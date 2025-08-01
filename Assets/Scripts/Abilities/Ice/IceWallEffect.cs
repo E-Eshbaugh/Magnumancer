@@ -16,29 +16,62 @@ public class IceWallEffect : MonoBehaviour
     [SerializeField] AudioClip destroySFX; // optional
     [SerializeField] AudioSource audioSource;
 
-    private int currentHealth;
+    private int currentHealth = 300;
     private float groundY;
+    public float riseHeight = 2f;
+    public float riseDuration = 0.3f;
+    public float meltDuration = 0.5f;
+
+    private Vector3 originalPosition;
+
+    void Awake()
+    {
+        originalPosition = transform.position;
+        transform.position -= Vector3.up * riseHeight;
+    }
 
     public void BeginRise()
     {
-        currentHealth = maxHealth;
+        StartCoroutine(Rise());
+    }
 
-        Vector3 above = transform.position + Vector3.up * raycastHeight;
-        if (Physics.Raycast(above, Vector3.down, out RaycastHit hit, raycastHeight + 10f, groundLayers))
+    public void BeginMelt()
+    {
+        StartCoroutine(MeltAndDestroy());
+    }
+
+    private IEnumerator Rise()
+    {
+        Vector3 start = transform.position;
+        Vector3 end = originalPosition;
+        float timer = 0f;
+
+        while (timer < riseDuration)
         {
-            groundY = hit.point.y;
-
-            Vector3 below = hit.point;
-            below.y -= riseFromBelow;
-            transform.position = below;
-
-            StartCoroutine(RiseToGround());
+            float t = timer / riseDuration;
+            transform.position = Vector3.Lerp(start, end, t);
+            timer += Time.deltaTime;
+            yield return null;
         }
-        else
+
+        transform.position = end;
+    }
+
+    private IEnumerator MeltAndDestroy()
+    {
+        Vector3 start = transform.position;
+        Vector3 end = start - Vector3.up * riseHeight;
+        float timer = 0f;
+
+        while (timer < meltDuration)
         {
-            Debug.LogWarning("IceWallEffect: Could not find valid ground.");
-            Destroy(gameObject);
+            float t = timer / meltDuration;
+            transform.position = Vector3.Lerp(start, end, t);
+            timer += Time.deltaTime;
+            yield return null;
         }
+
+        Destroy(gameObject);
     }
 
     IEnumerator RiseToGround()
@@ -77,4 +110,5 @@ public class IceWallEffect : MonoBehaviour
 
         Destroy(gameObject);
     }
+
 }

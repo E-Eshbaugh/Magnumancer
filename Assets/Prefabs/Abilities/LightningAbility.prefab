@@ -10,6 +10,7 @@ GameObject:
   m_Component:
   - component: {fileID: 1626467048269938922}
   - component: {fileID: 8158440375141110681}
+  - component: {fileID: 8689708664695181160}
   m_Layer: 0
   m_Name: LightningAbility
   m_TagString: Untagged
@@ -52,3 +53,17 @@ MonoBehaviour:
     m_Bits: 16
   thunderSound: {fileID: 8300000, guid: d67bd6f2d3888d843825c997bc83c138, type: 3}
   audioSource: {fileID: 0}
+--- !u!114 &8689708664695181160
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 187213004098624151}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 2a6ef723b6652b742b66d8037ab32029, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  cooldownTime: 12
+  ui: {fileID: 0}
