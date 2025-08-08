@@ -2,6 +2,7 @@ using UnityEngine;
 using UnityEngine.InputSystem;
 using UnityEngine.UI;
 using System.Collections;
+using Unity.VisualScripting;
 
 public class AmmoControl : MonoBehaviour
 {
@@ -136,15 +137,21 @@ public class AmmoControl : MonoBehaviour
                 UpdateAmmoBar();
             }
         }
-
-        if (gamepad.buttonWest.wasPressedThisFrame && audioSource && currentGun.reloadSound && ammoCount < currentGun.ammoCapacity)
+        else if (ammoCount == 0)
         {
-            ammoCount = 0;
             if (reloadCoroutine != null)
                 StopCoroutine(reloadCoroutine);
-
             reloadCoroutine = StartCoroutine(ReloadAmmoIncremental());
         }
+
+        if (gamepad.buttonWest.wasPressedThisFrame && audioSource && currentGun.reloadSound && ammoCount < currentGun.ammoCapacity)
+            {
+                ammoCount = 0;
+                if (reloadCoroutine != null)
+                    StopCoroutine(reloadCoroutine);
+
+                reloadCoroutine = StartCoroutine(ReloadAmmoIncremental());
+            }
     }
 
     public void OnGunEquipped(int index)
