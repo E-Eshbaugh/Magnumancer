@@ -16,13 +16,12 @@ public class MenuNavigationControl : MonoBehaviour
 
     [Header("-- Controllers & Subsystems --")]
     public ControllerConnectScript controllerConnectScript;
-    public ModeIconSelectScript[]  modeIconSelectScripts;
+    public ModeIconSelectScript[] modeIconSelectScripts;
     public CharacterSelectController characterSelectController;
     public WeaponSelectControl weaponSelectControl;
     public MapSelectController mapSelectController;
     public MagicManagement magicManagement;
     public CurPlayerTxtController curPlayerTxtController;
-
     #endregion
 
     #region Internal
@@ -38,7 +37,7 @@ public class MenuNavigationControl : MonoBehaviour
 
     private int playerCount = 1;
     private int selectedMode = 0;
-    private int selectedMap  = 0;
+    private int selectedMap = 0;
 
     private Gamepad masterPad;
     #endregion
@@ -67,15 +66,15 @@ public class MenuNavigationControl : MonoBehaviour
     void Start()
     {
         if (!characterSelectController) characterSelectController = FindFirstObjectByType<CharacterSelectController>();
-        if (!mapSelectController)       mapSelectController       = FindFirstObjectByType<MapSelectController>();
-        if (!weaponSelectControl)       weaponSelectControl       = FindFirstObjectByType<WeaponSelectControl>();
-        if (!magicManagement)           magicManagement           = FindFirstObjectByType<MagicManagement>();
+        if (!mapSelectController) mapSelectController = FindFirstObjectByType<MapSelectController>();
+        if (!weaponSelectControl) weaponSelectControl = FindFirstObjectByType<WeaponSelectControl>();
+        if (!magicManagement) magicManagement = FindFirstObjectByType<MagicManagement>();
 
         page3.SetActive(false); page4.SetActive(false);
         page5.SetActive(false); page6.SetActive(false);
         page7.SetActive(false); page8.SetActive(false);
 
-        foreach (var f in framesForward)  if (f) f.SetActive(false);
+        foreach (var f in framesForward) if (f) f.SetActive(false);
         foreach (var f in framesBackward) if (f) f.SetActive(false);
 
         phase = MenuPhase.ModeJoin;
@@ -95,30 +94,28 @@ public class MenuNavigationControl : MonoBehaviour
         if (hasStarted) return;
 
         Gamepad pad = ResolveActivePad();
-        if (pad == null)
-        {
-            // Only spam once per phase if needed
-            // Debug.LogWarning($"[MenuNav] pad NULL | phase:{phase} picker:{currentPicker} inputs:{DataManager.Instance.Inputs?.Length}");
-            return;
-        }
+        if (pad == null) return;
 
         if (pad.aButton.wasPressedThisFrame)
         {
             switch (phase)
             {
-                case MenuPhase.ModeJoin:    HandleModeJoinConfirm(); break;
-                case MenuPhase.WizardPick:  ConfirmWizard();          break;
-                case MenuPhase.LoadoutPick: ConfirmLoadout();         break;
-                case MenuPhase.MapPick:     ConfirmMap();             break;
+                case MenuPhase.ModeJoin: HandleModeJoinConfirm(); break;
+                case MenuPhase.WizardPick: ConfirmWizard(); break;
+                case MenuPhase.LoadoutPick: ConfirmLoadout(); break;
+                case MenuPhase.MapPick: ConfirmMap(); break;
             }
         }
         else if (pad.bButton.wasPressedThisFrame)
         {
             switch (phase)
             {
-                case MenuPhase.LoadoutPick: BackToWizard();      break;
-                case MenuPhase.WizardPick:  BackToModeJoin();    break;
-                case MenuPhase.MapPick:     BackToLastLoadout(); break;
+                case MenuPhase.LoadoutPick: BackToWizard(); break;
+                case MenuPhase.WizardPick:
+                    if (currentPicker == 0) BackToModeJoin();
+                    else BackToLastLoadoutForCurrentPlayer();
+                    break;
+                case MenuPhase.MapPick: BackToLastLoadout(); break;
             }
         }
     }
@@ -128,21 +125,18 @@ public class MenuNavigationControl : MonoBehaviour
     {
         if (masterPad == null) return;
 
-        // How many players actually joined
         playerCount = Mathf.Clamp(controllerConnectScript.numPlayers, 1, 4);
 
-        // Determine selected mode
         selectedMode = 0;
         if (modeIconSelectScripts != null)
             foreach (var mis in modeIconSelectScripts)
                 if (mis && mis.isActiveAndEnabled) { selectedMode = mis.currentIndex; break; }
 
-        // Save device order THEN init arrays (InitPlayers does NOT wipe Inputs)
         DataManager.Instance.SetInputs(controllerConnectScript.JoinedDevices);
         DataManager.Instance.InitPlayers(playerCount);
         DataManager.Instance.SelectedMode = selectedMode;
 
-        wizardLocked  = new bool[playerCount];
+        wizardLocked = new bool[playerCount];
         loadoutLocked = new bool[playerCount];
         currentPicker = 0;
 
@@ -171,7 +165,6 @@ public class MenuNavigationControl : MonoBehaviour
     private void ConfirmWizard()
     {
         var wiz = characterSelectController.selectedWizard;
-        Debug.Log($"[Menu] Player {currentPicker} selected wizard: {(wiz ? wiz.wizardName : "NULL")}");
         DataManager.Instance.SetWizard(currentPicker, wiz);
         wizardLocked[currentPicker] = true;
 
@@ -192,7 +185,7 @@ public class MenuNavigationControl : MonoBehaviour
 
     private void ConfirmLoadout()
     {
-        var src  = weaponSelectControl.inventoryData;
+        var src = weaponSelectControl.inventoryData;
         var copy = (WeaponData[])src.Clone();
         DataManager.Instance.SetLoadout(currentPicker, copy);
         loadoutLocked[currentPicker] = true;
@@ -263,7 +256,6 @@ public class MenuNavigationControl : MonoBehaviour
             curPlayerTxtController.SetCurrentDevice(pad);
         }
 
-
         hasStarted = true;
         StartCoroutine(pageBackwardAnimation(() =>
         {
@@ -302,18 +294,69 @@ public class MenuNavigationControl : MonoBehaviour
             hasStarted = false;
         }));
     }
+
+    private void BackToLastLoadoutForCurrentPlayer()
+    {
+        if (currentPicker <= 0)
+        {
+            BackToModeJoin(); // Fallback just in case
+            return;
+        }
+
+        currentPicker--; // Give control back to previous player
+        phase = MenuPhase.LoadoutPick;
+
+        hasStarted = true;
+        StartCoroutine(pageBackwardAnimation(() =>
+        {
+            SetWizardSelectActive(false);
+            SetLoadoutSelectActive(true);
+
+            // Update pad + visuals for previous player
+            var pad = DataManager.Instance.GetPad(currentPicker);
+            weaponSelectControl.SetActivePlayer(currentPicker, pad);
+            magicManagement.SetPlayer(currentPicker);
+
+            // Restore the emblem and inventory visuals
+            var savedLoadout = DataManager.Instance.GetLoadout(currentPicker);
+            if (savedLoadout != null)
+            {
+                for (int i = 0; i < weaponSelectControl.inventorySlots.Length; i++)
+                {
+                    if (i < savedLoadout.Length && savedLoadout[i] != null && savedLoadout[i] != weaponSelectControl.InventoryPlaceHolder)
+                    {
+                        weaponSelectControl.inventoryData[i] = savedLoadout[i];
+                        weaponSelectControl.inventorySlots[i].sprite = savedLoadout[i].weaponIcon;
+                        weaponSelectControl.inventorySlots[i].enabled = true;
+                    }
+                    else
+                    {
+                        weaponSelectControl.inventoryData[i] = weaponSelectControl.InventoryPlaceHolder;
+                        weaponSelectControl.inventorySlots[i].sprite = null;
+                        weaponSelectControl.inventorySlots[i].enabled = false;
+                    }
+                }
+
+                weaponSelectControl.SendMessage("PushSpentToUI"); // Update orb cost UI
+            }
+
+            hasStarted = false;
+        }));
+    }
+
+
     #endregion
 
     #region UI toggles
-    private void SetWizardSelectActive(bool on){ page3.SetActive(on); page4.SetActive(on); }
-    private void SetLoadoutSelectActive(bool on){ page5.SetActive(on); page6.SetActive(on); }
-    private void SetMapSelectActive(bool on){ page7.SetActive(on); page8.SetActive(on); }
+    private void SetWizardSelectActive(bool on) { page3.SetActive(on); page4.SetActive(on); }
+    private void SetLoadoutSelectActive(bool on) { page5.SetActive(on); page6.SetActive(on); }
+    private void SetMapSelectActive(bool on) { page7.SetActive(on); page8.SetActive(on); }
     #endregion
 
     #region Anim
     System.Collections.IEnumerator pageForwardAnimation(Action onComplete)
     {
-        if (framesForward == null || framesForward.Length == 0){ onComplete?.Invoke(); yield break; }
+        if (framesForward == null || framesForward.Length == 0) { onComplete?.Invoke(); yield break; }
 
         framesForward[currentBookIndex].SetActive(true);
         while (currentBookIndex < framesForward.Length - 1)
@@ -329,7 +372,7 @@ public class MenuNavigationControl : MonoBehaviour
 
     System.Collections.IEnumerator pageBackwardAnimation(Action onComplete)
     {
-        if (framesBackward == null || framesBackward.Length == 0){ onComplete?.Invoke(); yield break; }
+        if (framesBackward == null || framesBackward.Length == 0) { onComplete?.Invoke(); yield break; }
 
         framesBackward[currentBookIndex].SetActive(true);
         while (currentBookIndex < framesBackward.Length - 1)
@@ -343,7 +386,7 @@ public class MenuNavigationControl : MonoBehaviour
         onComplete?.Invoke();
     }
 
-    void ResetFrames(GameObject[] frames){ foreach (var f in frames) if (f) f.SetActive(false); }
+    void ResetFrames(GameObject[] frames) { foreach (var f in frames) if (f) f.SetActive(false); }
     #endregion
 
     #region Pads
