@@ -12,7 +12,7 @@ GameObject:
   - component: {fileID: 8263756560811728061}
   - component: {fileID: 8205800144846284229}
   m_Layer: 5
-  m_Name: CloneSmoke
+  m_Name: GoblinSmokeSpawn
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0

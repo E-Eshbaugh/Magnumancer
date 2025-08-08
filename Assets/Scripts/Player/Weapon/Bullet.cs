@@ -97,8 +97,18 @@ public class Bullet : MonoBehaviour
             }
         }
 
+        //Goblin
+        var goblin = hitCollider.GetComponent<GoblinHealth>();
+        if (goblin != null)
+        {
+            goblin.TakeDamage(damage);
+            Debug.Log("goblin shot");
+        }
+        else
+            Debug.Log("no goblin healthControl");
+
         // 3) snap both target and actual to impact
-        _targetPosition = hitPoint;
+            _targetPosition = hitPoint;
         transform.position = hitPoint;
 
         // 4) flash/destroy
