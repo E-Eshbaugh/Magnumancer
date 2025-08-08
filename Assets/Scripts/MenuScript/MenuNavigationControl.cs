@@ -21,6 +21,8 @@ public class MenuNavigationControl : MonoBehaviour
     public WeaponSelectControl weaponSelectControl;
     public MapSelectController mapSelectController;
     public MagicManagement magicManagement;
+    public CurPlayerTxtController curPlayerTxtController;
+
     #endregion
 
     #region Internal
@@ -153,7 +155,15 @@ public class MenuNavigationControl : MonoBehaviour
             phase = MenuPhase.WizardPick;
             SetWizardSelectActive(true);
 
-            characterSelectController.activePad = DataManager.Instance.GetPad(currentPicker);
+            var pad = DataManager.Instance.GetPad(currentPicker);
+            characterSelectController.activePad = pad;
+
+            if (curPlayerTxtController != null)
+            {
+                curPlayerTxtController.controllerConnect = controllerConnectScript;
+                curPlayerTxtController.SetCurrentDevice(pad);
+            }
+
             hasStarted = false;
         }));
     }
@@ -201,7 +211,15 @@ public class MenuNavigationControl : MonoBehaviour
                 SetLoadoutSelectActive(false);
                 SetWizardSelectActive(true);
 
-                characterSelectController.activePad = DataManager.Instance.GetPad(currentPicker);
+                var pad = DataManager.Instance.GetPad(currentPicker);
+                characterSelectController.activePad = pad;
+
+                if (curPlayerTxtController != null)
+                {
+                    curPlayerTxtController.controllerConnect = controllerConnectScript;
+                    curPlayerTxtController.SetCurrentDevice(pad);
+                }
+
                 hasStarted = false;
             }));
         }
@@ -236,7 +254,15 @@ public class MenuNavigationControl : MonoBehaviour
     private void BackToWizard()
     {
         phase = MenuPhase.WizardPick;
-        characterSelectController.activePad = DataManager.Instance.GetPad(currentPicker);
+        var pad = DataManager.Instance.GetPad(currentPicker);
+        characterSelectController.activePad = pad;
+
+        if (curPlayerTxtController != null)
+        {
+            curPlayerTxtController.controllerConnect = controllerConnectScript;
+            curPlayerTxtController.SetCurrentDevice(pad);
+        }
+
 
         hasStarted = true;
         StartCoroutine(pageBackwardAnimation(() =>
