@@ -56,6 +56,10 @@ public class LightningBlastDamage : MonoBehaviour
             if (health != null)
                 health.TakeDamage(damageToApply);
             
+            var goblin = nearby.GetComponent<GoblinHealth>();
+            if (goblin != null)
+                goblin.TakeDamage(damageToApply*2);
+            
             var stun = nearby.GetComponent<StunEffect>();
             if (stun != null)
                 stun.ApplyStun(0.2f, 0.2f, 5f); 

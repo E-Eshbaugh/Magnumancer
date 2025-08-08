@@ -104,6 +104,9 @@ public class GrenadeExplodeAfterDelay : MonoBehaviour
             var wall = nearby.GetComponent<IceWallEffect>();
             if (wall != null)
                 wall.TakeDamage(Mathf.RoundToInt(damageToApply));
+            var goblin = nearby.GetComponent<GoblinHealth>();
+            if (goblin != null)
+                goblin.TakeDamage(damageToApply*2);
         }
 
 

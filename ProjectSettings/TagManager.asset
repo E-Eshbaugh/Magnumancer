@@ -20,6 +20,8 @@ TagManager:
   - Hazard
   - Audio
   - IceWall
+  - Monster
+  - Monsters
   layers:
   - Default
   - TransparentFX

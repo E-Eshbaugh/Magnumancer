@@ -100,6 +100,13 @@ public class GrenadeExplodeOnImpact : MonoBehaviour
             var wall = nearby.GetComponent<IceWallEffect>();
             if (wall != null)
                 wall.TakeDamage(Mathf.RoundToInt(damageToApply));
+
+            var goblin = nearby.GetComponent<GoblinHealth>();
+            if (goblin != null)
+            {
+                Debug.Log("Blow up Goblin");
+                goblin.TakeDamage(damageToApply*2);
+            }
         }
 
         if (destroyAfterImpact)

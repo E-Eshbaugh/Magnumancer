@@ -92,6 +92,7 @@ MonoBehaviour:
   - Player2
   - Player3
   - Player4
+  - Monster
 --- !u!1 &4391894505192790014
 GameObject:
   m_ObjectHideFlags: 0

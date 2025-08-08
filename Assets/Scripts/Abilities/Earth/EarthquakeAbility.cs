@@ -94,6 +94,10 @@ public class EarthquakeAbility : MonoBehaviour, IActiveAbility
                 if (health != null)
                     health.TakeDamage(damagePerTick);
 
+                var goblin = nearby.GetComponent<GoblinHealth>();
+                if (goblin != null)
+                    goblin.TakeDamage(damagePerTick);
+
                 // Rumble
                 if (movementScript != null && movementScript.gamepad != null)
                 {

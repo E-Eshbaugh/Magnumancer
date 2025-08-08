@@ -103,6 +103,10 @@ public class CursedPlayer : MonoBehaviour
             var health = nearby.GetComponent<PlayerHealthControl>();
             if (health != null)
                 health.TakeDamage(damageToApply);
+            
+            var goblin = nearby.GetComponent<GoblinHealth>();
+            if (goblin != null)
+                goblin.TakeDamage(damageToApply);
 
             // Directly damage walls
             var wall = nearby.GetComponent<IceWallEffect>();

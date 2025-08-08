@@ -16,7 +16,7 @@ public class MineExplosionController : MonoBehaviour
     private bool isArmed = false;
     private bool hasExploded = false;
 
-    private static readonly string[] validPlayerTags = { "Player1", "Player2", "Player3", "Player4" };
+    private static readonly string[] validPlayerTags = { "Player1", "Player2", "Player3", "Player4", "Monster" };
 
     void Start()
     {
