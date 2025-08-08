@@ -88,7 +88,7 @@ public class MapSelectController : MonoBehaviour
             case 1: return "Stormspire";
             case 2: return "FungalHollow";
             case 3: return "Riftforge";
-            case 4: return "CinderCrucible";
+            case 4: return "CinderCrucibleZombies";
             case 5: return "DrownedSanctum";
             case 6: return "BlackOsuary";
             case 7: return "Frostgrave";
