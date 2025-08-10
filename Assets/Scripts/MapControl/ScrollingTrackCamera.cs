@@ -1,28 +1,28 @@
 using System.Collections.Generic;
 using UnityEngine;
 
-[ExecuteAlways]
+[DisallowMultipleComponent]
 public class ScrollingTrackCamera : MonoBehaviour
 {
     [Header("Players (tags: Player1..Player4)")]
     public bool autoFindPlayers = true;
 
     [Header("Track via Markers")]
-    public Transform startMarker;                 // REQUIRED
-    public Transform endMarker;                   // REQUIRED
-    [Tooltip("Flatten the track direction to XZ so the camera slides on the ground plane.")]
+    public Transform startMarker;     // REQUIRED
+    public Transform endMarker;       // REQUIRED
+    [Tooltip("Flatten track direction to XZ for isometric ground scrolling.")]
     public bool projectTrackToGround = true;
 
-    [Tooltip("Extra meters beyond the end marker the camera may travel (optional).")]
+    [Tooltip("Meters beyond end marker allowed.")]
     public float endPadding = 0f;
 
-    [Tooltip("Meters to lead ahead of the players along the track (optional).")]
+    [Tooltip("Meters to lead ahead of the average player along the track.")]
     public float leadAhead = 0f;
 
     [Header("Height")]
     [Tooltip("Keep camera Y locked to its start height (plus offset).")]
     public bool preserveStartHeight = true;
-    public float heightOffset = 0f;   // tweak if you want higher/lower than start
+    public float heightOffset = 0f;   // tweak globally
 
     [Header("Smoothing")]
     [Tooltip("Higher = snappier, lower = floatier (exp smoothing).")]
@@ -39,34 +39,41 @@ public class ScrollingTrackCamera : MonoBehaviour
 
     // Internals
     private Camera _cam;
-    private Vector3 _origin;        // start marker position (keeps its real Y)
+    private Vector3 _origin;        // start marker position (keeps real Y)
     private Vector3 _dir;           // normalized track direction (flattened if opted)
     private float _trackLength;     // distance from start to end along _dir
-    private Vector3 _lateralOffset; // preserves sideways offset (no Y)
+    private Vector3 _lateralOffset; // sideways offset (no Y)
     private float _startY;
 
     // ---------- Unity ----------
-    void OnEnable() { _cam = GetComponent<Camera>(); RebuildTrack(); }
-    void Start()    { RebuildTrack(); }
-    void Update()   { if (!Application.isPlaying) RebuildTrack(); }
+    void Awake()  { _cam = GetComponent<Camera>(); }
+    void OnValidate() { RebuildTrack(false); } // editor-safe: no height/offset recalc
+    void Start()
+    {
+        // Cache height and offsets ONCE at runtime
+        _startY = transform.position.y;
+        RebuildTrack(true); // compute lateral offset and lengths now
+    }
 
     void LateUpdate()
     {
+        if (!Application.isPlaying) return;          // <-- do nothing in edit mode
         if (!ValidateMarkers()) return;
+
         if (autoFindPlayers) _ = Players;
         if (_players.Count == 0) return;
 
         Vector3 avg = AveragePlayerPos();
 
-        // Project average player position onto the track
+        // Project average onto the track
         float t0 = Vector3.Dot(avg - _origin, _dir) + leadAhead;
         float t  = Mathf.Clamp(t0, 0f, _trackLength + Mathf.Max(0f, endPadding));
 
-        // Slide along the track, then add sideways/height handling
+        // Slide along track, add sideways offset
         Vector3 desired = _origin + _dir * t + _lateralOffset;
 
-        if (preserveStartHeight)
-            desired.y = _startY + heightOffset;
+        // Lock height if requested
+        if (preserveStartHeight) desired.y = _startY + heightOffset;
 
         float alpha = 1f - Mathf.Exp(-followLag * Time.deltaTime);
         transform.position = Vector3.Lerp(transform.position, desired, alpha);
@@ -77,9 +84,7 @@ public class ScrollingTrackCamera : MonoBehaviour
             float spread = FurthestPairDistance();
             float targetFov = Mathf.Clamp(minFOV + spread * spreadToFOV, minFOV, maxFOV);
             float zAlpha = 1f - Mathf.Exp(-zoomLag * Time.deltaTime);
-            _cam.fieldOfView = Vector3.Lerp(new Vector3(_cam.fieldOfView,0,0),
-                                            new Vector3(targetFov,0,0),
-                                            zAlpha).x;
+            _cam.fieldOfView = Mathf.Lerp(_cam.fieldOfView, targetFov, zAlpha);
         }
     }
 
@@ -141,17 +146,16 @@ public class ScrollingTrackCamera : MonoBehaviour
     // ---------- Track ----------
     private bool ValidateMarkers() => startMarker && endMarker;
 
-    private void RebuildTrack()
+    /// <param name="recomputeOffsets">
+    /// true at runtime start: also recompute lateral offset from current cam position;
+    /// false in editor: only refresh track geometry without touching cam-derived state.
+    /// </param>
+    private void RebuildTrack(bool recomputeOffsets)
     {
         if (!startMarker || !endMarker) return;
 
-        if (_cam == null) _cam = GetComponent<Camera>();
-        if (preserveStartHeight) _startY = transform.position.y;
-
-        // Keep origin at the start marker (real Y)
         _origin = startMarker.position;
 
-        // Direction from start to end; optionally flatten to ground for isometric tracks
         Vector3 dir = endMarker.position - startMarker.position;
         if (projectTrackToGround)
             dir = Vector3.ProjectOnPlane(dir, Vector3.up);
@@ -167,12 +171,23 @@ public class ScrollingTrackCamera : MonoBehaviour
             _trackLength = dir.magnitude;
         }
 
-        // Compute sideways offset (remove any component along the track; drop Y)
-        Vector3 camDelta = transform.position - _origin;
-        float tCam = Vector3.Dot(camDelta, _dir);
-        Vector3 camOnTrack = _origin + _dir * tCam;
-        _lateralOffset = Vector3.ProjectOnPlane(transform.position - camOnTrack, _dir);
-        _lateralOffset.y = 0f; // height handled by preserveStartHeight
+        if (recomputeOffsets)
+        {
+            // Compute sideways offset (remove track component; drop Y)
+            Vector3 camDelta = transform.position - _origin;
+            float tCam = Vector3.Dot(camDelta, _dir);
+            Vector3 camOnTrack = _origin + _dir * tCam;
+            _lateralOffset = Vector3.ProjectOnPlane(transform.position - camOnTrack, _dir);
+            _lateralOffset.y = 0f; // height handled separately
+        }
+    }
+
+    [ContextMenu("Recompute Offsets Now")]
+    private void RecomputeOffsetsNow()
+    {
+        // Handy if you move the camera/markers in play mode and want to re-anchor
+        RebuildTrack(true);
+        if (preserveStartHeight) _startY = transform.position.y;
     }
 
 #if UNITY_EDITOR
