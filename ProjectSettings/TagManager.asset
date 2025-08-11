@@ -22,6 +22,7 @@ TagManager:
   - IceWall
   - Monster
   - Monsters
+  - ProgressWall
   layers:
   - Default
   - TransparentFX

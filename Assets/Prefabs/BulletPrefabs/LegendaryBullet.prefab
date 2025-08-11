@@ -44,7 +44,7 @@ Light:
   serializedVersion: 11
   m_Type: 2
   m_Color: {r: 0.7019608, g: 0, b: 0, a: 1}
-  m_Intensity: 10
+  m_Intensity: 5
   m_Range: 10
   m_SpotAngle: 30
   m_InnerSpotAngle: 21.80208
@@ -231,6 +231,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 8376810653d88814a929a39a6376ccdc, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  damage: 10
   speed: 20
   flashIntensity: 3
   flashDuration: 0.1

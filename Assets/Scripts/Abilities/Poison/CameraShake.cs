@@ -13,7 +13,6 @@ public class CameraShake : MonoBehaviour
         else Destroy(gameObject);
 
         camTransform = Camera.main.transform;
-        originalPos = camTransform.localPosition;
     }
 
     public static void Shake(float intensity, float duration)
@@ -25,6 +24,9 @@ public class CameraShake : MonoBehaviour
 
     private IEnumerator DoShake(float intensity, float duration)
     {
+        // Store original position when shake begins
+        originalPos = camTransform.localPosition;
+
         float elapsed = 0f;
 
         while (elapsed < duration)
@@ -35,6 +37,7 @@ public class CameraShake : MonoBehaviour
             yield return null;
         }
 
+        // Restore to the position camera was at when shake started
         camTransform.localPosition = originalPos;
     }
 }

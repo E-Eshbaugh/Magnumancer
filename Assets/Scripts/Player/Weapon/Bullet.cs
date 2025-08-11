@@ -107,6 +107,12 @@ public class Bullet : MonoBehaviour
         else
             Debug.Log("no goblin healthControl");
 
+        var progWall = hitCollider.GetComponent<DestructibleWall>();
+        if (progWall)
+        {
+            progWall.TakeDamage(damage);
+            Debug.Log($"damaged ProgWall for {damage}");
+        }
         // 3) snap both target and actual to impact
             _targetPosition = hitPoint;
         transform.position = hitPoint;
