@@ -1010,7 +1010,8 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   baseMonsters:
   - {fileID: 5004298114529320299, guid: 8ba86e60bfc006f4391e2215ea08b66a, type: 3}
-  midBossMonsters: []
+  midBossMonsters:
+  - {fileID: 4302088671086319004, guid: a0884e96c2556f146b25f2b564c5b73a, type: 3}
   bossMonsters: []
   totalRounds: 10
   baseMonsterFactor: 3
