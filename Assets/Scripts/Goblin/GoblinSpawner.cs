@@ -18,8 +18,27 @@ public class GoblinSpawner : MonoBehaviour
     public Vector3 center = Vector3.zero;
     public Vector3 size = new Vector3(20f, 0f, 20f);
 
+    [Header("UI (optional)")]
+    [Tooltip("Assign your LegacyRomanWaveCounter, or leave empty to auto-find one in the scene.")]
+    public RomanWaveCounter waveCounter;
+
     private int currentWave = 0;
-    private List<GameObject> currentEnemies = new List<GameObject>();
+    private readonly List<GameObject> currentEnemies = new List<GameObject>();
+
+    public int CurrentWave => currentWave;
+
+    private void Awake()
+    {
+        // Auto-find a counter if not assigned
+        if (!waveCounter)
+        {
+#if UNITY_2023_1_OR_NEWER
+            waveCounter = FindAnyObjectByType<RomanWaveCounter>(FindObjectsInactive.Include);
+#else
+            waveCounter = FindObjectOfType<LegacyRomanWaveCounter>();
+#endif
+        }
+    }
 
     void Start()
     {
@@ -36,10 +55,13 @@ public class GoblinSpawner : MonoBehaviour
             return;
         }
 
+        // ✅ Update the on-screen wave text here
+        if (waveCounter) waveCounter.SetWave(currentWave);
+
         Debug.Log($"Starting Wave {currentWave}");
 
         int baseCount = currentWave * baseMonsterFactor;
-        int midCount = Mathf.FloorToInt(currentWave / 2f) * midBossFactor;
+        int midCount  = Mathf.FloorToInt(currentWave / 2f) * midBossFactor;
         int bossCount = Mathf.FloorToInt(currentWave / 4f) * bossMonsterFactor;
 
         SpawnEnemies(baseMonsters, baseCount);
@@ -60,8 +82,9 @@ public class GoblinSpawner : MonoBehaviour
             currentEnemies.Add(enemy);
 
             // Hook into destruction callback
-            GoblinDeathTracker tracker = enemy.AddComponent<GoblinDeathTracker>();
+            var tracker = enemy.AddComponent<GoblinDeathTracker>();
             tracker.spawner = this;
+            tracker.tracked = enemy;
         }
     }
 
@@ -77,12 +100,13 @@ public class GoblinSpawner : MonoBehaviour
 
     public void NotifyEnemyDeath(GameObject enemy)
     {
-        currentEnemies.Remove(enemy);
+        // Remove if we still track it
+        if (enemy) currentEnemies.Remove(enemy);
 
         if (currentEnemies.Count == 0)
         {
             Debug.Log($"Wave {currentWave} complete!");
-            Invoke(nameof(StartNextWave), 2f); // optional delay
+            Invoke(nameof(StartNextWave), 2f); // small breather before next wave
         }
     }
 

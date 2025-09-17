@@ -2,17 +2,18 @@ using UnityEngine;
 
 public class GoblinDeathTracker : MonoBehaviour
 {
-    public GoblinSpawner spawner;
+    [HideInInspector] public GoblinSpawner spawner;
+    [HideInInspector] public GameObject tracked;
 
-    [Header("Camera Shake On Death")]
-    public float shakeIntensity = 0.4f;
-    public float shakeDuration = 0.15f;
+    private bool _notified;
 
-    void OnDestroy()
+    private void OnDestroy()
     {
-        if (spawner != null)
-            spawner.NotifyEnemyDeath(gameObject);
+        // Avoid noise during scene unload or if spawner is gone
+        if (_notified || spawner == null) return;
 
-        CameraShake.Shake(shakeIntensity, shakeDuration);
+        _notified = true;
+        spawner.NotifyEnemyDeath(tracked ? tracked : gameObject);
     }
 }
+
