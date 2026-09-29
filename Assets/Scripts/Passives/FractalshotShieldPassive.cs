@@ -16,7 +16,12 @@ public class FractalshotShieldPassive : WizardPassive, IIncomingDamageModifier
     public float freezeStunMultiplier = 0.4f;
     public float freezeStunDuration = 1f;
 
+    public Color glowColor = new Color(0.55f, 0.85f, 1f);
+
     public float Shield { get; private set; }
+
+    // Icy glow that scales with the shield
+    void Update() => Glow.Set(glowColor, Shield / maxShield);
 
     readonly Dictionary<GameObject, float> lastStackTime = new();
 

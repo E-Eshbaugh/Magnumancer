@@ -15,6 +15,8 @@ public class StonebindPassive : WizardPassive, IIncomingDamageModifier
     public float armorPerSecond = 0.15f;
     public float maxArmor = 0.5f;          // 50% damage reduction
 
+    public Color glowColor = new Color(1f, 0.65f, 0.25f);
+
     float stillTime;
 
     /// Current damage reduction (0..maxArmor)
@@ -34,6 +36,9 @@ public class StonebindPassive : WizardPassive, IIncomingDamageModifier
             stillTime += Time.deltaTime;
         else
             stillTime = 0f;
+
+        // Warm glow that builds with armor
+        Glow.Set(glowColor, Armor / maxArmor);
     }
 
     public float ModifyIncoming(float amount, GameObject attacker) => amount * (1f - Armor);

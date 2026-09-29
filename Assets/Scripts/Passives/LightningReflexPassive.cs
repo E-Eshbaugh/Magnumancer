@@ -19,6 +19,8 @@ public class LightningReflexPassive : WizardPassive
     public Color boltStart = new Color(0.6f, 0.9f, 1f);
     public Color boltEnd = Color.white;
 
+    public Color glowColor = new Color(0.5f, 0.8f, 1f);
+
     float armedUntil;
     AmmoControl ammo;
     WizardAbilityController abilities;
@@ -50,6 +52,9 @@ public class LightningReflexPassive : WizardPassive
     }
 
     void Arm() => armedUntil = Time.time + window;
+
+    // Faint electric flicker while the bolt is armed
+    void Update() => Glow.Set(glowColor, Armed ? 0.6f : 0f, 25f);
 
     void HandleFired(int weaponDamage)
     {

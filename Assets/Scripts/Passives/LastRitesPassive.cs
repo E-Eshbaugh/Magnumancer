@@ -10,6 +10,8 @@ public class LastRitesPassive : WizardPassive, IOutgoingDamageModifier
     public float duration = 3f;
     public float damageMultiplier = 2f;
 
+    public Color glowColor = new Color(0.65f, 0.25f, 1f);
+
     float nextProc = -1f;
     float empoweredUntil;
 
@@ -17,6 +19,9 @@ public class LastRitesPassive : WizardPassive, IOutgoingDamageModifier
 
     void Update()
     {
+        // Pulsing violet glow while empowered
+        Glow.Set(glowColor, Empowered ? 1f : 0f, 6f);
+
         if (!IsAlive) return;
 
         if (health.stockCount > 0)

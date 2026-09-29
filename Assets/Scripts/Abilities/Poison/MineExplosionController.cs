@@ -32,6 +32,9 @@ public class MineExplosionController : MonoBehaviour
         Collider[] nearby = Physics.OverlapSphere(transform.position, detectionRadius);
         foreach (Collider col in nearby)
         {
+            // the Blightward who planted it can walk over their own mines
+            if (owner != null && DamageEvents.RootOf(col) == owner) continue;
+
             foreach (string tag in validPlayerTags)
             {
                 if (col.CompareTag(tag))
@@ -59,7 +62,10 @@ public class MineExplosionController : MonoBehaviour
             Vector3 pos = spawnPoint ? spawnPoint.position : transform.position;
             var cloud = Instantiate(poisonCloudPrefab, pos, Quaternion.identity);
             if (cloud.TryGetComponent<PoisonCloudHazard>(out var hazard))
+            {
                 hazard.owner = owner;
+                hazard.ownerImmune = true; // your own poison doesn't hurt you
+            }
         }
 
         // 2. Camera shake

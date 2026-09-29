@@ -23,6 +23,10 @@ public abstract class WizardPassive : MonoBehaviour
 
     protected bool IsAlive => health != null && !health.IsDead;
 
+    PassiveGlow glow;
+    /// Subtle glow around the player for buff indicators
+    protected PassiveGlow Glow => glow ? glow : (glow = PassiveGlow.On(gameObject));
+
     /// Spawns the wizard's passiveEffectPrefab (if any). lifetime <= 0 leaves cleanup to the prefab.
     protected GameObject SpawnEffect(Vector3 position, float lifetime)
     {
