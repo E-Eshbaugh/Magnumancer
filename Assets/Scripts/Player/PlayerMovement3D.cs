@@ -117,7 +117,7 @@ public class PlayerMovement3D : MonoBehaviour
 
         Vector3 horiz = isDashing
             ? lastDirection * dashSpeed
-            : lastDirection * currentMoveSpeed * stick.magnitude;
+            : lastDirection * currentMoveSpeed * moveSpeedMultiplier * stick.magnitude;
 
         moveDirection = new Vector3(horiz.x, verticalVelocity, horiz.z);
 

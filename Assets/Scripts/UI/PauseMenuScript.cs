@@ -26,7 +26,7 @@ public class PauseMenScript: MonoBehaviour
         bool menuPressed = (_gamepad != null && 
                             (_gamepad.startButton.wasPressedThisFrame 
                              || _gamepad.startButton?.wasPressedThisFrame == true))
-                           || Keyboard.current.escapeKey.wasPressedThisFrame;
+                           || (Keyboard.current != null && Keyboard.current.escapeKey.wasPressedThisFrame);
 
         if (menuPressed)
             TogglePause();
@@ -34,7 +34,9 @@ public class PauseMenScript: MonoBehaviour
 
     private void TogglePause()
     {
-        _isPaused = !_isPaused;
+        // PauseUIControl can close the menu itself (Resume / B), so read the
+        // menu's real state instead of trusting our own flag.
+        _isPaused = pauseMenuUI != null ? !pauseMenuUI.activeSelf : !_isPaused;
 
         // Show/hide UI
         if (pauseMenuUI != null)

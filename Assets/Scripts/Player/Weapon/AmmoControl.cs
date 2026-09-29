@@ -31,6 +31,7 @@ public class AmmoControl : MonoBehaviour
     public GameObject currentAmmoPrefab;
     private bool isReloading = false;
     private Coroutine reloadCoroutine;
+    private readonly System.Collections.Generic.List<WeaponData> runtimeGuns = new();
 
     void Awake()
     {
@@ -43,7 +44,24 @@ public class AmmoControl : MonoBehaviour
         gamepad = pad;
         wizard = wiz;
         guns = srcLoadout != null ? (WeaponData[])srcLoadout.Clone() : new WeaponData[4];
+
+        // Give this player their own runtime copy of each weapon so abilities
+        // like OverClock can tweak stats without editing the shared asset.
+        for (int i = 0; i < guns.Length; i++)
+        {
+            if (guns[i] == null) continue;
+            guns[i] = Instantiate(guns[i]);
+            runtimeGuns.Add(guns[i]);
+        }
+
         OnGunEquipped(0);
+    }
+
+    void OnDestroy()
+    {
+        foreach (var gun in runtimeGuns)
+            if (gun != null) Destroy(gun);
+        runtimeGuns.Clear();
     }
 
     void Update()

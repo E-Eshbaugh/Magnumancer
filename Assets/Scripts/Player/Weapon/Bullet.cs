@@ -7,6 +7,8 @@ public class Bullet : MonoBehaviour
     public int damage = 10;
     [Tooltip("Speed in units/sec")]
     public float speed = 20f;
+    [Tooltip("Seconds before a bullet that hits nothing is destroyed")]
+    public float lifetime = 5f;
 
     [Header("Explosion Flash")]
     public float flashIntensity = 8f;
@@ -15,6 +17,7 @@ public class Bullet : MonoBehaviour
     private Vector3 _direction;
     private Light   _light;
     private float   _originalIntensity;
+    private bool    _hasHit;
 
     // internal target position computed in FixedUpdate
     private Vector3 _targetPosition;
@@ -29,6 +32,9 @@ public class Bullet : MonoBehaviour
 
         // initialize targetPosition to current
         _targetPosition = transform.position;
+
+        // clean up bullets that miss everything
+        Destroy(gameObject, lifetime);
     }
 
     public void Initialize(Vector3 dir)
@@ -38,11 +44,15 @@ public class Bullet : MonoBehaviour
 
     void FixedUpdate()
     {
+        // already hit something; just waiting on the flash to finish
+        if (_hasHit) return;
+
         // compute how far to move this physics step
         float moveDist = speed * Time.fixedDeltaTime;
 
-        // raycast ahead
-        if (Physics.Raycast(_targetPosition, _direction, out RaycastHit hit, moveDist))
+        // raycast ahead (ignore triggers like poison clouds and lava trails)
+        if (Physics.Raycast(_targetPosition, _direction, out RaycastHit hit, moveDist,
+                Physics.DefaultRaycastLayers, QueryTriggerInteraction.Ignore))
         {
             HandleHit(hit.collider, hit.point);
             // after a hit we stop updating movement
@@ -69,6 +79,8 @@ public class Bullet : MonoBehaviour
         // 1) ignore other bullets
         if (hitCollider.GetComponentInParent<Bullet>() != null)
             return;
+
+        _hasHit = true;
 
         // 2) damage player if found
         var ph = hitCollider.GetComponentInParent<PlayerHealthControl>();

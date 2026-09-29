@@ -28,10 +28,10 @@ public class FireDashAbility : MonoBehaviour, IActiveAbility
         Debug.Log("FireDash activated!");
         if (_fireDashing) return;
 
+        // Read the caster's own pad (Gamepad.current is whoever touched a controller last)
         Vector2 stick = Vector2.zero;
-        var playerInput = caster.GetComponent<PlayerInput>();
-        if (playerInput != null && Gamepad.current != null)
-            stick = Gamepad.current.leftStick.ReadValue();
+        if (caster.TryGetComponent<PlayerMovement3D>(out var movement) && movement.gamepad != null)
+            stick = movement.gamepad.leftStick.ReadValue();
 
         Vector3 dir3 = new Vector3(stick.x, 0f, stick.y);
 

@@ -21,18 +21,12 @@ public class LightningTeleportAbility : MonoBehaviour, IActiveAbility
             blast.TriggerBlast(caster.transform.position, caster);
         }
         Debug.Log("LightningTeleport activated!");
-        var playerInput = caster.GetComponent<PlayerInput>();
-        if (playerInput != null)
+        // Use the caster's own pad (assigned by MultiplayerManager)
+        Gamepad gamepad = caster.TryGetComponent<PlayerMovement3D>(out var movement) ? movement.gamepad : null;
+        if (gamepad != null)
         {
-            foreach (var device in playerInput.devices)
-            {
-                if (device is Gamepad gamepad)
-                {
-                    gamepad.SetMotorSpeeds(0.6f, 1.0f); // ⚡ Light + heavy motor
-                    caster.GetComponent<MonoBehaviour>().StartCoroutine(StopRumble(gamepad));
-                    break; // only trigger the first matching gamepad
-                }
-            }
+            gamepad.SetMotorSpeeds(0.6f, 1.0f); // ⚡ Light + heavy motor
+            caster.GetComponent<MonoBehaviour>().StartCoroutine(StopRumble(gamepad));
         }
 
         audioSource = caster.GetComponent<AudioSource>();
@@ -55,7 +49,7 @@ public class LightningTeleportAbility : MonoBehaviour, IActiveAbility
         Debug.Log("Feet position start: " + feetStart);
 
         // 🎮 Read stick input
-        Vector2 stick = Gamepad.current?.leftStick.ReadValue() ?? Vector2.zero;
+        Vector2 stick = gamepad?.leftStick.ReadValue() ?? Vector2.zero;
         Vector3 dir3 = new Vector3(stick.x, 0f, stick.y);
 
         if (dir3.sqrMagnitude < 0.0001f)

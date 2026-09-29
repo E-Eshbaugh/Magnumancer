@@ -58,6 +58,15 @@ public class PoisonCloudHazard : MonoBehaviour
         while (true)
         {
             yield return new WaitForSeconds(tickInterval);
+
+            // Target died (goblins are destroyed, players deactivated) without
+            // triggering OnTriggerExit — stop ticking on it.
+            if (player == null || !player.activeInHierarchy)
+            {
+                activeDamageCoroutines.Remove(player);
+                yield break;
+            }
+
             ApplyDamage(player);
         }
     }
