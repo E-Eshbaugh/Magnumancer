@@ -9,6 +9,7 @@ public class GrenadeExplodeAfterDelay : MonoBehaviour
     public float explosionForce = 700f;
     public float maxDamage = 25f;
     public LayerMask damageLayers;
+    [HideInInspector] public GameObject owner; // player who fired it (damage credit)
     public float fuseTime = 3f;
 
     [Header("Audio & VFX")]
@@ -111,7 +112,7 @@ public class GrenadeExplodeAfterDelay : MonoBehaviour
             // Damage player or object
             var health = nearby.GetComponent<PlayerHealthControl>();
             if (health != null)
-                health.TakeDamage(damageToApply);
+                health.TakeDamage(damageToApply, owner);
 
             // Also damage ice wall directly if it’s the target
             var wall = nearby.GetComponent<IceWallEffect>();
@@ -119,7 +120,7 @@ public class GrenadeExplodeAfterDelay : MonoBehaviour
                 wall.TakeDamage(Mathf.RoundToInt(damageToApply));
             var goblin = nearby.GetComponent<GoblinHealth>();
             if (goblin != null)
-                goblin.TakeDamage(damageToApply*2);
+                goblin.TakeDamage(damageToApply*2, owner);
         }
 
 

@@ -31,3 +31,5 @@ MonoBehaviour:
   activeAbilityPrefab: {fileID: 9117129773369675752, guid: 5de43fb3f2671df4d952dce6b785b0cf, type: 3}
   abilityCooldown: 15
   customBulletPrefab: {fileID: 0}
+  passive: 4
+  passiveEffectPrefab: {fileID: 0}

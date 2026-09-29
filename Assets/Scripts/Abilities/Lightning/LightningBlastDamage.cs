@@ -61,15 +61,15 @@ public class LightningBlastDamage : MonoBehaviour
             // Health damage
             var health = nearby.GetComponent<PlayerHealthControl>();
             if (health != null)
-                health.TakeDamage(damageToApply);
+                health.TakeDamage(damageToApply, caster);
             
             var goblin = nearby.GetComponent<GoblinHealth>();
             if (goblin != null)
-                goblin.TakeDamage(damageToApply*2);
+                goblin.TakeDamage(damageToApply*2, caster);
             
-            var stun = nearby.GetComponent<StunEffect>();
-            if (stun != null)
-                stun.ApplyStun(0.2f, 0.2f, 5f); 
+            // Blinkstorm's shock pulse stuns players and monsters alike
+            if (DamageEvents.IsCombatant(victim))
+                StatusEffects.Of(victim).Stun(0.2f, 5f);
 
             // Direct hit to ice wall
             var wall = nearby.GetComponent<IceWallEffect>();

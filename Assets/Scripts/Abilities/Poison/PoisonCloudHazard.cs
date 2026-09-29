@@ -9,6 +9,9 @@ public class PoisonCloudHazard : MonoBehaviour
     public float tickInterval = 1f;
     public string[] playerTags = { "Player1", "Player2", "Player3", "Player4", "Monster"};
 
+    [HideInInspector] public GameObject owner;     // who created the cloud (damage credit)
+    [HideInInspector] public bool ownerImmune;     // Virulent Shroud clouds spare their owner
+
     private Dictionary<GameObject, Coroutine> activeDamageCoroutines = new();
 
     private void OnTriggerEnter(Collider other)
@@ -35,6 +38,7 @@ public class PoisonCloudHazard : MonoBehaviour
 
     private bool IsPlayer(GameObject obj)
     {
+        if (ownerImmune && obj == owner) return false;
         foreach (string tag in playerTags)
         {
             if (obj.CompareTag(tag))
@@ -70,11 +74,11 @@ public class PoisonCloudHazard : MonoBehaviour
     {
         if (player.TryGetComponent<PlayerHealthControl>(out var health))
         {
-            health.TakeDamage(damagePerSecond);
+            health.TakeDamage(damagePerSecond, owner);
         }
         else if (player.TryGetComponent<GoblinHealth>(out var goblinHealth))
         {
-            goblinHealth.TakeDamage(damagePerSecond);
+            goblinHealth.TakeDamage(damagePerSecond, owner);
         }
         else
         {

@@ -9,6 +9,7 @@ public class GrenadeExplodeOnImpact : MonoBehaviour
     public float explosionForce = 700f;
     private float maxDamage = 25f;
     public LayerMask damageLayers;
+    [HideInInspector] public GameObject owner; // player who fired it (damage credit)
 
     [Header("Audio & VFX")]
     public GameObject explosionEffect;
@@ -107,7 +108,7 @@ public class GrenadeExplodeOnImpact : MonoBehaviour
             // Health damage
             var health = nearby.GetComponent<PlayerHealthControl>();
             if (health != null)
-                health.TakeDamage(damageToApply);
+                health.TakeDamage(damageToApply, owner);
 
             // Damage ice wall directly if it's the actual target
             var wall = nearby.GetComponent<IceWallEffect>();
@@ -118,7 +119,7 @@ public class GrenadeExplodeOnImpact : MonoBehaviour
             if (goblin != null)
             {
                 Debug.Log("Blow up Goblin");
-                goblin.TakeDamage(damageToApply*2);
+                goblin.TakeDamage(damageToApply*2, owner);
             }
         }
 

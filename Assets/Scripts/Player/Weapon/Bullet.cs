@@ -14,6 +14,8 @@ public class Bullet : MonoBehaviour
     public float flashIntensity = 8f;
     public float flashDuration = 0.1f;
 
+    [HideInInspector] public GameObject owner; // player who fired it (damage credit)
+
     private Vector3 _direction;
     private Light   _light;
     private float   _originalIntensity;
@@ -102,7 +104,7 @@ public class Bullet : MonoBehaviour
                     break;
         }
         if (ph != null)
-            ph.TakeDamage(damage);
+            ph.TakeDamage(damage, owner);
 
         //iceWall effect
         var iceWall = hitCollider.GetComponent<IceWallEffect>();
@@ -122,7 +124,7 @@ public class Bullet : MonoBehaviour
         //Goblin
         var goblin = hitCollider.GetComponent<GoblinHealth>();
         if (goblin != null)
-            goblin.TakeDamage(damage);
+            goblin.TakeDamage(damage, owner);
 
         var progWall = hitCollider.GetComponent<DestructibleWall>();
         if (progWall)

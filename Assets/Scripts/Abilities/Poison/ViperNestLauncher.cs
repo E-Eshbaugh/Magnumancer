@@ -48,16 +48,18 @@ public class ViperNestAbility : MonoBehaviour, IActiveAbility
             }
 
             Vector3 spreadDirection = Quaternion.Euler(0f, angleOffset, 0f) * baseAim;
-            LaunchMine(spawnPos, spreadDirection);
+            LaunchMine(spawnPos, spreadDirection, caster);
             yield return new WaitForSeconds(delayBetweenMines);
         }
 
         isRunning = false;
     }
 
-    private void LaunchMine(Vector3 spawnPosition, Vector3 aimDirection)
+    private void LaunchMine(Vector3 spawnPosition, Vector3 aimDirection, GameObject caster)
     {
         GameObject mine = Instantiate(minePrefab, spawnPosition, Quaternion.identity);
+        if (mine.TryGetComponent<MineExplosionController>(out var explosion))
+            explosion.owner = caster;
 
         Rigidbody rb = mine.GetComponent<Rigidbody>();
         if (rb != null)

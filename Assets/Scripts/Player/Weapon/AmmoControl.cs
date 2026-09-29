@@ -24,6 +24,10 @@ public class AmmoControl : MonoBehaviour
     public AudioSource audioSource;
 
     private FireController3D fire;
+    private PlayerMovement3D movement;
+
+    /// Raised after each trigger pull that fires (arg: per-projectile damage) — Lightning Reflex
+    public event System.Action<int> OnFired;
     public int currentGunIndex;
     public WeaponData currentGun;
     public int ammoCount;
@@ -36,6 +40,7 @@ public class AmmoControl : MonoBehaviour
     void Awake()
     {
         fire = GetComponent<FireController3D>();
+        movement = GetComponentInParent<PlayerMovement3D>();
         if (!fire) Debug.LogError($"{name}: No FireController3D found!");
     }
 
@@ -157,6 +162,7 @@ public class AmmoControl : MonoBehaviour
 
             if (didFire)
             {
+                OnFired?.Invoke(damage);
                 ammoCount--;
                 nextFireTime = now + 1f / currentGun.attackSpeed;
                 UpdateAmmoBar();
@@ -191,6 +197,9 @@ public class AmmoControl : MonoBehaviour
 
         currentGunIndex = index;
         currentGun = guns[index];
+
+        // Heavier guns slow you down
+        if (movement != null) movement.SetCarriedWeight(currentGun != null ? currentGun.weight : 0);
         currentAmmoPrefab = (wizard != null && wizard.customBulletPrefab != null && !currentGun.megaBomb)
             ? wizard.customBulletPrefab
             : currentGun.baseAmmoType;

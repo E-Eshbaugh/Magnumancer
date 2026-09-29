@@ -66,6 +66,14 @@ public class MultiplayerManager : MonoBehaviour
             var appearance = go.GetComponentInChildren<PlayerAppearance>();
             if (appearance != null) appearance.Setup(wizard);
 
+            // Wizard stats: hearts are lives, plus the wizard's passive
+            var health = go.GetComponentInChildren<PlayerHealthControl>();
+            if (health != null && wizard != null)
+            {
+                health.SetLives(Mathf.Max(1, wizard.heartCount));
+                WizardPassive.AddTo(health.gameObject, wizard);
+            }
+
             Debug.Log($"Player {i} wired. Pad: {pad?.displayName ?? "None"}, Wizard: {wizard?.wizardName ?? "NULL"}, Guns: {loadout?.Length ?? 0}");
         }
 

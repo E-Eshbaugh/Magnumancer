@@ -11,6 +11,12 @@ public class FireController3D : MonoBehaviour
     public Transform firePoint;            // your muzzle or placeholder
     public float bulletSpeed = 20f;
 
+    [Tooltip("Scales recoil (controller kick) — Stonebind halves it")]
+    public float recoilMultiplier = 1f;
+
+    // Player this gun belongs to (credited with bullet/grenade damage)
+    public GameObject Owner { get; private set; }
+
     public void Setup(Gamepad pad)
     {
         gamepad = pad;
@@ -20,6 +26,8 @@ public class FireController3D : MonoBehaviour
     {
         if (firePoint == null)
             Debug.LogError($"{name}: firePoint is not assigned!");
+
+        Owner = OwnerPlayer();
     }
 
     /// <summary>
@@ -33,6 +41,8 @@ public class FireController3D : MonoBehaviour
             Debug.LogError($"{name}: Missing prefab or firePoint in Shoot()");
             return;
         }
+
+        recoil *= recoilMultiplier;
 
         if (gamepad != null)
         {
@@ -61,6 +71,7 @@ public class FireController3D : MonoBehaviour
         if (proj.TryGetComponent<Bullet>(out var bulletComp))
         {
             if (damage >= 0) bulletComp.damage = damage;
+            bulletComp.owner = Owner;
             bulletComp.Initialize(dir);
         }
         else if (proj.TryGetComponent<Rigidbody>(out var rb))
@@ -69,8 +80,11 @@ public class FireController3D : MonoBehaviour
         }
 
         // Grenade-launcher rounds: the weapon's damage is the blast's max damage
-        if (damage >= 0 && proj.TryGetComponent<GrenadeExplodeAfterDelay>(out var timeGrenade))
-            timeGrenade.maxDamage = damage;
+        if (proj.TryGetComponent<GrenadeExplodeAfterDelay>(out var timeGrenade))
+        {
+            timeGrenade.owner = Owner;
+            if (damage >= 0) timeGrenade.maxDamage = damage;
+        }
     }
 
     private IEnumerator HapticRecoil(Gamepad pad, float low, float high)
@@ -81,5 +95,12 @@ public class FireController3D : MonoBehaviour
         pad.SetMotorSpeeds(low * 0.5f, high * 0.7f);
         yield return new WaitForSeconds(0.1f);
         pad.SetMotorSpeeds(0f, 0f);
+    }
+
+    // The player object this component belongs to (Unity-null safe)
+    GameObject OwnerPlayer()
+    {
+        var player = GetComponentInParent<PlayerMovement3D>();
+        return player != null ? player.gameObject : null;
     }
 }

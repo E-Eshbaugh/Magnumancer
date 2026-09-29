@@ -16,4 +16,22 @@ public class WizardData : ScriptableObject
     public GameObject activeAbilityPrefab;
     public float abilityCooldown;
     public GameObject customBulletPrefab;
+
+    [Header("Passive")]
+    public PassiveType passive;
+    [Tooltip("VFX/prefab the passive spawns (poison cloud, fire burst, ice shield, bolt impact)")]
+    public GameObject passiveEffectPrefab;
+}
+
+public enum PassiveType
+{
+    None = 0,
+    VirulentShroud = 1,   // Blightward
+    BrandOfFlereous = 2,  // Emberguard
+    FractalshotShield = 3,// Frostwarden
+    Stonebind = 4,        // Granite Vow
+    LastRites = 5,        // The Hollow
+    Undercurrent = 6,     // Tidebound
+    VerdantResurgence = 7,// Verdant Circle
+    LightningReflex = 8   // Voltborn
 }

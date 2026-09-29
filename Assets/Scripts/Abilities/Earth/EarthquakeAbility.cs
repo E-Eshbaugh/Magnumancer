@@ -14,6 +14,8 @@ public class EarthquakeAbility : MonoBehaviour, IActiveAbility
     public float tickInterval = 0.25f;
     public int damagePerTick = 25;
     public float totalDuration = 1f;
+    public float stunDuration = 1f;
+    public float stunSpeedMultiplier = 0.3f;
 
     [Header("Effects")]
     public GameObject quakeVFX;
@@ -95,14 +97,18 @@ public class EarthquakeAbility : MonoBehaviour, IActiveAbility
                 if (elapsed == 0f && movementScript != null)
                     movementScript.ApplyKnockback(direction * knockbackForce);
 
+                // Seismic Judgement: the first shockwave briefly stuns
+                if (elapsed == 0f && DamageEvents.IsCombatant(victim))
+                    StatusEffects.Of(victim).Stun(stunSpeedMultiplier, stunDuration);
+
                 // Damage players
                 var health = target.GetComponentInParent<PlayerHealthControl>();
                 if (health != null)
-                    health.TakeDamage(damagePerTick);
+                    health.TakeDamage(damagePerTick, caster);
 
                 var goblin = nearby.GetComponent<GoblinHealth>();
                 if (goblin != null)
-                    goblin.TakeDamage(damagePerTick);
+                    goblin.TakeDamage(damagePerTick, caster);
 
                 // Rumble
                 if (movementScript != null && movementScript.gamepad != null)

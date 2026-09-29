@@ -13,6 +13,8 @@ public class MineExplosionController : MonoBehaviour
     [Header("Audio")]
     public AudioClip explosionClip;
 
+    [HideInInspector] public GameObject owner; // Blightward who launched it
+
     private bool isArmed = false;
     private bool hasExploded = false;
 
@@ -55,7 +57,9 @@ public class MineExplosionController : MonoBehaviour
         if (poisonCloudPrefab != null)
         {
             Vector3 pos = spawnPoint ? spawnPoint.position : transform.position;
-            Instantiate(poisonCloudPrefab, pos, Quaternion.identity);
+            var cloud = Instantiate(poisonCloudPrefab, pos, Quaternion.identity);
+            if (cloud.TryGetComponent<PoisonCloudHazard>(out var hazard))
+                hazard.owner = owner;
         }
 
         // 2. Camera shake

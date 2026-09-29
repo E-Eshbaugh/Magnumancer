@@ -113,6 +113,7 @@ public class AkimboController : MonoBehaviour
         if (proj.TryGetComponent<Bullet>(out var mover))
         {
             mover.damage = weapon.damage;
+            mover.owner = OwnerPlayer();
             mover.Initialize(dir);
         }
         else if (proj.TryGetComponent<Rigidbody>(out var rb))
@@ -138,5 +139,12 @@ public class AkimboController : MonoBehaviour
     {
         if (gamepad != null)
             gamepad.SetMotorSpeeds(0f, 0f);
+    }
+
+    // The player object this component belongs to (Unity-null safe)
+    GameObject OwnerPlayer()
+    {
+        var player = GetComponentInParent<PlayerMovement3D>();
+        return player != null ? player.gameObject : null;
     }
 }

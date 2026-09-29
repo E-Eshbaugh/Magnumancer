@@ -11,6 +11,9 @@ public class WizardAbilityController : MonoBehaviour
 
     private bool isInitialized = false;
 
+    /// Raised when the active ability fires (Lightning Reflex counts teleports)
+    public event System.Action OnAbilityActivated;
+
     public void Setup(Gamepad pad, WizardData wiz, CircleAbilityUI ui)
     {
         gamepad = pad;
@@ -57,6 +60,7 @@ public class WizardAbilityController : MonoBehaviour
                 return;
 
             abilityInstance?.Activate(gameObject);
+            OnAbilityActivated?.Invoke();
 
             if (cooldown != null)
                 cooldown.TriggerCooldown();

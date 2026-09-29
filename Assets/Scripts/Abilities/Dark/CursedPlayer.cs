@@ -10,6 +10,7 @@ public class CursedPlayer : MonoBehaviour
     public GameObject curseExplosionVFX;
 
     private PlayerHealthControl healthController;
+    private GameObject curser; // The Hollow who applied the curse (gets damage credit)
     public LayerMask damageLayers;
     public float explosionRadius = 4f;
     public float maxDamage = 25f;
@@ -29,52 +30,58 @@ public class CursedPlayer : MonoBehaviour
         }
     }
 
-    public void ApplyCurse()
+    public void ApplyCurse(GameObject caster = null)
     {
         isCursed = true;
-        Debug.Log($"[CursedPlayer] {name} has been cursed!");
+        curser = caster;
     }
 
-    public void ApplyDamage(int amount)
+    public void ApplyDamage(int amount, GameObject attacker = null)
     {
         if (healthController == null) return;
 
-        healthController.TakeDamage(amount);
+        healthController.TakeDamage(amount, attacker);
         // ⚠️ Do NOT explode here — we’ll handle that only during stock loss.
     }
 
+    /// Called on stock loss and on death: a cursed player bursts once.
     public void OnStockLost()
     {
         if (!isCursed) return;
         isCursed = false;
 
-        // VFX
-        if (explosionEffect != null)
-            Instantiate(explosionEffect, transform.position, Quaternion.identity);
-
-        // SFX
-        if (audioSource != null && explosionSound != null)
-            audioSource.PlayOneShot(explosionSound);
-
         // Optional: Hide visuals if you want player to disappear momentarily
         foreach (Renderer r in renderersToHide)
             r.enabled = false;
 
-        // Explosion logic
+        Explode(transform.position, gameObject, curser);
+    }
+
+    /// <summary>
+    /// Void burst centered on center. exclude is the object bursting (not damaged);
+    /// attacker gets credit for the damage. Also used for void-marked monsters.
+    /// </summary>
+    public void Explode(Vector3 center, GameObject exclude, GameObject attacker)
+    {
+        // VFX / SFX
+        if (explosionEffect != null)
+            Instantiate(explosionEffect, center, Quaternion.identity);
+        if (explosionSound != null)
+            AudioSource.PlayClipAtPoint(explosionSound, center);
+
         // Players have two colliders (CharacterController + capsule); hit each object once
         var alreadyHit = new HashSet<GameObject>();
-        Collider[] affected = Physics.OverlapSphere(transform.position, explosionRadius, damageLayers);
+        Collider[] affected = Physics.OverlapSphere(center, explosionRadius, damageLayers);
         foreach (Collider nearby in affected)
         {
-            GameObject victim = nearby.attachedRigidbody ? nearby.attachedRigidbody.gameObject : nearby.gameObject;
+            GameObject victim = DamageEvents.RootOf(nearby);
             if (!alreadyHit.Add(victim)) continue;
-            if (victim == gameObject) continue; // the curse blast shouldn't hit the cursed player
+            if (victim == exclude) continue; // the burst shouldn't hit whoever is bursting
             Transform target = nearby.transform;
-            Vector3 direction = (target.position - transform.position).normalized;
-            float distance = Vector3.Distance(transform.position, target.position);
+            float distance = Vector3.Distance(center, target.position);
 
             // Line-of-sight check
-            if (Physics.Linecast(transform.position, target.position, out RaycastHit hit,
+            if (Physics.Linecast(center, target.position, out RaycastHit hit,
                     Physics.DefaultRaycastLayers, QueryTriggerInteraction.Ignore))
             {
                 // Hit an ice wall
@@ -93,38 +100,32 @@ public class CursedPlayer : MonoBehaviour
             float distancePercent = Mathf.Clamp01(1f - (distance / explosionRadius));
             float damageToApply = maxDamage * distancePercent;
 
-            // Rumble feedback
+            // Rumble feedback (stopped by the victim, since the burster may be dying)
             var movement = nearby.GetComponent<PlayerMovement3D>();
             if (movement != null && movement.gamepad != null)
             {
                 float intensity = distancePercent;
-                float low = 0.2f * intensity;
-                float high = 0.9f * intensity;
-                float duration = 0.3f;
-
-                movement.gamepad.SetMotorSpeeds(low, high);
-            StartCoroutine(StopRumble(movement.gamepad, duration));
+                movement.gamepad.SetMotorSpeeds(0.2f * intensity, 0.9f * intensity);
+                movement.StartCoroutine(StopRumble(movement.gamepad, 0.3f));
             }
 
             // Apply health damage
             var health = nearby.GetComponent<PlayerHealthControl>();
             if (health != null)
-                health.TakeDamage(damageToApply);
-            
+                health.TakeDamage(damageToApply, attacker);
+
             var goblin = nearby.GetComponent<GoblinHealth>();
             if (goblin != null)
-                goblin.TakeDamage(damageToApply);
+                goblin.TakeDamage(damageToApply, attacker);
 
             // Directly damage walls
             var wall = nearby.GetComponent<IceWallEffect>();
             if (wall != null)
                 wall.TakeDamage(Mathf.RoundToInt(damageToApply));
         }
-
-        Debug.Log($"[CursedPlayer] {name} exploded from curse on stock loss!");
     }
 
-    private IEnumerator StopRumble(Gamepad pad, float delay)
+    private static IEnumerator StopRumble(Gamepad pad, float delay)
     {
         yield return new WaitForSeconds(delay);
         pad.SetMotorSpeeds(0, 0);

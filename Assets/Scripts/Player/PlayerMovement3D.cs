@@ -21,8 +21,27 @@ public class PlayerMovement3D : MonoBehaviour
     public float dashSpeed = 12f;
     public float dashDuration = 0.2f;
     public float dashCooldown = 1.0f;
+    [Tooltip("Scales dashCooldown (e.g. Tidebound's Undercurrent)")]
+    public float dashCooldownMultiplier = 1f;
     public Image dashBar;
     public Sprite[] dashBarSprites;
+
+    [Header("Weapon Weight")]
+    [Tooltip("Move speed lost per point of the equipped weapon's weight")]
+    public float weightSlowPerPoint = 0.05f;
+
+    [Header("Knockback")]
+    [Tooltip("Scales incoming knockback (e.g. Granite Vow's Stonebind)")]
+    public float knockbackMultiplier = 1f;
+
+    /// Fired when a dash starts (used by Undercurrent / Lightning Reflex)
+    public event System.Action OnDash;
+
+    /// How hard the move stick is pushed (0..1)
+    public float StickMagnitude { get; private set; }
+
+    // Named speed multipliers (stun, freeze, weight, buffs) — moveSpeedMultiplier is their product
+    readonly System.Collections.Generic.Dictionary<string, float> speedModifiers = new();
 
     [Header("Controller")]
     public Gamepad gamepad = null;
@@ -49,7 +68,7 @@ public class PlayerMovement3D : MonoBehaviour
 
     public void ApplyKnockback(Vector3 force)
     {
-        knockbackVelocity = force;
+        knockbackVelocity = force * knockbackMultiplier;
     }
 
     public void Setup(int index, Gamepad pad, WizardData wiz = null)
@@ -84,6 +103,7 @@ public class PlayerMovement3D : MonoBehaviour
 
         Vector2 stick = gamepad.leftStick.ReadValue();
         if (stick.sqrMagnitude < 0.01f) stick = Vector2.zero;
+        StickMagnitude = stick.magnitude;
 
         if (!isDashing && gamepad.buttonSouth.wasPressedThisFrame &&
             (controller.isGrounded || jumpsRemaining > 0))
@@ -157,9 +177,12 @@ public class PlayerMovement3D : MonoBehaviour
     {
         isDashing = true;
         dashTimer = dashDuration;
-        dashCooldownTimer = dashCooldown;
+        dashCooldownTimer = EffectiveDashCooldown;
         StartDashRefill();
+        OnDash?.Invoke();
     }
+
+    float EffectiveDashCooldown => dashCooldown * dashCooldownMultiplier;
 
     void StartDashRefill()
     {
@@ -177,7 +200,7 @@ public class PlayerMovement3D : MonoBehaviour
         int steps = dashBarSprites.Length - 1;
         if (steps <= 0) yield break;
 
-        float stepTime = dashCooldown / steps;
+        float stepTime = EffectiveDashCooldown / steps;
 
         for (int i = 1; i <= steps; i++)
         {
@@ -188,8 +211,30 @@ public class PlayerMovement3D : MonoBehaviour
         dashRefill = null;
     }
 
-    public void SetMoveSpeedMultiplier(float value)
+    /// Stun slow (kept for StunEffect)
+    public void SetMoveSpeedMultiplier(float value) => SetSpeedModifier("stun", value);
+
+    /// Sets a named speed multiplier; all active modifiers multiply together.
+    public void SetSpeedModifier(string key, float multiplier)
     {
-        moveSpeedMultiplier = value;
+        if (Mathf.Approximately(multiplier, 1f)) speedModifiers.Remove(key);
+        else speedModifiers[key] = multiplier;
+        RecalculateSpeedMultiplier();
+    }
+
+    public void ClearSpeedModifier(string key)
+    {
+        if (speedModifiers.Remove(key)) RecalculateSpeedMultiplier();
+    }
+
+    /// Heavier weapons slow you down (WeaponData.weight, 0 = no penalty)
+    public void SetCarriedWeight(int weight)
+        => SetSpeedModifier("weight", Mathf.Max(0.5f, 1f - weightSlowPerPoint * weight));
+
+    void RecalculateSpeedMultiplier()
+    {
+        float m = 1f;
+        foreach (var v in speedModifiers.Values) m *= v;
+        moveSpeedMultiplier = m;
     }
 }

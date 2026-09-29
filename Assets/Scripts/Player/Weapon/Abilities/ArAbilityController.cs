@@ -231,6 +231,9 @@ public class ArAbilityController : MonoBehaviour
             var cg = g.AddComponent<CustomGravityBody>();
             cg.gravity = gravity;
         }
+        if (g.TryGetComponent<GrenadeExplodeOnImpact>(out var impact))
+            impact.owner = OwnerPlayer();
+
 #if INCLUDE_MINI_GRENADE_CLASS
         if (g.TryGetComponent<MiniGrenade>(out var mini2))
             mini2.BeginFuse();
@@ -543,6 +546,13 @@ public class ArAbilityController : MonoBehaviour
         }
     }
 #endif
+
+    // The player object this component belongs to (Unity-null safe)
+    GameObject OwnerPlayer()
+    {
+        var player = GetComponentInParent<PlayerMovement3D>();
+        return player != null ? player.gameObject : null;
+    }
 }
 
 public class CustomGravityBody : MonoBehaviour

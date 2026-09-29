@@ -19,11 +19,14 @@ public class VoidShotProjectile : MonoBehaviour
 
     private void OnTriggerEnter(Collider other)
     {
-        // Monsters (waves mode) just take the hit — they can't carry a curse
+        // Monsters (waves mode): damage and void-mark them so they burst when they die
         if (other.CompareTag("Monster"))
         {
             if (alreadyHit.Add(other.gameObject) && other.TryGetComponent<GoblinHealth>(out var goblin))
-                goblin.TakeDamage(damage);
+            {
+                StatusEffects.Of(other.gameObject).MarkVoid(caster);
+                goblin.TakeDamage(damage, caster);
+            }
             return;
         }
 
@@ -43,8 +46,8 @@ public class VoidShotProjectile : MonoBehaviour
         CursedPlayer curseHandler = other.GetComponent<CursedPlayer>();
         if (curseHandler != null)
         {
-            curseHandler.ApplyCurse();
-            curseHandler.ApplyDamage(damage);
+            curseHandler.ApplyCurse(caster);
+            curseHandler.ApplyDamage(damage, caster);
         }
 
         // ⚠️ Do NOT destroy the projectile — it pierces!

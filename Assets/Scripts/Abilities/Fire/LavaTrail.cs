@@ -60,7 +60,7 @@ public class LavaTrail : MonoBehaviour
             {
                 var health = player.GetComponent<PlayerHealthControl>();
                 if (health != null)
-                    health.TakeDamage(damagePerTick);
+                    health.TakeDamage(damagePerTick, owner);
             }
 
             yield return new WaitForSeconds(tickInterval);
