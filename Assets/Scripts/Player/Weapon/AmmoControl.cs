@@ -73,24 +73,30 @@ public class AmmoControl : MonoBehaviour
 
         float now = Time.time;
 
-        if (currentGun.isShotgun && gamepad.leftTrigger.wasPressedThisFrame)
+        // Shotgun ammo swap (LT): switching shell type means reloading with the new shells.
+        // Wizards with a custom bullet have nothing to swap to.
+        bool hasCustomBullet = wizard != null && wizard.customBulletPrefab != null && !currentGun.megaBomb;
+        if (currentGun.isShotgun && !hasCustomBullet && gamepad.leftTrigger.wasPressedThisFrame)
         {
-            ammoCount = currentGun.ammoCapacity;
-            if (wizard != null && wizard.customBulletPrefab != null && !currentGun.megaBomb)
-                currentAmmoPrefab = wizard.customBulletPrefab;
-            else
-                currentAmmoPrefab = (currentAmmoPrefab == currentGun.baseAmmoType)
-                    ? currentGun.specialBulletType
-                    : currentGun.baseAmmoType;
+            currentAmmoPrefab = (currentAmmoPrefab == currentGun.baseAmmoType)
+                ? currentGun.specialBulletType
+                : currentGun.baseAmmoType;
 
-            nextFireTime = now;
+            ammoCount = 0;
             UpdateAmmoBar();
+            if (reloadCoroutine != null) StopCoroutine(reloadCoroutine);
+            reloadCoroutine = StartCoroutine(ReloadAmmoIncremental());
+            return;
         }
 
         if (ammoCount > 0 && now >= nextFireTime)
         {
             bool didFire = false;
-            string fireType = currentAmmoPrefab.tag == "slug" ? "semi" : currentGun.fireType;
+            bool isSlug = currentAmmoPrefab.CompareTag("slug");
+            string fireType = isSlug ? "semi" : currentGun.fireType;
+
+            // Shotgun damage is per pellet; a slug hits as hard as the full volley
+            int damage = isSlug ? currentGun.damage * Mathf.Max(1, currentGun.pelletCount) : currentGun.damage;
 
             GameObject bulletToShoot = (wizard != null && wizard.customBulletPrefab != null && !currentGun.megaBomb)
                 ? wizard.customBulletPrefab
@@ -102,7 +108,7 @@ public class AmmoControl : MonoBehaviour
                     if (gamepad.rightTrigger.wasPressedThisFrame && !audioSource.isPlaying)
                     {
                         for (int i = 0; i < currentGun.pelletCount; i++)
-                            fire.Shoot(bulletToShoot, currentGun.spreadAngle, currentGun.recoil);
+                            fire.Shoot(bulletToShoot, currentGun.spreadAngle, currentGun.recoil, damage);
 
                         if (audioSource && currentGun.fireSound)
                         {
@@ -117,7 +123,8 @@ public class AmmoControl : MonoBehaviour
                 case "shotgunA":
                     if (gamepad.rightTrigger.ReadValue() > 0.1f)
                     {
-                        fire.Shoot(bulletToShoot, currentGun.spreadAngle, currentGun.recoil);
+                        for (int i = 0; i < Mathf.Max(1, currentGun.pelletCount); i++)
+                            fire.Shoot(bulletToShoot, currentGun.spreadAngle, currentGun.recoil, damage);
                         audioSource?.PlayOneShot(currentGun.fireSound);
                         didFire = true;
                     }
@@ -125,7 +132,7 @@ public class AmmoControl : MonoBehaviour
                 case "grenade":
                     if (gamepad.rightTrigger.wasPressedThisFrame)
                     {
-                        fire.Shoot(bulletToShoot, 0f, currentGun.recoil);
+                        fire.Shoot(bulletToShoot, 0f, currentGun.recoil, damage);
                         audioSource?.PlayOneShot(currentGun.fireSound);
                         didFire = true;
                     }
@@ -133,7 +140,7 @@ public class AmmoControl : MonoBehaviour
                 case "semi":
                     if (gamepad.rightTrigger.wasPressedThisFrame)
                     {
-                        fire.Shoot(bulletToShoot, currentGun.spreadAngle, currentGun.recoil);
+                        fire.Shoot(bulletToShoot, currentGun.spreadAngle, currentGun.recoil, damage);
                         audioSource?.PlayOneShot(currentGun.fireSound);
                         didFire = true;
                     }
@@ -141,7 +148,7 @@ public class AmmoControl : MonoBehaviour
                 case "auto":
                     if (gamepad.rightTrigger.ReadValue() > 0.1f)
                     {
-                        fire.Shoot(bulletToShoot, currentGun.spreadAngle, currentGun.recoil);
+                        fire.Shoot(bulletToShoot, currentGun.spreadAngle, currentGun.recoil, damage);
                         audioSource?.PlayOneShot(currentGun.fireSound);
                         didFire = true;
                     }
@@ -224,6 +231,9 @@ public class AmmoControl : MonoBehaviour
             }
 
             yield return new WaitForSeconds(perBulletDelay);
+
+            // Akimbo/OverClock can refill the mag mid-reload; never go past capacity
+            if (ammoCount >= currentGun.ammoCapacity) break;
             ammoCount++;
             UpdateAmmoBar();
             elapsed += perBulletDelay;

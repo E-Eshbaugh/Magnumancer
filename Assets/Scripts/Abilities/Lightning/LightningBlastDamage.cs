@@ -11,9 +11,13 @@ public class LightningBlastDamage : MonoBehaviour
     public void TriggerBlast(Vector3 position, GameObject caster)
     {
            // Blast logic
+        // Players have two colliders (CharacterController + capsule); hit each object once
+        var alreadyHit = new HashSet<GameObject>();
         Collider[] affected = Physics.OverlapSphere(position, blastRadius, hitLayer);
         foreach (Collider nearby in affected)
         {
+            GameObject victim = nearby.attachedRigidbody ? nearby.attachedRigidbody.gameObject : nearby.gameObject;
+            if (!alreadyHit.Add(victim)) continue;
             if (nearby.gameObject == caster)
                 continue;
 

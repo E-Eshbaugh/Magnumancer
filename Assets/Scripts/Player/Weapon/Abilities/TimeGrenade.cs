@@ -1,3 +1,4 @@
+using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.InputSystem;
 
@@ -6,7 +7,7 @@ public class GrenadeExplodeAfterDelay : MonoBehaviour
     [Header("Explosion Settings")]
     public float explosionRadius = 5f;
     public float explosionForce = 700f;
-    private float maxDamage = 25f;
+    public float maxDamage = 25f;
     public LayerMask damageLayers;
     public float fuseTime = 3f;
 
@@ -45,10 +46,21 @@ public class GrenadeExplodeAfterDelay : MonoBehaviour
         foreach (Renderer r in renderersToHide)
             r.enabled = false;
 
+        // It lingers invisibly while the explosion sound plays; stop it bouncing around
+        // and absorbing bullets in the meantime
+        foreach (var col in GetComponentsInChildren<Collider>())
+            col.enabled = false;
+        if (TryGetComponent<Rigidbody>(out var body))
+            body.isKinematic = true;
+
         // Physics + Damage + Rumble
+        // Players have two colliders (CharacterController + capsule); hit each object once
+        var alreadyHit = new HashSet<GameObject>();
         Collider[] affected = Physics.OverlapSphere(transform.position, explosionRadius, damageLayers);
         foreach (Collider nearby in affected)
         {
+            GameObject victim = nearby.attachedRigidbody ? nearby.attachedRigidbody.gameObject : nearby.gameObject;
+            if (!alreadyHit.Add(victim)) continue;
             Transform target = nearby.transform;
             Vector3 direction = (target.position - transform.position).normalized;
             float distance = Vector3.Distance(transform.position, target.position);

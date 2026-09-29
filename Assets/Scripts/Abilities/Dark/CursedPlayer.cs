@@ -1,3 +1,4 @@
+using System.Collections.Generic;
 using System.Collections;
 using UnityEngine;
 using UnityEngine.InputSystem;
@@ -60,9 +61,14 @@ public class CursedPlayer : MonoBehaviour
             r.enabled = false;
 
         // Explosion logic
+        // Players have two colliders (CharacterController + capsule); hit each object once
+        var alreadyHit = new HashSet<GameObject>();
         Collider[] affected = Physics.OverlapSphere(transform.position, explosionRadius, damageLayers);
         foreach (Collider nearby in affected)
         {
+            GameObject victim = nearby.attachedRigidbody ? nearby.attachedRigidbody.gameObject : nearby.gameObject;
+            if (!alreadyHit.Add(victim)) continue;
+            if (victim == gameObject) continue; // the curse blast shouldn't hit the cursed player
             Transform target = nearby.transform;
             Vector3 direction = (target.position - transform.position).normalized;
             float distance = Vector3.Distance(transform.position, target.position);

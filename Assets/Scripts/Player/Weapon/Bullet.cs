@@ -22,6 +22,16 @@ public class Bullet : MonoBehaviour
     // internal target position computed in FixedUpdate
     private Vector3 _targetPosition;
 
+    void Awake()
+    {
+        // Movement and hits are handled by our own raycasts. Keep physics from also
+        // simulating the bullet (shoving grenades/mines/other pellets around).
+        if (TryGetComponent<Rigidbody>(out var rb))
+            rb.isKinematic = true;
+        foreach (var col in GetComponentsInChildren<Collider>())
+            col.isTrigger = true;
+    }
+
     void Start()
     {
         _light = GetComponentInChildren<Light>();

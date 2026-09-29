@@ -78,7 +78,7 @@ public class LaserScope : MonoBehaviour
             Vector3 origin = firePoint.position;
             Vector3 dir = orbit.aimDirection;
 
-            if (Physics.Raycast(origin, dir, out var hit, laserRange, hitLayers))
+            if (Physics.Raycast(origin, dir, out var hit, laserRange, hitLayers, QueryTriggerInteraction.Ignore))
                 lr.SetPosition(1, hit.point);
             else
                 lr.SetPosition(1, origin + dir * laserRange);

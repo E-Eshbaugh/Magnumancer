@@ -24,8 +24,9 @@ public class FireController3D : MonoBehaviour
 
     /// <summary>
     /// Spawns prefabToUse and propels it down firePoint.forward (with optional spread).
+    /// damage (if >= 0) overrides the projectile's own damage with the weapon's stat.
     /// </summary>
-    public void Shoot(GameObject prefabToUse, float spreadAngle, float recoil)
+    public void Shoot(GameObject prefabToUse, float spreadAngle, float recoil, int damage = -1)
     {
         if (prefabToUse == null || firePoint == null)
         {
@@ -59,12 +60,17 @@ public class FireController3D : MonoBehaviour
         // 4) Drive movement
         if (proj.TryGetComponent<Bullet>(out var bulletComp))
         {
+            if (damage >= 0) bulletComp.damage = damage;
             bulletComp.Initialize(dir);
         }
         else if (proj.TryGetComponent<Rigidbody>(out var rb))
         {
             rb.linearVelocity = dir * bulletSpeed;
         }
+
+        // Grenade-launcher rounds: the weapon's damage is the blast's max damage
+        if (damage >= 0 && proj.TryGetComponent<GrenadeExplodeAfterDelay>(out var timeGrenade))
+            timeGrenade.maxDamage = damage;
     }
 
     private IEnumerator HapticRecoil(Gamepad pad, float low, float high)

@@ -111,7 +111,10 @@ public class AkimboController : MonoBehaviour
         var proj = Instantiate(prefab, spawnPos, rot);
 
         if (proj.TryGetComponent<Bullet>(out var mover))
+        {
+            mover.damage = weapon.damage;
             mover.Initialize(dir);
+        }
         else if (proj.TryGetComponent<Rigidbody>(out var rb))
             rb.linearVelocity = dir * bulletSpeed;
 
