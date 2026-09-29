@@ -8,7 +8,6 @@ public class FireDashAbility : MonoBehaviour, IActiveAbility
 {
     [SerializeField] float fireDashDistance = 8f;
     [SerializeField] float fireDashTime = 0.15f;
-    [SerializeField] float lavaLifeTime = 5f;
     [SerializeField] float fireDashIsoYaw = 45f;
     public PlayerHealthControl playerHealthControl;
     public CharacterController _cc;
@@ -57,7 +56,9 @@ public class FireDashAbility : MonoBehaviour, IActiveAbility
         // ✅ Always spawn lava trail slightly above player (let it fall)
         Quaternion rotation = Quaternion.LookRotation(dir);
         Vector3 spawnPos = caster.transform.position + Vector3.up * 0.5f;
-        Instantiate(lavaTrailPrefab, spawnPos, rotation);
+        var lava = Instantiate(lavaTrailPrefab, spawnPos, rotation);
+        var trail = lava.GetComponentInChildren<LavaTrail>();
+        if (trail != null) trail.owner = caster; // caster can't burn in their own lava
 
         float elapsed = 0f;
         Vector3 startPos = caster.transform.position;
@@ -112,7 +113,7 @@ public class FireDashAbility : MonoBehaviour, IActiveAbility
 
         _fireDashing = false;
 
-        yield return new WaitForSeconds(lavaLifeTime);
+        // Invincible only for the dash itself (the hitbox overlaps the caster too)
         if (phc != null) phc.invincible = false;
     }
 }

@@ -16,7 +16,7 @@ public class IceWallEffect : MonoBehaviour
     [SerializeField] AudioClip destroySFX; // optional
     [SerializeField] AudioSource audioSource;
 
-    private int currentHealth = 300;
+    private int currentHealth;
     private float groundY;
     public float riseHeight = 2f;
     public float riseDuration = 0.3f;
@@ -26,6 +26,7 @@ public class IceWallEffect : MonoBehaviour
 
     void Awake()
     {
+        currentHealth = maxHealth;
         originalPosition = transform.position;
         transform.position -= Vector3.up * riseHeight;
     }

@@ -71,7 +71,8 @@ public class EarthquakeAbility : MonoBehaviour, IActiveAbility
                 float distance = Vector3.Distance(target.transform.position, origin);
 
                 // Line-of-sight check
-                if (Physics.Linecast(origin, target.transform.position, out RaycastHit hit))
+                if (Physics.Linecast(origin, target.transform.position, out RaycastHit hit,
+                    Physics.DefaultRaycastLayers, QueryTriggerInteraction.Ignore))
                 {
                     IceWallEffect wallBlock = hit.transform.GetComponent<IceWallEffect>();
                     if (wallBlock != null && hit.transform != target.transform)

@@ -24,7 +24,10 @@ public class LightningBlastDamage : MonoBehaviour
             float damageToApply = maxDamage * distancePercent;
 
             // Line-of-sight check
-            RaycastHit[] hits = Physics.RaycastAll(position, (target.position - position).normalized, Vector3.Distance(position, target.position));
+            RaycastHit[] hits = Physics.RaycastAll(position, (target.position - position).normalized, Vector3.Distance(position, target.position),
+                Physics.DefaultRaycastLayers, QueryTriggerInteraction.Ignore);
+            // RaycastAll returns hits in no particular order; walk them nearest-first
+            System.Array.Sort(hits, (a, b) => a.distance.CompareTo(b.distance));
             bool blocked = false;
 
             foreach (var hit in hits)

@@ -20,6 +20,8 @@ public class LavaTrail : MonoBehaviour
     [Header("Target Settings")]
     [SerializeField] string playerTag = "Player";
 
+    [HideInInspector] public GameObject owner; // set by FireDashAbility; immune to this trail
+
     private HashSet<GameObject> affectedPlayers = new();
     private bool hasLanded = false;
     private bool firstFramePassed = false;
@@ -68,6 +70,7 @@ public class LavaTrail : MonoBehaviour
     void OnTriggerEnter(Collider other)
     {
         if (!other.tag.StartsWith(playerTag)) return;
+        if (other.gameObject == owner) return;
         if (affectedPlayers.Contains(other.gameObject)) return;
 
         affectedPlayers.Add(other.gameObject);

@@ -36,9 +36,6 @@ public class ModeIconSelectScript : MonoBehaviour
         else if (CompareTag("localModes")) maxModes = 3;
         else maxModes = Mathf.Min(modeIcons.Length, ogModeIcons.Length, altModeIcons.Length, modeTexts.Length);
 
-        for (int i = 0; i < maxModes; i++)
-            Debug.Log($"{name} slot {i}: icon={modeIcons[i]?.name} text={modeTexts[i]?.name}");
-
         ApplyVisuals();
     }
 
@@ -118,7 +115,6 @@ public class ModeIconSelectScript : MonoBehaviour
                 // modeTexts[i].transform.SetAsLastSibling();
             }
 
-            Debug.Log($"[{name}] i={i} sel={isSelected} col={modeTexts[i].color} alpha={modeTexts[i].canvasRenderer.GetAlpha()} active={modeTexts[i].gameObject.activeInHierarchy}");
 
         }
     }

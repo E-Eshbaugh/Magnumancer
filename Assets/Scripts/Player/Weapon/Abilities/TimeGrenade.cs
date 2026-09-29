@@ -54,7 +54,8 @@ public class GrenadeExplodeAfterDelay : MonoBehaviour
             float distance = Vector3.Distance(transform.position, target.position);
 
             // Check if explosion is blocked
-            if (Physics.Linecast(transform.position, target.position, out RaycastHit hit))
+            if (Physics.Linecast(transform.position, target.position, out RaycastHit hit,
+                    Physics.DefaultRaycastLayers, QueryTriggerInteraction.Ignore))
             {
                 // Case: Ice wall is blocking line of sight
                 var wallBlock = hit.transform.GetComponent<IceWallEffect>();

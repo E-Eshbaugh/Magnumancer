@@ -15,7 +15,6 @@ public class PoisonCloudHazard : MonoBehaviour
     {
         if (IsPlayer(other.gameObject))
         {
-            Debug.Log($"{other.gameObject.tag} entered poison");
             if (!activeDamageCoroutines.ContainsKey(other.gameObject))
             {
                 // Start damaging immediately
@@ -36,16 +35,13 @@ public class PoisonCloudHazard : MonoBehaviour
 
     private bool IsPlayer(GameObject obj)
     {
-        Debug.Log($"isPlayer: {obj.tag}?");
         foreach (string tag in playerTags)
         {
             if (obj.CompareTag(tag))
             {
-                Debug.Log("- Yes -");
                 return true;
             }
         }
-        Debug.Log($"- No ({obj.tag} not in Tags) -");
         return false;
     }
 
@@ -53,7 +49,6 @@ public class PoisonCloudHazard : MonoBehaviour
     {
         // Initial damage on entry
         ApplyDamage(player);
-        Debug.Log($"poison damaging {player.tag}");
 
         while (true)
         {
@@ -80,7 +75,6 @@ public class PoisonCloudHazard : MonoBehaviour
         else if (player.TryGetComponent<GoblinHealth>(out var goblinHealth))
         {
             goblinHealth.TakeDamage(damagePerSecond);
-            Debug.Log("poison Goblin");
         }
         else
         {

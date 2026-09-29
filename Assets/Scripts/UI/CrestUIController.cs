@@ -17,7 +17,7 @@ public class CrestUIController : MonoBehaviour
 
         // 1) Try to find any whose name contains "mask"
         healthMask = imgs.FirstOrDefault(i =>
-            i.gameObject.name.ToLower().Contains("Mask"));
+            i.gameObject.name.ToLower().Contains("mask"));
 
         // 2) Fallback to the very first Image you find
         if (healthMask == null && imgs.Length > 0)

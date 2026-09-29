@@ -15,6 +15,7 @@ public class PlayerHealthControl : MonoBehaviour
     public event Action<float, float> OnHealthChanged;
     public event Action OnDeath;
     public bool invincible = false;
+    private bool isDead = false;
     public CursedPlayer cursedPlayer;
 
     [Header("UI")]
@@ -48,7 +49,8 @@ public class PlayerHealthControl : MonoBehaviour
     {
         Debug.Log($"[Health] {tag} TakeDamage( {amount} ) called; before = {currentHealth}/{maxHealth}");
 
-        if (amount <= 0 || invincible)
+        // isDead: lingering hazards (lava, poison) can still tick on a dead player
+        if (amount <= 0 || invincible || isDead)
             return;
 
         currentHealth = Mathf.Max(currentHealth - amount, 0);
@@ -102,6 +104,7 @@ public class PlayerHealthControl : MonoBehaviour
     // deactivate the player 
     private void Die()
     {
+        isDead = true;
         Debug.Log("[Health] Player has died.");
         var movement = GetComponent<PlayerMovement3D>();
         if (movement?.gamepad != null)

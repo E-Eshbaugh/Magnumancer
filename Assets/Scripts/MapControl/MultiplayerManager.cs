@@ -17,6 +17,12 @@ public class MultiplayerManager : MonoBehaviour
 
     void Start()
     {
+        if (DataManager.Instance == null)
+        {
+            Debug.LogError("[MPM] No DataManager found. Start from the MainMenu scene so players, wizards and loadouts get set up.");
+            return;
+        }
+
         int numPlayers = Mathf.Clamp(DataManager.Instance.NumPlayers, 1, players.Length);
 
         // Deactivate all

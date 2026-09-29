@@ -192,9 +192,11 @@ public class ArAbilityController : MonoBehaviour
         nextFireAllowed = Time.time + fireCooldown;
 
         GameObject g = grenadePrefab;
+        bool builtFallback = false;
 #if INCLUDE_MINI_GRENADE_CLASS
         if (!g)
         {
+            builtFallback = true;
             g = GameObject.CreatePrimitive(PrimitiveType.Sphere);
             g.transform.localScale = Vector3.one * 0.3f;
             Destroy(g.GetComponent<Collider>());
@@ -213,7 +215,10 @@ public class ArAbilityController : MonoBehaviour
         }
 #endif
         Vector3 spawnPos = muzzle ? muzzle.position : transform.position;
-        g = Instantiate(g, spawnPos, Quaternion.identity);
+        // A freshly built fallback is already a scene object — use it directly
+        // instead of cloning it and leaving the template behind.
+        if (builtFallback) g.transform.position = spawnPos;
+        else g = Instantiate(g, spawnPos, Quaternion.identity);
 
         if (g.TryGetComponent<Rigidbody>(out var rb2))
         {

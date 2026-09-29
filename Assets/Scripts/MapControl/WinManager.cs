@@ -8,6 +8,7 @@ public class WinManager : MonoBehaviour
     public string[] playerTags = { "Player1", "Player2", "Player3", "Player4" };
 
     private bool endSequenceStarted = false;
+    private int maxAliveSeen = 0;
 
     void Update()
     {
@@ -15,9 +16,11 @@ public class WinManager : MonoBehaviour
         int aliveCount = 0;
         foreach (var tag in playerTags)
             aliveCount += GameObject.FindGameObjectsWithTag(tag).Length;
+        maxAliveSeen = Mathf.Max(maxAliveSeen, aliveCount);
 
         // once only one is left, start the end sequence
-        if (!endSequenceStarted && aliveCount == 1)
+        // (only if the match actually had 2+ players, so solo testing doesn't end instantly)
+        if (!endSequenceStarted && aliveCount == 1 && maxAliveSeen >= 2)
         {
             endSequenceStarted = true;
             StartCoroutine(WaitAndReturnToMainMenu());

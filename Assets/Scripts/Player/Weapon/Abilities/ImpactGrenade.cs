@@ -54,7 +54,8 @@ public class GrenadeExplodeOnImpact : MonoBehaviour
             float distance = Vector3.Distance(transform.position, target.position);
 
             // Line-of-sight check
-            if (Physics.Linecast(transform.position, target.position, out RaycastHit hit))
+            if (Physics.Linecast(transform.position, target.position, out RaycastHit hit,
+                    Physics.DefaultRaycastLayers, QueryTriggerInteraction.Ignore))
             {
                 // Hit an ice wall that's blocking the target
                 IceWallEffect wallBlock = hit.transform.GetComponent<IceWallEffect>();

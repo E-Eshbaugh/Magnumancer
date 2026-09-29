@@ -37,8 +37,7 @@ public class CircleAbilityUI : MonoBehaviour
             Debug.Log("[CircleAbilityUI] Reassigned Canvas camera to MainCamera at runtime.");
         }
 
-        // Force glow visibility for debug
-        glowImage.color = new Color(1f, 0f, 0f, 0.9f); // red debug color
+        // Glow color/alpha is driven by SetCooldownFill
         glowImage.enabled = true;
     }
 

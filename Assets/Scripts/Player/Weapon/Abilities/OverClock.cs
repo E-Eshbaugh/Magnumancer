@@ -67,11 +67,7 @@ public class OverClock : MonoBehaviour
 
     void Update()
     {
-        if (gamepad == null)
-        {
-            Debug.Log($"{name}: No gamepad assigned.");
-            return;
-        }
+        if (gamepad == null) return;
 
         currentGun = ammoControl.currentGun;
         if (currentGun == null || !currentGun.heavyWeapon) return;
