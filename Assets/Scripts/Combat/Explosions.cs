@@ -52,7 +52,7 @@ public static class Explosions
             if (col == null) continue;
             if (source != null && col.transform.IsChildOf(source.transform)) continue;
 
-            float dist = Vector3.Distance(center, col.ClosestPoint(center));
+            float dist = Vector3.Distance(center, SafeClosestPoint(col, center));
             float t = Mathf.Clamp01(dist / radius);
             float delay = Mathf.Lerp(MinChainDelay, MaxChainDelay, t);
 
@@ -80,8 +80,21 @@ public static class Explosions
             var crystal = col.GetComponentInParent<CrystalHealth>();
             if (crystal != null && damage > 0f && handled.Add(crystal))
                 crystal.TakeDamage(Mathf.Max(1, Mathf.RoundToInt(damage * (1f - t))));
+
+            // props take the blast too (barrels ripple outward like mines)
+            var prop = col.GetComponentInParent<Destructible>();
+            if (prop != null && damage > 0f && handled.Add(prop))
+                prop.TakeDamageAfter(delay, damage * Mathf.Lerp(1f, 0.3f, t), null, col.ClosestPointOnBounds(center));
         }
+
+        // big blasts scar the floor for the rest of the match
+        if (shove && damage >= Craters.MinBlastDamage)
+            Craters.Blast(center, radius * 0.45f);
     }
+
+    /// ClosestPoint doesn't support non-convex mesh colliders (floors, big props): use bounds
+    public static Vector3 SafeClosestPoint(Collider col, Vector3 p)
+        => col is MeshCollider m && !m.convex ? col.ClosestPointOnBounds(p) : col.ClosestPoint(p);
 
     /// A bullet fired by `shooter` hit this collider. Returns true if it set something off.
     /// Your own grenades are safe from your bullets (they leave the muzzle right in the

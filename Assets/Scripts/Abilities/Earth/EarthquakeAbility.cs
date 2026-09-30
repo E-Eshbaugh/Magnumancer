@@ -75,6 +75,7 @@ public class EarthquakeAbility : MonoBehaviour, IActiveAbility
 
     void Slam(GameObject caster, Vector3 origin)
     {
+        Craters.Cracks(origin, quakeRadius * 0.6f);   // the ground splits and stays split
         // VFX
         if (quakeVFX != null)
             Instantiate(quakeVFX, origin, Quaternion.identity);

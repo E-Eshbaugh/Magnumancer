@@ -151,6 +151,17 @@ Again, nothing existing was retuned. All numbers live in `ElementReactions.Table
 | Combo payout | 25 × combo length when it ends | `ZombiesPoints.PerComboStep` |
 | Reaction sound levels | master 0.8, per-reaction 0.5–0.9, announcer 0.9 | `Resources/ReactionSounds.asset` |
 
+## Pass 7 (2026-09-30): destructible environment (new numbers only)
+
+See [Destructible Environment](destructible-environment.md). Knobs: `DestructibleSetup.Rules` (per-prop toughness, explosive barrels), `DestructibleSetup.BaseHealth` (20 + 35 × size) and `MaxHealth` (400), `Destructible.ElementMultiplier`, `PropHealthBar.VisibleFor` (2.5s), `Craters.MinBlastDamage` (26) and `MaxScars` (40).
+
+| Thing | Value |
+|---|---|
+| Explosive barrels / kegs | 35 damage, 3.5m, full shove, chain |
+| Fire vs wood, plants, ice | ×2 |
+| Earth vs stone | ×1.5 |
+| Explosion damage to props | full at the center, 30% at the edge |
+
 ## Open issues / to playtest
 
 - **Blinkstorm stun is 5s** (`LightningBlastDamage`: `Stun(0.2f, 5f)`). With stuns now also blocking jumps that's very punishing. Suggest **~1.5s**.
@@ -167,4 +178,6 @@ Again, nothing existing was retuned. All numbers live in `ElementReactions.Table
 - Magnetize rubble arcs pick one target per pulse; 4 chunks around one player can add up (up to ~40 dps if they stand in the middle). Probably fine because it's easy to walk out, but watch it.
 - Zombies points: 10 per pellet makes shotguns farm points. If that matters once wall buys exist, pay hits per shot or per damage instead.
 - Reaction sounds are placeholders from the gun pack; check levels against gunfire, and replace Brittle's static and Shatter's thud when ice sounds exist.
+- **Destructible props**: check how fast cover disappears. A 4-player match with miniguns could strip Frostgrave's rubble in a minute. Tune per-rule toughness or `BaseHealth` if maps open up too fast, and check the auto-setup console count per map.
+- Explosive barrels (Drowned Sanctum has 7) might chain-kill. That's intended chaos, but watch the damage.
 - Blinkstorm's 5s stun now also Charges everyone it hits. Combined with Conduct that's a lot of lockdown; another reason to shorten it.

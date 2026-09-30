@@ -157,6 +157,11 @@ public class Bullet : MonoBehaviour
         if (progWall)
             progWall.TakeDamage(damage);
 
+        // environment props wear down (fire burns wood faster, earth smashes stone...)
+        var prop = hitCollider.GetComponentInParent<Destructible>();
+        if (prop != null)
+            prop.TakeDamage(damage, owner, hitPoint, _element);
+
         // Elements: set off a reaction with whatever's on them, or leave our own status
         var struck = ph != null ? ph.gameObject : (goblin != null ? goblin.gameObject : null);
         if (struck != null && struck != owner)
