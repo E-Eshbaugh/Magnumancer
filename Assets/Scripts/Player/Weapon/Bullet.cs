@@ -113,7 +113,7 @@ public class Bullet : MonoBehaviour
         _hasHit = true;
 
         // Mines and grenades can be shot to set them off
-        Explosions.Shoot(hitCollider, owner);
+        bool setOff = Explosions.Shoot(hitCollider, owner);
         hitCollider.GetComponentInParent<IBulletImpact>()?.OnBulletHit(hitPoint, owner);
 
         // 2) damage player if found
@@ -161,6 +161,12 @@ public class Bullet : MonoBehaviour
         var prop = hitCollider.GetComponentInParent<Destructible>();
         if (prop != null)
             prop.TakeDamage(damage, owner, hitPoint, _element);
+
+        // the world itself (floors, walls) keeps a bullet hole or scorch mark
+        bool solidWorld = ph == null && goblin == null && prop == null && iceWall == null && !setOff
+                          && (hitCollider.attachedRigidbody == null || hitCollider.attachedRigidbody.isKinematic);
+        if (solidWorld)
+            ImpactMarks.Mark(hitPoint, hitNormal, _element, damage);
 
         // Elements: set off a reaction with whatever's on them, or leave our own status
         var struck = ph != null ? ph.gameObject : (goblin != null ? goblin.gameObject : null);

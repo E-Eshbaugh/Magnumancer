@@ -1,6 +1,8 @@
 using System;
 using System.Collections.Generic;
+using Unity.AI.Navigation;
 using UnityEngine;
+using UnityEngine.AI;
 using UnityEngine.SceneManagement;
 
 /// <summary>
@@ -26,6 +28,8 @@ public static class DestructibleSetup
         public float explodeDamage;     // > 0: blows up
         public float explodeRadius = 3.5f;
         public Color debris;            // alpha 0 = the material's default
+        public bool stub;               // breaks down to a low stub first (still cover)
+        public float stubHeight = 0.35f;
     }
 
     /// First match wins. Keep the specific stems above general ones.
@@ -35,7 +39,7 @@ public static class DestructibleSetup
         new Rule { stems = new[] { "barrel", "keg" }, material = PropMaterial.Wood, toughness = 0.6f, explodeDamage = 35f, explodeRadius = 3.5f },
         // wood
         new Rule { stems = new[] { "box_stacked", "crate", "chest", "trunk", "table", "chair", "fence_wood", "catapult", "trees_a_cut" }, material = PropMaterial.Wood },
-        new Rule { stems = new[] { "commontree", "pine", "deadtree", "twistedtree" }, material = PropMaterial.Wood, toughness = 1.4f },
+        new Rule { stems = new[] { "commontree", "pine", "deadtree", "twistedtree" }, material = PropMaterial.Wood, toughness = 1.4f, stub = true, stubHeight = 0.12f },   // leaves a stump
         // stone
         new Rule { stems = new[] { "rubble", "rock", "resource_stone", "pillar", "column", "fence_stone", "barrier", "statue", "tomb", "gravestone" }, material = PropMaterial.Stone, toughness = 1.3f },
         // growth
@@ -48,12 +52,29 @@ public static class DestructibleSetup
         new Rule { stems = new[] { "skull", "bone" }, material = PropMaterial.Bone, toughness = 0.6f },
     };
 
-    /// Never destructible, even if a rule matches (arena shape, landmarks, floors)
+    /// Interior walls: tough, and they break down to a low stub (half cover) before they go.
+    /// Walls on the arena's edge never break (see IsBoundary), and in Zombies no wall does
+    /// (they gate progress).
+    public static readonly Rule WallRule = new Rule
+    {
+        stems = new[] { "wall" }, material = PropMaterial.Stone, toughness = 2.2f, stub = true, stubHeight = 0.35f,
+    };
+
+    /// Walls this close to the outer edge of all the walls count as the arena boundary
+    public static float BoundaryMargin = 3f;
+    /// Stone props taller than this leave a stub too (pillars, statues)
+    public static float TallStub = 2.2f;
+
+    /// Never destructible, even if a rule matches (arena shape, landmarks, floors).
+    /// Wall joints (corners, crossings) hold the layout together.
     static readonly string[] Never =
     {
-        "wall", "building", "stairs", "ground", "floor", "terrain", "plane", "ramp", "lava", "water",
-        "lake", "river", "light", "backdrop", "progress", "environment", "bridge", "tower", "castle",
+        "wall_corner", "wall_crossing", "building", "stairs", "ground", "floor", "terrain", "plane", "ramp",
+        "lava", "water", "lake", "river", "light", "backdrop", "progress", "environment", "bridge", "tower", "castle",
     };
+
+    /// In builds, rebuilding the Zombies navmesh needs Read/Write on the model imports
+    public static bool RebuildZombiesNavmesh = true;
 
     /// Health from overall size: a small rock ~70, a rubble pile ~120, a tree ~300
     public static float BaseHealth(Bounds b) => 20f + 35f * b.size.magnitude;
@@ -71,8 +92,11 @@ public static class DestructibleSetup
         foreach (var r in Rules)
             foreach (var s in r.stems)
                 if (n.Contains(s)) return r;
+        if (n.Contains("wall")) return WallRule;
         return null;
     }
+
+    static bool IsWall(string name) => name.ToLowerInvariant().Contains("wall");
 
     static void OnSceneLoaded(Scene scene, LoadSceneMode mode)
     {
@@ -81,13 +105,30 @@ public static class DestructibleSetup
         if (UnityEngine.Object.FindAnyObjectByType<WinManager>() == null &&
             UnityEngine.Object.FindAnyObjectByType<GoblinSpawner>() == null) return;
 
-        int made = 0;
+        bool zombies = UnityEngine.Object.FindAnyObjectByType<GoblinSpawner>() != null;
+
+        // every solid collider's owning object, once
+        var candidates = new List<(GameObject go, Collider col)>();
         var seen = new HashSet<GameObject>();
+        bool anyWall = false;
+        var wallRect = new Bounds();
         foreach (var col in UnityEngine.Object.FindObjectsByType<Collider>(FindObjectsSortMode.None))
         {
             if (col.isTrigger || col.gameObject.scene != scene) continue;
             var go = col.attachedRigidbody != null ? col.attachedRigidbody.gameObject : col.gameObject;
             if (!seen.Add(go)) continue;
+            candidates.Add((go, col));
+            // the walls' outer edge = the arena boundary
+            if (IsWall(go.name))
+            {
+                if (!anyWall) { wallRect = col.bounds; anyWall = true; }
+                else wallRect.Encapsulate(col.bounds);
+            }
+        }
+
+        var made = new List<Destructible>();
+        foreach (var (go, col) in candidates)
+        {
             if (go.GetComponentInParent<Destructible>() != null) continue;
             if (!Eligible(go, col)) continue;
 
@@ -95,6 +136,7 @@ public static class DestructibleSetup
             if (rule == null) continue;
             var b = col.bounds;
             if (Mathf.Max(b.size.x, b.size.z) > MaxFootprint || b.size.magnitude < MinSize) continue;
+            if (rule == WallRule && (zombies || IsBoundary(b, wallRect))) continue;
 
             var d = go.AddComponent<Destructible>();
             d.material = rule.material;
@@ -102,9 +144,55 @@ public static class DestructibleSetup
             d.explodeDamage = rule.explodeDamage;
             d.explodeRadius = rule.explodeRadius;
             d.debrisColor = rule.debris;
-            made++;
+            d.leavesStub = rule.stub || (rule.material == PropMaterial.Stone && d.Bounds.size.y > TallStub);
+            d.stubHeight = rule.stub ? rule.stubHeight : 0.35f;
+            made.Add(d);
         }
-        if (made > 0) Debug.Log($"[Destructibles] {made} props in {scene.name} can be destroyed");
+        if (made.Count > 0) Debug.Log($"[Destructibles] {made.Count} props in {scene.name} can be destroyed");
+
+        if (zombies && RebuildZombiesNavmesh && made.Count > 0) PrepareNavmesh(made);
+    }
+
+    static bool IsBoundary(Bounds wall, Bounds rect)
+        => wall.min.x - rect.min.x < BoundaryMargin || rect.max.x - wall.max.x < BoundaryMargin
+        || wall.min.z - rect.min.z < BoundaryMargin || rect.max.z - wall.max.z < BoundaryMargin;
+
+    /// Zombies: the baked navmesh has holes where props stood, and a hole can't reopen at
+    /// runtime. So rebuild it once at load without the props (same settings as the bake),
+    /// and give every prop a carving obstacle instead: breaking it just turns that off.
+    static void PrepareNavmesh(List<Destructible> props)
+    {
+        var surfaces = UnityEngine.Object.FindObjectsByType<NavMeshSurface>(FindObjectsSortMode.None);
+        if (surfaces.Length == 0) return;
+
+        foreach (var d in props)
+        {
+            if (d.GetComponentInChildren<NavMeshObstacle>() == null)
+            {
+                var o = d.gameObject.AddComponent<NavMeshObstacle>();
+                o.shape = NavMeshObstacleShape.Box;
+                var b = d.Bounds;
+                Vector3 s = d.transform.lossyScale;
+                o.center = d.transform.InverseTransformPoint(b.center);
+                o.size = new Vector3(b.size.x / Mathf.Max(0.001f, Mathf.Abs(s.x)),
+                                     b.size.y / Mathf.Max(0.001f, Mathf.Abs(s.y)),
+                                     b.size.z / Mathf.Max(0.001f, Mathf.Abs(s.z)));
+                o.carving = true;
+                o.carveOnlyStationary = true;
+            }
+            d.gameObject.AddComponent<NavMeshModifier>().ignoreFromBuild = true;
+        }
+        // players standing at their spawns shouldn't punch holes either
+        foreach (var p in UnityEngine.Object.FindObjectsByType<PlayerMovement3D>(FindObjectsSortMode.None))
+            if (p.GetComponent<NavMeshModifier>() == null) p.gameObject.AddComponent<NavMeshModifier>().ignoreFromBuild = true;
+
+        foreach (var surface in surfaces)
+        {
+            try { surface.BuildNavMesh(); }
+            catch (Exception e) { Debug.LogWarning($"[Destructibles] Couldn't rebuild the Zombies navmesh ({e.Message}); broken props will leave their old hole."); }
+        }
+        Debug.Log($"[Destructibles] Rebuilt the Zombies navmesh around {props.Count} destructible props " +
+                  "(in builds this needs Read/Write enabled on the prop models' import settings).");
     }
 
     // Leave gameplay objects alone: players, monsters, ability objects, walls with their own health

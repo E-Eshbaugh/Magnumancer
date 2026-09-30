@@ -25,7 +25,7 @@ A fun, chaotic, combo-forward **couch co-op brawler**: *CoD Zombies meets Gang B
 | Doc | What's in it | Status |
 |---|---|---|
 | [Elemental Ecosystem](elemental-ecosystem.md) | Element statuses, reactions, team roles, implementation plan | **Built**: statuses, all 11 reactions + Echo, combo counter, environment rules; needs playtest and map placement of `MapElementZone` |
-| [Destructible Environment](destructible-environment.md) | Destructible props, prop health bars, craters and cracks, next steps | **First pass built**; needs playtest |
+| [Destructible Environment](destructible-environment.md) | Destructible props and interior walls, health bars, damage states, burning/brittle props, stubs, craters (terrain dents), bullet holes | **Two passes built**; needs playtest |
 | [Items & Drops](items-and-drops.md) | Map pickups, wonder weapons, zombies economy | Designed |
 | [Modes & Match Flow](modes-and-flow.md) | Brawl campaign, sudden death, drafts, hazards, TDM, Zombies | Designed |
 | [Balance Log](balance-log.md) | What's been tuned, where the knobs live, open issues | Up to date (2026-09-30) |
@@ -44,7 +44,7 @@ A fun, chaotic, combo-forward **couch co-op brawler**: *CoD Zombies meets Gang B
 | Glow visuals | `Assets/Scripts/Player/GlowLine.cs`, `Assets/Scripts/Abilities/Runes/AbilityKit.cs` | Additive lines, rings, zaps, glow orbs, shockwaves |
 | Ground zones | `Assets/Scripts/Abilities/Runes/GroundHazard.cs` | Damage/slow circles (poison puddles, lava, ice). Carry an element (the owner's by default) and register as element zones, as do `PoisonCloudHazard` and `LavaTrail` |
 | Explosions | `Assets/Scripts/Combat/Explosions.cs` | Shootable mines/grenades, area damage, shove, props, craters |
-| Destructible environment | `Assets/Scripts/Environment/` | `Destructible`, `DestructibleSetup` (name rules), `PropHealthBar`, `Craters` |
+| Destructible environment | `Assets/Scripts/Environment/` | `Destructible`, `DestructibleSetup` (name rules, walls, Zombies navmesh), `PropHealthBar`, `Craters`, `TerrainCraters`, `ImpactMarks` |
 | Wizards and runes | `Assets/Resources/Wizards/*.asset`, `Assets/Scripts/Data/RuneBook.cs` | 3 active runes, 2 passive runes, 1 weapon affinity per wizard |
 | Weapon affinity | `Assets/Scripts/Combat/WeaponSynergy.cs` | Per-wizard bonus with favoured weapon classes |
 | Weapons | `Assets/Resources/Weapons/*/*.asset` | Tiers: Initiate, Ascendant, Archon |

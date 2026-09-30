@@ -9,15 +9,20 @@ public enum PropMaterial { Stone, Wood, Plant, Crystal, Ice, Metal, Bone }
 
 /// <summary>
 /// An environment object that can be shot and blown apart: crates, pillars, statues,
-/// mushrooms, ice chunks. Bullets and explosions damage it; a health bar appears over it
-/// while it's being hit and fades when left alone; at zero it crumbles (or, if
-/// explosive, blows up), so cover wears away as the match goes on.
+/// mushrooms, trees, interior walls. Bullets and explosions damage it; a health bar
+/// appears over it while it's being hit and fades when left alone. It darkens as it
+/// weakens and cracks at half health. At zero it crumbles (or, if explosive, blows up),
+/// so cover wears away as the match goes on. Walls and big props first break down to a
+/// low stub (still half cover) before they go completely.
+///
+/// Elements: fire sets wood and plants burning (damage over time, it can spread, and a
+/// burning prop is a fire zone that can be put out with water); frost makes stone and
+/// crystal brittle (x1.5 damage for a few seconds).
 ///
 /// Add it to a prop by hand, or let DestructibleSetup add it at scene load from name
-/// rules (Resources/DestructibleRules). Everything lives on the object that has the
-/// collider(s) and renderer(s) as children.
+/// rules. It goes on the object that has the collider(s) and renderer(s).
 /// </summary>
-public class Destructible : MonoBehaviour
+public class Destructible : MonoBehaviour, IElementZone
 {
     public float maxHealth = 120f;
     public PropMaterial material = PropMaterial.Stone;
@@ -27,18 +32,38 @@ public class Destructible : MonoBehaviour
     public float explodeDamage;
     public float explodeRadius = 3.5f;
 
+    [Header("Stub")]
+    [Tooltip("First 'death' knocks it down to a low stub that's still cover, second one clears it")]
+    public bool leavesStub;
+    [Range(0.1f, 0.8f)] public float stubHeight = 0.35f;
+    [Tooltip("Stub health, as a fraction of max")]
+    [Range(0.1f, 1f)] public float stubHealth = 0.4f;
+
     [Tooltip("Size of the debris burst (auto from the prop's size when 0)")]
     public float debrisScale;
     [Tooltip("Debris color (alpha 0 = a default for the material)")]
     public Color debrisColor = new Color(0f, 0f, 0f, 0f);
 
+    // ---------- tuning shared by all props ----------
+    public static float BurnDps = 8f;           // what burning does to the prop itself
+    public static float BurnTime = 4f;          // refreshed by more fire
+    public static float SpreadRadius = 1.5f;    // flames jump to flammable props this close...
+    public static float SpreadChance = 0.3f;    // ...with this chance each second
+    public static float BrittleTime = 4f;
+    public static float BrittleMultiplier = 1.5f;
+
     public float Health { get; private set; }
     public bool IsDestroyed { get; private set; }
+    public bool IsStub { get; private set; }
+    public bool IsBurning => Time.time < burningUntil;
+    public bool IsBrittle => Time.time < brittleUntil;
     public float HealthFraction => maxHealth > 0f ? Mathf.Clamp01(Health / maxHealth) : 0f;
     public float LastHitTime { get; private set; } = -999f;
 
     /// The prop's world bounds (for health bar placement, debris, explosions)
     public Bounds Bounds { get; private set; }
+
+    public bool Flammable => material == PropMaterial.Wood || material == PropMaterial.Plant;
 
     /// prop, who destroyed it (null for blasts nobody owns)
     public static event Action<Destructible, GameObject> Destroyed;
@@ -47,9 +72,14 @@ public class Destructible : MonoBehaviour
 
     Renderer[] renderers;
     Collider[] colliders;
+    Color[] baseColors;
+    MaterialPropertyBlock block;
     Vector3 restPosition;
-    Coroutine jolt;
-    bool batched;   // static-batched meshes can't be moved or scaled at runtime
+    Coroutine jolt, burn;
+    bool batched;       // static-batched meshes can't be moved or scaled at runtime
+    bool cracked;       // the half-health crack has happened
+    float burningUntil, brittleUntil, charred;
+    GameObject burnedBy;
 
     void Awake()
     {
@@ -59,12 +89,26 @@ public class Destructible : MonoBehaviour
         Bounds = ComputeBounds();
         foreach (var r in renderers) if (r != null && r.isPartOfStaticBatch) { batched = true; break; }
         if (debrisScale <= 0f) debrisScale = Mathf.Clamp(Bounds.size.magnitude * 0.35f, 0.4f, 3f);
+
+        block = new MaterialPropertyBlock();
+        baseColors = new Color[renderers.Length];
+        for (int i = 0; i < renderers.Length; i++)
+        {
+            var m = renderers[i] != null ? renderers[i].sharedMaterial : null;
+            baseColors[i] = m != null && m.HasProperty("_BaseColor") ? m.GetColor("_BaseColor")
+                          : m != null && m.HasProperty("_Color") ? m.color : Color.white;
+        }
     }
 
     void OnEnable() => All.Add(this);
-    void OnDisable() => All.Remove(this);
 
-    /// Reset max health (DestructibleSetup sizes props by volume)
+    void OnDisable()
+    {
+        All.Remove(this);
+        ElementZones.Unregister(this);
+    }
+
+    /// Reset max health (DestructibleSetup sizes props)
     public void SetMaxHealth(float hp)
     {
         maxHealth = hp;
@@ -77,7 +121,7 @@ public class Destructible : MonoBehaviour
         var b = new Bounds(transform.position, Vector3.zero);
         foreach (var c in GetComponentsInChildren<Collider>())
         {
-            if (c.isTrigger) continue;
+            if (c.isTrigger || !c.enabled) continue;
             if (!any) { b = c.bounds; any = true; } else b.Encapsulate(c.bounds);
         }
         if (!any)
@@ -106,21 +150,38 @@ public class Destructible : MonoBehaviour
     };
 
     public void TakeDamage(float amount, GameObject attacker, Vector3 point, Element element = Element.None)
+        => Damage(amount, attacker, point, element, false);
+
+    void Damage(float amount, GameObject attacker, Vector3 point, Element element, bool quiet)
     {
         if (IsDestroyed || amount <= 0f) return;
         float mult = ElementMultiplier(material, element);
+        if (IsBrittle && element != Element.Frost) mult *= BrittleMultiplier;
         Health -= amount * mult;
         LastHitTime = Time.time;
-
         PropHealthBar.Show(this);
-        Chips(point, Mathf.Clamp(amount / 15f, 0.5f, 2f) * (mult > 1f ? 1.5f : 1f));
-        if (!batched)
+
+        // elements leave their mark on the prop
+        if (element == Element.Fire && Flammable) Ignite(attacker);
+        if (element == Element.Frost && (material == PropMaterial.Stone || material == PropMaterial.Crystal)) MakeBrittle();
+
+        if (!quiet)
         {
-            if (jolt != null) StopCoroutine(jolt);
-            jolt = StartCoroutine(Jolt(Mathf.Clamp(amount / 60f, 0.02f, 0.12f)));
+            Chips(point, Mathf.Clamp(amount / 15f, 0.5f, 2f) * (mult > 1f ? 1.5f : 1f));
+            if (!batched)
+            {
+                if (jolt != null) StopCoroutine(jolt);
+                jolt = StartCoroutine(Jolt(Mathf.Clamp(amount / 60f, 0.02f, 0.12f)));
+            }
         }
 
-        if (Health <= 0f) Break(attacker);
+        if (Health <= 0f)
+        {
+            if (leavesStub && !IsStub && !batched) BecomeStub();
+            else Break(attacker);
+        }
+        else if (!cracked && HealthFraction <= 0.5f) Crack();
+        UpdateLook();
     }
 
     /// Blasts ripple outward: props a little farther out break a beat later
@@ -168,12 +229,181 @@ public class Destructible : MonoBehaviour
         jolt = null;
     }
 
+    // ---------- damage states ----------
+
+    // Half health: it visibly gives, a burst of dust and chips and a slight lean
+    void Crack()
+    {
+        cracked = true;
+        Vector3 c = Bounds.center;
+        RockDebris.Dust(new Vector3(c.x, Bounds.min.y, c.z), Mathf.Max(0.5f, debrisScale * 0.6f), 5);
+        Chips(c + Vector3.up * Bounds.extents.y * 0.5f, 1.5f);
+        if (!batched)
+        {
+            if (jolt != null) { StopCoroutine(jolt); jolt = null; }
+            if (restPosition != Vector3.zero) transform.position = restPosition;
+            transform.rotation = Quaternion.AngleAxis(UnityEngine.Random.Range(2f, 4f), UnityEngine.Random.onUnitSphere) * transform.rotation;
+        }
+    }
+
+    // Darker as it weakens, charred as it burns, icy while brittle
+    void UpdateLook()
+    {
+        if (renderers == null) return;
+        float wear = 1f - HealthFraction;
+        for (int i = 0; i < renderers.Length; i++)
+        {
+            var r = renderers[i];
+            if (r == null) continue;
+            Color c = baseColors[i] * Mathf.Lerp(1f, 0.55f, wear * wear);
+            c = Color.Lerp(c, new Color(0.12f, 0.09f, 0.07f), charred * 0.7f);
+            if (IsBrittle) c = Color.Lerp(c, new Color(0.75f, 0.9f, 1f), 0.4f);
+            c.a = baseColors[i].a;
+            r.GetPropertyBlock(block);
+            block.SetColor("_BaseColor", c);
+            block.SetColor("_Color", c);
+            r.SetPropertyBlock(block);
+        }
+    }
+
+    // ---------- fire and frost ----------
+
+    public void Ignite(GameObject by)
+    {
+        if (IsDestroyed || !Flammable) return;
+        burnedBy = by;
+        bool wasBurning = IsBurning;
+        burningUntil = Time.time + BurnTime;
+        if (!wasBurning)
+        {
+            ElementZones.Register(this);   // a burning prop is a fire zone: gas and brambles nearby go up
+            if (burn == null) burn = StartCoroutine(Burn());
+        }
+    }
+
+    IEnumerator Burn()
+    {
+        Color fire = Elements.ColorOf(Element.Fire);
+        float nextTick = Time.time + 0.5f, nextSpread = Time.time + 1f;
+        while (IsBurning && !IsDestroyed)
+        {
+            // flames licking up the prop
+            var b = Bounds;
+            Vector3 p = new Vector3(b.center.x, b.min.y, b.center.z)
+                      + Vector3.Scale(new Vector3(UnityEngine.Random.value - 0.5f, UnityEngine.Random.value, UnityEngine.Random.value - 0.5f), b.size * 0.9f);
+            BulletFX.Mote(BulletFX.Flavor.Embers, fire, p, 1.4f);
+            if (UnityEngine.Random.value < 0.15f)
+                PowerFx.Puffs(p, new Color(0.15f, 0.12f, 0.1f, 1f), 1, 0.8f, 0.6f, 1f, lift: 1.5f);
+
+            if (Time.time >= nextTick)
+            {
+                nextTick = Time.time + 0.5f;
+                charred = Mathf.Min(1f, charred + 0.06f);
+                Damage(BurnDps * 0.5f, burnedBy, b.center, Element.None, true);
+            }
+            if (Time.time >= nextSpread)
+            {
+                nextSpread = Time.time + 1f;
+                Spread();
+            }
+            yield return null;
+        }
+        burn = null;
+        ElementZones.Unregister(this);
+    }
+
+    void Spread()
+    {
+        foreach (var other in All)
+        {
+            if (other == this || !other.Flammable || other.IsBurning || other.IsDestroyed) continue;
+            if (other.Bounds.SqrDistance(Bounds.center) > (Bounds.extents.magnitude + SpreadRadius) * (Bounds.extents.magnitude + SpreadRadius)) continue;
+            if (UnityEngine.Random.value < SpreadChance) other.Ignite(burnedBy);
+        }
+    }
+
+    void MakeBrittle()
+    {
+        bool was = IsBrittle;
+        brittleUntil = Time.time + BrittleTime;
+        if (!was)
+        {
+            PowerFx.Sparks(Bounds.center, new Color(0.75f, 0.9f, 1f), 12, 3f, 0.4f, 0.05f, 0.3f);
+            StartCoroutine(ThawLater());
+        }
+    }
+
+    IEnumerator ThawLater()
+    {
+        while (IsBrittle) yield return null;
+        UpdateLook();
+    }
+
+    // ---------- IElementZone (only registered while burning) ----------
+    public Element ZoneElement => Element.Fire;
+    public GameObject ZoneOwner => burnedBy;
+    public Vector3 ZoneCenter => new Vector3(Bounds.center.x, Bounds.min.y, Bounds.center.z);
+    public float ZoneRadius => Mathf.Max(Bounds.extents.x, Bounds.extents.z) + 0.5f;
+    public float DistanceTo(Vector3 p)
+    {
+        Vector3 c = Bounds.ClosestPoint(new Vector3(p.x, Bounds.center.y, p.z));
+        c.y = p.y = 0f;
+        return Vector3.Distance(c, p);
+    }
+    /// Water hit it (Steam): the fire's out
+    public void Consume()
+    {
+        burningUntil = 0f;
+        ElementZones.Unregister(this);
+    }
+
     // ---------- destruction ----------
+
+    // Walls and big props: the top comes off, the base stays as low cover
+    void BecomeStub()
+    {
+        IsStub = true;
+        Health = maxHealth * stubHealth;
+        cracked = true;
+        if (jolt != null) { StopCoroutine(jolt); jolt = null; }
+        if (restPosition != Vector3.zero) transform.position = restPosition;
+
+        var before = Bounds;
+        Color col = DebrisColor();
+        var mat = DebrisMaterial();
+        int chunks = Mathf.RoundToInt(Mathf.Lerp(8f, 18f, Mathf.InverseLerp(0.4f, 3f, debrisScale)));
+        for (int i = 0; i < chunks; i++)
+        {
+            // the part above the stub line is what breaks off
+            Vector3 p = new Vector3(before.center.x, before.min.y + before.size.y * Mathf.Lerp(stubHeight, 1f, UnityEngine.Random.value), before.center.z)
+                      + Vector3.Scale(UnityEngine.Random.insideUnitSphere, new Vector3(before.extents.x, 0f, before.extents.z) * 0.8f);
+            Vector3 v = (p - before.center).normalized * UnityEngine.Random.Range(1.5f, 4f) + Vector3.up * UnityEngine.Random.Range(1f, 4f);
+            RockDebris.Chunk(p, v, UnityEngine.Random.Range(0.12f, 0.28f) * debrisScale, UnityEngine.Random.Range(1f, 1.8f), mat, col);
+        }
+        RockDebris.Dust(new Vector3(before.center.x, before.min.y, before.center.z), Mathf.Max(0.8f, debrisScale), 8);
+        Rumble.Blast(before.center, Mathf.Max(3f, debrisScale * 3f), 0.3f);
+        CameraShake.Shake(0.05f + 0.03f * debrisScale, 0.15f);
+
+        // squash it down, keeping its base on the ground, with a broken tilt
+        var s = transform.localScale;
+        transform.localScale = new Vector3(s.x, s.y * stubHeight, s.z);
+        transform.rotation = Quaternion.AngleAxis(UnityEngine.Random.Range(-4f, 4f), transform.right) * transform.rotation;
+        Physics.SyncTransforms();
+        var after = ComputeBounds();
+        transform.position += Vector3.up * (before.min.y - after.min.y);
+        Physics.SyncTransforms();
+        restPosition = transform.position;
+        Bounds = ComputeBounds();
+        PropHealthBar.Show(this);
+        UpdateLook();
+    }
 
     void Break(GameObject attacker)
     {
         IsDestroyed = true;
         Health = 0f;
+        burningUntil = 0f;
+        ElementZones.Unregister(this);
         if (jolt != null) { StopCoroutine(jolt); jolt = null; }
         if (restPosition != Vector3.zero) transform.position = restPosition;
 
@@ -203,6 +433,8 @@ public class Destructible : MonoBehaviour
         if (material == PropMaterial.Plant)
             for (int i = 0; i < 10; i++)
                 BulletFX.Mote(BulletFX.Flavor.Spores, col, center + UnityEngine.Random.insideUnitSphere * debrisScale * 0.5f, 1.8f);
+        if (charred > 0.2f)
+            PowerFx.Puffs(center, new Color(0.1f, 0.08f, 0.07f, 1f), 8, 2f, 1.2f, 1.2f, lift: 1.5f);   // burnt out
 
         Rumble.Blast(center, Mathf.Max(3f, debrisScale * 3f), 0.35f);
         CameraShake.Shake(0.05f + 0.04f * debrisScale, 0.15f);
@@ -215,8 +447,8 @@ public class Destructible : MonoBehaviour
         else StartCoroutine(Sink());
     }
 
-    // Barrels and volatile crystals: a real explosion that hurts, shoves and sets off
-    // mines, grenades and other explosive props (chains)
+    // Barrels and volatile crystals: a real explosion that hurts, shoves, sets off mines,
+    // grenades and other explosive props (chains), and sets wood nearby on fire
     void Explode(GameObject attacker, Vector3 center, Vector3 ground)
     {
         Color fire = Elements.ColorOf(Element.Fire);
@@ -227,6 +459,9 @@ public class Destructible : MonoBehaviour
         }
         Explosions.AffectWorld(center, explodeRadius, explodeDamage, gameObject);
         ElementReactions.OnElementArea(center, explodeRadius, attacker, Element.Fire);   // gas and brambles go up
+        foreach (var other in All.ToArray())
+            if (other != this && other.Flammable && other.Bounds.SqrDistance(center) <= explodeRadius * explodeRadius)
+                other.Ignite(attacker);
 
         AbilityKit.Shockwave(ground, explodeRadius * 1.2f, fire, 0.4f);
         PowerFx.Flash(center, fire, 12f, explodeRadius * 3f, 0.45f);

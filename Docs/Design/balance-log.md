@@ -162,6 +162,19 @@ See [Destructible Environment](destructible-environment.md). Knobs: `Destructibl
 | Earth vs stone | ×1.5 |
 | Explosion damage to props | full at the center, 30% at the edge |
 
+## Pass 8 (2026-09-30): destructibles, second pass (new numbers only)
+
+| Knob | Value | Where |
+|---|---|---|
+| Walls | toughness ×2.2, stub at 35% height with 40% health | `DestructibleSetup.WallRule`, `Destructible.stubHeight` / `stubHealth` |
+| Boundary margin | 3m from the walls' outer edge | `DestructibleSetup.BoundaryMargin` |
+| Tall stone stubs | over 2.2m | `DestructibleSetup.TallStub` |
+| Tree stumps | 12% height | tree rule `stubHeight` |
+| Burning props | 8 dps for 4s, 30%/s spread within 1.5m | `Destructible.BurnDps`, `BurnTime`, `SpreadChance`, `SpreadRadius` |
+| Brittle (frost on stone) | ×1.5 for 4s | `Destructible.BrittleMultiplier`, `BrittleTime` |
+| Terrain craters | 0.12m per metre of radius, max 0.5m each, 1.2m total | `TerrainCraters` |
+| Bullet marks | pool of 220 | `ImpactMarks.Max` |
+
 ## Open issues / to playtest
 
 - **Blinkstorm stun is 5s** (`LightningBlastDamage`: `Stun(0.2f, 5f)`). With stuns now also blocking jumps that's very punishing. Suggest **~1.5s**.
@@ -179,5 +192,7 @@ See [Destructible Environment](destructible-environment.md). Knobs: `Destructibl
 - Zombies points: 10 per pellet makes shotguns farm points. If that matters once wall buys exist, pay hits per shot or per damage instead.
 - Reaction sounds are placeholders from the gun pack; check levels against gunfire, and replace Brittle's static and Shatter's thud when ice sounds exist.
 - **Destructible props**: check how fast cover disappears. A 4-player match with miniguns could strip Frostgrave's rubble in a minute. Tune per-rule toughness or `BaseHealth` if maps open up too fast, and check the auto-setup console count per map.
+- **Forest fires**: Oldwoods has ~80 trees within reach of each other. A 30%/s spread could burn the whole map in one match. Great or awful; lower `SpreadChance` if it's awful.
+- **Destructible interior walls** (BlackOsuary's dungeon especially): check the boundary detection keeps the outer walls up on every map, and that maps don't turn into open fields too early (walls are ×2.2 toughness and leave stubs).
 - Explosive barrels (Drowned Sanctum has 7) might chain-kill. That's intended chaos, but watch the damage.
 - Blinkstorm's 5s stun now also Charges everyone it hits. Combined with Conduct that's a lot of lockdown; another reason to shorten it.

@@ -21,11 +21,19 @@ public static class Craters
     {
         if (!GroundAt(at, out Vector3 point, out Vector3 normal)) return;
         radius = Mathf.Clamp(radius, 0.6f, 4f);
-        var root = NewScar("Crater", point, normal);
 
-        // soot, then the darker pit in the middle
-        Decal(root.transform, radius * 2.3f, new Color(0.05f, 0.04f, 0.035f, 0.55f), 0.012f);
-        Decal(root.transform, radius * 1.3f, new Color(0.02f, 0.015f, 0.01f, 0.8f), 0.018f);
+        // on Terrain maps the ground really sinks; the scorch sits down in the pit
+        float sunk = TerrainCraters.Blast(point, radius);
+        var root = NewScar("Crater", point + Vector3.down * sunk * 0.8f, normal);
+
+        if (sunk > 0f)
+            Decal(root.transform, radius * 1.1f, new Color(0.03f, 0.02f, 0.015f, 0.75f), 0.015f);
+        else
+        {
+            // soot, then the darker pit in the middle
+            Decal(root.transform, radius * 2.3f, new Color(0.05f, 0.04f, 0.035f, 0.55f), 0.012f);
+            Decal(root.transform, radius * 1.3f, new Color(0.02f, 0.015f, 0.01f, 0.8f), 0.018f);
+        }
 
         // chunks of the floor heaved up around the edge
         int rocks = Mathf.RoundToInt(Mathf.Lerp(5f, 12f, radius / 4f));
@@ -39,7 +47,7 @@ public static class Craters
             rock.name = "Rubble";
             rock.transform.SetParent(root.transform, false);
             float s = Random.Range(0.12f, 0.3f) * Mathf.Sqrt(radius);
-            rock.transform.localPosition = local + Vector3.up * s * 0.15f;   // half sunk
+            rock.transform.localPosition = local + Vector3.up * (s * 0.15f + sunk * 0.8f);   // half sunk, on the rim
             rock.transform.localRotation = Quaternion.LookRotation(local) * Quaternion.Euler(Random.Range(-40f, -10f), Random.Range(-20f, 20f), Random.Range(-25f, 25f));
             rock.transform.localScale = new Vector3(s * Random.Range(0.8f, 1.4f), s * Random.Range(0.5f, 0.9f), s * Random.Range(0.8f, 1.4f));
             var r = rock.GetComponent<MeshRenderer>();
@@ -128,8 +136,14 @@ public static class Craters
         return go;
     }
 
-    static void Paint(GameObject go, Color color)
+    /// Makes go a flat decal quad in `color` (reuse = it already is one: just recolor)
+    internal static void Paint(GameObject go, Color color, bool reuse = false)
     {
+        if (reuse && go.TryGetComponent<MeshRenderer>(out var existing))
+        {
+            PowerFx.Tint(existing, color);
+            return;
+        }
         if (quad == null)
         {
             var tmp = GameObject.CreatePrimitive(PrimitiveType.Quad);
