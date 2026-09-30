@@ -67,7 +67,7 @@ public class ChargedRubble : MonoBehaviour, IElementZone
             Vector3 chest = AbilityKit.Chest(e);
             AbilityKit.Zap(at, chest, volt, 0.15f, 0.16f);
             PowerFx.Sparks(chest, volt, 10, 5f, 0.3f, 0.05f, 0.5f);
-            DamageEvents.Deal(e, damage, owner);
+            ElementReactions.DealAs(Reaction.Magnetize, e, damage, owner);
             ElementReactions.AbilityHit(e, owner, Element.Lightning, damage);
             break; // one arc per pulse
         }

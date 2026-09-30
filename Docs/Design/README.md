@@ -36,7 +36,8 @@ A fun, chaotic, combo-forward **couch co-op brawler**: *CoD Zombies meets Gang B
 | Damage and kill events | `Assets/Scripts/Combat/DamageEvents.cs` | `Damaged` / `Killed` events, incoming/outgoing modifiers |
 | Status effects | `Assets/Scripts/Combat/StatusEffects.cs` | Brands (fire), freeze counters, stun/root, void mark, plus element statuses (Soaked, Charged, Poisoned, Staggered, Burning/Frozen windows) with `Has` / `Consume` |
 | Elements and reactions | `Assets/Scripts/Combat/Element.cs`, `ElementReactions.cs`, `ElementZones.cs` | Element model, data-driven recipe table, `BulletHit` / `AbilityHit` / `ZoneHit` sources, zone registry, `Reacted` event |
-| Reaction feedback | `Assets/Scripts/Combat/ReactionPopup.cs`, `ElementStatusFx.cs`, `ReactionCombo.cs`, `Abilities/Runes/SteamCloud.cs` | Popup word, on-body status hints, combo callouts, steam cloud |
+| Reaction feedback | `Assets/Scripts/Combat/ReactionPopup.cs`, `ElementStatusFx.cs`, `ReactionCombo.cs`, `ReactionAudio.cs`, `Abilities/Runes/SteamCloud.cs` | Popup word, on-body status hints, combo callouts, sounds (`Resources/ReactionSounds.asset`), steam cloud |
+| Teams, comps, Zombies points | `Assets/Scripts/Combat/Teams.cs`, `ElementComps.cs`, `ZombiesPoints.cs` | Friendly-fire hook, wizard-select comp hints, Zombies earning |
 | Stuns | `StunEffect` via `StatusEffects.Stun/Root` | Stunned players can't jump (`PlayerMovement3D.SetJumpBlocked`) |
 | Bullets | `Assets/Scripts/Player/Weapon/Bullet.cs`, `BulletFX.cs` | Hit handling, knockback, element hits; `BulletFX.FlavorOf(passive)` maps each wizard to an element; `BulletFX.Mote` emits element bits for other effects |
 | Glow visuals | `Assets/Scripts/Player/GlowLine.cs`, `Assets/Scripts/Abilities/Runes/AbilityKit.cs` | Additive lines, rings, zaps, glow orbs, shockwaves |

@@ -83,7 +83,7 @@ public class MapElementZone : MonoBehaviour, IElementZone, IElectrifiable, IFree
             foreach (var e in inside)
             {
                 if (e == electrifiedBy) continue;
-                DamageEvents.Deal(e, electrifyDps * ShockTick, electrifiedBy);
+                ElementReactions.DealAs(Reaction.Conduct, e, electrifyDps * ShockTick, electrifiedBy);
                 StatusEffects.Of(e).StunAtLeast(0.4f, 0.3f);
                 Vector3 chest = AbilityKit.Chest(e);
                 AbilityKit.Zap(chest + Vector3.down, chest, volt, 0.12f, 0.14f);

@@ -171,9 +171,33 @@ Statuses (not brands, freeze counters or void marks, which keep their old rules)
 
 ### Needs the editor
 
-- Add `MapElementZone` (Water) to Drowned Sanctum's walkable shallows and (Fire) to Cinder Crucible's `GroundLava`. The Drowned Sanctum `Water` plane is 73×65 units under the arena, so it may be background rather than something players stand in; give the component a collider that covers only where players wade.
+- Add `MapElementZone` (Water) to Drowned Sanctum's walkable shallows and (Fire) to Cinder Crucible's lava. **Don't put it on the big planes as they are.** Drowned Sanctum's `Water` is a 73×65 plane and Cinder Crucible's `GroundLava` a 58×60 plane at y ≈ −1, right under the arena floor. With `standHeight` 1.2, players standing on the floor above would count as inside, so everyone would be Soaked or Burning all the time. Give the component (via its `area` field) its own box collider covering only where players actually wade or step in lava. (Non-convex plane colliders work, measured by their bounds.)
 - Frostgrave's `FrozenLake`: to make it "always Brittle-slippery near Frostwarden effects", give it a Water `MapElementZone` with `appliesStatus` off (so it doesn't Soak). Frost that reaches it freezes it into slippery ice for 4s.
+
+### Sound
+
+`ReactionAudio` plays one sound per reaction from `Assets/Resources/ReactionSounds.asset` (a `ReactionSoundBank`; swap clips there, no code). It's 2D (one shared screen), with a little pitch jitter, and long clips are cut to `maxLength`. Echo replays the reaction's sound deeper. Clips come from the gun pack's Bonus_Sounds: taser zaps (Conduct, Magnetize), explosions (Combust large, Thermal Shock small), a fuse burn as the hiss (Steam, Wildfire), body impacts (Shatter), wet impacts (Mudslide, Blight Bloom, Overgrowth) and static (Brittle). The announcer says "Frenzy" when a combo reaches 4 and "Killing spree" at 5. **Placeholders**: there are no ice, steam or splash sounds in the project yet.
+
+### Reaction kills
+
+Damage a reaction deals, including what it leaves behind (steam scald, burning patches, poison puddles, electrified water, charged rubble), goes through `ElementReactions.DealAs`. A kill it lands fires `ReactionKilled(reaction, killer, victim, where)`, the hook for a future kill-feed icon, and pops a big "COMBUST KILL!" in the reaction's colors.
+
+### Team roles and comps on wizard select
+
+`ElementComps` holds §4's roles and named comps. The wizard select lore box now starts with the highlighted wizard's role and comps ("**Setup** · Storm Front (+Voltborn) · Monsoon Grove (+Verdant Circle)"). In co-op/team modes (`SelectedMode` isn't deathmatch), if someone who already picked completes a comp, it calls it out in gold: "**STORM FRONT** with P1's Voltborn! Soak them, then Conduct."
+
+### Seed of Aloria totem
+
+The healing totem is a nature zone (its heal range). Water surges it (×1.5 healing for 5s), poison blooms spore pods around it once, and fire sets it ablaze (Wildfire): **no healing for 4s** and a fire zone around it that hurts everyone, its Verdant owner included. It can't be used up; it still breaks only when its crystal does.
+
+### Teams and friendly fire
+
+`Teams`: `TeamOf(player)` (−1 = free-for-all) and `SameTeam`. There's no TDM yet, so deathmatch is everyone-for-themselves and Zombies puts all players on one team. `Teams.ReactionFriendlyFire` (on by default, per the design) is enforced for all reaction damage. `Teams.BulletFriendlyFire` (off) is declared but bullets don't check teams yet; that belongs with TDM.
+
+### Zombies points
+
+`ZombiesPoints` (active on maps with a `GoblinSpawner`): 10 per hit on a monster, 60 per kill, **30 per reaction**, and a finished combo pays 25 × its length. Big earns pop a small "+60" over the player. `TrySpend` is ready for wall buys, and `Multiplier` for Double Points. There's no HUD total yet; add it with wall buys.
 
 ### Not built yet
 
-Steam and Wildfire from the Seed of Aloria totem itself; an announcer voice for combos (no audio yet); a points payout for combos in Zombies (no points system yet); reaction kill-feed icons (no kill feed yet); the TDM friendly-fire toggle (there are no teams yet); a sound per reaction (no audio assets hooked up).
+The kill feed itself (hooked via `ReactionKilled`); a HUD points total and wall buys; TDM (team assignment, team colors, bullet friendly fire); real ice/steam/splash sounds.

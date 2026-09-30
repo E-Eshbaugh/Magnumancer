@@ -38,6 +38,8 @@
 
 ## Zombies economy (co-op)
 
+> *Built (2026-09-30):* earning points (`ZombiesPoints`: hits, kills, reactions, combos). Spending (wall buys) and a HUD total are next.
+
 - **Points:** hits, kills, and **reactions (bonus!)** earn points, so the combo counter directly pays.
 - **Mystery Box:** random roll, including wonder weapons.
 - **Wall buys:** weapons chalked on walls, bought with points.

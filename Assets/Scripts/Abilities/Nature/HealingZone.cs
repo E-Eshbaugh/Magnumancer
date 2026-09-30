@@ -1,7 +1,11 @@
 using System.Collections.Generic;
 using UnityEngine;
 
-public class HealingZone : MonoBehaviour
+/// Seed of Aloria's healing totem. It's also a nature zone in the Elemental Ecosystem:
+/// water surges it (Overgrowth Surge), poison blooms spore pods around it (Blight Bloom),
+/// and fire sets it ablaze (Wildfire): no healing while it burns, and the flames hurt
+/// everyone near it, its Verdant owner included.
+public class HealingZone : MonoBehaviour, IElementZone
 {
     [Header("Healing Settings")]
     public float maxHealPerSecond = 10f;
@@ -22,6 +26,39 @@ public class HealingZone : MonoBehaviour
         PowerFx.Sparks(transform.position + Vector3.up, nature, 30, 4f, 0.8f, 0.08f, -0.3f, Vector3.up, 120f);
     }
 
+    // Wildfire
+    float burningUntil;
+    bool Burning => Time.time < burningUntil;
+
+    public void Ignite(GameObject by, float duration, float dps)
+    {
+        burningUntil = Time.time + duration;
+        Vector3 at = AbilityKit.Ground(transform.position + Vector3.up);
+        var flames = GroundHazard.Spawn(by, at, ZoneRadius, duration, Elements.ColorOf(Element.Fire));
+        flames.element = Element.Fire;
+        flames.damagePerSecond = dps;
+        flames.fromReaction = Reaction.Wildfire;
+        EffectPool.Spawn(at, ZoneRadius, duration, EffectPool.Style.Lava);
+        PowerFx.Sparks(transform.position + Vector3.up, Elements.ColorOf(Element.Fire), 40, 6f, 0.8f, 0.09f, -0.4f, Vector3.up, 120f);
+    }
+
+    void Update()
+    {
+        if (Burning && Random.value < 0.4f)
+            BulletFX.Mote(BulletFX.Flavor.Embers, Elements.ColorOf(Element.Fire),
+                          transform.position + Vector3.up * Random.Range(0.3f, 2f) + Random.insideUnitSphere * 0.5f, 1.5f);
+    }
+
+    // ---------- IElementZone ----------
+    public Element ZoneElement => Burning ? Element.Fire : Element.Nature;
+    public GameObject ZoneOwner => null;
+    public Vector3 ZoneCenter => transform.position;
+    public float ZoneRadius => beamController != null ? beamController.healRange : 3f;
+    public float DistanceTo(Vector3 p) => ElementZones.FlatDistance(transform.position, ZoneRadius, p);
+    public void Consume() { }   // the totem breaks when its crystal does, not from reactions
+
+    void Start() => ElementZones.Register(this);
+
     void OnEnable()
     {
         Active.Add(this);
@@ -39,6 +76,7 @@ public class HealingZone : MonoBehaviour
     void OnDisable()
     {
         Active.Remove(this);
+        ElementZones.Unregister(this);
         if (beamController != null)
         {
             beamController.OnHealablePlayersUpdated -= HealPlayers;
@@ -50,6 +88,7 @@ public class HealingZone : MonoBehaviour
         int numTargets = players.Count;
         if (numTargets == 0) return;
 
+        if (Burning) return;   // ablaze: no healing
         float rate = maxHealPerSecond * (Time.time < surgeUntil ? surgeMultiplier : 1f);
         float healRatePerPlayer = rate / numTargets;
         float healThisFrame = healRatePerPlayer * Time.deltaTime;

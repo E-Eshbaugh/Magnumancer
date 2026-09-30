@@ -18,6 +18,8 @@ public class GroundHazard : MonoBehaviour, IElementZone, IElectrifiable, IFreeza
     public Color color = Color.white;
     [Tooltip("None = the owner's element")]
     public Element element;
+    /// Left behind by a reaction (Combust's burning patch...): its kills are reaction kills
+    [HideInInspector] public Reaction? fromReaction;
 
     [Header("Effects on enemies")]
     public float damagePerSecond;
@@ -156,7 +158,11 @@ public class GroundHazard : MonoBehaviour, IElementZone, IElectrifiable, IFreeza
             nextTick = Time.time + Tick;
             foreach (var e in inside)
             {
-                if (damagePerSecond > 0f) DamageEvents.Deal(e, damagePerSecond * Tick, owner);
+                if (damagePerSecond > 0f)
+                {
+                    if (fromReaction.HasValue) ElementReactions.DealAs(fromReaction.Value, e, damagePerSecond * Tick, owner);
+                    else DamageEvents.Deal(e, damagePerSecond * Tick, owner);
+                }
                 if (freezeStacksPerSecond > 0f && Random.value < freezeStacksPerSecond * Tick)
                     StatusEffects.Of(e).AddFreeze();
                 ElementReactions.ZoneHit(e, owner, element, damagePerSecond * Tick);
@@ -246,6 +252,7 @@ public class GroundHazard : MonoBehaviour, IElementZone, IElectrifiable, IFreeza
         color = Elements.ColorOf(Element.Fire);
         damagePerSecond = Mathf.Max(damagePerSecond, dps);
         rootDuration = burstDamage = 0f;   // a snare burns up instead of springing
+        fromReaction = Reaction.Wildfire;
         pullStrength = 0f;
         duration = Age + time;
         EffectPool.Spawn(transform.position, radius, time, EffectPool.Style.Lava);
@@ -277,7 +284,7 @@ public class GroundHazard : MonoBehaviour, IElementZone, IElectrifiable, IFreeza
         nextShock = Time.time + ShockTick;
         foreach (var e in AbilityKit.Enemies(transform.position, radius, electrifiedBy))
         {
-            DamageEvents.Deal(e, electrifyDps * ShockTick, electrifiedBy);
+            ElementReactions.DealAs(Reaction.Conduct, e, electrifyDps * ShockTick, electrifiedBy);
             StatusEffects.Of(e).StunAtLeast(0.4f, 0.3f);
             AbilityKit.Zap(c, AbilityKit.Chest(e), volt, 0.12f, 0.14f);
         }

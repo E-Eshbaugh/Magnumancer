@@ -1,0 +1,102 @@
+%YAML 1.1
+%TAG !u! tag:unity3d.com,2011:
+--- !u!114 &11400000
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: e886e4c94c414fc6a218161c44642ccb, type: 3}
+  m_Name: ReactionSounds
+  m_EditorClassIdentifier:
+  masterVolume: 0.8
+  reactions:
+  - reaction: 0
+    clips:
+    - {fileID: 8300000, guid: ad13ce1653307ff4ca0016b6f29a23b3, type: 3}
+    - {fileID: 8300000, guid: e78e5a0c24ceb6f45a2ed8c3ed6d1a92, type: 3}
+    - {fileID: 8300000, guid: f0ee2bee9f098414ab95ac5b848da118, type: 3}
+    volume: 0.9
+    pitch: 0.8
+    maxLength: 0.8
+  - reaction: 1
+    clips:
+    - {fileID: 8300000, guid: 8f286c5e194c89f4bacf115c5489522c, type: 3}
+    - {fileID: 8300000, guid: 8793d040e701cc94f9423fa8c69547c1, type: 3}
+    - {fileID: 8300000, guid: 03eecb54dffb0de478ee3e6c9a5d74d1, type: 3}
+    - {fileID: 8300000, guid: e95b39c72339e4147ae9e273c884f10c, type: 3}
+    volume: 0.8
+    pitch: 1
+    maxLength: 1
+  - reaction: 2
+    clips:
+    - {fileID: 8300000, guid: c483dabda353ff04da88e8de74fa8934, type: 3}
+    - {fileID: 8300000, guid: 48aba2972d78eff409f1c80bbb511622, type: 3}
+    - {fileID: 8300000, guid: 94ba382d5b199c249844a339cdef6943, type: 3}
+    volume: 0.9
+    pitch: 1
+    maxLength: 2
+  - reaction: 3
+    clips:
+    - {fileID: 8300000, guid: 2e97453dc6f1cbd40895fa01e9631329, type: 3}
+    - {fileID: 8300000, guid: b9287221876e6a84c80bf226c228f50b, type: 3}
+    - {fileID: 8300000, guid: 1840926d9c092644faece4d4e10de44c, type: 3}
+    volume: 0.75
+    pitch: 1.2
+    maxLength: 1.2
+  - reaction: 4
+    clips:
+    - {fileID: 8300000, guid: f070b6ff381cd0c469d23f3918ea4a35, type: 3}
+    - {fileID: 8300000, guid: 5eac7d996044bd44a8b6f481e4e54010, type: 3}
+    volume: 0.5
+    pitch: 1.8
+    maxLength: 0.5
+  - reaction: 5
+    clips:
+    - {fileID: 8300000, guid: 3e98cc67e10cee8449c10a533d46b2b1, type: 3}
+    - {fileID: 8300000, guid: 93e6fc769ddd0464bbb65fed8828708c, type: 3}
+    - {fileID: 8300000, guid: dc24524e3db18b94db255bd756910f09, type: 3}
+    volume: 0.8
+    pitch: 0.7
+    maxLength: 0.8
+  - reaction: 6
+    clips:
+    - {fileID: 8300000, guid: 8f286c5e194c89f4bacf115c5489522c, type: 3}
+    - {fileID: 8300000, guid: 03eecb54dffb0de478ee3e6c9a5d74d1, type: 3}
+    volume: 0.7
+    pitch: 0.7
+    maxLength: 1
+  - reaction: 7
+    clips:
+    - {fileID: 8300000, guid: d42426fe5af7a394ea3376d4466ca99f, type: 3}
+    - {fileID: 8300000, guid: 29b66fafdf7e1c745a2138b803395e54, type: 3}
+    volume: 0.7
+    pitch: 0.8
+    maxLength: 1.2
+  - reaction: 8
+    clips:
+    - {fileID: 8300000, guid: 3e98cc67e10cee8449c10a533d46b2b1, type: 3}
+    - {fileID: 8300000, guid: 93e6fc769ddd0464bbb65fed8828708c, type: 3}
+    volume: 0.7
+    pitch: 1.25
+    maxLength: 0.6
+  - reaction: 9
+    clips:
+    - {fileID: 8300000, guid: dc24524e3db18b94db255bd756910f09, type: 3}
+    - {fileID: 8300000, guid: 93e6fc769ddd0464bbb65fed8828708c, type: 3}
+    volume: 0.6
+    pitch: 0.9
+    maxLength: 0.7
+  - reaction: 10
+    clips:
+    - {fileID: 8300000, guid: d42426fe5af7a394ea3376d4466ca99f, type: 3}
+    - {fileID: 8300000, guid: 29b66fafdf7e1c745a2138b803395e54, type: 3}
+    volume: 0.7
+    pitch: 1.3
+    maxLength: 1.5
+  comboFrenzy: {fileID: 8300000, guid: 3a4a3954a815e03489c79de1705910de, type: 3}
+  comboOverload: {fileID: 8300000, guid: 0422fc8f6b2aca048abdc8fee246533d, type: 3}
+  announcerVolume: 0.9

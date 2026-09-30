@@ -39,8 +39,8 @@
 
 - 2v2 (or 2v1 with a handicap). Team colors are a ring or outline on each wizard; bullets keep the wizard color.
 - Shared team lives or per-player lives (test both). A team is out when all of its lives are gone.
-- Friendly fire: bullets **off** by default, reactions **on** (toggle). Chaos stays, frustration drops.
-- Team-comp hints on wizard select (see [Elemental Ecosystem § Team roles](elemental-ecosystem.md#4-team-roles-tdm-and-zombies)).
+- Friendly fire: bullets **off** by default, reactions **on** (toggle). Chaos stays, frustration drops. *(Hook built: `Teams.ReactionFriendlyFire` is enforced; `Teams.TeamOf` needs TDM to assign teams.)*
+- Team-comp hints on wizard select *(built: role, comps, and a callout when an earlier pick completes a comp)* (see [Elemental Ecosystem § Team roles](elemental-ecosystem.md#4-team-roles-tdm-and-zombies)).
 
 ## Zombies (co-op waves)
 

@@ -104,12 +104,35 @@ public class CharacterSelectController : MonoBehaviour
             (f != null ? $"\nAffinity - {RuneBook.ClassList(f)}: {f.name}. {f.description}" : "");
     }
 
+    // Which player is picking (slots before it are this session's locked picks)
+    int pickerSlot;
+
+    public void SetPicker(int slot)
+    {
+        pickerSlot = slot;
+        // refresh just the hint (going back to this page keeps the rune picks)
+        if (selectedWizard != null && loreText != null) loreText.text = CompHint() + selectedWizard.loreText;
+    }
+
+    /// Role and named comps (Elemental Ecosystem), plus a callout in co-op/team modes
+    /// when an earlier pick completes a comp with the highlighted wizard
+    string CompHint()
+    {
+        var dm = DataManager.Instance;
+        var picked = new System.Collections.Generic.List<(int, WizardData)>();
+        if (dm != null && dm.Wizards != null)
+            for (int i = 0; i < pickerSlot && i < dm.Wizards.Length; i++)
+                if (dm.Wizards[i] != null) picked.Add((i, dm.Wizards[i]));
+        bool teamMode = dm != null && dm.SelectedMode != 0;   // 0 = deathmatch
+        return ElementComps.Hint(selectedWizard, picked, teamMode);
+    }
+
     void updateWizard()
     {
         selectedWizard = allWizards[currentWizardIndex];
 
         nameText.text = selectedWizard.wizardName;
-        loreText.text = selectedWizard.loreText;
+        loreText.text = CompHint() + selectedWizard.loreText;
         // new wizard: start from their original runes
         selectedActiveRune = 0;
         selectedPassiveRune = 0;

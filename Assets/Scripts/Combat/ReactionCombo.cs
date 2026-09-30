@@ -39,6 +39,7 @@ public static class ReactionCombo
         Expire();
 
         if (!streaks.TryGetValue(attacker, out var s)) streaks[attacker] = s = new Streak();
+        if (ticker == null) ticker = new GameObject("[ReactionCombo]").AddComponent<ComboTicker>();
         s.count++;
         s.last = Time.time;
         ComboChanged?.Invoke(attacker, s.count);
@@ -54,10 +55,13 @@ public static class ReactionCombo
         float k = Mathf.Clamp01(s.count / 5f);
         Rumble.Play(attacker, 0.4f + 0.6f * k, 0.8f + 0.2f * k, 0.3f + 0.3f * k);
         if (s.count >= 3) CameraShake.Shake(0.12f + 0.06f * Mathf.Min(s.count - 3, 3), 0.25f);
+        ReactionAudio.Combo(s.count);
     }
 
-    // Close out streaks whose window ran out
-    static void Expire()
+    static ComboTicker ticker;
+
+    // Close out streaks whose window ran out (also ticked every frame, so ComboEnded is on time)
+    internal static void Expire()
     {
         if (streaks.Count == 0) return;
         List<GameObject> done = null;
@@ -76,6 +80,7 @@ public static class ReactionCombo
     static void ResetStatics()
     {
         streaks.Clear();
+        ticker = null;
         ComboChanged = null;
         ComboEnded = null;
     }
@@ -83,4 +88,10 @@ public static class ReactionCombo
     // after ElementReactions clears its own event
     [RuntimeInitializeOnLoadMethod(RuntimeInitializeLoadType.BeforeSceneLoad)]
     static void Hook() => ElementReactions.Reacted += OnReacted;
+}
+
+[AddComponentMenu("")]
+class ComboTicker : MonoBehaviour
+{
+    void Update() => ReactionCombo.Expire();
 }

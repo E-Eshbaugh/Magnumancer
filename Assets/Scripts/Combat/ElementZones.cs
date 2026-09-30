@@ -115,7 +115,8 @@ public static class ElementZones
     {
         if (col == null) return float.MaxValue;
         Vector3 probe = new Vector3(p.x, col.bounds.center.y, p.z);
-        Vector3 c = col.ClosestPoint(probe);
+        // ClosestPoint doesn't support non-convex mesh colliders (map floor planes): use bounds
+        Vector3 c = col is MeshCollider mesh && !mesh.convex ? col.bounds.ClosestPoint(probe) : col.ClosestPoint(probe);
         c.y = probe.y;
         return Vector3.Distance(c, probe);
     }

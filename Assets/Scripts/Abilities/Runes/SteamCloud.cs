@@ -105,6 +105,6 @@ public class SteamCloud : MonoBehaviour
         if (Time.time < nextTick) return;
         nextTick = Time.time + Tick;
         foreach (var e in AbilityKit.Enemies(transform.position, radius, owner))
-            DamageEvents.Deal(e, dps * Tick, owner);
+            ElementReactions.DealAs(Reaction.Steam, e, dps * Tick, owner);
     }
 }

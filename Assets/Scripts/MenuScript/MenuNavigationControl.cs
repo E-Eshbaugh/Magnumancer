@@ -151,6 +151,7 @@ public class MenuNavigationControl : MonoBehaviour
 
             var pad = DataManager.Instance.GetPad(currentPicker);
             characterSelectController.activePad = pad;
+            characterSelectController.SetPicker(currentPicker);   // comp hints know who picked before
 
             if (curPlayerTxtController != null)
             {
@@ -212,6 +213,7 @@ public class MenuNavigationControl : MonoBehaviour
 
                 var pad = DataManager.Instance.GetPad(currentPicker);
                 characterSelectController.activePad = pad;
+                characterSelectController.SetPicker(currentPicker);   // comp hints know who picked before
 
                 if (curPlayerTxtController != null)
                 {
@@ -255,6 +257,7 @@ public class MenuNavigationControl : MonoBehaviour
         phase = MenuPhase.WizardPick;
         var pad = DataManager.Instance.GetPad(currentPicker);
         characterSelectController.activePad = pad;
+        characterSelectController.SetPicker(currentPicker);   // comp hints know who picked before
 
         if (curPlayerTxtController != null)
         {

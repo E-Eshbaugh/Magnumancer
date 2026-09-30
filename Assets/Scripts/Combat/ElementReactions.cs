@@ -219,11 +219,48 @@ public static class ElementReactions
         public int count = 1;            // targets caught, shown as "x3"
         public float scale = 1f;         // damage multiplier (Echo)
         public bool echo;
+        public Reaction reaction;
     }
 
     /// reaction (Echo for the repeat), triggerer (credit), target (null for zone
     /// reactions), where. Hook for the combo counter, announcer and kill feed.
     public static event Action<Reaction, GameObject, GameObject, Vector3> Reacted;
+
+    /// reaction, killer (credit), victim, where: a reaction (or a zone/cloud/rubble it left
+    /// behind) took a life. The hook for a kill-feed icon; for now it pops "COMBUST KILL!".
+    public static event Action<Reaction, GameObject, GameObject, Vector3> ReactionKilled;
+
+    static Reaction? dealing;
+
+    /// Damage that belongs to a reaction (including what it leaves behind), so a kill it
+    /// lands counts as a reaction kill. Credit still goes to `attacker`.
+    public static void DealAs(Reaction reaction, GameObject victim, float amount, GameObject attacker)
+    {
+        if (!Teams.ReactionFriendlyFire && Teams.SameTeam(victim, attacker)) return;   // team toggle
+        var previous = dealing;
+        dealing = reaction;
+        try { DamageEvents.Deal(victim, amount, attacker); }
+        finally { dealing = previous; }
+    }
+
+    static void OnKilled(GameObject victim, GameObject attacker, Vector3 position)
+    {
+        if (dealing == null || victim == null) return;
+        var reaction = dealing.Value;
+        ReactionKilled?.Invoke(reaction, attacker, victim, position);
+
+        var r = Array.Find(Table, x => x.id == reaction);
+        if (r == null) return;
+        ReactionPopup.Show(r.word + " KILL!", Elements.ColorOf(r.colorA), Elements.ColorOf(r.colorB),
+                           position + Vector3.up * 2.6f, 1.35f);
+    }
+
+    [RuntimeInitializeOnLoadMethod(RuntimeInitializeLoadType.BeforeSceneLoad)]
+    static void Hook()
+    {
+        DamageEvents.Killed -= OnKilled;   // no double-subscribe when domain reload is off
+        DamageEvents.Killed += OnKilled;
+    }
 
     // ---------- Sources ----------
 
@@ -402,6 +439,7 @@ public static class ElementReactions
 
     static void Fire(Recipe r, Ctx c)
     {
+        c.reaction = r.id;
         depth++;
         try { r.effect(r, c); }
         finally { depth--; }
@@ -450,6 +488,7 @@ public static class ElementReactions
         PowerFx.Flash(c.point, Color.Lerp(a, b, 0.5f), 8f, 7f, 0.35f);
 
         CameraShake.Shake(r.shake * c.scale, 0.2f);
+        ReactionAudio.Play(r.id, c.echo);
         Rumble.ReactionTrigger(c.attacker);
     }
 
@@ -457,7 +496,7 @@ public static class ElementReactions
     static void Hurt(GameObject victim, float damage, Ctx c)
     {
         if (victim == null || victim == c.attacker) return;
-        DamageEvents.Deal(victim, damage * c.scale, c.attacker);
+        DealAs(c.reaction, victim, damage * c.scale, c.attacker);
         Rumble.ReactionVictim(victim);
     }
 
@@ -621,6 +660,7 @@ public static class ElementReactions
         var patch = GroundHazard.Spawn(c.attacker, center, radius * 0.6f, r.duration, Elements.ColorOf(Element.Fire));
         patch.element = Element.Fire;
         patch.damagePerSecond = r.zoneDps;
+        patch.fromReaction = Reaction.Combust;
         EffectPool.Spawn(center, radius * 0.6f, r.duration, EffectPool.Style.Lava);
 
         Color fire = Elements.ColorOf(Element.Fire), poison = Elements.ColorOf(Element.Poison);
@@ -738,6 +778,7 @@ public static class ElementReactions
         if (c.target == null)
         {
             if (c.zone is GroundHazard growth) growth.Ignite(c.attacker, r.duration, r.zoneDps * c.scale);
+            else if (c.zone is HealingZone totem) totem.Ignite(c.attacker, r.duration, r.zoneDps * c.scale);
             return;
         }
 
@@ -751,6 +792,7 @@ public static class ElementReactions
         // the vines on them burn into a patch that spreads into any growth it touches
         var burn = GroundHazard.Spawn(c.attacker, at, r.radius, r.duration, Elements.ColorOf(Element.Fire));
         burn.element = Element.Fire;
+        burn.fromReaction = Reaction.Wildfire;
         burn.damagePerSecond = r.zoneDps * c.scale;
         EffectPool.Spawn(at, r.radius, r.duration, EffectPool.Style.Lava);
 
@@ -835,6 +877,7 @@ public static class ElementReactions
 
         var puddle = GroundHazard.Spawn(c.attacker, at, r.radius, r.duration, poison);
         puddle.element = Element.Poison;
+        puddle.fromReaction = Reaction.BlightBloom;
         puddle.damagePerSecond = r.zoneDps * c.scale;
         PowerFx.Puffs(at + Vector3.up * 0.4f, poison, 8, 2.5f, 0.9f, 0.9f, lift: 0.8f);
         PowerFx.Sparks(at + Vector3.up * 0.4f, nature, 14, 5f, 0.4f, 0.06f, 1f);
@@ -912,6 +955,8 @@ public static class ElementReactions
     {
         runner = null;
         depth = 0;
+        dealing = null;
+        ReactionKilled = null;
         zoneCooldowns.Clear();
         onceZones.Clear();
         Reacted = null;

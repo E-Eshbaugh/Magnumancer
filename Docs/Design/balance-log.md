@@ -141,6 +141,16 @@ Again, nothing existing was retuned. All numbers live in `ElementReactions.Table
 | Fire vs ice walls | ×2 damage | `Bullet.FireVsIce` | Fire rounds only |
 | Zone reaction cooldown | 1.5s per zone | `ElementReactions.ZoneCooldown` | Stops a bullet stream over one puddle spamming |
 
+## Pass 6 (2026-09-30): Zombies points, reaction sounds (new numbers only)
+
+| Knob | Value | Where |
+|---|---|---|
+| Points per monster hit | 10 (every pellet counts) | `ZombiesPoints.PerHit` |
+| Points per kill | 60 | `ZombiesPoints.PerKill` |
+| Points per reaction | 30 | `ZombiesPoints.PerReaction` |
+| Combo payout | 25 × combo length when it ends | `ZombiesPoints.PerComboStep` |
+| Reaction sound levels | master 0.8, per-reaction 0.5–0.9, announcer 0.9 | `Resources/ReactionSounds.asset` |
+
 ## Open issues / to playtest
 
 - **Blinkstorm stun is 5s** (`LightningBlastDamage`: `Stun(0.2f, 5f)`). With stuns now also blocking jumps that's very punishing. Suggest **~1.5s**.
@@ -155,4 +165,6 @@ Again, nothing existing was retuned. All numbers live in `ElementReactions.Table
 - Bullets count as "flying through" a zone when they pass over it, so a Frostwarden firing across an Undertow freezes it. That's intended to make zone reactions common; check it doesn't feel random.
 - **Blinkstorm now also shoves** (explosion shove, ~12 at the center) on top of its 5s stun. Watch that stunned players don't get flung off ledges too often.
 - Magnetize rubble arcs pick one target per pulse; 4 chunks around one player can add up (up to ~40 dps if they stand in the middle). Probably fine because it's easy to walk out, but watch it.
+- Zombies points: 10 per pellet makes shotguns farm points. If that matters once wall buys exist, pay hits per shot or per damage instead.
+- Reaction sounds are placeholders from the gun pack; check levels against gunfire, and replace Brittle's static and Shatter's thud when ice sounds exist.
 - Blinkstorm's 5s stun now also Charges everyone it hits. Combined with Conduct that's a lot of lockdown; another reason to shorten it.
