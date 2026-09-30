@@ -6,6 +6,25 @@
 
 The arena should visibly take a beating. Cover wears away as the match goes on, so late-match fights get more open and more frantic, and big moments leave marks (craters, cracks, rubble) that tell the story of the fight.
 
+## Per match, map tour
+
+Matches are a **tour**: every match is a different map, and the map **fully resets** each match (Gang Beasts style; see [Modes & Match Flow](modes-and-flow.md)). So destruction only has to last one match, and wearing a map down is the point: a forest fire or a flattened dungeon is a one-match spectacle, not permanent damage.
+
+- **Pacing target:** cover should mostly survive the opening, be about half gone by the middle of a 5–10 minute match, and leave the endgame open and frantic. Tune with per-rule toughness in `DestructibleSetup.Rules`.
+- **Everything resets on map load:** props, stubs, craters, marks, burning, terrain dents (each match digs a fresh copy of the terrain, and the previous match's copy is freed), health bars, element zones, Zombies points and teams.
+
+### Adding a map to the tour
+
+Destruction sets itself up from names, so new maps mostly just work if they follow these conventions:
+
+- Build props from the KayKit / Nature MegaKit / mushroom models and keep their model names (`rubble_large`, `pillar`, `CommonTree`, `barrel_large`...) so the name rules catch them. Give each a convex collider.
+- Name wall pieces `wall...`. The outer ring is detected as the boundary and never breaks. Name joints `wall_corner` / `wall_crossing`.
+- Use `building_`, `stairs`, `tower`, `bridge`, `castle` for landmarks that should never break. Anything over 9m across never breaks either.
+- For hand-tuned props, add a `Destructible` component yourself: it's kept as placed.
+- Use a Unity **Terrain** floor if blasts should dent the ground (mesh floors get decal craters only).
+- For map water or lava, add a `MapElementZone` with its own collider covering only where players stand in it (see [Elemental Ecosystem](elemental-ecosystem.md), "Needs the editor").
+- Check the console on first play: `[Destructibles] N props in <map> can be destroyed`.
+
 ## What's built
 
 ### Destructible props (`Assets/Scripts/Environment/Destructible.cs`)

@@ -192,7 +192,7 @@ See [Destructible Environment](destructible-environment.md). Knobs: `Destructibl
 - Zombies points: 10 per pellet makes shotguns farm points. If that matters once wall buys exist, pay hits per shot or per damage instead.
 - Reaction sounds are placeholders from the gun pack; check levels against gunfire, and replace Brittle's static and Shatter's thud when ice sounds exist.
 - **Destructible props**: check how fast cover disappears. A 4-player match with miniguns could strip Frostgrave's rubble in a minute. Tune per-rule toughness or `BaseHealth` if maps open up too fast, and check the auto-setup console count per map.
-- **Forest fires**: Oldwoods has ~80 trees within reach of each other. A 30%/s spread could burn the whole map in one match. Great or awful; lower `SpreadChance` if it's awful.
+- **Forest fires**: Oldwoods has ~80 trees within reach of each other, and a 30%/s spread could burn the whole map in one match. Maps reset every match (tour), so this is a one-match spectacle, not lasting damage. Judge it on whether it makes a *good* match; lower `SpreadChance` if the forest is gone before mid-match.
 - **Destructible interior walls** (BlackOsuary's dungeon especially): check the boundary detection keeps the outer walls up on every map, and that maps don't turn into open fields too early (walls are ×2.2 toughness and leave stubs).
 - Explosive barrels (Drowned Sanctum has 7) might chain-kill. That's intended chaos, but watch the damage.
 - Blinkstorm's 5s stun now also Charges everyone it hits. Combined with Conduct that's a lot of lockdown; another reason to shorten it.

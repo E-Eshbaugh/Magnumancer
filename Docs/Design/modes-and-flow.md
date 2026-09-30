@@ -3,6 +3,7 @@
 ## Brawl campaign (the session structure)
 
 - Players pick a target: **first to 3, 5 or 7 match wins**.
+- It's a **tour** (like Gang Beasts): every match is a different map, and each map loads fresh (destruction, craters and so on reset).
 - Each **match** is one map with stock rules (wizard hearts = lives). Last wizard standing wins the match.
 - **Between matches:**
   - A quick scoreboard with a crown or medals for the leader.

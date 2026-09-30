@@ -21,6 +21,8 @@ public static class TerrainCraters
 
     class Dug { public TerrainData data; public float[,] original; }
     static readonly Dictionary<Terrain, Dug> terrains = new();
+    /// Last match's terrain copies: freed when the next map loads (a tour loads many maps)
+    static readonly List<TerrainData> copies = new();
 
     /// Dents the terrain under `at`; returns how deep (metres, 0 = no terrain there)
     public static float Blast(Vector3 at, float radius)
@@ -92,12 +94,16 @@ public static class TerrainCraters
     {
         terrains.Clear();
         dirty.Clear();
+        // the previous map is gone: free its dug-up terrain copies
+        foreach (var old in copies) if (old != null) Object.Destroy(old);
+        copies.Clear();
         if (!Enabled) return;
         foreach (var t in Terrain.activeTerrains)
         {
             if (t == null || t.terrainData == null || t.gameObject.scene != scene) continue;
             var copy = Object.Instantiate(t.terrainData);
             copy.name = t.terrainData.name + " (match copy)";
+            copies.Add(copy);
             t.terrainData = copy;
             var col = t.GetComponent<TerrainCollider>();
             if (col != null) col.terrainData = copy;
@@ -126,6 +132,7 @@ public static class TerrainCraters
     {
         terrains.Clear();
         dirty.Clear();
+        copies.Clear();
         runner = null;
     }
 

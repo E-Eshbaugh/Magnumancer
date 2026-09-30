@@ -67,6 +67,7 @@ public class PropHealthBar : MonoBehaviour
     static Canvas Canvas()
     {
         if (canvas != null) return canvas;
+        bars.Clear();   // a new map: last map's props are gone
         var go = new GameObject("PropHealthBars");
         canvas = go.AddComponent<UnityEngine.Canvas>();
         canvas.renderMode = RenderMode.ScreenSpaceOverlay;
