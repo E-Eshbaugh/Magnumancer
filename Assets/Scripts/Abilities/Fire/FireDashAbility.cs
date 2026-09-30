@@ -13,6 +13,8 @@ public class FireDashAbility : MonoBehaviour, IActiveAbility
     public CharacterController _cc;
     bool _fireDashing;
     [SerializeField] GameObject lavaTrailPrefab;
+    /// The lava effect, reused by Molten Core's lava pool
+    public GameObject LavaTrailPrefab => lavaTrailPrefab;
     [SerializeField] LayerMask enemyLayer;
     [SerializeField] float enemyHitboxRadius = 1f;
     [SerializeField] int dashDamage = 40;

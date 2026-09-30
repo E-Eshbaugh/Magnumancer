@@ -12,33 +12,32 @@ public class PauseUIControl : MonoBehaviour
     public GameObject pauseMenuUI;
 
     [Header("Controller")]
+    [Tooltip("Controller driving the menu (whoever pressed Start); null = any controller")]
     public Gamepad gamepad;
     public float deadzone = 0.2f;
     public float threshold = 0.6f;
 
     private int _currentIndex = 0;
     private bool _stickReleased = true;
-    private bool _isPaused = false;
+    private int _openedFrame = -1;
 
+    // Note: this lives on the menu root, which PauseMenScript hides in its Start —
+    // so this component's Start only runs the first time the menu opens. Don't hide
+    // the menu from here (that made the first Start press show nothing).
     void Start()
     {
         if (selectors.Length != 3)
             Debug.LogError("PauseUIControl requires exactly 3 selectors.");
-        // Ensure pause menu is hidden at start
-        if (pauseMenuUI != null)
-            pauseMenuUI.SetActive(false);
         UpdateActiveSelector();
     }
 
     void Update()
     {
-        if (gamepad == null)
-            gamepad = Gamepad.current;
-        if (gamepad == null)
-            return;
+        // The Start press that opened the menu isn't a menu input
+        if (Time.frameCount == _openedFrame) return;
 
-        // 1) Navigate with right stick
-        float y = gamepad.rightStick.y.ReadValue();
+        // 1) Navigate with either stick or the d-pad
+        float y = ReadVertical();
         if (Mathf.Abs(y) < deadzone)
             _stickReleased = true;
 
@@ -56,14 +55,42 @@ public class PauseUIControl : MonoBehaviour
         }
 
         // 2) Confirm with A (buttonSouth)
-        if (gamepad.buttonSouth.wasPressedThisFrame)
-        {
+        if (Pressed(p => p.buttonSouth.wasPressedThisFrame))
             HandleSelection();
-        }
+        // 3) B resumes any time
+        else if (Pressed(p => p.buttonEast.wasPressedThisFrame))
+            ClosePauseMenu();
+    }
 
-        // 3) Also allow B to unpause any time
-        if (gamepad.buttonEast.wasPressedThisFrame)
-            HandleSelectionCancel();
+    float ReadVertical()
+    {
+        if (gamepad != null) return VerticalOf(gamepad);
+
+        float best = 0f;
+        foreach (var pad in Gamepad.all)
+        {
+            float v = VerticalOf(pad);
+            if (Mathf.Abs(v) > Mathf.Abs(best)) best = v;
+        }
+        return best;
+    }
+
+    static float VerticalOf(Gamepad pad)
+    {
+        float y = pad.rightStick.y.ReadValue();
+        float l = pad.leftStick.y.ReadValue();
+        if (Mathf.Abs(l) > Mathf.Abs(y)) y = l;
+        float d = pad.dpad.y.ReadValue();
+        if (Mathf.Abs(d) > Mathf.Abs(y)) y = d;
+        return y;
+    }
+
+    bool Pressed(System.Func<Gamepad, bool> check)
+    {
+        if (gamepad != null) return check(gamepad);
+        foreach (var pad in Gamepad.all)
+            if (check(pad)) return true;
+        return false;
     }
 
     private void UpdateActiveSelector()
@@ -78,15 +105,11 @@ public class PauseUIControl : MonoBehaviour
         switch (_currentIndex)
         {
             case 0:
-                // Resume
-                if (pauseMenuUI != null)
-                    pauseMenuUI.SetActive(false);
-                Time.timeScale = 1f;
-                _isPaused = false;
+                ClosePauseMenu();
                 break;
             case 1:
                 // Return to MainMenu scene
-                Time.timeScale = 1f; // unpause before scene load
+                GamePause.Resume(); // unpause before scene load
                 SceneManager.LoadScene("MainMenu");
                 break;
             case 2:
@@ -96,25 +119,25 @@ public class PauseUIControl : MonoBehaviour
         }
     }
 
-    private void HandleSelectionCancel()
-    {
-        // Treat B as “cancel/pause toggle” → resume
-        if (pauseMenuUI != null)
-            pauseMenuUI.SetActive(false);
-        Time.timeScale = 1f;
-        _isPaused = false;
-    }
-
     /// <summary>
-    /// Call this to open the pause menu.
+    /// Opens the pause menu, driven by the controller that paused (null = any).
     /// </summary>
-    public void OpenPauseMenu()
+    public void OpenPauseMenu(Gamepad presser = null)
     {
+        gamepad = presser;
+        _openedFrame = Time.frameCount;
+        _currentIndex = 0;
+        _stickReleased = false; // don't jump selection if a stick is already held
         if (pauseMenuUI != null)
             pauseMenuUI.SetActive(true);
-        Time.timeScale = 0f;
-        _isPaused = true;
-        _currentIndex = 0;
         UpdateActiveSelector();
+        GamePause.Pause();
+    }
+
+    public void ClosePauseMenu()
+    {
+        if (pauseMenuUI != null)
+            pauseMenuUI.SetActive(false);
+        GamePause.Resume();
     }
 }

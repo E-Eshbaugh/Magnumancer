@@ -10,6 +10,9 @@ public class MineExplosionController : MonoBehaviour
     public float cameraShakeIntensity = 0.3f;
     public float cameraShakeDuration = 0.2f;
 
+    [Tooltip("Other mines/grenades this close get set off too (0 = off: a Viper Nest's three mines land close together and would all go off at once)")]
+    public float chainRadius = 0f;
+
     [Header("Audio")]
     public AudioClip explosionClip;
 
@@ -51,10 +54,20 @@ public class MineExplosionController : MonoBehaviour
         isArmed = true;
     }
 
+    /// Set off by a blast or gunfire (works even before it's armed)
+    public void Detonate(float delay)
+    {
+        if (hasExploded) return;
+        if (delay <= 0f) { Explode(); return; }
+        CancelInvoke(nameof(Explode));
+        Invoke(nameof(Explode), delay);
+    }
+
     public void Explode()
     {
         if (hasExploded) return;
         hasExploded = true;
+        CancelInvoke();
 
         // 1. Spawn poison cloud
         if (poisonCloudPrefab != null)
@@ -68,13 +81,17 @@ public class MineExplosionController : MonoBehaviour
             }
         }
 
-        // 2. Camera shake
+        // 2. Camera shake + controller rumble for anyone close
         CameraShake.Shake(cameraShakeIntensity, cameraShakeDuration);
+        Rumble.Blast(transform.position, detectionRadius * 4f, 0.7f);
 
         // 3. Play explosion sound from temp object
         PlayExplosionSound();
 
-        // 4. Destroy the mine
+        // 4. Chain into nearby mines/grenades
+        Explosions.AffectWorld(transform.position, chainRadius, 0f, gameObject);
+
+        // 5. Destroy the mine
         Destroy(gameObject);
     }
 

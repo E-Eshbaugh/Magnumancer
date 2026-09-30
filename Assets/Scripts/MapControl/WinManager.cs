@@ -23,6 +23,11 @@ public class WinManager : MonoBehaviour
         if (!endSequenceStarted && aliveCount == 1 && maxAliveSeen >= 2)
         {
             endSequenceStarted = true;
+
+            // the last wizard standing gets a victory rumble
+            foreach (var tag in playerTags)
+                foreach (var winner in GameObject.FindGameObjectsWithTag(tag))
+                    Rumble.Play(winner, 0.6f, 1f, 1.2f);
             StartCoroutine(WaitAndReturnToMainMenu());
         }
     }

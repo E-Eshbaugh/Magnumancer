@@ -26,7 +26,7 @@ public class CloneMovement : MonoBehaviour
 
     void Update()
     {
-        if (gamepad == null) return;
+        if (gamepad == null || GamePause.InputBlocked) return;
 
         Vector2 rawInput = gamepad.leftStick.ReadValue();
         Vector3 inputDir = new Vector3(rawInput.x, 0f, -rawInput.y); // ← mirror vertical input

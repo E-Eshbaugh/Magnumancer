@@ -166,7 +166,13 @@ public class MenuNavigationControl : MonoBehaviour
     {
         var wiz = characterSelectController.selectedWizard;
         DataManager.Instance.SetWizard(currentPicker, wiz);
+        DataManager.Instance.SetRunes(currentPicker,
+            characterSelectController.selectedActiveRune,
+            characterSelectController.selectedPassiveRune);
         wizardLocked[currentPicker] = true;
+
+        // the loadout page uses the d-pad for slots: stop the (hidden) wizard page reacting
+        characterSelectController.activePad = null;
 
         phase = MenuPhase.LoadoutPick;
         hasStarted = true;

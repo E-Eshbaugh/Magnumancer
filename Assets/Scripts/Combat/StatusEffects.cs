@@ -67,6 +67,14 @@ public class StatusEffects : MonoBehaviour
 
     public void ClearBrands(GameObject attacker) => brands.Remove(attacker);
 
+    /// Live brands from this attacker (0 if they've decayed)
+    public int BrandCount(GameObject attacker)
+    {
+        if (!brands.TryGetValue(attacker, out int n)) return 0;
+        if (lastBrandTime.TryGetValue(attacker, out float last) && Time.time - last > brandDecayTime) return 0;
+        return n;
+    }
+
     // ---------- Freeze ----------
     /// Adds a freeze counter (max 5) and returns the new count.
     public int AddFreeze()
@@ -76,6 +84,11 @@ public class StatusEffects : MonoBehaviour
         ApplySpeed();
         return freezeStacks;
     }
+
+    public int FreezeStacks => freezeStacks;
+
+    /// Can't move for a moment (Thornsnare, Glacial Lance)
+    public void Root(float duration) => Stun(0.05f, duration);
 
     public void ClearFreeze()
     {
@@ -87,6 +100,7 @@ public class StatusEffects : MonoBehaviour
     /// Slows movement to speedMultiplier for duration (players also get slowed aim via StunEffect).
     public void Stun(float speedMultiplier, float duration)
     {
+        Rumble.Stunned(gameObject, duration);
         var playerStun = GetComponent<StunEffect>();
         if (playerStun != null)
         {

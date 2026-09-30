@@ -29,7 +29,10 @@ MonoBehaviour:
     lies in outlasting any foe.
   material: {fileID: 2100000, guid: ae8c9663d79734e4cbf2bdf668e4f97f, type: 2}
   activeAbilityPrefab: {fileID: 4533276989616956427, guid: 552cfd2e2793958408fce5c056cd0172, type: 3}
-  abilityCooldown: 20
+  abilityCooldown: 16
   customBulletPrefab: {fileID: 0}
+  moveSpeedMultiplier: 1.0
+  themeColor: {r: 0.35, g: 1.0, b: 0.35, a: 1}
+  spawnEffectPrefab: {fileID: 2353600328335836179, guid: ceec7516237b4104b94300043ca39784, type: 3}
   passive: 7
   passiveEffectPrefab: {fileID: 0}

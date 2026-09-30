@@ -26,7 +26,7 @@ public class CloneGunOrbit : MonoBehaviour
 
     void Update()
     {
-        if (gamepad == null || cloneTransform == null)
+        if (gamepad == null || cloneTransform == null || GamePause.InputBlocked)
             return;
 
         // Read caster’s stick and mirror vertical (Y)

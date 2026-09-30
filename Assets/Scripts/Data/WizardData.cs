@@ -16,6 +16,14 @@ public class WizardData : ScriptableObject
     public GameObject activeAbilityPrefab;
     public float abilityCooldown;
     public GameObject customBulletPrefab;
+    [Tooltip("Base move speed multiplier (Granite Vow is slow, Voltborn is quick)")]
+    public float moveSpeedMultiplier = 1f;
+
+    [Header("Theme")]
+    [Tooltip("Signature color: laser sights, spawn bolt/flash")]
+    public Color themeColor = Color.white;
+    [Tooltip("Optional particle burst played where the wizard (re)spawns, on top of the bolt")]
+    public GameObject spawnEffectPrefab;
 
     [Header("Passive")]
     public PassiveType passive;

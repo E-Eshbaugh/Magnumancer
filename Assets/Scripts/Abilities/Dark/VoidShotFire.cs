@@ -40,16 +40,7 @@ public class VoidShotActivator : MonoBehaviour, IActiveAbility
         }
 
         // Rumble the controller
-        if (orbit.gamepad != null)
-        {
-            orbit.gamepad.SetMotorSpeeds(rumbleLow, rumbleHigh);
-            caster.GetComponent<MonoBehaviour>().StartCoroutine(StopRumbleAfterDelay(orbit.gamepad, rumbleDuration));
-        }
+        Rumble.Play(orbit.gamepad, rumbleLow, rumbleHigh, rumbleDuration);
     }
 
-    private System.Collections.IEnumerator StopRumbleAfterDelay(Gamepad pad, float delay)
-    {
-        yield return new WaitForSeconds(delay);
-        pad.SetMotorSpeeds(0f, 0f);
-    }
 }

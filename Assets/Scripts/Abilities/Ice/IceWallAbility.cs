@@ -6,8 +6,10 @@ public class IceWallAbility : MonoBehaviour, IActiveAbility
     [Header("Wall Settings")]
     [SerializeField] GameObject iceWallEffectPrefab;
     [SerializeField] float forwardDistance = 1.2f;
+    [Tooltip("Walls never time out — they stand until shot down. Past this many, the oldest shatters.")]
+    [SerializeField] int maxWalls = 3;
 
-    private GameObject lastWall;
+    private readonly System.Collections.Generic.List<IceWallEffect> walls = new();
 
     public void Activate(GameObject caster)
     {
@@ -27,18 +29,20 @@ public class IceWallAbility : MonoBehaviour, IActiveAbility
 
         Quaternion rotation = Quaternion.LookRotation(-forward);
 
-        // Handle previous wall
-        if (lastWall != null)
+        // Walls last until they're broken; only the oldest goes if there are too many
+        walls.RemoveAll(w => w == null);
+        while (walls.Count >= Mathf.Max(1, maxWalls))
         {
-            IceWallEffect effect = lastWall.GetComponent<IceWallEffect>();
-            if (effect != null) effect.BeginMelt();
-            else Destroy(lastWall);
-
-            lastWall = null;
+            walls[0].Shatter();
+            walls.RemoveAt(0);
         }
 
-        lastWall = Instantiate(iceWallEffectPrefab, testPoint, rotation);
-        lastWall.GetComponent<IceWallEffect>()?.BeginRise();
+        var wall = Instantiate(iceWallEffectPrefab, testPoint, rotation).GetComponent<IceWallEffect>();
+        if (wall != null)
+        {
+            wall.BeginRise();
+            walls.Add(wall);
+        }
     }
 
 }

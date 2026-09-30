@@ -13,14 +13,15 @@ MonoBehaviour:
   m_Name: AutoSG
   m_EditorClassIdentifier: 
   weaponName: Hellthrasher
-  damage: 8
-  ammoCapacity: 6
+  damage: 7
+  ammoCapacity: 8
   attackSpeed: 2
   weight: 4
   orbCost: 4
   weaponIcon: {fileID: -1675477381, guid: 88365eb93f90dc0448eb4a39ecadd679, type: 3}
-  description: '[6x6] Pumps out shells like a possessed forge. Close-range obliteration.'
+  description: '[6x8] Pumps out shells like a possessed forge. Close-range obliteration.'
   fireType: shotgunA
+  weaponClass: 4
   recoil: 2
   reloadTime: 2.2
   fireSound: {fileID: 8300000, guid: a5ea8a4a2de7ed4439952ab7cd355f5c, type: 3}
@@ -29,7 +30,7 @@ MonoBehaviour:
   laserRange: 0
   isShotgun: 1
   pelletCount: 6
-  spreadAngle: 30
+  spreadAngle: 25
   heavyWeapon: 0
   akimbo: 0
   grenadeLauncher: 0

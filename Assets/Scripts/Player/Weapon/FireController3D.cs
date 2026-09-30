@@ -14,6 +14,11 @@ public class FireController3D : MonoBehaviour
     [Tooltip("Scales recoil (controller kick) — Stonebind halves it")]
     public float recoilMultiplier = 1f;
 
+    [Tooltip("From high ground, shots angle down to reach the floor this far out")]
+    public float highGroundAimDistance = 7f;
+
+    PlayerMovement3D ownerMovement;
+
     // Player this gun belongs to (credited with bullet/grenade damage)
     public GameObject Owner { get; private set; }
 
@@ -28,6 +33,22 @@ public class FireController3D : MonoBehaviour
             Debug.LogError($"{name}: firePoint is not assigned!");
 
         Owner = OwnerPlayer();
+        ownerMovement = Owner != null ? Owner.GetComponent<PlayerMovement3D>() : null;
+    }
+
+    /// Where a shot goes before spread: straight out of the muzzle, angled down when
+    /// the shooter stands on high ground. The laser sight uses this too.
+    public Vector3 ShotDirection()
+    {
+        Vector3 dir = firePoint != null ? firePoint.up : transform.forward;
+        float elevation = ownerMovement != null ? ownerMovement.elevation : 0f;
+        if (elevation > 0.3f)
+        {
+            Vector3 flat = new Vector3(dir.x, 0f, dir.z);
+            if (flat.sqrMagnitude > 1e-4f)
+                dir = (flat.normalized * highGroundAimDistance - Vector3.up * elevation).normalized;
+        }
+        return dir;
     }
 
     /// <summary>
@@ -44,17 +65,10 @@ public class FireController3D : MonoBehaviour
 
         recoil *= recoilMultiplier;
 
-        if (gamepad != null)
-        {
-            StartCoroutine(HapticRecoil(
-                gamepad,
-                Mathf.Clamp01(recoil * 0.7f),
-                Mathf.Clamp01(recoil * 1.5f)
-            ));
-        }
+        Rumble.Fire(gamepad, recoil);
 
-        // 1) Compute the flat shooting direction
-        Vector3 dir = firePoint.up;
+        // 1) Compute the shooting direction (angled down from high ground)
+        Vector3 dir = ShotDirection();
         if (spreadAngle > 0f)
             dir = Quaternion.AngleAxis(
                 Random.Range(-spreadAngle, spreadAngle),
@@ -85,16 +99,6 @@ public class FireController3D : MonoBehaviour
             timeGrenade.owner = Owner;
             if (damage >= 0) timeGrenade.maxDamage = damage;
         }
-    }
-
-    private IEnumerator HapticRecoil(Gamepad pad, float low, float high)
-    {
-        if (pad == null) yield break;
-        pad.SetMotorSpeeds(low * 1.2f, high * 1.5f);
-        yield return new WaitForSeconds(0.05f);
-        pad.SetMotorSpeeds(low * 0.5f, high * 0.7f);
-        yield return new WaitForSeconds(0.1f);
-        pad.SetMotorSpeeds(0f, 0f);
     }
 
     // The player object this component belongs to (Unity-null safe)

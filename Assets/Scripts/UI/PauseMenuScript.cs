@@ -6,49 +6,63 @@ public class PauseMenScript: MonoBehaviour
     [Tooltip("Root GameObject of your pause menu UI")]
     public GameObject pauseMenuUI;
 
-    private bool _isPaused = false;
-    private Gamepad _gamepad;
+    private PauseUIControl menuControl;
 
     void Start()
     {
-        // Ensure menu is hidden initially
         if (pauseMenuUI != null)
+        {
+            menuControl = pauseMenuUI.GetComponent<PauseUIControl>();
             pauseMenuUI.SetActive(false);
+        }
+        GamePause.Resume();
     }
 
     void Update()
     {
-        // Grab the assigned gamepad (or the first connected)
-        if (_gamepad == null)
-            _gamepad = Gamepad.current;
-
-        // Check for menu/start button or Escape key
-        bool menuPressed = (_gamepad != null && 
-                            (_gamepad.startButton.wasPressedThisFrame 
-                             || _gamepad.startButton?.wasPressedThisFrame == true))
-                           || (Keyboard.current != null && Keyboard.current.escapeKey.wasPressedThisFrame);
+        // Any connected controller's Start (or Escape) toggles the menu
+        bool menuPressed = Keyboard.current != null && Keyboard.current.escapeKey.wasPressedThisFrame;
+        Gamepad presser = null;
+        foreach (var pad in Gamepad.all)
+        {
+            if (pad.startButton.wasPressedThisFrame)
+            {
+                menuPressed = true;
+                presser = pad;
+                break;
+            }
+        }
 
         if (menuPressed)
-            TogglePause();
+            TogglePause(presser);
     }
 
-    private void TogglePause()
+    private void TogglePause(Gamepad presser)
     {
         // PauseUIControl can close the menu itself (Resume / B), so read the
-        // menu's real state instead of trusting our own flag.
-        _isPaused = pauseMenuUI != null ? !pauseMenuUI.activeSelf : !_isPaused;
+        // menu's real state instead of keeping our own flag.
+        bool open = pauseMenuUI != null ? !pauseMenuUI.activeSelf : !GamePause.IsPaused;
 
-        // Show/hide UI
-        if (pauseMenuUI != null)
-            pauseMenuUI.SetActive(_isPaused);
+        if (open)
+        {
+            if (menuControl != null) menuControl.OpenPauseMenu(presser);
+            else
+            {
+                if (pauseMenuUI != null) pauseMenuUI.SetActive(true);
+                GamePause.Pause();
+            }
+        }
+        else
+        {
+            if (menuControl != null) menuControl.ClosePauseMenu();
+            else
+            {
+                if (pauseMenuUI != null) pauseMenuUI.SetActive(false);
+                GamePause.Resume();
+            }
+        }
 
-        // Freeze/unfreeze time
-        Time.timeScale = _isPaused ? 0f : 1f;
-
-        // (Optional) lock/unlock the cursor
-        Cursor.visible = _isPaused;
-        Cursor.lockState = _isPaused 
-            ? CursorLockMode.None 
-            : CursorLockMode.Locked;
+        Cursor.visible = open;
+        Cursor.lockState = open ? CursorLockMode.None : CursorLockMode.Locked;
     }
 }

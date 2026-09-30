@@ -13,7 +13,7 @@ MonoBehaviour:
   m_Name: SideFed
   m_EditorClassIdentifier: 
   weaponName: Scrapwind
-  damage: 15
+  damage: 12
   ammoCapacity: 25
   attackSpeed: 6.5
   weight: 3
@@ -21,6 +21,7 @@ MonoBehaviour:
   weaponIcon: {fileID: 981701276, guid: 88365eb93f90dc0448eb4a39ecadd679, type: 3}
   description: A janky marvel of war. Spits bullets faster than it should.
   fireType: auto
+  weaponClass: 2
   recoil: 0.2
   reloadTime: 1.8
   fireSound: {fileID: 8300000, guid: c12bc10dadc48864987bf6e62042df18, type: 3}

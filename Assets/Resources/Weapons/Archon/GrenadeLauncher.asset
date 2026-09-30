@@ -13,14 +13,15 @@ MonoBehaviour:
   m_Name: GrenadeLauncher
   m_EditorClassIdentifier: 
   weaponName: Emberblast
-  damage: 20
-  ammoCapacity: 3
-  attackSpeed: 2.5
-  weight: 0
+  damage: 35
+  ammoCapacity: 4
+  attackSpeed: 1.5
+  weight: 4
   orbCost: 4
   weaponIcon: {fileID: 608442159, guid: 88365eb93f90dc0448eb4a39ecadd679, type: 3}
-  description: 
+  description: Lobs fused fire charges that burst after a moment. Hold LT to keep them live, release to set them all off.
   fireType: grenade
+  weaponClass: 6
   recoil: 0
   reloadTime: 4
   fireSound: {fileID: 8300000, guid: acc6798c4c232844e894890e76b45821, type: 3}
@@ -34,6 +35,7 @@ MonoBehaviour:
   akimbo: 0
   grenadeLauncher: 0
   megaBomb: 1
+  remoteDetonate: 1
   specialBulletType: {fileID: 3773003613870667637, guid: 228047014f7b36848a6ea2a0bdecd43d, type: 3}
   baseAmmoType: {fileID: 3773003613870667637, guid: 228047014f7b36848a6ea2a0bdecd43d, type: 3}
   prefab: {fileID: 757998253363643933, guid: 53df6c660ea584309aabb523204bed8e, type: 3}

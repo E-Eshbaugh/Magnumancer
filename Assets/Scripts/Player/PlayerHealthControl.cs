@@ -26,7 +26,12 @@ public class PlayerHealthControl : MonoBehaviour
     public GameObject[] stock;
     [Tooltip("Extra lives after the current one (set from the wizard's hearts at match start)")]
     public int stockCount = 3;
+    int maxLives;   // lives at match start: greyed-out hearts shown once eliminated
     public PlayerMovement3D movement;
+
+    [Header("Respawn")]
+    [Tooltip("After losing a life you respawn at your starting spot and can't be hurt for this long")]
+    public float respawnInvulnerability = 2f;
 
     /// Time.time of the last hit that actually did damage (Verdant Resurgence)
     public float LastDamageTime { get; private set; } = -999f;
@@ -34,6 +39,10 @@ public class PlayerHealthControl : MonoBehaviour
 
     float invulnerableUntil;
     GameObject lastAttacker;
+
+    Vector3 spawnPosition;
+    Quaternion spawnRotation = Quaternion.identity;
+    bool hasSpawnPoint;
 
     // heart icon layout, captured from the icons placed in the scene
     readonly List<GameObject> stockSlots = new();
@@ -49,6 +58,7 @@ public class PlayerHealthControl : MonoBehaviour
         if (cursedPlayer == null)
             cursedPlayer = GetComponent<CursedPlayer>();
 
+        maxLives = stockCount + 1;
         CacheStockLayout();
         UpdateStockUI();
     }
@@ -59,7 +69,16 @@ public class PlayerHealthControl : MonoBehaviour
     public void SetLives(int hearts)
     {
         stockCount = Mathf.Max(0, hearts - 1);
+        maxLives = stockCount + 1;
         UpdateStockUI();
+    }
+
+    /// Where this player starts the match — and comes back to after losing a life.
+    public void SetSpawnPoint(Vector3 position, Quaternion rotation)
+    {
+        spawnPosition = position;
+        spawnRotation = rotation;
+        hasSpawnPoint = true;
     }
 
     /// Ignore all damage for a while (Last Rites).
@@ -95,6 +114,15 @@ public class PlayerHealthControl : MonoBehaviour
             StockDamage();
         else if (currentHealth <= 0)
             Die();
+    }
+
+    /// Sets health to a fraction of max (Soul Swap). Never kills: at least 1 HP.
+    public void SetHealthFraction(float fraction)
+    {
+        if (isDead) return;
+        currentHealth = Mathf.Clamp(Mathf.Round(maxHealth * Mathf.Clamp01(fraction)), 1f, maxHealth);
+        UpdateUI();
+        OnHealthChanged?.Invoke(currentHealth, maxHealth);
     }
 
     public void Heal(int amount)
@@ -145,11 +173,12 @@ public class PlayerHealthControl : MonoBehaviour
     }
 
     /// Shows one heart per remaining life (current + extra), centered under the crest.
+    /// Once eliminated, every heart they started with comes back, greyed out with the panel.
     void UpdateStockUI()
     {
         if (stockSlots.Count == 0) return;
 
-        int lives = isDead ? 0 : stockCount + 1;
+        int lives = isDead ? maxLives : stockCount + 1;
 
         // Wizards with more hearts than the scene has icons get cloned icons
         while (stockSlots.Count < lives)
@@ -169,21 +198,26 @@ public class PlayerHealthControl : MonoBehaviour
         }
     }
 
-    // deactivate the player
+    // Out of lives: blow up, grey out the HUD, deactivate the player
     private void Die()
     {
         isDead = true;
         UpdateStockUI();
-        var movement = GetComponent<PlayerMovement3D>();
-        if (movement?.gamepad != null)
-            movement.gamepad.SetMotorSpeeds(0, 0);
-
         DamageEvents.RaiseKilled(gameObject, lastAttacker, transform.position);
         // Soulfracture marks explode on death too, not just on stock loss
         cursedPlayer?.OnStockLost();
 
+        WizardDeathEffect.Play(transform.position, Wizard(), final: true);
+        if (healthMask != null) UIGreyOut.Apply(healthMask.gameObject);
+
         OnDeath?.Invoke();
         gameObject.SetActive(false);
+    }
+
+    WizardData Wizard()
+    {
+        if (movement == null) movement = GetComponent<PlayerMovement3D>();
+        return movement != null ? movement.wizard : null;
     }
 
     private void StockDamage()
@@ -196,6 +230,9 @@ public class PlayerHealthControl : MonoBehaviour
         // Trigger curse explosion if applicable
         cursedPlayer?.OnStockLost();
 
+        // A smaller version of the death fireball where they fell (they respawn elsewhere)
+        WizardDeathEffect.Play(transform.position, Wizard(), final: false);
+
         // Reset health for next stock
         currentHealth = maxHealth;
         UpdateUI();
@@ -203,6 +240,23 @@ public class PlayerHealthControl : MonoBehaviour
 
         invincible = true;
         Invoke(nameof(ResetInvincibility), 0.1f);
+
+        Respawn();
+    }
+
+    /// Back to the starting spot with full ammo, arriving in a bolt of the wizard's color.
+    void Respawn()
+    {
+        if (movement == null) movement = GetComponent<PlayerMovement3D>();
+
+        if (hasSpawnPoint && movement != null)
+            movement.Teleport(spawnPosition, spawnRotation);
+
+        foreach (var ammo in GetComponentsInChildren<AmmoControl>())
+            ammo.RefillAll();
+
+        GrantInvulnerability(respawnInvulnerability);
+        WizardSpawnEffect.Play(gameObject, movement != null ? movement.wizard : null);
     }
 
 
@@ -211,9 +265,4 @@ public class PlayerHealthControl : MonoBehaviour
         invincible = false;
     }
 
-    private IEnumerator StopRumble(Gamepad pad, float delay)
-    {
-        yield return new WaitForSeconds(delay);
-        pad.SetMotorSpeeds(0, 0);
-    }
 }

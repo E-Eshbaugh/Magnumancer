@@ -8,10 +8,10 @@ using UnityEngine;
 public class BrandOfFlereousPassive : WizardPassive
 {
     public int brandsToIgnite = 5;
-    public float igniteDamage = 30f;
+    public float igniteDamage = 25f;
     public float igniteRadius = 3f;
-    [Tooltip("A single shotgun blast's pellets only brand once")]
-    public float brandCooldownPerTarget = 0.15f;
+    [Tooltip("A shotgun blast's pellets only brand once; also paces brands (0.3s = an ignite every ~1.5s at best, ~17 bonus dps)")]
+    public float brandCooldownPerTarget = 0.3f;
 
     readonly Dictionary<GameObject, float> lastBrandTime = new();
     bool igniting;
@@ -38,6 +38,7 @@ public class BrandOfFlereousPassive : WizardPassive
     void Ignite(Vector3 center)
     {
         SpawnEffect(center + Vector3.up, 3f);
+        Explosions.AffectWorld(center, igniteRadius, igniteDamage, null);
 
         igniting = true; // the burst's own damage shouldn't add brands
         var hit = new HashSet<GameObject>();

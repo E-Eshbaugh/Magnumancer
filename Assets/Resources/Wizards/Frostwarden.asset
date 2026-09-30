@@ -13,14 +13,12 @@ MonoBehaviour:
   m_Name: Frostwarden
   m_EditorClassIdentifier: 
   wizardName: Frostwarden
-  heartCount: 2
+  heartCount: 3
   orbCount: 4
-  loadoutOrbs: 10
+  loadoutOrbs: 9
   factionEmblem: {fileID: 102104955, guid: d812d7af151532745a44f9a32bbfe38a, type: 3}
   charcterImage: {fileID: -1695864718, guid: 2b157bd54fec28a47a9c6c2e19006362, type: 3}
-  passiveAbilityTxt: 'Fractalshot Shield: Hits on enemies apply freeze counters,
-    slowing enemies. Stack 5 freezes on an enemy to gain a weak ice shield. Can be
-    strengthened by freezing more enemies.'
+  passiveAbilityTxt: 'Fractalshot Shield: Hits on enemies apply freeze counters, slowing enemies; heavy hits apply more. Stack 5 freezes on an enemy to gain a weak ice shield. Can be strengthened by freezing more enemies.'
   activeAbilityTxt: 'Covenant of Frostgrave: Summon a wall of ice to block enemies
     and incoming damage.'
   loreText: Descendants of the ancient cryomancers, the Frostwardens dwell in glacial
@@ -29,7 +27,10 @@ MonoBehaviour:
     and icy in demeanor, they dominate from a distance.
   material: {fileID: 2100000, guid: e69691b4cf4f8eb4c86f4607dfe3c7dd, type: 2}
   activeAbilityPrefab: {fileID: 5952689688775455035, guid: 5145027600256894793402b35b2c5e7f, type: 3}
-  abilityCooldown: 15
+  abilityCooldown: 12
   customBulletPrefab: {fileID: 6997994299401861888, guid: 86affdb9b46a4f84a87b8d37eb097266, type: 3}
+  moveSpeedMultiplier: 1.0
+  themeColor: {r: 0.55, g: 0.9, b: 1.0, a: 1}
+  spawnEffectPrefab: {fileID: 5112403345868107898, guid: 6f34ef0d986e9db4199cf75805f79753, type: 3}
   passive: 3
   passiveEffectPrefab: {fileID: 5112403345868107898, guid: 6f34ef0d986e9db4199cf75805f79753, type: 3}

@@ -26,12 +26,24 @@ public class GrenadeExplodeOnImpact : MonoBehaviour
 
     void OnCollisionEnter(Collision collision)
     {
-        if (!hasExploded)
-        {
-            hasExploded = true;
-            Explode();
-        }
+        Detonate();
     }
+
+    /// Explode now or after `delay` (chain reactions, gunfire)
+    public void Detonate(float delay = 0f)
+    {
+        if (hasExploded) return;
+        if (delay > 0f)
+        {
+            CancelInvoke(nameof(DetonateNow));
+            Invoke(nameof(DetonateNow), delay);
+            return;
+        }
+        hasExploded = true;
+        Explode();
+    }
+
+    void DetonateNow() => Detonate(0f);
 
     void Explode()
     {
@@ -92,19 +104,6 @@ public class GrenadeExplodeOnImpact : MonoBehaviour
             if (rb != null)
                 rb.AddExplosionForce(explosionForce, transform.position, explosionRadius);
 
-            // Rumble
-            var movement = nearby.GetComponent<PlayerMovement3D>();
-            if (movement != null && movement.gamepad != null)
-            {
-                float intensity = distancePercent;
-                float low = 0.2f * intensity;
-                float high = 0.9f * intensity;
-                float duration = 0.3f;
-
-                movement.gamepad.SetMotorSpeeds(low, high);
-                StartCoroutine(StopRumble(movement.gamepad, duration));
-            }
-
             // Health damage
             var health = nearby.GetComponent<PlayerHealthControl>();
             if (health != null)
@@ -123,6 +122,10 @@ public class GrenadeExplodeOnImpact : MonoBehaviour
             }
         }
 
+        // Mines, other grenades, crystals
+        Explosions.AffectWorld(transform.position, explosionRadius, maxDamage, gameObject);
+        WeaponSynergy.OnGrenadeExploded(owner, transform.position);
+
         if (destroyAfterImpact)
         {
             float delay = (explosionSound != null) ? explosionSound.length : 0f;
@@ -130,10 +133,4 @@ public class GrenadeExplodeOnImpact : MonoBehaviour
         }
     }
 
-    private System.Collections.IEnumerator StopRumble(Gamepad pad, float delay)
-    {
-        yield return new WaitForSeconds(delay);
-        if (pad != null)
-            pad.SetMotorSpeeds(0f, 0f);
-    }
 }

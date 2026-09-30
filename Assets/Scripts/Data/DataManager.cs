@@ -26,6 +26,20 @@ public class DataManager : MonoBehaviour
 
     public PlayerInputRef[] Inputs { get; private set; }   // <— NEW
 
+    // Rune picks per player (index into RuneBook actives/passives; 0 = the original)
+    public int[] ActiveRunes { get; private set; } = new int[4];
+    public int[] PassiveRunes { get; private set; } = new int[4];
+
+    public void SetRunes(int slot, int active, int passive)
+    {
+        if (slot < 0 || slot >= ActiveRunes.Length) return;
+        ActiveRunes[slot] = active;
+        PassiveRunes[slot] = passive;
+    }
+
+    public int GetActiveRune(int slot) => slot >= 0 && slot < ActiveRunes.Length ? ActiveRunes[slot] : 0;
+    public int GetPassiveRune(int slot) => slot >= 0 && slot < PassiveRunes.Length ? PassiveRunes[slot] : 0;
+
     void Awake()
     {
         Debug.Log($"[DataManager] Awake in scene '{UnityEngine.SceneManagement.SceneManager.GetActiveScene().name}'");

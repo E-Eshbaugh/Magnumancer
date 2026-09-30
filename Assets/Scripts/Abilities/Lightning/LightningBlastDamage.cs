@@ -10,7 +10,10 @@ public class LightningBlastDamage : MonoBehaviour
 
     public void TriggerBlast(Vector3 position, GameObject caster)
     {
-           // Blast logic
+        // Sets off mines/grenades and hits crystals
+        Explosions.AffectWorld(position, blastRadius, maxDamage, caster);
+
+        // Blast logic
         // Players have two colliders (CharacterController + capsule); hit each object once
         var alreadyHit = new HashSet<GameObject>();
         Collider[] affected = Physics.OverlapSphere(position, blastRadius, hitLayer);

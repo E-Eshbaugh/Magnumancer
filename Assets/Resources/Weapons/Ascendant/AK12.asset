@@ -15,12 +15,13 @@ MonoBehaviour:
   weaponName: Blackmaw
   damage: 12
   ammoCapacity: 25
-  attackSpeed: 5
+  attackSpeed: 5.5
   weight: 2
   orbCost: 3
   weaponIcon: {fileID: -854721862, guid: 88365eb93f90dc0448eb4a39ecadd679, type: 3}
   description: Hungers for battle. Heavy recoil, heavier impact.
   fireType: auto
+  weaponClass: 2
   recoil: 0.3
   reloadTime: 1.5
   fireSound: {fileID: 8300000, guid: 9d72cb3859b4f4e4fa51e2bfdf0c33d6, type: 3}
@@ -29,7 +30,7 @@ MonoBehaviour:
   laserRange: 0
   isShotgun: 0
   pelletCount: 5
-  spreadAngle: 15
+  spreadAngle: 12
   heavyWeapon: 0
   akimbo: 1
   grenadeLauncher: 0

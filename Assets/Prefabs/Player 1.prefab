@@ -1173,7 +1173,7 @@ MonoBehaviour:
   maxJumps: 2
   dashSpeed: 20
   dashDuration: 0.2
-  dashCooldown: 3
+  dashCooldown: 2
   dashBar: {fileID: 0}
   dashBarSprites:
   - {fileID: -1913973324, guid: 833c3ffd2f7675845aac0c2232d739b8, type: 3}
@@ -1268,7 +1268,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 2095b9625c692f944b1ca2e7e5ea5864, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  maxHealth: 100
+  maxHealth: 120
   invincible: 0
   cursedPlayer: {fileID: 0}
   healthMask: {fileID: 0}

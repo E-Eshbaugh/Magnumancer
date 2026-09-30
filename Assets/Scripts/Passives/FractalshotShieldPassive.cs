@@ -12,6 +12,8 @@ public class FractalshotShieldPassive : WizardPassive, IIncomingDamageModifier
     public float maxShield = 60f;
     [Tooltip("A single shotgun blast's pellets only add one counter")]
     public float stackCooldownPerTarget = 0.2f;
+    [Tooltip("Each this-much damage in one hit adds another freeze counter")]
+    public float damagePerExtraStack = 20f;
     [Header("Full freeze")]
     public float freezeStunMultiplier = 0.4f;
     public float freezeStunDuration = 1f;
@@ -36,8 +38,12 @@ public class FractalshotShieldPassive : WizardPassive, IIncomingDamageModifier
             return;
         lastStackTime[victim] = Time.time;
 
+        // Heavy hits freeze harder: +1 counter per damagePerExtraStack (a 45 dmg sniper shot = 3)
+        int stacks = 1 + Mathf.FloorToInt(amount / Mathf.Max(1f, damagePerExtraStack));
         var fx = StatusEffects.Of(victim);
-        if (fx.AddFreeze() >= 5)
+        int count = 0;
+        for (int i = 0; i < stacks; i++) count = fx.AddFreeze();
+        if (count >= 5)
         {
             // Fully frozen: brief hard slow, counters reset, and we gain shield
             fx.ClearFreeze();

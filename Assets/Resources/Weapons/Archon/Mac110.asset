@@ -13,14 +13,15 @@ MonoBehaviour:
   m_Name: Mac110
   m_EditorClassIdentifier: 
   weaponName: Bloodcurrent
-  damage: 6
+  damage: 8
   ammoCapacity: 40
-  attackSpeed: 8
-  weight: 2
+  attackSpeed: 9
+  weight: 1
   orbCost: 4
   weaponIcon: {fileID: -379827944, guid: 88365eb93f90dc0448eb4a39ecadd679, type: 3}
   description: A torrent of crimson lead. Fast, chaotic, and close-range lethal.
   fireType: auto
+  weaponClass: 3
   recoil: 0.2
   reloadTime: 2
   fireSound: {fileID: 8300000, guid: 16df531e981a634499e2139f8fa98d7c, type: 3}

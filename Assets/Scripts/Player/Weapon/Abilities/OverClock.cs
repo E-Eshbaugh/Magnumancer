@@ -1,6 +1,10 @@
 using UnityEngine;
 using UnityEngine.InputSystem;
 
+/// <summary>
+/// Heavy weapons (Minigun) — LT: Overclock. Faster fire, less recoil, no spread and
+/// a bottomless magazine for a few seconds. Ends early if you swap off the gun.
+/// </summary>
 [RequireComponent(typeof(AmmoControl))]
 public class OverClock : MonoBehaviour
 {
@@ -12,7 +16,7 @@ public class OverClock : MonoBehaviour
     public float recoilMultiplier = 0.5f;
     [Tooltip("Duration of the overclock in seconds")]
     public float duration = 5f;
-    [Tooltip("Cooldown before you can overclock again in seconds")]
+    [Tooltip("Cooldown before you can overclock again in seconds (counted from activation)")]
     public float cooldown = 10f;
     public WeaponAbilityControl weaponAbility;
 
@@ -20,7 +24,7 @@ public class OverClock : MonoBehaviour
     public Gamepad gamepad;  // assigned by MultiplayerManager
 
     private AmmoControl ammoControl;
-    private WeaponData currentGun;
+    private WeaponData boostedGun;
 
     // state
     private bool isActive = false;
@@ -44,76 +48,77 @@ public class OverClock : MonoBehaviour
             Debug.LogError($"{name}: Missing AmmoControl!");
     }
 
-    void Start()
-    {
-        nextReadyTime = Time.time + cooldown;
-        Debug.Log($"{name}: Overclock ready at {nextReadyTime:F1}");
-    }
-
     public void ResetOverclock()
     {
-        if (isActive && currentGun != null)
-        {
-            currentGun.attackSpeed = origAttackSpeed;
-            currentGun.recoil = origRecoil;
-            currentGun.spreadAngle = origSpreadAngle;
-        }
-
-        isActive = false;
-        endTime = 0f;
-        nextReadyTime = Time.time + cooldown;
-        Debug.Log($"{name}: Overclock reset; next ready at {nextReadyTime:F1}");
+        DeactivateOverclock();
+        nextReadyTime = 0f;
     }
 
     void Update()
     {
-        if (gamepad == null) return;
+        var gun = ammoControl.currentGun;
 
-        currentGun = ammoControl.currentGun;
-        if (currentGun == null || !currentGun.heavyWeapon) return;
+        // Swapped off the overclocked gun: shut it down (stats live on this player's runtime copy)
+        if (isActive && gun != boostedGun)
+            DeactivateOverclock();
+
+        if (gamepad == null || gun == null || !gun.heavyWeapon) return;
 
         float now = Time.time;
 
         if (!isActive)
         {
-            if (gamepad.leftTrigger.wasPressedThisFrame && now >= nextReadyTime)
-                ActivateOverclock(now);
+            if (!GamePause.InputBlocked && gamepad.leftTrigger.wasPressedThisFrame && now >= nextReadyTime)
+                ActivateOverclock(gun, now);
+            // the bar drained while active, so it refills over what's left of the cooldown
+            weaponAbility?.ReportCooldown(nextReadyTime, Mathf.Max(0.01f, cooldown - duration));
         }
         else
         {
-            ammoControl.ammoCount = currentGun.ammoCapacity;
+            if (ammoControl.ammoCount < gun.ammoCapacity)
+                ammoControl.RefillMagazine();
+
+            // drains while active
+            weaponAbility?.ReportFill((endTime - now) / duration);
 
             if (now >= endTime)
                 DeactivateOverclock();
         }
     }
 
-    void ActivateOverclock(float now)
+    void ActivateOverclock(WeaponData gun, float now)
     {
-        weaponAbility?.TriggerAbilityFill();
+        boostedGun = gun;
+        origAttackSpeed = gun.attackSpeed;
+        origRecoil = gun.recoil;
+        origSpreadAngle = gun.spreadAngle;
 
-        origAttackSpeed = currentGun.attackSpeed;
-        origRecoil = currentGun.recoil;
-        origSpreadAngle = currentGun.spreadAngle;
-
-        currentGun.attackSpeed *= fireRateMultiplier;
-        currentGun.recoil *= recoilMultiplier;
-        currentGun.spreadAngle = 0f;
+        gun.attackSpeed *= fireRateMultiplier;
+        gun.recoil *= recoilMultiplier;
+        gun.spreadAngle = 0f;
 
         isActive = true;
+        Rumble.GunAbility(gamepad);
+        Rumble.Hold(gamepad, "overclock", 0.06f, 0.14f); // the minigun hums while overclocked
         endTime = now + duration;
         nextReadyTime = now + cooldown;
-
-        Debug.Log($"{name}: Overclock ON until {endTime:F1}s (next ready at {nextReadyTime:F1}s)");
+        ammoControl.RefillMagazine();
     }
 
     void DeactivateOverclock()
     {
-        currentGun.attackSpeed = origAttackSpeed;
-        currentGun.recoil = origRecoil;
-        currentGun.spreadAngle = origSpreadAngle;
+        if (!isActive) return;
+        if (boostedGun != null)
+        {
+            boostedGun.attackSpeed = origAttackSpeed;
+            boostedGun.recoil = origRecoil;
+            boostedGun.spreadAngle = origSpreadAngle;
+        }
 
+        boostedGun = null;
         isActive = false;
-        Debug.Log($"{name}: Overclock OFF; next ready at {nextReadyTime:F1}s");
+        Rumble.Release(gamepad, "overclock");
     }
+
+    void OnDisable() => DeactivateOverclock();
 }

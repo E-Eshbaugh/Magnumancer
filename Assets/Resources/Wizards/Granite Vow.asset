@@ -13,13 +13,12 @@ MonoBehaviour:
   m_Name: Granite Vow
   m_EditorClassIdentifier: 
   wizardName: Granite Vow
-  heartCount: 5
-  orbCount: 2
-  loadoutOrbs: 6
+  heartCount: 4
+  orbCount: 3
+  loadoutOrbs: 8
   factionEmblem: {fileID: 1886968780, guid: d812d7af151532745a44f9a32bbfe38a, type: 3}
   charcterImage: {fileID: -21015154, guid: 966ee461096bb924f91cc201321af6f8, type: 3}
-  passiveAbilityTxt: 'Stonebind: Reduced knockback and recoil. Standing still builds
-    armor, increasing damage resistance.'
+  passiveAbilityTxt: 'Stonebind: Reduced knockback and recoil, and heavy weapons barely slow you. Standing still builds armor, increasing damage resistance.'
   activeAbilityTxt: 'Seismic Judgement: Smash the gorund, sending out a shockwave
     that knocks enemies back, damaging and briefly stunning them.'
   loreText: "Forged in canyon fortresses, the Granite Vow are elite engineer-soldiers
@@ -31,5 +30,8 @@ MonoBehaviour:
   activeAbilityPrefab: {fileID: 9117129773369675752, guid: 5de43fb3f2671df4d952dce6b785b0cf, type: 3}
   abilityCooldown: 15
   customBulletPrefab: {fileID: 0}
+  moveSpeedMultiplier: 0.9
+  themeColor: {r: 0.75, g: 0.52, b: 0.3, a: 1}
+  spawnEffectPrefab: {fileID: 3432958286849152088, guid: 87ee7299dd44ed747af24dbb91bcd33b, type: 3}
   passive: 4
   passiveEffectPrefab: {fileID: 0}

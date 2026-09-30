@@ -13,7 +13,7 @@ MonoBehaviour:
   m_Name: Minigun
   m_EditorClassIdentifier: 
   weaponName: Iron Tempest
-  damage: 5
+  damage: 6
   ammoCapacity: 100
   attackSpeed: 15
   weight: 5
@@ -22,6 +22,7 @@ MonoBehaviour:
   description: An unwieldy behemoth that sprays a relentless hail of bullets. Low
     per-shot damage, but high volume.
   fireType: auto
+  weaponClass: 5
   recoil: 0.5
   reloadTime: 4
   fireSound: {fileID: 8300000, guid: 69f0e7727d0a83b468d8a2973b0b8ece, type: 3}
@@ -30,7 +31,7 @@ MonoBehaviour:
   laserRange: 0
   isShotgun: 0
   pelletCount: 0
-  spreadAngle: 20
+  spreadAngle: 16
   heavyWeapon: 1
   akimbo: 0
   grenadeLauncher: 0

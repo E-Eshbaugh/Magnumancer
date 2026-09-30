@@ -79,8 +79,7 @@ public class LavaTrail : MonoBehaviour
         if (move != null)
             move.currentMoveSpeed *= slowMultiplier;
 
-        var gamepad = move?.gamepad;
-        gamepad?.SetMotorSpeeds(0.1f, 0.2f);
+        Rumble.Hold(move?.gamepad, RumbleKey, 0.1f, 0.2f);
     }
 
     void OnTriggerExit(Collider other)
@@ -94,9 +93,10 @@ public class LavaTrail : MonoBehaviour
         if (move != null)
             move.currentMoveSpeed /= slowMultiplier;
 
-        var gamepad = move?.gamepad;
-        gamepad?.SetMotorSpeeds(0f, 0f);
+        Rumble.Release(move?.gamepad, RumbleKey);
     }
+
+    string RumbleKey => "lava" + GetEntityId();
 
     void OnDestroy()
     {
@@ -106,8 +106,7 @@ public class LavaTrail : MonoBehaviour
             if (move != null)
                 move.currentMoveSpeed /= slowMultiplier;
 
-            var gamepad = move?.gamepad;
-            gamepad?.SetMotorSpeeds(0f, 0f);
+            Rumble.Release(move?.gamepad, RumbleKey);
         }
 
         affectedPlayers.Clear();

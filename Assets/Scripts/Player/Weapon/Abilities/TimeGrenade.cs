@@ -23,17 +23,50 @@ public class GrenadeExplodeAfterDelay : MonoBehaviour
     [Header("Behavior")]
     public bool destroyAfterExplosion = true;
 
+    /// Live (not yet exploded) grenades, for Emberblast's remote fuse
+    public static readonly List<GrenadeExplodeAfterDelay> Live = new();
+
+    public bool HasExploded => hasExploded;
+    public float SpawnTime { get; private set; }
+
     private bool hasExploded = false;
+    private float fuseEndTime;
+    private float heldUntil;
+    private float detonateAt = float.MaxValue;
+
+    void OnEnable() => Live.Add(this);
+    void OnDisable() => Live.Remove(this);
 
     void Start()
     {
-        Invoke(nameof(Explode), fuseTime);
+        SpawnTime = Time.time;
+        fuseEndTime = Time.time + fuseTime;
+    }
+
+    void Update()
+    {
+        if (hasExploded) return;
+        float now = Time.time;
+        if (now >= detonateAt || (now >= fuseEndTime && now >= heldUntil))
+            Explode();
+    }
+
+    /// Keeps the fuse from running out for another `seconds` (remote fuse held)
+    public void HoldFuse(float seconds) => heldUntil = Mathf.Max(heldUntil, Time.time + seconds);
+
+    /// Explode after `delay` (chain reactions, gunfire, remote detonation)
+    public void Detonate(float delay = 0f)
+    {
+        if (hasExploded) return;
+        detonateAt = Mathf.Min(detonateAt, Time.time + Mathf.Max(0f, delay));
+        if (delay <= 0f) Explode();
     }
 
     void Explode()
     {
         if (hasExploded) return;
         hasExploded = true;
+        Live.Remove(this);
 
         // VFX
         if (explosionEffect != null)
@@ -63,7 +96,6 @@ public class GrenadeExplodeAfterDelay : MonoBehaviour
             GameObject victim = nearby.attachedRigidbody ? nearby.attachedRigidbody.gameObject : nearby.gameObject;
             if (!alreadyHit.Add(victim)) continue;
             Transform target = nearby.transform;
-            Vector3 direction = (target.position - transform.position).normalized;
             float distance = Vector3.Distance(transform.position, target.position);
 
             // Check if explosion is blocked
@@ -97,18 +129,6 @@ public class GrenadeExplodeAfterDelay : MonoBehaviour
             if (rb != null)
                 rb.AddExplosionForce(explosionForce, transform.position, explosionRadius);
 
-            // Controller rumble
-            var movement = nearby.GetComponent<PlayerMovement3D>();
-            if (movement != null && movement.gamepad != null)
-            {
-                float intensity = distancePercent;
-                float low = 0.2f * intensity;
-                float high = 0.9f * intensity;
-                float duration = 0.3f;
-                movement.gamepad.SetMotorSpeeds(low, high);
-                StartCoroutine(StopRumble(movement.gamepad, duration));
-            }
-
             // Damage player or object
             var health = nearby.GetComponent<PlayerHealthControl>();
             if (health != null)
@@ -123,6 +143,9 @@ public class GrenadeExplodeAfterDelay : MonoBehaviour
                 goblin.TakeDamage(damageToApply*2, owner);
         }
 
+        // Mines, other grenades, crystals
+        Explosions.AffectWorld(transform.position, explosionRadius, maxDamage, gameObject);
+        WeaponSynergy.OnGrenadeExploded(owner, transform.position);
 
         if (destroyAfterExplosion)
         {
@@ -131,10 +154,4 @@ public class GrenadeExplodeAfterDelay : MonoBehaviour
         }
     }
 
-    private System.Collections.IEnumerator StopRumble(Gamepad pad, float delay)
-    {
-        yield return new WaitForSeconds(delay);
-        if (pad != null)
-            pad.SetMotorSpeeds(0f, 0f);
-    }
 }

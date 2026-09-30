@@ -27,12 +27,25 @@ public class PlayerMovement3D : MonoBehaviour
     public Sprite[] dashBarSprites;
 
     [Header("Weapon Weight")]
-    [Tooltip("Move speed lost per point of the equipped weapon's weight")]
-    public float weightSlowPerPoint = 0.05f;
+    [Tooltip("Move speed while holding a gun of weight 0..5 (index = weight)")]
+    public float[] heldWeightSpeed = { 1f, 0.97f, 0.92f, 0.86f, 0.78f, 0.68f };
+    [Tooltip("Total loadout weight you can carry before it starts slowing you")]
+    public int packWeightAllowance = 8;
+    [Tooltip("Move speed lost per point of loadout weight over the allowance")]
+    public float packSlowPerPoint = 0.015f;
+    public float maxPackSlow = 0.15f;
+    [Tooltip("Knockback resisted per point of held weight (heavy gunners are hard to shove)")]
+    public float knockbackResistPerPoint = 0.08f;
+    [Tooltip("Dash cooldown added per point of held weight")]
+    public float dashCooldownPerPoint = 0.06f;
+    [Tooltip("Scales every weight speed penalty (Granite Vow's Stonebind halves it)")]
+    public float weightPenaltyScale = 1f;
 
     [Header("Knockback")]
     [Tooltip("Scales incoming knockback (e.g. Granite Vow's Stonebind)")]
     public float knockbackMultiplier = 1f;
+    [Tooltip("Cap on the shove that stacks up from gunfire (units/sec)")]
+    public float maxHitKnockback = 12f;
 
     /// Fired when a dash starts (used by Undercurrent / Lightning Reflex)
     public event System.Action OnDash;
@@ -68,7 +81,15 @@ public class PlayerMovement3D : MonoBehaviour
 
     public void ApplyKnockback(Vector3 force)
     {
-        knockbackVelocity = force * knockbackMultiplier;
+        knockbackVelocity = force * knockbackMultiplier * WeightKnockbackScale;
+    }
+
+    /// Gunfire shoves: hits stack up (a shotgun volley pushes harder than one pellet), capped.
+    public void AddKnockback(Vector3 force)
+    {
+        force.y = 0f;
+        Vector3 v = knockbackVelocity + force * knockbackMultiplier * WeightKnockbackScale;
+        knockbackVelocity = Vector3.ClampMagnitude(v, Mathf.Max(maxHitKnockback, knockbackVelocity.magnitude));
     }
 
     public void Setup(int index, Gamepad pad, WizardData wiz = null)
@@ -86,6 +107,8 @@ public class PlayerMovement3D : MonoBehaviour
 
         if (dashBar && dashBarSprites != null && dashBarSprites.Length > 0)
             dashBar.sprite = dashBarSprites[^1];
+
+        SetSpeedModifier("wizard", wiz != null ? wiz.moveSpeedMultiplier : 1f);
     }
 
     void Awake()
@@ -101,18 +124,23 @@ public class PlayerMovement3D : MonoBehaviour
 
         dashCooldownTimer = Mathf.Max(0f, dashCooldownTimer - Time.deltaTime);
 
-        Vector2 stick = gamepad.leftStick.ReadValue();
+        // Pause menu owns the controller (A/B/sticks) while it's open
+        bool inputOk = !GamePause.InputBlocked;
+
+        Vector2 stick = inputOk ? gamepad.leftStick.ReadValue() : Vector2.zero;
         if (stick.sqrMagnitude < 0.01f) stick = Vector2.zero;
         StickMagnitude = stick.magnitude;
 
-        if (!isDashing && gamepad.buttonSouth.wasPressedThisFrame &&
+        airTime = controller.isGrounded ? 0f : airTime + Time.deltaTime;
+
+        if (inputOk && !isDashing && CanJump && gamepad.buttonSouth.wasPressedThisFrame &&
             (controller.isGrounded || jumpsRemaining > 0))
         {
             verticalVelocity = jumpForce;
             if (!controller.isGrounded) jumpsRemaining--;
         }
 
-        if (!isDashing && dashCooldownTimer <= 0f &&
+        if (inputOk && !isDashing && dashCooldownTimer <= 0f &&
             stick.sqrMagnitude > 0.01f &&
             gamepad.buttonEast.wasPressedThisFrame)
         {
@@ -127,6 +155,9 @@ public class PlayerMovement3D : MonoBehaviour
 
         if (controller.isGrounded && verticalVelocity < 0f)
         {
+            // thump on a real fall (a normal jump lands around -5)
+            if (verticalVelocity < -7f)
+                Rumble.Land(gamepad, Mathf.Clamp01(-verticalVelocity / 20f));
             verticalVelocity = -0.5f;
             jumpsRemaining = maxJumps - 1;
         }
@@ -173,16 +204,82 @@ public class PlayerMovement3D : MonoBehaviour
         }
     }
 
+    /// Moves the player instantly (respawn), clearing momentum, knockback and dashes.
+    public void Teleport(Vector3 position, Quaternion rotation)
+    {
+        bool wasEnabled = controller.enabled;
+        controller.enabled = false; // CharacterController overrides transform moves while enabled
+        transform.SetPositionAndRotation(position, rotation);
+        controller.enabled = wasEnabled;
+
+        verticalVelocity = -0.5f;
+        knockbackVelocity = Vector3.zero;
+        moveDirection = Vector3.zero;
+        isDashing = false;
+        dashTimer = 0f;
+        jumpsRemaining = maxJumps;
+        lastDirection = rotation * Vector3.forward;
+        lastDirection.y = 0f;
+        if (lastDirection.sqrMagnitude < 0.01f) lastDirection = Vector3.forward;
+        lastDirection.Normalize();
+    }
+
     void StartDash()
     {
         isDashing = true;
         dashTimer = dashDuration;
         dashCooldownTimer = EffectiveDashCooldown;
         StartDashRefill();
+        Rumble.Dash(gamepad);
         OnDash?.Invoke();
     }
 
-    float EffectiveDashCooldown => dashCooldown * dashCooldownMultiplier;
+    float EffectiveDashCooldown => dashCooldown * dashCooldownMultiplier * dashCooldownBonus
+                                   * (1f + dashCooldownPerPoint * heldWeight);
+
+    // Named dash-cooldown multipliers from synergies (Undercurrent keeps using dashCooldownMultiplier)
+    readonly System.Collections.Generic.Dictionary<string, float> dashMods = new();
+    float dashCooldownBonus = 1f;
+
+    public void SetDashCooldownModifier(string key, float mult)
+    {
+        if (Mathf.Approximately(mult, 1f)) dashMods.Remove(key); else dashMods[key] = mult;
+        dashCooldownBonus = 1f;
+        foreach (var v in dashMods.Values) dashCooldownBonus *= v;
+    }
+
+    public bool IsDashing => isDashing;
+
+    // ---------- Jumping state ----------
+    readonly System.Collections.Generic.HashSet<string> jumpBlocks = new();
+    float airTime;
+
+    /// Stunned, rooted or frozen players can't jump (named so overlapping effects don't clear each other)
+    public void SetJumpBlocked(string key, bool blocked)
+    {
+        if (blocked) jumpBlocks.Add(key); else jumpBlocks.Remove(key);
+    }
+
+    public bool CanJump => jumpBlocks.Count == 0;
+
+    /// Off the ground for more than a moment (a real jump or fall, not a step down).
+    /// Ground shockwaves like Seismic Judgement pass under airborne players.
+    public bool IsAirborne => airTime > 0.08f;
+
+    /// Stops the current dash's movement (Stormrunner replaces it with a blink)
+    public void CancelDash()
+    {
+        isDashing = false;
+        dashTimer = 0f;
+    }
+
+    /// How far above the arena floor the player is standing (e.g. on an Earthwork
+    /// Parapet). Guns angle their shots down by this much so high ground can still hit
+    /// people below. Set by whatever lifted them; 0 normally.
+    [HideInInspector] public float elevation;
+
+    /// Where the left stick points in world space (or where you're facing)
+    public Vector3 MoveDirection => lastDirection;
 
     void StartDashRefill()
     {
@@ -227,9 +324,41 @@ public class PlayerMovement3D : MonoBehaviour
         if (speedModifiers.Remove(key)) RecalculateSpeedMultiplier();
     }
 
-    /// Heavier weapons slow you down (WeaponData.weight, 0 = no penalty)
-    public void SetCarriedWeight(int weight)
-        => SetSpeedModifier("weight", Mathf.Max(0.5f, 1f - weightSlowPerPoint * weight));
+    // ---------- Weapon weight ----------
+    // The gun in your hands sets most of the slowdown; everything else you carry adds a
+    // little once the loadout gets heavy. Heavy guns also make you harder to shove and
+    // slower to dash again, so light builds are zippy and heavy builds are tanks.
+
+    int heldWeight, packWeight;
+
+    public int HeldWeight => heldWeight;
+    float WeightKnockbackScale => Mathf.Clamp01(1f - knockbackResistPerPoint * heldWeight);
+
+    /// held = equipped gun's weight, pack = total weight of the whole loadout
+    public void SetCarriedWeight(int held, int pack)
+    {
+        heldWeight = Mathf.Max(0, held);
+        packWeight = Mathf.Max(0, pack);
+        SetSpeedModifier("weight", WeightSpeed(heldWeight, packWeight, weightPenaltyScale, this));
+    }
+
+    public void SetCarriedWeight(int held) => SetCarriedWeight(held, packWeight);
+
+    /// Speed multiplier for a held/pack weight (also used by the loadout screen)
+    public static float WeightSpeed(int held, int pack, float penaltyScale = 1f, PlayerMovement3D tuning = null)
+    {
+        float[] table = tuning != null ? tuning.heldWeightSpeed : DefaultHeldSpeed;
+        int allowance = tuning != null ? tuning.packWeightAllowance : 8;
+        float perPoint = tuning != null ? tuning.packSlowPerPoint : 0.015f;
+        float maxPack = tuning != null ? tuning.maxPackSlow : 0.15f;
+
+        float heldMult = table.Length > 0 ? table[Mathf.Clamp(held, 0, table.Length - 1)] : 1f;
+        float packMult = 1f - Mathf.Min(maxPack, perPoint * Mathf.Max(0, pack - allowance));
+        float slow = 1f - heldMult * packMult;
+        return Mathf.Max(0.4f, 1f - slow * penaltyScale);
+    }
+
+    static readonly float[] DefaultHeldSpeed = { 1f, 0.97f, 0.92f, 0.86f, 0.78f, 0.68f };
 
     void RecalculateSpeedMultiplier()
     {

@@ -4,22 +4,15 @@ public class UIController : MonoBehaviour
 {
     public GameObject UI;
     public GameObject Player;
-    // Start is called once before the first execution of Update after the MonoBehaviour is created
-    void Start()
-    {
-        
-    }
 
-    // Update is called once per frame
+    PlayerHealthControl health;
+
+    // Shows the HUD for players in the match. Eliminated players' HUDs stay up, greyed out.
     void Update()
     {
-        if (Player.activeSelf)
-        {
-            UI.SetActive(true);
-        }
-        else
-        {
-            UI.SetActive(false);
-        }
+        if (Player == null || UI == null) return;
+        if (health == null) health = Player.GetComponentInChildren<PlayerHealthControl>(true);
+        bool eliminated = health != null && health.IsDead;
+        UI.SetActive(Player.activeSelf || eliminated);
     }
 }

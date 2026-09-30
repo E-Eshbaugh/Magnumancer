@@ -1,12 +1,12 @@
 using UnityEngine;
 
 /// <summary>
-/// The Hollow — Last Rites: when on the last life stock, every 30 seconds gain
+/// The Hollow — Last Rites: when on the last life stock, every 20 seconds gain
 /// 3 seconds of invincibility and double damage (triggers as soon as you reach it).
 /// </summary>
 public class LastRitesPassive : WizardPassive, IOutgoingDamageModifier
 {
-    public float interval = 30f;
+    public float interval = 20f;
     public float duration = 3f;
     public float damageMultiplier = 2f;
 

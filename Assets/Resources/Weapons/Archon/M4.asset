@@ -13,16 +13,17 @@ MonoBehaviour:
   m_Name: M4
   m_EditorClassIdentifier: 
   weaponName: Gravewhisper
-  damage: 10
+  damage: 13
   ammoCapacity: 30
-  attackSpeed: 6
+  attackSpeed: 6.5
   weight: 3
-  orbCost: 5
+  orbCost: 4
   weaponIcon: {fileID: -1922479695, guid: 88365eb93f90dc0448eb4a39ecadd679, type: 3}
   description: A versatile killer. Balanced, reliable, and just quiet enough.
   fireType: auto
+  weaponClass: 2
   recoil: 0.01
-  reloadTime: 1
+  reloadTime: 1.5
   fireSound: {fileID: 8300000, guid: 1ef531b5677829043b6d50699cb7d098, type: 3}
   reloadSound: {fileID: 8300000, guid: dc24a3a858b4ee1419af6498c4425a53, type: 3}
   ammoType: {fileID: 6997994299401861888, guid: 2ec29fc9207248740970443e058a84f0, type: 3}

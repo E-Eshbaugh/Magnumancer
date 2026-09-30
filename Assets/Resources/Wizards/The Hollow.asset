@@ -13,13 +13,12 @@ MonoBehaviour:
   m_Name: The Hollow
   m_EditorClassIdentifier: 
   wizardName: The Hollow
-  heartCount: 1
+  heartCount: 3
   orbCount: 5
-  loadoutOrbs: 12
+  loadoutOrbs: 10
   factionEmblem: {fileID: -1861122501, guid: d812d7af151532745a44f9a32bbfe38a, type: 3}
   charcterImage: {fileID: 1591709252, guid: 83fa121b3217fa84ca11623844a0189b, type: 3}
-  passiveAbilityTxt: 'Last Rites: When on last life stock, every 30 seconds gain
-    3 seconds of invinciblity and double damage.'
+  passiveAbilityTxt: 'Last Rites: When on last life stock, every 20 seconds gain 3 seconds of invincibility and double damage.'
   activeAbilityTxt: 'Soulfracture Beam: Fire a piercing void ray that marks hit enemies.
     Marked enemies explode on death or loss of next life stock, dealing area damage.'
   loreText: Wielders of forsaken magics, the Hollow were not an original Great Faction,
@@ -29,7 +28,10 @@ MonoBehaviour:
     they walk the line between mastery and madness.
   material: {fileID: 2100000, guid: a33d8e2725f6d0e4aa41f0e158762194, type: 2}
   activeAbilityPrefab: {fileID: 5727223826685956371, guid: ca8800aa210c3704d9c16bd566fdc034, type: 3}
-  abilityCooldown: 20
+  abilityCooldown: 15
   customBulletPrefab: {fileID: 0}
+  moveSpeedMultiplier: 1.0
+  themeColor: {r: 0.6, g: 0.15, b: 1.0, a: 1}
+  spawnEffectPrefab: {fileID: 5642766282230003982, guid: b5c8ca7ed10b61e499cce8ec3b6e2e4c, type: 3}
   passive: 5
   passiveEffectPrefab: {fileID: 7226888052703040409, guid: 7ec363c8df426644ea85f8d6d570561c, type: 3}

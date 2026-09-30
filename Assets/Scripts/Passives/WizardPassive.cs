@@ -36,9 +36,18 @@ public abstract class WizardPassive : MonoBehaviour
         return fx;
     }
 
-    public static WizardPassive AddTo(GameObject player, WizardData data)
+    public static WizardPassive AddTo(GameObject player, WizardData data, int passiveRune = 0)
     {
         if (player == null || data == null) return null;
+
+        // Rune II swaps in the alternative passive
+        var rune = RuneBook.Passive(data, passiveRune);
+        if (passiveRune > 0 && rune != null && rune.passiveType != null)
+        {
+            var alt = player.AddComponent(rune.passiveType) as WizardPassive;
+            if (alt != null) alt.Init(data);
+            return alt;
+        }
 
         WizardPassive passive = data.passive switch
         {

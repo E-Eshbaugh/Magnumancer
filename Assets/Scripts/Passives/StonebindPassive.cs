@@ -13,7 +13,9 @@ public class StonebindPassive : WizardPassive, IIncomingDamageModifier
     [Tooltip("Seconds standing still before armor starts building")]
     public float stillDelay = 0.5f;
     public float armorPerSecond = 0.15f;
-    public float maxArmor = 0.5f;          // 50% damage reduction
+    public float maxArmor = 0.4f;          // 40% damage reduction
+    [Tooltip("Scales the move-speed penalty from weapon weight (engineer-soldiers built for heavy guns)")]
+    public float weightPenaltyMultiplier = 0.5f;
 
     public Color glowColor = new Color(1f, 0.65f, 0.25f);
 
@@ -25,7 +27,12 @@ public class StonebindPassive : WizardPassive, IIncomingDamageModifier
     public override void Init(WizardData data)
     {
         base.Init(data);
-        if (movement != null) movement.knockbackMultiplier = knockbackMultiplier;
+        if (movement != null)
+        {
+            movement.knockbackMultiplier = knockbackMultiplier;
+            movement.weightPenaltyScale *= weightPenaltyMultiplier;
+            movement.SetCarriedWeight(movement.HeldWeight); // re-apply with the lighter penalty
+        }
         foreach (var gun in GetComponentsInChildren<FireController3D>(true))
             gun.recoilMultiplier = recoilMultiplier;
     }

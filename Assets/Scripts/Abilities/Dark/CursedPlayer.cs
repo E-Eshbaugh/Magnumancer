@@ -69,6 +69,9 @@ public class CursedPlayer : MonoBehaviour
         if (explosionSound != null)
             AudioSource.PlayClipAtPoint(explosionSound, center);
 
+        // Sets off mines/grenades and hits crystals
+        Explosions.AffectWorld(center, explosionRadius, maxDamage, exclude);
+
         // Players have two colliders (CharacterController + capsule); hit each object once
         var alreadyHit = new HashSet<GameObject>();
         Collider[] affected = Physics.OverlapSphere(center, explosionRadius, damageLayers);
@@ -100,15 +103,6 @@ public class CursedPlayer : MonoBehaviour
             float distancePercent = Mathf.Clamp01(1f - (distance / explosionRadius));
             float damageToApply = maxDamage * distancePercent;
 
-            // Rumble feedback (stopped by the victim, since the burster may be dying)
-            var movement = nearby.GetComponent<PlayerMovement3D>();
-            if (movement != null && movement.gamepad != null)
-            {
-                float intensity = distancePercent;
-                movement.gamepad.SetMotorSpeeds(0.2f * intensity, 0.9f * intensity);
-                movement.StartCoroutine(StopRumble(movement.gamepad, 0.3f));
-            }
-
             // Apply health damage
             var health = nearby.GetComponent<PlayerHealthControl>();
             if (health != null)
@@ -125,11 +119,6 @@ public class CursedPlayer : MonoBehaviour
         }
     }
 
-    private static IEnumerator StopRumble(Gamepad pad, float delay)
-    {
-        yield return new WaitForSeconds(delay);
-        pad.SetMotorSpeeds(0, 0);
-    }
 
 
 

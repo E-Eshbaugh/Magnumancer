@@ -35,12 +35,16 @@ public class ArAbilityController : MonoBehaviour
     public float upwardBias = 0.55f;
     public float fireCooldown = 0.25f;
     public Vector3 launchVelAdjust = Vector3.zero;
+    [Tooltip("Seconds between grenades (shown on the gun ability bar)")]
+    public float abilityCooldown = 6f;
 
     [Header("Physics / Simulation")]
     public Vector3 gravity = new Vector3(0, -11.5f, 0);
     public int maxSteps = 80;
+    [Tooltip("Unused: the preview steps at Time.fixedDeltaTime so it matches the grenade's physics exactly")]
     public float timeStep = 0.05f;
     public float maxSimTime = 2.0f;
+    [Tooltip("Fallback only: the real grenade prefab's collider radius is used when available")]
     public float grenadeRadius = 0.15f;
     public LayerMask collisionMask = ~0;
 
@@ -72,6 +76,11 @@ public class ArAbilityController : MonoBehaviour
     public string fxLayerName = "FX";
 
     Gamepad pad;
+    GunOrbitController orbit;
+    WeaponAbilityControl abilityBar;
+    GameObject ownerRoot;
+    Collider[] ownerColliders = new Collider[0];
+    readonly RaycastHit[] castHits = new RaycastHit[16];
     bool aiming;
     float aimStartTime;
     float nextFireAllowed;
@@ -109,6 +118,27 @@ public class ArAbilityController : MonoBehaviour
 
         BuildDashPool();
         if (showLandingRing) BuildRing();
+
+        orbit = GetComponent<GunOrbitController>();
+        if (orbit == null) orbit = GetComponentInParent<GunOrbitController>();
+        ownerRoot = OwnerPlayer();
+        grenadeRadius = MeasureGrenadeRadius(grenadePrefab, grenadeRadius);
+    }
+
+    void Start()
+    {
+        abilityBar = WeaponAbilityControl.FindFor(this);
+        if (ownerRoot != null) ownerColliders = ownerRoot.GetComponentsInChildren<Collider>(true);
+    }
+
+    // The preview sphere has to be the same size as the grenade's real collider
+    static float MeasureGrenadeRadius(GameObject prefab, float fallback)
+    {
+        if (prefab == null) return fallback;
+        var sphere = prefab.GetComponentInChildren<SphereCollider>();
+        if (sphere == null) return fallback;
+        Vector3 s = sphere.transform.lossyScale;
+        return sphere.radius * Mathf.Max(Mathf.Abs(s.x), Mathf.Abs(s.y), Mathf.Abs(s.z));
     }
 
     public void Setup(Gamepad pad)
@@ -119,11 +149,19 @@ public class ArAbilityController : MonoBehaviour
 
     void Update()
     {
-        currentGun = gunSwapControl.loadout[gunSwapControl.currentGunIndex];
-        if (!currentGun.grenadeLauncher) return;
-
+        currentGun = gunSwapControl != null && gunSwapControl.loadout != null
+            ? gunSwapControl.loadout[gunSwapControl.currentGunIndex]
+            : null;
         pad = gamepadOverride;
-        if (pad == null) { if (aiming) CancelAiming(); return; }
+
+        // Swapped away (or paused) mid-aim: don't leave the arc hanging in the air
+        if (currentGun == null || !currentGun.grenadeLauncher || pad == null || GamePause.InputBlocked)
+        {
+            if (aiming) CancelAiming();
+            return;
+        }
+
+        abilityBar?.ReportCooldown(nextFireAllowed, abilityCooldown);
 
         float trig = pad.leftTrigger.ReadValue();
 
@@ -155,10 +193,16 @@ public class ArAbilityController : MonoBehaviour
     {
         Vector3 startPos = muzzle ? muzzle.position : transform.position;
 
-        Vector2 rs = pad.rightStick.ReadValue();
-        Vector3 dir = (rs.magnitude > stickDeadzone)
-            ? Quaternion.Euler(0, isoYaw, 0) * new Vector3(rs.x, 0f, rs.y)
-            : transform.forward;
+        // Throw where the gun is pointing (the orbit already applies the isometric rotation)
+        Vector3 dir = orbit != null ? orbit.aimDirection : transform.forward;
+        if (orbit == null)
+        {
+            Vector2 rs = pad.rightStick.ReadValue();
+            if (rs.magnitude > stickDeadzone)
+                dir = Quaternion.Euler(0, isoYaw, 0) * new Vector3(rs.x, 0f, rs.y);
+        }
+        dir.y = 0f;
+        if (dir.sqrMagnitude < 1e-4f) dir = Vector3.forward;
         dir.Normalize();
 
         float speed = chargePower
@@ -166,7 +210,7 @@ public class ArAbilityController : MonoBehaviour
             : Mathf.Lerp(minSpeed, maxSpeed, 0.65f);
 
         Vector3 launchDir = (dir + Vector3.up * upwardBias).normalized;
-        cachedVelocity = launchDir * speed + launchVelAdjust;
+        cachedVelocity = launchDir * speed + launchVelAdjust + InheritedVelocity();
 
         SimulateArc(startPos, cachedVelocity);
 
@@ -189,7 +233,8 @@ public class ArAbilityController : MonoBehaviour
     void FireGrenade(Vector3 velocity)
     {
         if (Time.time < nextFireAllowed) return;
-        nextFireAllowed = Time.time + fireCooldown;
+        nextFireAllowed = Time.time + Mathf.Max(fireCooldown, abilityCooldown);
+        Rumble.GunAbility(pad);
 
         GameObject g = grenadePrefab;
         bool builtFallback = false;
@@ -220,19 +265,25 @@ public class ArAbilityController : MonoBehaviour
         if (builtFallback) g.transform.position = spawnPos;
         else g = Instantiate(g, spawnPos, Quaternion.identity);
 
+        // Never collide with the thrower (the preview ignores them too). Re-read the
+        // colliders each throw: the held gun model is swapped in and out.
+        if (ownerRoot != null) ownerColliders = ownerRoot.GetComponentsInChildren<Collider>();
+        foreach (var gc in g.GetComponentsInChildren<Collider>())
+            foreach (var oc in ownerColliders)
+                if (oc != null) Physics.IgnoreCollision(gc, oc, true);
+
         if (g.TryGetComponent<Rigidbody>(out var rb2))
         {
+            // Match the preview: no drag, no built-in gravity, no tunnelling through floors
             rb2.useGravity = false;
-#if UNITY_6000_0_OR_NEWER
-            rb2.linearVelocity = velocity + (playerBody ? playerBody.linearVelocity : Vector3.zero);
-#else
-            rb2.velocity = velocity + (playerBody ? playerBody.velocity : Vector3.zero);
-#endif
+            rb2.linearDamping = 0f;
+            rb2.collisionDetectionMode = CollisionDetectionMode.ContinuousDynamic;
+            rb2.linearVelocity = velocity; // already includes any inherited velocity
             var cg = g.AddComponent<CustomGravityBody>();
             cg.gravity = gravity;
         }
         if (g.TryGetComponent<GrenadeExplodeOnImpact>(out var impact))
-            impact.owner = OwnerPlayer();
+            impact.owner = ownerRoot;
 
 #if INCLUDE_MINI_GRENADE_CLASS
         if (g.TryGetComponent<MiniGrenade>(out var mini2))
@@ -240,41 +291,67 @@ public class ArAbilityController : MonoBehaviour
 #endif
     }
 
-    // ===== Simulation (unchanged) =====
+    Vector3 InheritedVelocity()
+        => playerBody ? playerBody.linearVelocity : Vector3.zero;
+
+    // ===== Simulation =====
+    // Steps exactly like the real grenade: CustomGravityBody adds gravity to the velocity
+    // in FixedUpdate, then the physics step moves it by velocity * fixedDeltaTime
+    // (semi-implicit Euler). Using the textbook arc formula here drifts noticeably
+    // from where the grenade actually lands with this much gravity.
     void SimulateArc(Vector3 startPos, Vector3 initVel)
     {
-        if (simBuffer == null || simBuffer.Length < maxSteps + 4)
-            simBuffer = new Vector3[maxSteps + 4];
+        float dt = Time.fixedDeltaTime;
+        int steps = Mathf.Min(Mathf.Max(maxSteps, 1) * 4, Mathf.CeilToInt(maxSimTime / dt));
+        if (simBuffer == null || simBuffer.Length < steps + 2)
+            simBuffer = new Vector3[steps + 2];
 
         simCount = 0;
         simHit = false;
 
         Vector3 pos = startPos;
         Vector3 vel = initVel;
-        float t = 0f;
 
-        for (int step = 0; step < maxSteps && t < maxSimTime; step++)
+        for (int step = 0; step < steps; step++)
         {
             simBuffer[simCount++] = pos;
 
-            Vector3 newVel = vel + gravity * timeStep;
-            Vector3 newPos = pos + vel * timeStep + 0.5f * gravity * (timeStep * timeStep);
+            vel += gravity * dt;
+            Vector3 newPos = pos + vel * dt;
 
             Vector3 seg = newPos - pos;
             float dist = seg.magnitude;
 
-            if (Physics.SphereCast(pos, grenadeRadius, seg.normalized, out RaycastHit hit, dist, collisionMask, QueryTriggerInteraction.Ignore))
+            if (dist > 1e-5f && CastIgnoringOwner(pos, seg / dist, dist, out RaycastHit hit))
             {
-                if (simCount < simBuffer.Length) simBuffer[simCount++] = hit.point;
+                // show where the grenade's center will be on contact
+                if (simCount < simBuffer.Length) simBuffer[simCount++] = pos + seg / dist * hit.distance;
                 simHit = true;
                 simHitInfo = hit;
                 break;
             }
 
             pos = newPos;
-            vel = newVel;
-            t += timeStep;
         }
+    }
+
+    bool CastIgnoringOwner(Vector3 origin, Vector3 dir, float dist, out RaycastHit best)
+    {
+        best = default;
+        int n = Physics.SphereCastNonAlloc(origin, grenadeRadius, dir, castHits, dist, collisionMask, QueryTriggerInteraction.Ignore);
+        float bestDist = float.MaxValue;
+        for (int i = 0; i < n; i++)
+        {
+            var h = castHits[i];
+            if (h.distance >= bestDist) continue;
+            if (ownerRoot != null && h.collider.transform.IsChildOf(ownerRoot.transform)) continue;
+            if (h.collider.GetComponentInParent<Bullet>() != null) continue; // bullets are triggers to grenades
+            // overlapping at the very start (distance 0) would stop the preview at the muzzle
+            if (h.distance <= 0f && h.point == Vector3.zero) continue;
+            best = h;
+            bestDist = h.distance;
+        }
+        return bestDist < float.MaxValue;
     }
 
     // ===== Dashes =====
@@ -525,6 +602,7 @@ public class ArAbilityController : MonoBehaviour
                 if (c.attachedRigidbody)
                     c.attachedRigidbody.AddExplosionForce(explosionForce, transform.position, blastRadius, upwardModifier, ForceMode.Impulse);
             }
+            Explosions.AffectWorld(transform.position, blastRadius, damage, gameObject);
             Destroy(gameObject);
         }
     }

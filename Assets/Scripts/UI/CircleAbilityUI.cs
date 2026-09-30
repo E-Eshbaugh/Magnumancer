@@ -104,6 +104,17 @@ public class CircleAbilityUI : MonoBehaviour
         }
     }
 
+    /// Out of the match: no more ability-ready glow
+    public void SetEliminated()
+    {
+        if (pulseRoutine != null)
+        {
+            StopCoroutine(pulseRoutine);
+            pulseRoutine = null;
+        }
+        if (glowImage != null) glowImage.enabled = false;
+    }
+
     private IEnumerator PulseAlpha(float baseAlpha)
     {
         while (true)

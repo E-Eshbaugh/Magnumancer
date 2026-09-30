@@ -17,6 +17,10 @@ public class EarthquakeAbility : MonoBehaviour, IActiveAbility
     public float stunDuration = 1f;
     public float stunSpeedMultiplier = 0.3f;
 
+    [Header("Dodge by jumping")]
+    [Tooltip("Warning before the slam: a ring marks the area and a second ring grows to meet it. Jump when they meet.")]
+    public float windup = 0.4f;
+
     [Header("Effects")]
     public GameObject quakeVFX;
     public AudioClip quakeSFX;
@@ -27,8 +31,50 @@ public class EarthquakeAbility : MonoBehaviour, IActiveAbility
 
     public void Activate(GameObject caster)
     {
-        Vector3 origin = caster.transform.position;
+        StartCoroutine(WindupThenSlam(caster, caster.transform.position));
+    }
 
+    // Seismic Judgement is a ground shockwave: airborne players are untouched. The slam
+    // knocks back and stuns anyone on the ground (and stunned players can't jump), the
+    // aftershocks only chip grounded players. The windup ring makes the timing readable.
+    IEnumerator WindupThenSlam(GameObject caster, Vector3 origin)
+    {
+        if (windup > 0f)
+        {
+            var movement = caster.GetComponent<PlayerMovement3D>();
+            if (movement != null) Rumble.Play(movement.gamepad, 0.2f, 0.3f, windup, fade: false);
+            yield return Telegraph(caster, origin);
+        }
+        if (caster != null) Slam(caster, origin);
+    }
+
+    IEnumerator Telegraph(GameObject caster, Vector3 origin)
+    {
+        var host = new GameObject("QuakeWarning");
+        Destroy(host, windup + 0.1f); // never left behind if this ability goes away mid-windup
+        Vector3 ground = AbilityKit.Ground(origin + Vector3.up);
+        Color color = AbilityKit.Theme(caster);
+        var edge = GlowLine.Make(host.transform, "Edge", 48, 0.14f, AbilityKit.Glow());
+        var closing = GlowLine.Make(host.transform, "Closing", 48, 0.22f, AbilityKit.Glow());
+        edge.loop = closing.loop = true;
+        Vector3 center = ground + Vector3.up * 0.08f;
+        AbilityKit.Circle(edge, center, quakeRadius);
+
+        float t = 0f;
+        while (t < windup)
+        {
+            t += Time.deltaTime;
+            float k = Mathf.Clamp01(t / windup);
+            AbilityKit.Circle(closing, center, Mathf.Lerp(0.3f, quakeRadius, k * k));
+            GlowLine.SetColor(edge, color, 0.5f + 0.5f * Mathf.PingPong(t * 8f, 1f));
+            GlowLine.SetColor(closing, Color.Lerp(color, Color.white, k), 0.4f + 0.6f * k);
+            yield return null;
+        }
+        Destroy(host);
+    }
+
+    void Slam(GameObject caster, Vector3 origin)
+    {
         // VFX
         if (quakeVFX != null)
             Instantiate(quakeVFX, origin, Quaternion.identity);
@@ -42,11 +88,11 @@ public class EarthquakeAbility : MonoBehaviour, IActiveAbility
 
         // Rumble for the caster
         var movement = caster.GetComponent<PlayerMovement3D>();
-        if (movement != null && movement.gamepad != null)
-        {
-            movement.gamepad.SetMotorSpeeds(0.6f, 1.0f);
-            StartCoroutine(StopRumble(movement.gamepad, 1f));
-        }
+        if (movement != null)
+            Rumble.Play(movement.gamepad, 0.6f, 1.0f, 1f);
+
+        // The initial shockwave sets off mines/grenades and cracks crystals
+        Explosions.AffectWorld(origin, quakeRadius, damagePerTick, caster);
 
         // Start damage over time
         StartCoroutine(DamageOverTime(caster, origin));
@@ -76,6 +122,10 @@ public class EarthquakeAbility : MonoBehaviour, IActiveAbility
 
                 Vector3 direction = (target.transform.position - origin).normalized;
                 float distance = Vector3.Distance(target.transform.position, origin);
+
+                // Ground shockwave: players in the air are untouched (monsters can't jump)
+                var mover = target.GetComponentInParent<PlayerMovement3D>();
+                if (mover != null && mover.IsAirborne) continue;
 
                 // Line-of-sight check
                 if (Physics.Linecast(origin, target.transform.position, out RaycastHit hit,
@@ -111,13 +161,8 @@ public class EarthquakeAbility : MonoBehaviour, IActiveAbility
                     goblin.TakeDamage(damagePerTick, caster);
 
                 // Rumble
-                if (movementScript != null && movementScript.gamepad != null)
-                {
-                    float low = 0.2f;
-                    float high = 0.6f;
-                    movementScript.gamepad.SetMotorSpeeds(low, high);
-                    StartCoroutine(StopRumble(movementScript.gamepad, 0.25f));
-                }
+                if (movementScript != null)
+                    Rumble.Play(movementScript.gamepad, 0.2f, 0.6f, 0.25f);
 
                 // Ice wall damage
                 var wall = target.GetComponentInParent<IceWallEffect>();
@@ -130,9 +175,4 @@ public class EarthquakeAbility : MonoBehaviour, IActiveAbility
         }
     }
 
-    private IEnumerator StopRumble(Gamepad gamepad, float duration)
-    {
-        yield return new WaitForSeconds(duration);
-        gamepad?.SetMotorSpeeds(0, 0);
-    }
 }

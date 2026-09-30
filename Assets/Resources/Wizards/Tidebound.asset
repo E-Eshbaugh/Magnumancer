@@ -13,9 +13,9 @@ MonoBehaviour:
   m_Name: Tidebound
   m_EditorClassIdentifier: 
   wizardName: Tidebound
-  heartCount: 4
-  orbCount: 2
-  loadoutOrbs: 6
+  heartCount: 3
+  orbCount: 3
+  loadoutOrbs: 8
   factionEmblem: {fileID: 758042945, guid: d812d7af151532745a44f9a32bbfe38a, type: 3}
   charcterImage: {fileID: 2062932452, guid: 14b3787829e18034195f3cad3ff558b4, type: 3}
   passiveAbilityTxt: 'Undercurrent: Dash cooldown is reduced by 30%. After dashing,
@@ -31,7 +31,10 @@ MonoBehaviour:
     They crash in like waves\u2014overwhelming and personal."
   material: {fileID: 2100000, guid: 25ac3a8882121e843b62dcef38a94f6d, type: 2}
   activeAbilityPrefab: {fileID: 6621311588407131760, guid: a6cc53738622afe4d93c7fe152af4005, type: 3}
-  abilityCooldown: 20
+  abilityCooldown: 13
   customBulletPrefab: {fileID: 0}
+  moveSpeedMultiplier: 1.05
+  themeColor: {r: 0.2, g: 0.55, b: 1.0, a: 1}
+  spawnEffectPrefab: {fileID: 8205706795460263314, guid: 326e86d5729c54e479798cacab220bb2, type: 3}
   passive: 6
   passiveEffectPrefab: {fileID: 0}

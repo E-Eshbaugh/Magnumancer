@@ -24,6 +24,12 @@ public class CharacterSelectController : MonoBehaviour
     public static CharacterSelectController Instance;
     public WizardData selectedWizard;
 
+    [Header("-- Runes --")]
+    [Tooltip("D-pad left/right picks the active rune, up/down the passive rune")]
+    public bool showRuneHints = true;
+    public int selectedActiveRune;
+    public int selectedPassiveRune;
+
     private int currentWizardIndex = 0;
     private bool rightPressed = false;
     private bool leftPressed = false;
@@ -56,6 +62,46 @@ public class CharacterSelectController : MonoBehaviour
 
         rightPressed = isPressedR;
         leftPressed = isPressedL;
+
+        // Runes: d-pad left/right = active (3), up/down = passive (2)
+        bool changed = false;
+        if (activePad.dpad.right.wasPressedThisFrame) { selectedActiveRune = (selectedActiveRune + 1) % RuneBook.ActiveCount; changed = true; }
+        if (activePad.dpad.left.wasPressedThisFrame) { selectedActiveRune = (selectedActiveRune + RuneBook.ActiveCount - 1) % RuneBook.ActiveCount; changed = true; }
+        if (activePad.dpad.up.wasPressedThisFrame || activePad.dpad.down.wasPressedThisFrame)
+        {
+            selectedPassiveRune = (selectedPassiveRune + 1) % RuneBook.PassiveCount;
+            changed = true;
+        }
+        if (changed)
+        {
+            UpdateRuneText();
+            Rumble.Swap(activePad);
+        }
+    }
+
+    /// Shows the picked runes in the ability text boxes (plus the wizard's weapon affinity)
+    void UpdateRuneText()
+    {
+        var runes = RuneBook.For(selectedWizard);
+        if (runes == null)
+        {
+            passiveTextUI.text = selectedWizard.passiveAbilityTxt;
+            activeTextUI.text = selectedWizard.activeAbilityTxt;
+            return;
+        }
+
+        var a = runes.actives[selectedActiveRune];
+        var p = runes.passives[selectedPassiveRune];
+        string aHint = showRuneHints ? "<  " : "";
+        string aHintEnd = showRuneHints ? "  >" : "";
+        activeTextUI.text =
+            $"{aHint}Rune {RuneBook.Numeral(selectedActiveRune)}/{RuneBook.Numeral(RuneBook.ActiveCount - 1)}: {a.name}{aHintEnd}  ({a.cooldown:0}s)\n{a.description}";
+
+        string pHint = showRuneHints ? "^v " : "";
+        var f = runes.affinity;
+        passiveTextUI.text =
+            $"{pHint}Rune {RuneBook.Numeral(selectedPassiveRune)}/{RuneBook.Numeral(RuneBook.PassiveCount - 1)}: {p.name}\n{p.description}" +
+            (f != null ? $"\nAffinity - {RuneBook.ClassList(f)}: {f.name}. {f.description}" : "");
     }
 
     void updateWizard()
@@ -64,8 +110,10 @@ public class CharacterSelectController : MonoBehaviour
 
         nameText.text = selectedWizard.wizardName;
         loreText.text = selectedWizard.loreText;
-        passiveTextUI.text = selectedWizard.passiveAbilityTxt;
-        activeTextUI.text = selectedWizard.activeAbilityTxt;
+        // new wizard: start from their original runes
+        selectedActiveRune = 0;
+        selectedPassiveRune = 0;
+        UpdateRuneText();
         mainWiz.sprite = selectedWizard.charcterImage;
         centerIcon.sprite = selectedWizard.factionEmblem;
 

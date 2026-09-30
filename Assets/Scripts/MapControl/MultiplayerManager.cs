@@ -15,6 +15,9 @@ public class MultiplayerManager : MonoBehaviour
     public bool pairDevicesToUsers = true;
     public ControllerConnectScript controllerConnectScript;
 
+    [Tooltip("Gap between each wizard's arrival bolt at round start")]
+    public float arrivalStagger = 0.2f;
+
     void Start()
     {
         if (DataManager.Instance == null)
@@ -59,8 +62,19 @@ public class MultiplayerManager : MonoBehaviour
             go.GetComponentInChildren<OverClock>()?.Setup(pad);
             go.GetComponentInChildren<LaserScope>()?.Setup(pad);
             go.GetComponentInChildren<AkimboController>()?.Setup(pad);
-            go.GetComponentInChildren<WizardAbilityController>()?.Setup(pad, wizard, uiControllers[i]);
+            int activeRune = DataManager.Instance.GetActiveRune(i);
+            int passiveRune = DataManager.Instance.GetPassiveRune(i);
+            go.GetComponentInChildren<WizardAbilityController>()?.Setup(pad, wizard, uiControllers[i], activeRune);
             go.GetComponentInChildren<ArAbilityController>()?.Setup(pad);
+
+            // Emberblast's Remote Fuse lives next to the other gun abilities
+            var ammo = go.GetComponentInChildren<AmmoControl>();
+            if (ammo != null)
+            {
+                var detonator = ammo.GetComponent<RemoteDetonator>();
+                if (detonator == null) detonator = ammo.gameObject.AddComponent<RemoteDetonator>();
+                detonator.Setup(pad);
+            }
 
             // Appearance
             var appearance = go.GetComponentInChildren<PlayerAppearance>();
@@ -71,7 +85,22 @@ public class MultiplayerManager : MonoBehaviour
             if (health != null && wizard != null)
             {
                 health.SetLives(Mathf.Max(1, wizard.heartCount));
-                WizardPassive.AddTo(health.gameObject, wizard);
+                WizardPassive.AddTo(health.gameObject, wizard, passiveRune);
+            }
+            if (health != null) WizardHealthBar.AddTo(health, wizard);
+
+            // Where they start is where they come back to after losing a life
+            var spawnRoot = health != null ? health.transform : go.transform;
+            if (health != null) health.SetSpawnPoint(spawnRoot.position, spawnRoot.rotation);
+            WizardSpawnEffect.Play(spawnRoot.gameObject, wizard, i * arrivalStagger);
+
+            // Ability charge shown as flames on the wizard; dashes leave a lightning trail
+            var mover = go.GetComponentInChildren<PlayerMovement3D>();
+            if (mover != null)
+            {
+                WizardChargeAura.AddTo(mover.gameObject, wizard);
+                WizardDashTrail.AddTo(mover.gameObject, wizard);
+                WeaponSynergy.AddTo(mover.gameObject, wizard);
             }
 
             Debug.Log($"Player {i} wired. Pad: {pad?.displayName ?? "None"}, Wizard: {wizard?.wizardName ?? "NULL"}, Guns: {loadout?.Length ?? 0}");

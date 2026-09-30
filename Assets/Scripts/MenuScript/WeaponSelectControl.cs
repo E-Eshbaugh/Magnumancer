@@ -37,9 +37,16 @@ public class WeaponSelectControl : MonoBehaviour
     public WeaponData   InventoryPlaceHolder;
 
     [Header("-- Fillbar Settings --")]
-    [Tooltip("Anchored X positions (min->max) for stat bars")]
+    [Tooltip("Old slide-in range. The bars now sit at maxX and fill left→right instead of sliding.")]
     public float minX = -614f;
     public float maxX = -211f;
+    [Tooltip("How fast bars animate to a new weapon's stats (fraction per second)")]
+    public float barFillSpeed = 4f;
+    [Tooltip("Smallest visible fill so a low stat still shows a sliver")]
+    [Range(0f, 0.2f)] public float minVisibleFill = 0.04f;
+
+    // stat bar image -> target fill
+    private readonly System.Collections.Generic.Dictionary<Image, float> barTargets = new();
 
     // Runtime
     private WeaponData[] currentList;
@@ -69,12 +76,19 @@ public class WeaponSelectControl : MonoBehaviour
             inventoryData[i] = InventoryPlaceHolder;
         }
 
+        PrepareBar(weaponAmmo);
+        PrepareBar(weaponDamage);
+        PrepareBar(weaponAttackSpeed);
+        PrepareBar(weaponWeight);
+
         UpdateTierList(true);
         UpdateWeaponDisplay();
     }
 
     void Update()
     {
+        AnimateBars();
+
         if (activePad == null) return;
 
         // 1) Tier change?
@@ -113,6 +127,9 @@ public class WeaponSelectControl : MonoBehaviour
 
         // sync MAgicManagement
         if (magicManagement) magicManagement.SetPlayer(playerIndex);
+
+        // synergy notes depend on who's picking
+        UpdateWeaponDisplay();
 
         // Optional: ResetSelection();
     }
@@ -191,16 +208,48 @@ public class WeaponSelectControl : MonoBehaviour
 
         weaponNameText.text        = wd.weaponName;
         weaponOrbCostText.text     = wd.orbCost.ToString();
-        weaponDescriptionText.text = wd.description;
+        weaponDescriptionText.text = wd.description + WeightLine(wd) + SynergyLine(wd);
         weaponIcon.sprite          = wd.weaponIcon;
 
         UpdateFillPercent(wd);
     }
 
+    // "Synergy" note when this gun is one the picking wizard favours
+    private string SynergyLine(WeaponData wd)
+    {
+        if (myWizard == null || !RuneBook.Favors(myWizard, wd)) return "";
+        var a = RuneBook.AffinityOf(myWizard);
+        // Color tag, not <b>: the description uses a bitmap font that can't do bold
+        string hex = ColorUtility.ToHtmlStringRGB(GlowLine.Brighten(WizardSpawnEffect.ThemeColorOf(myWizard)));
+        return $"\n<color=#{hex}>Synergy - {a.name}: {a.description}</color>";
+    }
+
+    // What the gun's weight will cost in the match, given what's already packed
+    private string WeightLine(WeaponData wd)
+    {
+        int pack = 0;
+        for (int i = 0; i < inventoryData.Length; i++)
+        {
+            var w = inventoryData[i];
+            if (w != null && w != InventoryPlaceHolder && w != wd) pack += Mathf.Max(0, w.weight);
+        }
+        pack += Mathf.Max(0, wd.weight);
+
+        // Granite Vow's Stonebind halves weight penalties
+        bool stonebind = myWizard != null && myWizard.passive == PassiveType.Stonebind
+                         && DataManager.Instance != null && DataManager.Instance.GetPassiveRune(activePlayerIndex) == 0;
+        float speed = PlayerMovement3D.WeightSpeed(wd.weight, pack, stonebind ? 0.5f : 1f);
+        int slow = Mathf.RoundToInt((1f - speed) * 100f);
+        string feel = wd.weight >= 4 ? "Heavy" : wd.weight <= 1 ? "Light" : "Medium";
+        return $"\n{feel} ({wd.weight}): {slow}% slower in hand - loadout weight {pack}";
+    }
+
     private void UpdateFillPercent(WeaponData wd)
     {
         ammoPercent        = Mathf.Clamp01(wd.ammoCapacity   / 60f);
-        damagePercent      = Mathf.Clamp01(wd.damage         / 40f);
+        // per trigger pull: shotgun damage is per pellet, so show the whole volley
+        int perShot        = wd.isShotgun ? wd.damage * Mathf.Max(1, wd.pelletCount) : wd.damage;
+        damagePercent      = Mathf.Clamp01(perShot           / 75f);
         attackSpeedPercent = Mathf.Clamp01(wd.attackSpeed    / 15f);
         weightPercent      = Mathf.Clamp01(wd.weight         / 5f);
 
@@ -211,11 +260,47 @@ public class WeaponSelectControl : MonoBehaviour
         SetBar(weaponWeight,      weightPercent,      range);
     }
 
+    // The bars used to "fill" by sliding the whole colored bar sideways and hiding the
+    // overflow behind a big "Screen" image. That image stuck far outside the bar frame and
+    // covered neighbouring UI. Now each bar stays put inside its frame and uses a
+    // horizontal Filled image; the Screen occluders aren't needed.
+    private void PrepareBar(RectTransform bar)
+    {
+        if (!bar) return;
+        bar.anchoredPosition = new Vector2(maxX, bar.anchoredPosition.y);
+
+        var img = bar.GetComponent<Image>();
+        if (img != null)
+        {
+            img.type = Image.Type.Filled;
+            img.fillMethod = Image.FillMethod.Horizontal;
+            img.fillOrigin = (int)Image.OriginHorizontal.Left;
+            img.fillAmount = 0f;
+            barTargets[img] = 0f;
+        }
+
+        if (bar.parent != null)
+        {
+            var screen = bar.parent.Find("Screen");
+            if (screen != null) screen.gameObject.SetActive(false);
+        }
+    }
+
     private void SetBar(RectTransform bar, float pct, float range)
     {
         if (!bar) return;
-        float x = Mathf.Clamp(minX + pct * range, minX, maxX);
-        bar.anchoredPosition = new Vector2(x, bar.anchoredPosition.y);
+        var img = bar.GetComponent<Image>();
+        if (img == null || !barTargets.ContainsKey(img)) PrepareBar(bar);
+        if (img != null) barTargets[img] = Mathf.Max(minVisibleFill, Mathf.Clamp01(pct));
+    }
+
+    private void AnimateBars()
+    {
+        foreach (var kv in barTargets)
+        {
+            if (kv.Key == null) continue;
+            kv.Key.fillAmount = Mathf.MoveTowards(kv.Key.fillAmount, kv.Value, barFillSpeed * Time.unscaledDeltaTime);
+        }
     }
     #endregion
 
@@ -294,6 +379,7 @@ public class WeaponSelectControl : MonoBehaviour
 
     private void PushSpentToUI()
     {
+        UpdateWeaponDisplay(); // weight line depends on what's packed
         int spent = CountInventoryCost();
         if (magicManagement != null)
         {

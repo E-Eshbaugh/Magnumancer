@@ -49,7 +49,7 @@ public class GunOrbitController : MonoBehaviour
         if (gamepad == null || player == null) return;
 
         // 1) Read stick & compute a flat XZ direction
-        Vector2 stick = gamepad.rightStick.ReadValue();
+        Vector2 stick = GamePause.InputBlocked ? Vector2.zero : gamepad.rightStick.ReadValue();
         if (stick.magnitude > 0.1f)
         {
             float angle = Mathf.Atan2(stick.x, stick.y);

@@ -45,7 +45,7 @@ public class GunSwapControl : MonoBehaviour
 
     void Update()
     {
-        if (!isInitialized || gamepad == null) return;
+        if (!isInitialized || gamepad == null || GamePause.InputBlocked) return;
 
         if (gamepad.dpad.up.wasPressedThisFrame && gunPrefabs[0] != null) EquipGun(0);
         if (gamepad.dpad.right.wasPressedThisFrame && gunPrefabs[1] != null) EquipGun(1);
@@ -56,6 +56,8 @@ public class GunSwapControl : MonoBehaviour
     void EquipGun(int index)
     {
         if (index < 0 || index >= gunPrefabs.Length || gunPrefabs[index] == null) return;
+        if (currentGun != null && index == currentGunIndex) return; // already holding it
+        if (currentGun != null) Rumble.Swap(gamepad); // not on the initial equip
 
         if (currentGun) Destroy(currentGun);
 

@@ -1,7 +1,11 @@
 using UnityEngine;
 using UnityEngine.UI;
-using System.Collections;
 
+/// <summary>
+/// The center-out gun ability bar. Whichever gun ability belongs to the equipped gun
+/// reports its cooldown each frame via ReportCooldown; guns whose ability has no
+/// cooldown (or none at all) show a full bar.
+/// </summary>
 public class WeaponAbilityControl : MonoBehaviour
 {
     [Header("UI References")]
@@ -10,55 +14,48 @@ public class WeaponAbilityControl : MonoBehaviour
     [Tooltip("Right half of the center-out ability bar")]
     public Image abilityBarR;
 
-    [Header("Fill Settings")]
-    [Tooltip("How long (in seconds) it takes to refill from 0→1")]
-    public float fillDuration = 2f;
+    int reportedFrame = -1;
+    float reportedFill = 1f;
 
-    private Coroutine _fillRoutine;
+    void Start() => SetFill(1f);
 
-    void Start()
+    /// readyTime: Time.time the ability is ready again; cooldown: its full length.
+    public void ReportCooldown(float readyTime, float cooldown)
     {
-        // At start, both halves are full
-        if (abilityBarL != null) abilityBarL.fillAmount = 1f;
-        if (abilityBarR != null) abilityBarR.fillAmount = 1f;
+        float remaining = readyTime - Time.time;
+        ReportFill(cooldown <= 0f || remaining <= 0f ? 1f : 1f - remaining / cooldown);
     }
 
-    /// <summary>
-    /// Call this when the ability is used (e.g. LT pressed).
-    /// Bars will disappear, then refill from center out.
-    /// </summary>
-    public void TriggerAbilityFill()
+    /// 0 = just used, 1 = ready (also used for "active, draining" states)
+    public void ReportFill(float fill)
     {
-        // stop any in-progress fill
-        if (_fillRoutine != null)
-            StopCoroutine(_fillRoutine);
-
-        // instantly empty both halves
-        if (abilityBarL != null) abilityBarL.fillAmount = 0f;
-        if (abilityBarR != null) abilityBarR.fillAmount = 0f;
-
-        // kick off the refill coroutine
-        _fillRoutine = StartCoroutine(FillRoutine());
+        reportedFrame = Time.frameCount;
+        reportedFill = Mathf.Clamp01(fill);
     }
 
-    private IEnumerator FillRoutine()
+    /// Kept for older callers: shows the bar emptying (the ability's own
+    /// ReportCooldown drives the refill from here on).
+    public void TriggerAbilityFill() => ReportFill(0f);
+
+    void LateUpdate()
     {
-        float elapsed = 0f;
-        while (elapsed < fillDuration)
-        {
-            elapsed += Time.deltaTime;
-            float frac = Mathf.Clamp01(elapsed / fillDuration);
+        SetFill(reportedFrame == Time.frameCount ? reportedFill : 1f);
+    }
 
-            if (abilityBarL != null) abilityBarL.fillAmount = frac;
-            if (abilityBarR != null) abilityBarR.fillAmount = frac;
+    void SetFill(float frac)
+    {
+        if (abilityBarL != null) abilityBarL.fillAmount = frac;
+        if (abilityBarR != null) abilityBarR.fillAmount = frac;
+    }
 
-            yield return null;
-        }
-
-        // ensure fully filled at the end
-        if (abilityBarL != null) abilityBarL.fillAmount = 1f;
-        if (abilityBarR != null) abilityBarR.fillAmount = 1f;
-
-        _fillRoutine = null;
+    /// The bar for the player that owns this gun (abilities wired only on some components).
+    public static WeaponAbilityControl FindFor(Component gunComponent)
+    {
+        if (gunComponent == null) return null;
+        var oc = gunComponent.GetComponent<OverClock>();
+        if (oc != null && oc.weaponAbility != null) return oc.weaponAbility;
+        var ak = gunComponent.GetComponent<AkimboController>();
+        if (ak != null && ak.weaponAbility != null) return ak.weaponAbility;
+        return null;
     }
 }

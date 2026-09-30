@@ -23,11 +23,7 @@ public class LightningTeleportAbility : MonoBehaviour, IActiveAbility
         Debug.Log("LightningTeleport activated!");
         // Use the caster's own pad (assigned by MultiplayerManager)
         Gamepad gamepad = caster.TryGetComponent<PlayerMovement3D>(out var movement) ? movement.gamepad : null;
-        if (gamepad != null)
-        {
-            gamepad.SetMotorSpeeds(0.6f, 1.0f); // ⚡ Light + heavy motor
-            caster.GetComponent<MonoBehaviour>().StartCoroutine(StopRumble(gamepad));
-        }
+        Rumble.Play(gamepad, 0.6f, 1.0f, 0.2f); // ⚡ Light + heavy motor
 
         audioSource = caster.GetComponent<AudioSource>();
         if (audioSource && thunderSound)
@@ -127,12 +123,6 @@ public class LightningTeleportAbility : MonoBehaviour, IActiveAbility
         return false;
     }
 
-    IEnumerator StopRumble(Gamepad gamepad)
-    {
-        yield return new WaitForSeconds(0.2f);
-        if (gamepad != null)
-            gamepad.SetMotorSpeeds(0f, 0f);
-    }
 
 }
 

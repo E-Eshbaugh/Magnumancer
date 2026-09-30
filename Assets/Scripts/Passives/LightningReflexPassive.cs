@@ -10,14 +10,14 @@ public class LightningReflexPassive : WizardPassive
 {
     public float window = 2f;
     public float range = 40f;
-    public float boltDamageMultiplier = 3f;
+    public float boltDamageMultiplier = 2f;
     public float minBoltDamage = 25f;
+    [Tooltip("Keeps a sniper + bolt from one-shotting")]
+    public float maxBoltDamage = 50f;
 
     [Header("Look")]
-    public float boltWidth = 0.15f;
+    public float boltWidth = 0.22f;
     public float boltLifetime = 0.15f;
-    public Color boltStart = new Color(0.6f, 0.9f, 1f);
-    public Color boltEnd = Color.white;
 
     public Color glowColor = new Color(0.5f, 0.8f, 1f);
 
@@ -60,7 +60,7 @@ public class LightningReflexPassive : WizardPassive
     {
         if (!Armed || !IsAlive) return;
         armedUntil = 0f;
-        FireBolt(Mathf.Max(minBoltDamage, weaponDamage * boltDamageMultiplier));
+        FireBolt(Mathf.Clamp(weaponDamage * boltDamageMultiplier, minBoltDamage, maxBoltDamage));
     }
 
     void FireBolt(float damage)
@@ -106,12 +106,10 @@ public class LightningReflexPassive : WizardPassive
     {
         var go = new GameObject("LightningReflexBolt");
         var lr = go.AddComponent<LineRenderer>();
-        lr.useWorldSpace = true;
-        lr.widthMultiplier = boltWidth;
-        lr.numCapVertices = 2;
-        lr.startColor = boltStart;
-        lr.endColor = boltEnd;
-        lr.material = GetBoltMaterial();
+        GlowLine.Configure(lr, 2, boltWidth, GetBoltMaterial());
+        Color theme = GlowLine.Brighten(WizardSpawnEffect.ThemeColorOf(wizard));
+        lr.startColor = Color.Lerp(theme, Color.white, 0.4f);
+        lr.endColor = theme;
 
         // jagged bolt: random sideways offsets, pinned at both ends
         const int segments = 14;
@@ -129,17 +127,8 @@ public class LightningReflexPassive : WizardPassive
 
     Material GetBoltMaterial()
     {
-        if (boltMaterial != null) return boltMaterial;
-
-        // Sprites/Default is always included in builds and respects vertex colors
-        var shader = Shader.Find("Sprites/Default");
-        if (shader != null)
-            boltMaterial = new Material(shader);
-        else
-        {
-            var laser = GetComponentInChildren<LaserScope>(true);
-            if (laser != null) boltMaterial = laser.mat;
-        }
+        // bright additive glow (the old Sprites/Default bolt read dark, like the lasers did)
+        if (boltMaterial == null) boltMaterial = GlowLine.CreateMaterial(3f);
         return boltMaterial;
     }
 }

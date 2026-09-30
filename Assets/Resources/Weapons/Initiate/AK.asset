@@ -21,6 +21,7 @@ MonoBehaviour:
   weaponIcon: {fileID: 1835304517, guid: 88365eb93f90dc0448eb4a39ecadd679, type: 3}
   description: Unpolished but fierce. Roars with every pull of the trigger.
   fireType: auto
+  weaponClass: 2
   recoil: 0.2
   reloadTime: 1
   fireSound: {fileID: 8300000, guid: d762ace56fe98ad4ba020361b889c73f, type: 3}
@@ -29,7 +30,7 @@ MonoBehaviour:
   laserRange: 0
   isShotgun: 0
   pelletCount: 5
-  spreadAngle: 15
+  spreadAngle: 12
   heavyWeapon: 0
   akimbo: 0
   grenadeLauncher: 1
