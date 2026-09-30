@@ -86,7 +86,11 @@ public class LightningReflexPassive : WizardPassive
             if (IsEnemy(target))
             {
                 // pierce through enemies
-                if (struck.Add(target)) DamageEvents.Deal(target, damage, gameObject);
+                if (struck.Add(target))
+                {
+                    DamageEvents.Deal(target, damage, gameObject);
+                    ElementReactions.AbilityHit(target, gameObject, damage);
+                }
                 continue;
             }
 

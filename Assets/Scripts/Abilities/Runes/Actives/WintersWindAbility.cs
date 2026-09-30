@@ -45,6 +45,8 @@ public class WintersWindAbility : MonoBehaviour, IActiveAbility
         Vector3 push = (dir * 0.75f + away.normalized * 0.25f).normalized;
         AbilityKit.Knockback(enemy, push * knockback);
         if (damage > 0f) DamageEvents.Deal(enemy, damage, caster);
+        // hurled hard enough to Shatter anyone already Frozen
+        ElementReactions.AbilityHit(enemy, caster, damage, heavy: true);
         var fx = StatusEffects.Of(enemy);
         for (int i = 0; i < freezeStacks; i++) fx.AddFreeze();
         Rumble.Play(enemy, 0.5f, 0.4f, 0.25f);

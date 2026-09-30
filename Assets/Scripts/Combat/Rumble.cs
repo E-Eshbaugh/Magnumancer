@@ -137,6 +137,12 @@ public static class Rumble
 
     public static void Stunned(GameObject victim, float duration) => Play(victim, 0.2f, 0.7f, Mathf.Max(0.15f, duration));
 
+    /// You set off an elemental reaction: a bright, snappy "combo!" kick
+    public static void ReactionTrigger(GameObject attacker) => Play(attacker, 0.5f, 1f, 0.3f);
+
+    /// Caught in someone's reaction: heavier than a normal hit
+    public static void ReactionVictim(GameObject victim) => Play(victim, 1f, 0.7f, 0.4f);
+
     // ---------- Runner ----------
 
     // Unity's Input System can't drive every controller's motors. Most notably Xbox

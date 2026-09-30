@@ -149,7 +149,11 @@ public class EarthquakeAbility : MonoBehaviour, IActiveAbility
 
                 // Seismic Judgement: the first shockwave briefly stuns
                 if (elapsed == 0f && DamageEvents.IsCombatant(victim))
+                {
                     StatusEffects.Of(victim).Stun(stunSpeedMultiplier, stunDuration);
+                    // Earth + heavy shove: Shatters the Frozen, Staggers everyone else
+                    ElementReactions.AbilityHit(victim, caster, damagePerTick, heavy: true);
+                }
 
                 // Damage players
                 var health = target.GetComponentInParent<PlayerHealthControl>();

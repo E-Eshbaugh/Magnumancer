@@ -56,6 +56,7 @@ public class LightningFence : MonoBehaviour
             shocked.Add(e);
             DamageEvents.Deal(e, damage, owner);
             StatusEffects.Of(e).Stun(0.35f, 0.5f);
+            ElementReactions.AbilityHit(e, owner, damage);
             AbilityKit.Zap(ClosestOnSegment(p, a, b), p, core, 0.15f, 0.15f);
             PowerFx.Sparks(p, core, 16, 5f, 0.4f, 0.06f, 1f);
             PowerFx.Flash(p, color, 4f, 3f, 0.2f);

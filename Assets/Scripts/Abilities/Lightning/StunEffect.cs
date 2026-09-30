@@ -46,6 +46,14 @@ public class StunEffect : MonoBehaviour
         stunRoutine = null;
     }
 
+    /// Ends the current stun early (Shatter knocks you free of the ice)
+    public void EndStun()
+    {
+        if (stunRoutine == null) return;
+        StopCoroutine(stunRoutine);
+        OnDisable();
+    }
+
     // Never leave a player grounded forever if the stun is cut short
     void OnDisable()
     {

@@ -39,6 +39,7 @@ public class BrandOfFlereousPassive : WizardPassive
     {
         SpawnEffect(center + Vector3.up, 3f);
         Explosions.AffectWorld(center, igniteRadius, igniteDamage, null);
+        ElementReactions.OnElementArea(center, igniteRadius, gameObject, Element.Fire);
 
         igniting = true; // the burst's own damage shouldn't add brands
         var hit = new HashSet<GameObject>();
@@ -47,6 +48,7 @@ public class BrandOfFlereousPassive : WizardPassive
             var target = DamageEvents.RootOf(col);
             if (!IsEnemy(target) || !hit.Add(target)) continue;
             DamageEvents.Deal(target, igniteDamage, gameObject);
+            ElementReactions.AbilityHit(target, gameObject, Element.Fire, igniteDamage);
         }
         igniting = false;
     }

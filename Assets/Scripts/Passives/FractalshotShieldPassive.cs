@@ -48,6 +48,7 @@ public class FractalshotShieldPassive : WizardPassive, IIncomingDamageModifier
             // Fully frozen: brief hard slow, counters reset, and we gain shield
             fx.ClearFreeze();
             fx.Stun(freezeStunMultiplier, freezeStunDuration);
+            fx.MarkFrozen(freezeStunDuration);   // Shatter-able while it lasts
             Shield = Mathf.Min(maxShield, Shield + shieldPerFreeze);
             SpawnEffect(transform.position + Vector3.up, 2f);
         }

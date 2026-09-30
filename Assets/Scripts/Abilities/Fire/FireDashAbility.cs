@@ -90,6 +90,7 @@ public class FireDashAbility : MonoBehaviour, IActiveAbility
                     {
                         enemyHealth.TakeDamage(dashDamage, caster);
                         hitEnemies.Add(h.gameObject);
+                        ElementReactions.AbilityHit(h.gameObject, caster, dashDamage);
                     }
 
                     var goblin = h.GetComponent<GoblinHealth>();
@@ -97,6 +98,7 @@ public class FireDashAbility : MonoBehaviour, IActiveAbility
                     {
                         goblin.TakeDamage(dashDamage, caster);
                         hitEnemies.Add(h.gameObject);
+                        ElementReactions.AbilityHit(h.gameObject, caster, dashDamage);
                     }
                 }
             }

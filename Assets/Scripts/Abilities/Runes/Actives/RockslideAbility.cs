@@ -70,6 +70,7 @@ public class RockslideAbility : MonoBehaviour, IActiveAbility
                 if (!hit.Add(e)) continue;
                 DamageEvents.Deal(e, damage, caster);
                 AbilityKit.Knockback(e, (dir + Vector3.up * 0.1f) * knockback);
+                ElementReactions.AbilityHit(e, caster, damage, heavy: true);
                 StatusEffects.Of(e).Stun(0.3f, stunDuration);
                 // stone bursts off them where the boulder hits
                 RockDebris.Burst(e.transform.position + Vector3.up * 0.5f, 7, 6f, 0.3f, dir * 3f);

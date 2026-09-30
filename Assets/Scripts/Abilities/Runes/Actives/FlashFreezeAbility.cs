@@ -59,6 +59,7 @@ public class FlashFreezeAbility : MonoBehaviour, IActiveAbility
         if (stacks > 0) DamageEvents.Deal(enemy, damagePerStack * stacks, caster);
         fx.ClearFreeze();
         fx.Root(time);
+        fx.MarkFrozen(time);   // encased: Shatter-able
         if (stacks <= 0) { fx.AddFreeze(); fx.AddFreeze(); } // the fallback pulse leaves them chilled
 
         // a frost beam finds them, then the ice closes in

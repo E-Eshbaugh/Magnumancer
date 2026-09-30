@@ -67,8 +67,12 @@ public class FireballAbility : MonoBehaviour, IActiveAbility
                 AbilityKit.Shockwave(e.transform.position, 1.2f + 0.3f * brands, Color.white, 0.3f);
                 Rumble.Play(e, 0.7f, 0.6f, 0.3f);
             }
+
+            // after the brands pop: Steam on the Soaked, Combust on the Poisoned, else Burning
+            ElementReactions.AbilityHit(e, caster, damage);
         }
         Explosions.AffectWorld(to, blastRadius, damage, null);
+        ElementReactions.OnElementArea(to, blastRadius, caster, Element.Fire);   // gas clouds go up
 
         // the blast
         AbilityKit.Shockwave(to, blastRadius, theme, 0.4f);

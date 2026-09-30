@@ -32,6 +32,7 @@ public class ChainSurgeAbility : MonoBehaviour, IActiveAbility
             AbilityKit.Zap(from, to, theme, 0.25f, 0.25f);
             DamageEvents.Deal(target, dmg, caster);
             StatusEffects.Of(target).Stun(0.4f, 0.4f);
+            ElementReactions.AbilityHit(target, caster, dmg);   // Conduct on Soaked, else Charged
 
             from = to;
             dmg *= falloff;

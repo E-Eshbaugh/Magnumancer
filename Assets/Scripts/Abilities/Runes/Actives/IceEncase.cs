@@ -11,6 +11,17 @@ public class IceEncase : MonoBehaviour
     readonly List<Transform> shards = new();
     readonly List<Vector3> fullScale = new();
 
+    static readonly List<IceEncase> active = new();
+    void OnEnable() => active.Add(this);
+    void OnDisable() => active.Remove(this);
+
+    /// Shatters the ice around target right now (Shatter reaction)
+    public static void BreakOn(GameObject t)
+    {
+        for (int i = active.Count - 1; i >= 0; i--)
+            if (active[i] != null && active[i].target == t) active[i].Shatter();
+    }
+
     public void Init(GameObject t, float duration, int stacks, Color color, WizardData wiz)
     {
         target = t; born = Time.time; until = Time.time + duration; ice = color; wizard = wiz;
@@ -58,6 +69,8 @@ public class IceEncase : MonoBehaviour
 
     void Shatter()
     {
+        if (!enabled) return;
+        enabled = false;
         Vector3 at = transform.position + Vector3.up;
         PowerFx.IceShards(at, ice, 10 + shards.Count, 6f, 0.2f);
         PowerFx.Sparks(at, Color.white, 20, 6f, 0.4f, 0.06f, 1f);

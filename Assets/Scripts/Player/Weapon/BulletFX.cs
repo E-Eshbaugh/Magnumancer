@@ -228,7 +228,8 @@ public class BulletFX : MonoBehaviour
         };
     }
 
-    static Flavor FlavorOf(PassiveType passive) => passive switch
+    /// Each wizard's element flavor (also their Element, see Elements.Of)
+    public static Flavor FlavorOf(PassiveType passive) => passive switch
     {
         PassiveType.BrandOfFlereous => Flavor.Embers,    // Emberguard
         PassiveType.FractalshotShield => Flavor.Frost,   // Frostwarden
@@ -249,6 +250,17 @@ public class BulletFX : MonoBehaviour
         Flavor.Sparks => 1.5f,
         _ => 4f
     };
+
+    static readonly Dictionary<(Flavor, Color), Style> moteStyles = new();
+
+    /// One element bit outside of a bullet (status indicators, reactions), through the
+    /// same shared particle systems. scale > 1 = bigger and faster.
+    public static void Mote(Flavor flavor, Color color, Vector3 p, float scale = 1f)
+    {
+        if (!moteStyles.TryGetValue((flavor, color), out var s))
+            moteStyles[(flavor, color)] = s = MakeStyle(color, flavor);
+        FlavorBit(s, p, Vector3.up, scale);
+    }
 
     // One element bit. scale > 1 for impact bursts (bigger, faster).
     static void FlavorBit(Style s, Vector3 p, Vector3 dir, float scale)
@@ -377,6 +389,7 @@ public class BulletFX : MonoBehaviour
     static void ResetStatics()
     {
         styles.Clear();
+        moteStyles.Clear();
         root = null;
     }
 

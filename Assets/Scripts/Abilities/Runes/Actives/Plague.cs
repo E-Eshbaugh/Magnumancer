@@ -28,6 +28,7 @@ public class Plague : MonoBehaviour
         lastAfflicted = Time.time;
         stacks = Mathf.Min(maxStacks, Mathf.Floor(stacks) + 1f);
         DamageEvents.Deal(gameObject, damagePerStackPerTick * stacks, source);
+        ElementReactions.AbilityHit(gameObject, source, Element.Poison, damagePerStackPerTick * stacks);
         PowerFx.Sparks(transform.position + Vector3.up * 1.2f, color, 2 + (int)stacks, 2f, 0.4f, 0.07f, -0.2f);
     }
 

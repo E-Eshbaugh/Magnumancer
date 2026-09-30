@@ -21,7 +21,10 @@ public class PlagueMortarAbility : MonoBehaviour, IActiveAbility
         Destroy(shell);
 
         foreach (var e in AbilityKit.Enemies(to, impactRadius, caster))
+        {
             DamageEvents.Deal(e, impactDamage, caster);
+            ElementReactions.AbilityHit(e, caster, impactDamage);
+        }
         Explosions.AffectWorld(to, impactRadius, impactDamage, null);
         AbilityKit.Shockwave(to, impactRadius, theme, 0.35f);
         PoisonCloud.Spawn(caster, to);

@@ -34,6 +34,7 @@ public class TidalSurgeAbility : MonoBehaviour, IActiveAbility
         if (enemy == null) yield break;
         DamageEvents.Deal(enemy, damage, caster);
         AbilityKit.Knockback(enemy, (to.normalized + Vector3.up * 0.1f) * knockback);
+        ElementReactions.AbilityHit(enemy, caster, damage);
         Rumble.Play(enemy, 0.6f, 0.4f, 0.25f);
     }
 }

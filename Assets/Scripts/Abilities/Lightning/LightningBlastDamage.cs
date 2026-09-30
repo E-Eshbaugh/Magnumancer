@@ -12,6 +12,8 @@ public class LightningBlastDamage : MonoBehaviour
     {
         // Sets off mines/grenades and hits crystals
         Explosions.AffectWorld(position, blastRadius, maxDamage, caster);
+        // ...and electrifies water zones (Conduct)
+        ElementReactions.OnElementArea(position, blastRadius, caster, Element.Lightning);
 
         // Blast logic
         // Players have two colliders (CharacterController + capsule); hit each object once
@@ -72,7 +74,10 @@ public class LightningBlastDamage : MonoBehaviour
             
             // Blinkstorm's shock pulse stuns players and monsters alike
             if (DamageEvents.IsCombatant(victim))
+            {
                 StatusEffects.Of(victim).Stun(0.2f, 5f);
+                ElementReactions.AbilityHit(victim, caster, damageToApply);
+            }
 
             // Direct hit to ice wall
             var wall = nearby.GetComponent<IceWallEffect>();

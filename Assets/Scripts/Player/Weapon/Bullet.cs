@@ -24,6 +24,8 @@ public class Bullet : MonoBehaviour
     private float   _originalIntensity;
     private bool    _hasHit;
     private BulletFX _fx;
+    private Element _element;      // the shooter's element (reactions, statuses)
+    private bool    _ignitedGas;   // a fire round only sets off one poison cloud
 
     // internal target position computed in FixedUpdate
     private Vector3 _targetPosition;
@@ -58,6 +60,7 @@ public class Bullet : MonoBehaviour
         _direction = dir.normalized;
         // tracer, trail and glow in the shooter's wizard colors (owner/damage are set by now)
         _fx = BulletFX.Attach(this, _direction);
+        _element = Elements.Of(owner);
     }
 
     void FixedUpdate()
@@ -69,8 +72,15 @@ public class Bullet : MonoBehaviour
         float moveDist = speed * Time.fixedDeltaTime;
 
         // raycast ahead (ignore triggers like poison clouds and lava trails)
-        if (Physics.Raycast(_targetPosition, _direction, out RaycastHit hit, moveDist,
-                Physics.DefaultRaycastLayers, QueryTriggerInteraction.Ignore))
+        bool blocked = Physics.Raycast(_targetPosition, _direction, out RaycastHit hit, moveDist,
+                Physics.DefaultRaycastLayers, QueryTriggerInteraction.Ignore);
+
+        // fire rounds flying through poison gas set it off (Combust)
+        if (_element == Element.Fire && !_ignitedGas)
+            _ignitedGas = ElementReactions.OnElementPass(_targetPosition,
+                blocked ? hit.point : _targetPosition + _direction * moveDist, owner, _element);
+
+        if (blocked)
         {
             HandleHit(hit.collider, hit.point, hit.normal);
             // after a hit we stop updating movement
@@ -143,6 +153,11 @@ public class Bullet : MonoBehaviour
         var progWall = hitCollider.GetComponent<DestructibleWall>();
         if (progWall)
             progWall.TakeDamage(damage);
+
+        // Elements: set off a reaction with whatever's on them, or leave our own status
+        var struck = ph != null ? ph.gameObject : (goblin != null ? goblin.gameObject : null);
+        if (struck != null && struck != owner)
+            ElementReactions.BulletHit(struck, owner, damage, hitPoint);
         // 3) snap both target and actual to impact
         _targetPosition = hitPoint;
         transform.position = hitPoint;

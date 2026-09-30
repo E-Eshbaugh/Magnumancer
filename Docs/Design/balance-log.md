@@ -67,6 +67,49 @@ Weights: Mac110 1 · PumpSG, M1, AK12 2 · AK, M4, SideFed, LeverAction 3 · **S
 - **Stunned, rooted or frozen players can't jump** (`StunEffect` sets `SetJumpBlocked("stun")`), so a mistimed jump means eating the aftershocks.
 - Aftershocks (12 per tick) chip grounded players but never stun.
 
+## Pass 3 (2026-09-30): Elemental Ecosystem v1 (new numbers only)
+
+The first four reactions and the new statuses shipped. **No existing number was retuned.** Everything below is new and a first guess, so it needs playtesting. Reaction damage stays in the 15–35 band the design asks for (120 HP per life).
+
+### Reactions (`ElementReactions.Table`, one place)
+
+| Reaction | Recipe | Numbers |
+|---|---|---|
+| Shatter | Frozen + Earth hit, or any heavy knockback | 10 + 4 per freeze counter (Frozen counts as 5 = **30**), knockback 14, breaks the ice and ends the stun |
+| Conduct | Soaked + Lightning, or Charged + Water | **16** to every Soaked target within **8m** (each consumed), 0.6s stun (25% speed). Water zones in range are electrified for **3s** and shock at **10 dps** plus a 0.3s stun |
+| Combust | Poisoned/poison cloud + Fire, or Burning + Poison | **26** at the center down to 40% at the edge, radius **3.5** (a cloud blasts its own size + 1.5), knockback 16, sets off mines and grenades, leaves a **3s** burning patch (8 dps) |
+| Steam | Soaked + Fire, or Burning + Water | **10** to the target, 3.2m cloud for **3s** that hides whoever's inside, 4 dps scald |
+
+### Globals (`ElementReactions`)
+
+| Knob | Value | Why |
+|---|---|---|
+| `ReactionCooldown` | 1s per target | Stops a shotgun volley or zone ticks from chaining reactions on one person |
+| `HeavyBulletDamage` | 30 | A single round this strong counts as heavy knockback (M1, SVD) and can Shatter |
+| `SoakBuildup` | 35 bullet damage | Tidebound: about one close shotgun blast, or 3–4 rifle hits |
+| `ChargeBuildup` | 30 bullet damage | Voltborn: Charged is short (3s), so it builds a bit faster |
+| `AbilityBurnTime` / `ZoneBurnTime` | 3s / 1.5s | Burning from fire abilities / from standing in lava |
+| `MaxDepth` | 4 | Reaction chains stop this deep |
+
+### Statuses (`StatusEffects`, per target)
+
+| Knob | Value |
+|---|---|
+| `soakDuration` | 5s |
+| `chargeDuration` | 3s |
+| `poisonLinger` | 3s after the last poison tick |
+| `staggerDuration` | 1s |
+| `brandsForBurning` | 2 brands (from anyone, combined) count as Burning |
+| `buildupDecayTime` | Soak/charge buildup empties 3s after the last hit |
+| `frozenSettleTime` | 0.12s: the hit that freezes you can't also shatter you |
+| `PoisonCloudHazard.reactionPadding` | 0.6m: clouds react a bit beyond their trigger collider |
+
+### Rules worth knowing when tuning
+
+- **The triggerer is never hurt by their own reaction** (Combust still shoves them). Everyone else is fair game, including in free-for-all.
+- Reaction damage goes through `DamageEvents.Deal`, so the triggerer's **outgoing damage modifiers apply** (Inferno Rounds +35% makes a Steam hit harder). Watch for this.
+- A reaction consumes **all** brands on the target (everyone's), which can cost an Emberguard their ignite.
+
 ## Open issues / to playtest
 
 - **Blinkstorm stun is 5s** (`LightningBlastDamage`: `Stun(0.2f, 5f)`). With stuns now also blocking jumps that's very punishing. Suggest **~1.5s**.
@@ -75,3 +118,5 @@ Weights: Mac110 1 · PumpSG, M1, AK12 2 · AK, M4, SideFed, LeverAction 3 · **S
 - Match length is untested with 120 HP and 3–4 hearts. Add sudden death (see [Modes & Match Flow](modes-and-flow.md)) as the hard cap.
 - Ability damage values (Rune II and III actives) haven't had a dedicated pass.
 - Blightward (lime) and Verdant Circle (green) bullet colors are the closest pair; tweak a `themeColor` if they're hard to tell apart.
+- **Elemental reactions (Pass 3) are unplaytested.** Watch for: Tidebound shotguns turning every Emberguard target into Steam (Water + 2 brands), how often a sniper Shatters (any 30+ damage round on someone Frozen), and whether Combust chains through a Viper's Nest's three clouds are fun or oppressive.
+- Blinkstorm's 5s stun now also Charges everyone it hits. Combined with Conduct that's a lot of lockdown; another reason to shorten it.

@@ -24,7 +24,7 @@ A fun, chaotic, combo-forward **couch co-op brawler**: *CoD Zombies meets Gang B
 
 | Doc | What's in it | Status |
 |---|---|---|
-| [Elemental Ecosystem](elemental-ecosystem.md) | Element statuses, reactions, team roles, implementation plan | Designed; **build next** |
+| [Elemental Ecosystem](elemental-ecosystem.md) | Element statuses, reactions, team roles, implementation plan | **Core built** (statuses + Conduct, Steam, Shatter, Combust); needs playtest; more reactions next |
 | [Items & Drops](items-and-drops.md) | Map pickups, wonder weapons, zombies economy | Designed |
 | [Modes & Match Flow](modes-and-flow.md) | Brawl campaign, sudden death, drafts, hazards, TDM, Zombies | Designed |
 | [Balance Log](balance-log.md) | What's been tuned, where the knobs live, open issues | Up to date (2026-09-30) |
@@ -34,11 +34,13 @@ A fun, chaotic, combo-forward **couch co-op brawler**: *CoD Zombies meets Gang B
 | System | Where | Notes |
 |---|---|---|
 | Damage and kill events | `Assets/Scripts/Combat/DamageEvents.cs` | `Damaged` / `Killed` events, incoming/outgoing modifiers |
-| Status effects | `Assets/Scripts/Combat/StatusEffects.cs` | Brands (fire), freeze counters, stun/root, void mark. **Element statuses go here.** |
+| Status effects | `Assets/Scripts/Combat/StatusEffects.cs` | Brands (fire), freeze counters, stun/root, void mark, plus element statuses (Soaked, Charged, Poisoned, Staggered, Burning/Frozen windows) with `Has` / `Consume` |
+| Elements and reactions | `Assets/Scripts/Combat/Element.cs`, `ElementReactions.cs`, `ElementZones.cs` | Element model, data-driven recipe table, `BulletHit` / `AbilityHit` / `ZoneHit` sources, zone registry, `Reacted` event |
+| Reaction feedback | `Assets/Scripts/Combat/ReactionPopup.cs`, `ElementStatusFx.cs`, `Abilities/Runes/SteamCloud.cs` | Popup word, on-body status hints, steam cloud |
 | Stuns | `StunEffect` via `StatusEffects.Stun/Root` | Stunned players can't jump (`PlayerMovement3D.SetJumpBlocked`) |
-| Bullets | `Assets/Scripts/Player/Weapon/Bullet.cs`, `BulletFX.cs` | Hit handling, knockback; `BulletFX.FlavorOf(passive)` (private, make it public) already maps each wizard to an element |
+| Bullets | `Assets/Scripts/Player/Weapon/Bullet.cs`, `BulletFX.cs` | Hit handling, knockback, element hits; `BulletFX.FlavorOf(passive)` maps each wizard to an element; `BulletFX.Mote` emits element bits for other effects |
 | Glow visuals | `Assets/Scripts/Player/GlowLine.cs`, `Assets/Scripts/Abilities/Runes/AbilityKit.cs` | Additive lines, rings, zaps, glow orbs, shockwaves |
-| Ground zones | `Assets/Scripts/Abilities/Runes/GroundHazard.cs` | Damage/slow circles (poison puddles, lava, ice) |
+| Ground zones | `Assets/Scripts/Abilities/Runes/GroundHazard.cs` | Damage/slow circles (poison puddles, lava, ice). Carry an element (the owner's by default) and register as element zones, as do `PoisonCloudHazard` and `LavaTrail` |
 | Explosions | `Assets/Scripts/Combat/Explosions.cs` | Shootable mines/grenades, area damage |
 | Wizards and runes | `Assets/Resources/Wizards/*.asset`, `Assets/Scripts/Data/RuneBook.cs` | 3 active runes, 2 passive runes, 1 weapon affinity per wizard |
 | Weapon affinity | `Assets/Scripts/Combat/WeaponSynergy.cs` | Per-wizard bonus with favoured weapon classes |

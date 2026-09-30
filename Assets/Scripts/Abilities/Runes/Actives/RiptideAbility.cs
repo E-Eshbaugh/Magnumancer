@@ -74,6 +74,7 @@ public class RiptideAbility : MonoBehaviour, IActiveAbility
                 if (Vector3.Dot(e.transform.position - caster.transform.position, side) < 0f) side = -side;
                 DamageEvents.Deal(e, damage, caster);
                 AbilityKit.Knockback(e, (side * 0.8f + dir * 0.4f).normalized * shove);
+                ElementReactions.AbilityHit(e, caster, damage);   // Soaked (or Conduct/Steam)
                 Splash(e.transform.position, water, foam, wiz, 0.8f);
             }
             yield return null;

@@ -40,6 +40,7 @@ public class Infection : MonoBehaviour
         {
             nextTick = Time.time + 0.5f;
             DamageEvents.Deal(gameObject, damagePerSecond * 0.5f, source);
+            ElementReactions.AbilityHit(gameObject, source, Element.Poison, damagePerSecond * 0.5f);
         }
         if (Time.time >= nextSpread)
         {
