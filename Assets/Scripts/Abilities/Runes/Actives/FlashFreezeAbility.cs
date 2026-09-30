@@ -33,6 +33,7 @@ public class FlashFreezeAbility : MonoBehaviour, IActiveAbility
         CameraShake.Shake(0.2f, 0.25f);
         Rumble.Play(caster, 0.4f, 0.9f, 0.3f);
 
+        ElementReactions.OnElementArea(origin, range, caster, Element.Frost);   // puddles freeze into ice
         var enemies = AbilityKit.Enemies(origin, range, caster);
         bool anyChilled = false;
         foreach (var e in enemies)

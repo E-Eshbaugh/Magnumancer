@@ -49,6 +49,7 @@ public class VoidShotProjectile : MonoBehaviour
             curseHandler.ApplyCurse(caster);
             curseHandler.ApplyDamage(damage, caster);
         }
+        StatusEffects.Of(other.gameObject).MarkVoid(caster);   // Marked: the next reaction on them Echoes
 
         // ⚠️ Do NOT destroy the projectile — it pierces!
     }

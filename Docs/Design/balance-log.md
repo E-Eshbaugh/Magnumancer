@@ -110,6 +110,23 @@ The first four reactions and the new statuses shipped. **No existing number was 
 - Reaction damage goes through `DamageEvents.Deal`, so the triggerer's **outgoing damage modifiers apply** (Inferno Rounds +35% makes a Steam hit harder). Watch for this.
 - A reaction consumes **all** brands on the target (everyone's), which can cost an Emberguard their ignite.
 
+## Pass 4 (2026-09-30): more reactions, Echo, combos (new numbers only)
+
+Again, nothing existing was retuned. All numbers live in `ElementReactions.Table` / `ZoneRules` and `ReactionCombo`.
+
+| Reaction | Recipe | Numbers |
+|---|---|---|
+| Thermal Shock | Chilled 2+ or Frozen + Fire, or Burning + Frost | 4 + **6 per counter** (16 at 2, **34** frozen); needs 2+ counters |
+| Brittle | Soaked + Frost, or Chilled + Water | **8**, freeze counters topped up to **4**; water zones within 4m freeze to ice for **4s** at traction **0.12** |
+| Mudslide | Soaked + Earth, or Staggered + Water | **6**, 2.8m mud patch for **4s**: enemies 55% slower (×0.45) and can't dash |
+| Wildfire | Rooted + Fire, or Burning + Nature | **12**, 2.5m burn zone for **4s** at **8 dps**; ignited growth burns at 8+ dps for 4s |
+| Echo | any reaction on a Void-marked target | repeats **0.35s** later at **1.5×** damage (`EchoDelay`, `EchoScale`) |
+
+| Knob | Value | Where |
+|---|---|---|
+| Combo window | 4s between reactions | `ReactionCombo.Window` |
+| Ice feel | acceleration lerps 4→60 u/s² with traction; knockback decay ×0.3 at traction 0 | `PlayerMovement3D` Update / FixedUpdate |
+
 ## Open issues / to playtest
 
 - **Blinkstorm stun is 5s** (`LightningBlastDamage`: `Stun(0.2f, 5f)`). With stuns now also blocking jumps that's very punishing. Suggest **~1.5s**.
@@ -119,4 +136,7 @@ The first four reactions and the new statuses shipped. **No existing number was 
 - Ability damage values (Rune II and III actives) haven't had a dedicated pass.
 - Blightward (lime) and Verdant Circle (green) bullet colors are the closest pair; tweak a `themeColor` if they're hard to tell apart.
 - **Elemental reactions (Pass 3) are unplaytested.** Watch for: Tidebound shotguns turning every Emberguard target into Steam (Water + 2 brands), how often a sniper Shatters (any 30+ damage round on someone Frozen), and whether Combust chains through a Viper's Nest's three clouds are fun or oppressive.
+- **Echo stacks hard with Thermal Shock**: a Frozen, marked target takes 34 + 51. If The Hollow + Frostwarden + Emberguard deletes people, lower `EchoScale` (1.25?) or cap echo damage.
+- Ice (Brittle) is untested for feel. If it's frustrating rather than funny, raise `traction` (0.12) or shorten ice (4s).
+- Bullets count as "flying through" a zone when they pass over it, so a Frostwarden firing across an Undertow freezes it. That's intended to make zone reactions common; check it doesn't feel random.
 - Blinkstorm's 5s stun now also Charges everyone it hits. Combined with Conduct that's a lot of lockdown; another reason to shorten it.

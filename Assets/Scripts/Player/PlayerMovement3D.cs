@@ -140,7 +140,7 @@ public class PlayerMovement3D : MonoBehaviour
             if (!controller.isGrounded) jumpsRemaining--;
         }
 
-        if (inputOk && !isDashing && dashCooldownTimer <= 0f &&
+        if (inputOk && !isDashing && CanDash && dashCooldownTimer <= 0f &&
             stick.sqrMagnitude > 0.01f &&
             gamepad.buttonEast.wasPressedThisFrame)
         {
@@ -166,9 +166,16 @@ public class PlayerMovement3D : MonoBehaviour
             verticalVelocity += gravity * Time.deltaTime;
         }
 
-        Vector3 horiz = isDashing
+        Vector3 wanted = isDashing
             ? lastDirection * dashSpeed
             : lastDirection * currentMoveSpeed * moveSpeedMultiplier * stick.magnitude;
+
+        // Full traction snaps to the stick; on ice you build up and bleed off speed slowly
+        if (isDashing || traction >= 0.999f)
+            slideVelocity = wanted;
+        else
+            slideVelocity = Vector3.MoveTowards(slideVelocity, wanted, Mathf.Lerp(4f, 60f, traction) * Time.deltaTime);
+        Vector3 horiz = slideVelocity;
 
         moveDirection = new Vector3(horiz.x, verticalVelocity, horiz.z);
 
@@ -190,7 +197,8 @@ public class PlayerMovement3D : MonoBehaviour
 
         if (knockbackVelocity.sqrMagnitude > 0.01f)
         {
-            knockbackVelocity = Vector3.Lerp(knockbackVelocity, Vector3.zero, knockbackDecayRate * Time.fixedDeltaTime);
+            knockbackVelocity = Vector3.Lerp(knockbackVelocity, Vector3.zero,
+                knockbackDecayRate * Mathf.Lerp(0.3f, 1f, traction) * Time.fixedDeltaTime); // shoves slide further on ice
         }
         else
         {
@@ -215,6 +223,7 @@ public class PlayerMovement3D : MonoBehaviour
         verticalVelocity = -0.5f;
         knockbackVelocity = Vector3.zero;
         moveDirection = Vector3.zero;
+        slideVelocity = Vector3.zero;
         isDashing = false;
         dashTimer = 0f;
         jumpsRemaining = maxJumps;
@@ -261,6 +270,44 @@ public class PlayerMovement3D : MonoBehaviour
     }
 
     public bool CanJump => jumpBlocks.Count == 0;
+
+    // ---------- Dash blocks (Mudslide) ----------
+    readonly System.Collections.Generic.HashSet<string> dashBlocks = new();
+
+    /// Mired players can't dash (named so overlapping effects don't clear each other)
+    public void SetDashBlocked(string key, bool blocked)
+    {
+        if (blocked) dashBlocks.Add(key); else dashBlocks.Remove(key);
+    }
+
+    public bool CanDash => dashBlocks.Count == 0;
+
+    // ---------- Traction (Brittle ice) ----------
+    // 1 = normal (movement snaps to the stick). Lower = slippery: you speed up and slow
+    // down gradually, keep sliding after a dash, and knockback carries further.
+    readonly System.Collections.Generic.Dictionary<string, float> tractionMods = new();
+    float traction = 1f;
+    Vector3 slideVelocity;
+
+    public float Traction => traction;
+
+    /// Named traction (the slipperiest one wins)
+    public void SetTraction(string key, float value)
+    {
+        tractionMods[key] = Mathf.Clamp01(value);
+        RecalculateTraction();
+    }
+
+    public void ClearTraction(string key)
+    {
+        if (tractionMods.Remove(key)) RecalculateTraction();
+    }
+
+    void RecalculateTraction()
+    {
+        traction = 1f;
+        foreach (var v in tractionMods.Values) traction = Mathf.Min(traction, v);
+    }
 
     /// Off the ground for more than a moment (a real jump or fall, not a step down).
     /// Ground shockwaves like Seismic Judgement pass under airborne players.

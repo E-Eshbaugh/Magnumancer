@@ -30,12 +30,19 @@ public class GroundHazard : MonoBehaviour, IElementZone, IElectrifiable
     [Tooltip("Seconds before a snare can trigger")]
     public float armTime;
 
+    [Tooltip("Below 1 = slippery ice (Brittle): everyone inside slides, owner included")]
+    [Range(0f, 1f)] public float traction = 1f;
+    [Tooltip("Enemies inside can't dash (Mudslide)")]
+    public bool blocksDash;
+
     [Header("Owner")]
     public float ownerSpeedMultiplier = 1f;
 
     const float Tick = 0.25f;
     const float ShockTick = 0.5f;
     readonly HashSet<PlayerMovement3D> slowed = new();
+    readonly HashSet<PlayerMovement3D> sliding = new();
+    readonly HashSet<PlayerMovement3D> mired = new();
     PlayerMovement3D boostedOwner;
     float spawnTime, nextTick;
     LineRenderer edge, inner;
@@ -125,6 +132,13 @@ public class GroundHazard : MonoBehaviour, IElementZone, IElectrifiable
         slowed.Clear();
         slowed.UnionWith(now);
 
+        // Ice: everyone slides, the one who made it too (Gang Beasts rules)
+        Track(sliding, traction < 1f ? AbilityKit.Enemies(transform.position, radius, null) : null,
+              m => m.SetTraction(key, traction), m => m.ClearTraction(key));
+        // Mud: enemies can't dash out
+        Track(mired, blocksDash ? inside : null,
+              m => m.SetDashBlocked(key, true), m => m.SetDashBlocked(key, false));
+
         // Owner buff while standing in it
         if (ownerSpeedMultiplier != 1f && owner != null)
         {
@@ -148,6 +162,78 @@ public class GroundHazard : MonoBehaviour, IElementZone, IElectrifiable
                 ElementReactions.ZoneHit(e, owner, element, damagePerSecond * Tick);
             }
         }
+    }
+
+    // Applies `on` to players in `who` (null = nobody), `off` to those who left
+    void Track(HashSet<PlayerMovement3D> set, List<GameObject> who, System.Action<PlayerMovement3D> on, System.Action<PlayerMovement3D> off)
+    {
+        var now = new HashSet<PlayerMovement3D>();
+        if (who != null)
+            foreach (var e in who)
+            {
+                var m = e.GetComponent<PlayerMovement3D>();
+                if (m == null) continue;
+                on(m);
+                now.Add(m);
+            }
+        foreach (var m in set)
+            if (m != null && !now.Contains(m)) off(m);
+        set.Clear();
+        set.UnionWith(now);
+    }
+
+    // ---------- Reactions reshaping the zone ----------
+
+    float Age => spawnTime > 0f ? Time.time - spawnTime : 0f;
+
+    /// Brittle: this water freezes into slippery ice for `time` seconds. It hurts nobody,
+    /// but everyone on it slides.
+    public void FreezeOver(GameObject by, float time, float iceTraction)
+    {
+        owner = by;
+        element = Element.Frost;
+        color = Elements.ColorOf(Element.Frost);
+        pullStrength = 0f;
+        damagePerSecond = 0f;
+        slowMultiplier = 1f;
+        traction = iceTraction;
+        electrifiedUntil = 0f;
+        duration = Age + time;
+        EffectPool.Spawn(transform.position, radius, time, EffectPool.Style.Ice);
+        PowerFx.IceShards(transform.position + Vector3.up * 0.3f, color, 18, 5f, 0.2f);
+        ElementReactions.OnZoneChanged(this);
+    }
+
+    /// Mudslide: this water turns to mud. Enemies in it are slowed and can't dash.
+    public void MudOver(GameObject by, float time, float slow)
+    {
+        owner = by;
+        element = Element.Earth;
+        color = Elements.ColorOf(Element.Earth);
+        pullStrength = 0f;
+        damagePerSecond = 0f;
+        slowMultiplier = slow;
+        blocksDash = true;
+        electrifiedUntil = 0f;
+        duration = Age + time;
+        ElementReactions.MudFx(transform.position, radius);
+        ElementReactions.OnZoneChanged(this);
+    }
+
+    /// Wildfire: vines and brambles catch fire. It burns everyone in it, the Verdant
+    /// who grew it included, and spreads to other growth it touches.
+    public void Ignite(GameObject by, float time, float dps)
+    {
+        owner = by;
+        element = Element.Fire;
+        color = Elements.ColorOf(Element.Fire);
+        damagePerSecond = Mathf.Max(damagePerSecond, dps);
+        rootDuration = burstDamage = 0f;   // a snare burns up instead of springing
+        pullStrength = 0f;
+        duration = Age + time;
+        EffectPool.Spawn(transform.position, radius, time, EffectPool.Style.Lava);
+        PowerFx.Sparks(transform.position + Vector3.up * 0.3f, color, 30, 6f, 0.7f, 0.08f, -0.3f, Vector3.up, 120f);
+        ElementReactions.OnZoneChanged(this);
     }
 
     // ---------- Conduct ----------
@@ -193,6 +279,8 @@ public class GroundHazard : MonoBehaviour, IElementZone, IElectrifiable
     {
         ElementZones.Unregister(this);
         foreach (var m in slowed) if (m != null) m.ClearSpeedModifier(key);
+        foreach (var m in sliding) if (m != null) m.ClearTraction(key);
+        foreach (var m in mired) if (m != null) m.SetDashBlocked(key, false);
         if (boostedOwner != null) boostedOwner.ClearSpeedModifier(key);
     }
 }

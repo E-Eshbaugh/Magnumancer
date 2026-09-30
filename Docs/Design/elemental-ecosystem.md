@@ -1,6 +1,6 @@
 # Elemental Ecosystem
 
-> **Status (2026-09-30):** the core is **built**: the element model, all statuses, the reaction system, element sources (bullets, abilities, zones) and the first four reactions (**Conduct, Steam, Shatter, Combust**) with feedback. Not playtested yet. See [§6 Implementation](#6-implementation-built-2026-09-30) for what exists and how it behaves. Numbers are in the [Balance Log](balance-log.md) (Pass 3).
+> **Status (2026-09-30):** the core is **built**: the element model, all statuses, the reaction system, element sources (bullets, abilities, zones) and eight reactions (**Conduct, Steam, Shatter, Combust, Thermal Shock, Brittle, Mudslide, Wildfire**) plus **Echo**, and the per-player **combo counter**, all with feedback. Not playtested yet. See [§6 Implementation](#6-implementation-built-2026-09-30) for what exists and how it behaves. Numbers are in the [Balance Log](balance-log.md) (Passes 3 and 4).
 
 > **Core idea:** elements aren't team-only synergies. They're an **ecosystem**. Every wizard *applies* an elemental status and every wizard can *set off* reactions on statuses others applied, **no matter who applied them**. In free-for-all that means accidental combos, stolen kills and chaos. In team modes it means planned combos and team comps.
 
@@ -81,7 +81,7 @@ In TDM, reactions still hurt everyone they touch, so friendly fire from reaction
 5. **Feedback:** reaction popup word (world-space text or glow sprite), rumble and shake, then the combo counter.
 6. **Tuning pass:** keep reaction damage roughly in the 15–35 range (health is 120 per life). Reactions should feel strong but not delete people alone.
 
-Steps 1–4 are done, and step 5 is done except the combo counter (the `ElementReactions.Reacted` event is its hook).
+Steps 1–5 are done, including Thermal Shock, Brittle, Mudslide, Wildfire, Echo and the combo counter. Magnetize, Blight Bloom and Overgrowth Surge are still to come.
 
 ## 6. Implementation (built 2026-09-30)
 
@@ -109,9 +109,9 @@ A wizard's element comes from `BulletFX.FlavorOf(wizard.passive)` (now public), 
 | Soaked | 5s | **Tidebound bullets: 35 damage adds up to Soaked** (buildup empties 3s after the last hit); Riptide; Undertow (and any water zone) while inside |
 | Charged | 3s | **Voltborn bullets: 30 damage adds up to Charged**; Chain Surge, Stormrunner fences, Blinkstorm pulse, Lightning Reflex bolt |
 | Staggered | 1s | Seismic Judgement slam, Rockslide, heavy bullets (30+ dmg) from Granite Vow, any heavy ability knockback |
-| Rooted | while rooted | Thornsnare and other roots (tracked, no reaction uses it yet) |
+| Rooted | while rooted | Thornsnare and other roots (fire burns them: Wildfire) |
 | Poisoned | while inside, then 3s | Poison clouds (mines, Virulent Shroud), toxic puddles, Plague and Contagion ticks |
-| Marked | until used | Soulfracture (tracked, no reaction uses it yet) |
+| Marked | until its Echo is used | Soulfracture (players and monsters). Echo spends the mark's echo, **not** the curse, so The Hollow keeps the death burst |
 
 Statuses (not brands, freeze counters or void marks, which keep their old rules) clear when you lose a life.
 
@@ -123,7 +123,7 @@ Statuses (not brands, freeze counters or void marks, which keep their old rules)
 
 ### Reaction rules
 
-- **At most one reaction per hit**, checked in table order: Shatter, Conduct, Combust, Steam.
+- **At most one reaction per hit**, checked in table order: Shatter, Conduct, Combust, Thermal Shock, Brittle, Mudslide, Wildfire, Steam.
 - The status that matched is **consumed**, and that target can't react again for **1s**.
 - **No matter who applied the status**: it's all free-for-all. Credit (damage, kills, passives, rumble) goes to **whoever triggered it**, through `DamageEvents.Deal`.
 - **You're never hurt by your own reaction** (Combust still shoves you). Everyone else, teammates included later, is fair game.
@@ -135,6 +135,17 @@ Statuses (not brands, freeze counters or void marks, which keep their old rules)
 | **Conduct** | Soaked + lightning, or Charged + water. Bolts hop target to target through every Soaked combatant within 8m (damage and a short stun each, never shortening a longer stun), and every water zone in range is electrified for 3s, shocking anyone in it (its owner too, just not the triggerer). A lightning burst or static field landing on a water zone electrifies it. |
 | **Combust** | Poisoned + fire, Burning + poison, or fire touching a cloud or puddle. The gas explodes: area damage, knockback, and mines and grenades nearby go off. It leaves a burning patch, which is a fire zone and can set off the next cloud. |
 | **Steam** | Soaked + fire, or Burning + water. Scald damage and a thick 3s cloud that hides whoever's inside. Tracers still draw over it, and it scalds everyone in it except the triggerer. |
+| **Thermal Shock** | Chilled (2+ counters) or Frozen + fire, or Burning + frost. Cashes in the freeze counters as burst damage (Frozen counts as 5) and clears the brands and ice together. |
+| **Brittle** | Soaked + frost, or Chilled + water. Tops the target up to 4 freeze counters (one more Frostwarden hit freezes them). Water zones nearby, or any a frost round flies over, **freeze into slippery ice** for 4s: everyone on it, the one who froze it included, slides (momentum carries, knockback travels further). |
+| **Mudslide** | Soaked + earth, or Staggered + water. A 4s mud patch: heavy slow and **no dashing** for enemies. Seismic Judgement or a Granite Vow round over a water zone churns it to mud. |
+| **Wildfire** | Rooted + fire, or Burning + nature. Burns the vines off (it ends the root) and leaves a spreading burn zone. Brambles and thickets it touches catch fire, **burning their Verdant owner too**, and fire rounds over growth ignite it. |
+| **Echo** | Any reaction on a Void-marked target repeats on them 0.35s later at **1.5× damage**, with a void burst. Popup: "ECHO STEAM!". |
+
+**Zones meeting zones** is one small table (`ElementReactions.ZoneRules`): fire + gas = Combust, fire + growth = Wildfire, lightning + water = electrified, frost + water = ice, earth + water = mud. The same rules apply to bullets flying over a zone, blasts landing on one (Fireball, Brand ignite, Blinkstorm, Flash Freeze, Seismic Judgement) and zones spawning or changing on top of each other. A zone that changes (water froze, brambles caught fire) reacts again as its new element, so fires spread through growth and ice spreads across connected water.
+
+### Combo counter
+
+`ReactionCombo`: reactions you trigger within **4s** of each other chain. At 2+ a callout pops over your head in your wizard's colors (DOUBLE REACTION!, TRIPLE, QUAD, then ELEMENTAL OVERLOAD!), with rumble that grows and camera shake from 3. Echoes and chain reactions (a Combust setting off the next cloud) count. `ComboChanged(player, count)` and `ComboEnded(player, count)` are the hooks for Zombies points and the announcer.
 
 ### Feedback
 
@@ -144,6 +155,10 @@ Statuses (not brands, freeze counters or void marks, which keep their old rules)
 - **Effects**: dual-color bolts (Conduct), ice shards and mist (Shatter), fireball, embers and toxic smoke (Combust), boiling burst and steam cloud (Steam), all built on GlowLine, AbilityKit, PowerFx and BulletFX motes.
 - **Status hints** on bodies: Soaked drips, Charged crackles, Poisoned oozes, Burning sheds embers, Staggered kicks up dust. All small, no HUD.
 
+### Movement hooks added
+
+`PlayerMovement3D` gained named **traction** modifiers (`SetTraction` / `ClearTraction`; the slipperiest wins) and named **dash blocks** (`SetDashBlocked`, `CanDash`), used by ice and mud zones (`GroundHazard.traction`, `GroundHazard.blocksDash`). At traction 1, movement is exactly as before.
+
 ### Not built yet
 
-Thermal Shock, Brittle, then the rest of §2; Echo; environment reactions (map water, lava + water); the combo counter and announcer; reaction kill-feed icons; the TDM friendly-fire toggle (there are no teams yet); a sound per reaction (no audio assets hooked up).
+Magnetize, Blight Bloom, Overgrowth Surge; environment reactions (map water, lava + water, Frostgrave ice); Steam and Wildfire from the Seed of Aloria totem; an announcer voice for combos (no audio yet); a points payout for combos in Zombies (no points system yet); reaction kill-feed icons (no kill feed yet); the TDM friendly-fire toggle (there are no teams yet); a sound per reaction (no audio assets hooked up).

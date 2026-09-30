@@ -121,6 +121,13 @@ public class StatusEffects : MonoBehaviour
 
     public int FreezeStacks => freezeStacks;
 
+    /// Tops freeze counters up to at least n (Brittle); returns the count
+    public int FreezeAtLeast(int n)
+    {
+        while (freezeStacks < Mathf.Min(n, 5)) AddFreeze();
+        return freezeStacks;
+    }
+
     /// Can't move for a moment (Thornsnare, Glacial Lance)
     public void Root(float duration)
     {
@@ -192,8 +199,15 @@ public class StatusEffects : MonoBehaviour
     }
 
     // ---------- Void mark ----------
-    public void MarkVoid(GameObject caster) => VoidMarkedBy = caster;
-    public void ClearVoidMark() => VoidMarkedBy = null;
+    public void MarkVoid(GameObject caster)
+    {
+        VoidMarkedBy = caster;
+        echoReady = true;
+    }
+    public void ClearVoidMark() { VoidMarkedBy = null; echoReady = false; }
+
+    // Echo spends the mark's echo, not the mark itself (The Hollow keeps the death burst)
+    bool echoReady;
 
     // ---------- Element statuses ----------
     public bool IsSoaked => Time.time < soakedUntil;
@@ -256,7 +270,7 @@ public class StatusEffects : MonoBehaviour
         ElementStatus.Staggered => IsStaggered,
         ElementStatus.Rooted => IsRooted,
         ElementStatus.Poisoned => IsPoisoned,
-        ElementStatus.Marked => VoidMarkedBy != null,
+        ElementStatus.Marked => VoidMarkedBy != null && echoReady,
         _ => false
     };
 
@@ -284,7 +298,7 @@ public class StatusEffects : MonoBehaviour
             case ElementStatus.Staggered: staggeredUntil = 0f; break;
             case ElementStatus.Rooted: EndStun(); break;
             case ElementStatus.Poisoned: poisonedUntil = 0f; break;
-            case ElementStatus.Marked: ClearVoidMark(); break;
+            case ElementStatus.Marked: echoReady = false; break;
         }
     }
 
@@ -294,6 +308,7 @@ public class StatusEffects : MonoBehaviour
     {
         soakedUntil = chargedUntil = poisonedUntil = staggeredUntil = burningUntil = frozenUntil = 0f;
         soakBuild = chargeBuild = 0f;
+        echoReady = false;
         ReactionCooldownUntil = 0f;
     }
 

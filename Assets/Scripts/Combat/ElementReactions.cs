@@ -3,18 +3,18 @@ using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 
-public enum Reaction { Shatter, Conduct, Combust, Steam }
+public enum Reaction { Shatter, Conduct, Combust, ThermalShock, Brittle, Mudslide, Wildfire, Steam, Echo }
 
 /// <summary>
 /// The Elemental Ecosystem's reactions: an element hitting a target that carries another
 /// element's status sets off a reaction. Reactions go off no matter who applied the status
 /// (free-for-all included), consume it, and credit their damage to whoever triggered them
 /// (through DamageEvents, so kills, passives and rumble all see it). At most one reaction
-/// per hit, then a short per-target cooldown.
+/// per hit, then a short per-target cooldown. A Void-marked target Echoes the reaction.
 ///
 /// Sources call in here: bullets (BulletHit), abilities (AbilityHit), ground zones
 /// (ZoneHit), plus OnElementPass / OnElementArea for bullets and blasts meeting zones.
-/// Every recipe and number is in the table below. See Docs/Design/elemental-ecosystem.md.
+/// Every recipe and number is in the tables below. See Docs/Design/elemental-ecosystem.md.
 /// </summary>
 public static class ElementReactions
 {
@@ -58,6 +58,49 @@ public static class ElementReactions
         },
         new Recipe
         {
+            id = Reaction.ThermalShock, word = "THERMAL SHOCK", colorA = Element.Frost, colorB = Element.Fire,
+            pairs = new[] { (Element.Fire, ElementStatus.Frozen), (Element.Fire, ElementStatus.Chilled), (Element.Frost, ElementStatus.Burning) },
+            minCounters = 2,                      // a single stray counter isn't worth cashing
+            damage = 4f, damagePerCounter = 6f,   // 16 at 2 counters, 34 frozen
+            shake = 0.25f,
+            effect = ThermalShock,
+        },
+        new Recipe
+        {
+            id = Reaction.Brittle, word = "BRITTLE", colorA = Element.Water, colorB = Element.Frost,
+            pairs = new[] { (Element.Frost, ElementStatus.Soaked), (Element.Water, ElementStatus.Chilled) },
+            damage = 8f,
+            freezeTo = 4,      // straight to 4 counters: one more frost hit freezes
+            radius = 4f,       // water zones this close freeze over
+            duration = 4f,     // ...into ice for this long
+            traction = 0.12f,  // how slippery the ice is (1 = normal)
+            shake = 0.12f,
+            effect = Brittle,
+        },
+        new Recipe
+        {
+            id = Reaction.Mudslide, word = "MUDSLIDE", colorA = Element.Water, colorB = Element.Earth,
+            pairs = new[] { (Element.Earth, ElementStatus.Soaked), (Element.Water, ElementStatus.Staggered) },
+            damage = 6f,
+            radius = 2.8f,     // mud patch
+            duration = 4f,
+            slow = 0.45f,      // 55% slower in the mud, and no dashing out
+            shake = 0.15f,
+            effect = Mudslide,
+        },
+        new Recipe
+        {
+            id = Reaction.Wildfire, word = "WILDFIRE", colorA = Element.Nature, colorB = Element.Fire,
+            pairs = new[] { (Element.Fire, ElementStatus.Rooted), (Element.Nature, ElementStatus.Burning) },
+            damage = 12f,
+            radius = 2.5f,     // burn zone, which spreads into any growth it touches
+            duration = 4f,
+            zoneDps = 8f,
+            shake = 0.2f,
+            effect = Wildfire,
+        },
+        new Recipe
+        {
             id = Reaction.Steam, word = "STEAM", colorA = Element.Water, colorB = Element.Fire,
             pairs = new[] { (Element.Fire, ElementStatus.Soaked), (Element.Water, ElementStatus.Burning) },
             damage = 10f,      // scald on the target
@@ -67,6 +110,17 @@ public static class ElementReactions
             shake = 0.1f,
             effect = Steam,
         },
+    };
+
+    /// Element hits (bullets flying through, blasts, other zones) meeting zones on the
+    /// ground: (the hit, the zone it meets, what happens to the zone)
+    static readonly (Element hit, Element zone, Reaction reaction)[] ZoneRules =
+    {
+        (Element.Fire, Element.Poison, Reaction.Combust),     // the gas explodes
+        (Element.Fire, Element.Nature, Reaction.Wildfire),    // the growth catches fire
+        (Element.Lightning, Element.Water, Reaction.Conduct), // the water is electrified
+        (Element.Frost, Element.Water, Reaction.Brittle),     // the water freezes into ice
+        (Element.Earth, Element.Water, Reaction.Mudslide),    // the water turns to mud
     };
 
     /// Reactions can't go off on the same target again for this long
@@ -79,6 +133,9 @@ public static class ElementReactions
     /// How long fire abilities and fire zones leave someone Burning
     public static float AbilityBurnTime = 3f;
     public static float ZoneBurnTime = 1.5f;
+    /// Echo (Void mark): the reaction repeats on the marked target this much later, this much harder
+    public static float EchoDelay = 0.35f;
+    public static float EchoScale = 1.5f;
     /// Reactions setting off reactions (Combust patch → another cloud) stop this deep
     const int MaxDepth = 4;
 
@@ -89,7 +146,8 @@ public static class ElementReactions
         public Element colorA, colorB;
         public (Element trigger, ElementStatus status)[] pairs;
         public bool heavyTriggers;
-        public float damage, damagePerCounter, radius, stun, knockback, duration, zoneDps, shake;
+        public int minCounters, freezeTo;
+        public float damage, damagePerCounter, radius, stun, knockback, duration, zoneDps, slow = 1f, traction = 1f, shake;
         public Action<Recipe, Ctx> effect;
     }
 
@@ -102,12 +160,14 @@ public static class ElementReactions
         public ElementStatus consumed;
         public IElementZone zone;        // the zone that reacted, if any
         public Vector3 point;
-        public int counters;             // freeze counters (Shatter)
+        public int counters;             // freeze counters when it went off
         public int count = 1;            // targets caught, shown as "x3"
+        public float scale = 1f;         // damage multiplier (Echo)
+        public bool echo;
     }
 
-    /// reaction, triggerer (credit), target (null for zone reactions), where.
-    /// Hook for the combo counter, announcer and kill feed.
+    /// reaction (Echo for the repeat), triggerer (credit), target (null for zone
+    /// reactions), where. Hook for the combo counter, announcer and kill feed.
     public static event Action<Reaction, GameObject, GameObject, Vector3> Reacted;
 
     // ---------- Sources ----------
@@ -178,11 +238,12 @@ public static class ElementReactions
             {
                 bool triggered = (element != Element.None && trigger == element) || (heavy && r.heavyTriggers);
                 if (!triggered || !fx.Has(status)) continue;
+                if (r.minCounters > 0 && !fx.IsFrozen && fx.FreezeStacks < r.minCounters) continue;
 
                 var c = new Ctx
                 {
                     target = target, attacker = attacker, element = element, consumed = status,
-                    point = point, counters = status == ElementStatus.Frozen ? 5 : fx.FreezeStacks,
+                    point = point, counters = fx.IsFrozen ? 5 : fx.FreezeStacks,
                 };
                 fx.Consume(status);
                 fx.ReactionCooldownUntil = Time.time + ReactionCooldown;
@@ -192,57 +253,66 @@ public static class ElementReactions
         return false;
     }
 
-    /// A bullet's step from→to: a fire round through a poison cloud Combusts it.
-    /// True if something went off (one per bullet is plenty).
+    /// A bullet's step from→to: a round flying through a zone its element reacts with
+    /// (fire through gas or brambles, frost or lightning through water). One per bullet.
     public static bool OnElementPass(Vector3 from, Vector3 to, GameObject attacker, Element element)
     {
-        if (element != Element.Fire || depth >= MaxDepth) return false;
-        var cloud = ElementZones.AlongSegment(from, to, Element.Poison);
-        if (cloud == null) return false;
-        ZoneReaction(Reaction.Combust, cloud, attacker, element);
-        return true;
+        if (element == Element.None || depth >= MaxDepth) return false;
+        foreach (var rule in ZoneRules)
+        {
+            if (rule.hit != element) continue;
+            var zone = ElementZones.AlongSegment(from, to, rule.zone);
+            if (zone == null) continue;
+            ZoneReaction(rule.reaction, zone, attacker, element);
+            return true;
+        }
+        return false;
     }
 
-    /// A burst of `element` over an area (fireball, brand ignite, Blinkstorm pulse) meets
-    /// the zones there: fire Combusts poison clouds, lightning electrifies water.
+    /// A burst of `element` over an area (fireball, brand ignite, Blinkstorm pulse, Flash
+    /// Freeze, Seismic Judgement) meets the zones there.
     public static void OnElementArea(Vector3 center, float radius, GameObject attacker, Element element)
     {
         if (depth >= MaxDepth) return;
-        if (element == Element.Fire)
-            foreach (var cloud in ElementZones.Overlapping(center, radius, Element.Poison))
-                ZoneReaction(Reaction.Combust, cloud, attacker, element);
-        else if (element == Element.Lightning)
-            foreach (var water in ElementZones.Overlapping(center, radius, Element.Water))
-                ZoneReaction(Reaction.Conduct, water, attacker, element);
+        foreach (var rule in ZoneRules)
+            if (rule.hit == element)
+                foreach (var zone in ElementZones.Overlapping(center, radius, rule.zone))
+                    ZoneReaction(rule.reaction, zone, attacker, element);
     }
 
-    /// A zone appeared: it reacts with zones it lands on (a mine's cloud on lava, lava
-    /// dragged through a cloud, a static field on a whirlpool). The newcomer gets credit.
+    /// A zone appeared: it reacts with zones it touches (a mine's cloud on lava, lava laid
+    /// through a cloud, a static field on a whirlpool, brambles grown into a fire).
+    /// The newcomer gets the credit.
     internal static void OnZoneSpawned(IElementZone zone)
     {
-        if (zone.ZoneElement != Element.Fire && zone.ZoneElement != Element.Poison && zone.ZoneElement != Element.Lightning)
-            return;
+        if (!Array.Exists(ZoneRules, r => r.hit == zone.ZoneElement || r.zone == zone.ZoneElement)) return;
         // a beat later, so chains ripple outward like Explosions do
-        Runner().After(0.15f, () =>
+        Runner().After(0.15f, () => ZoneMeetsZones(zone));
+    }
+
+    /// A zone changed element (water froze, brambles caught fire): react like a new one
+    public static void OnZoneChanged(IElementZone zone) => OnZoneSpawned(zone);
+
+    static void ZoneMeetsZones(IElementZone zone)
+    {
+        if (zone is UnityEngine.Object o && o == null) return;
+        Element e = zone.ZoneElement;
+        foreach (var rule in ZoneRules)
         {
-            if (zone is UnityEngine.Object o && o == null) return;
-            switch (zone.ZoneElement)
-            {
-                case Element.Fire:
-                    // wide net (lava strips are long), then an exact touch test
-                    foreach (var cloud in ElementZones.Overlapping(zone.ZoneCenter, zone.ZoneRadius + 10f, Element.Poison))
-                        if (ElementZones.Touch(zone, cloud)) ZoneReaction(Reaction.Combust, cloud, zone.ZoneOwner, Element.Fire);
-                    break;
-                case Element.Poison:
-                    foreach (var fire in ElementZones.Overlapping(zone.ZoneCenter, zone.ZoneRadius + 10f, Element.Fire))
-                        if (ElementZones.Touch(zone, fire)) { ZoneReaction(Reaction.Combust, zone, zone.ZoneOwner, Element.Poison); break; }
-                    break;
-                case Element.Lightning:
-                    foreach (var water in ElementZones.Overlapping(zone.ZoneCenter, zone.ZoneRadius + 10f, Element.Water))
-                        if (ElementZones.Touch(zone, water)) ZoneReaction(Reaction.Conduct, water, zone.ZoneOwner, Element.Lightning);
-                    break;
-            }
-        });
+            // the newcomer acts on zones it touches...
+            if (rule.hit == e)
+                foreach (var other in ElementZones.Overlapping(zone.ZoneCenter, zone.ZoneRadius + 10f, rule.zone, zone))
+                    if (ElementZones.Touch(zone, other)) ZoneReaction(rule.reaction, other, zone.ZoneOwner, e);
+
+            // ...or gets acted on by one it landed in
+            if (rule.zone == e)
+                foreach (var other in ElementZones.Overlapping(zone.ZoneCenter, zone.ZoneRadius + 10f, rule.hit, zone))
+                    if (ElementZones.Touch(zone, other))
+                    {
+                        ZoneReaction(rule.reaction, zone, zone.ZoneOwner, rule.hit);
+                        return;
+                    }
+        }
     }
 
     static void ZoneReaction(Reaction id, IElementZone zone, GameObject attacker, Element element)
@@ -261,21 +331,50 @@ public static class ElementReactions
         try { r.effect(r, c); }
         finally { depth--; }
         Feedback(r, c);
-        Reacted?.Invoke(r.id, c.attacker, c.target, c.point);
+        Reacted?.Invoke(c.echo ? Reaction.Echo : r.id, c.attacker, c.target, c.point);
+        TryEcho(r, c);
+    }
+
+    /// Void-marked target: the reaction goes off again on them, harder
+    static void TryEcho(Recipe r, Ctx c)
+    {
+        if (c.echo || c.target == null) return;
+        var fx = StatusEffects.Of(c.target);
+        if (!fx.Has(ElementStatus.Marked)) return;
+        fx.Consume(ElementStatus.Marked);
+        var hollow = fx.VoidMarkedBy;
+        var target = c.target;
+
+        // the mark drinks the reaction in...
+        Color voidColor = Elements.ColorOf(Element.Void);
+        PowerFx.Puffs(AbilityKit.Chest(target), voidColor, 8, 1.5f, 0.7f, EchoDelay, additive: true, lift: 0f);
+
+        // ...and throws it back out
+        Runner().After(EchoDelay, () =>
+        {
+            if (!IsTarget(target, c.attacker)) return;
+            Fire(r, new Ctx
+            {
+                target = target, attacker = c.attacker, element = c.element, consumed = c.consumed,
+                point = AbilityKit.Chest(target), counters = c.counters, scale = EchoScale, echo = true,
+            });
+            AbilityKit.Shockwave(AbilityKit.Ground(target.transform.position + Vector3.up), 3f, voidColor, 0.4f);
+            if (hollow != null && hollow != c.attacker) Rumble.ReactionTrigger(hollow); // The Hollow feels their mark pay off
+        });
     }
 
     static void Feedback(Recipe r, Ctx c)
     {
-        Color a = Elements.ColorOf(r.colorA), b = Elements.ColorOf(r.colorB);
-        string word = r.word + "!" + (c.count > 1 ? $" <size=70%>x{c.count}</size>" : "");
-        ReactionPopup.Show(word, a, b, c.point + Vector3.up * 1.2f);
+        Color a = Elements.ColorOf(c.echo ? Element.Void : r.colorA), b = Elements.ColorOf(r.colorB);
+        string word = (c.echo ? "ECHO " : "") + r.word + "!" + (c.count > 1 ? $" <size=70%>x{c.count}</size>" : "");
+        ReactionPopup.Show(word, a, b, c.point + Vector3.up * 1.2f, c.echo ? 1.15f : 1f);
 
         Vector3 ground = AbilityKit.Ground(c.point);
         AbilityKit.Shockwave(ground, 2.2f, a, 0.35f);
         AbilityKit.Shockwave(ground, 1.4f, b, 0.28f);
         PowerFx.Flash(c.point, Color.Lerp(a, b, 0.5f), 8f, 7f, 0.35f);
 
-        CameraShake.Shake(r.shake, 0.2f);
+        CameraShake.Shake(r.shake * c.scale, 0.2f);
         Rumble.ReactionTrigger(c.attacker);
     }
 
@@ -283,7 +382,7 @@ public static class ElementReactions
     static void Hurt(GameObject victim, float damage, Ctx c)
     {
         if (victim == null || victim == c.attacker) return;
-        DamageEvents.Deal(victim, damage, c.attacker);
+        DamageEvents.Deal(victim, damage * c.scale, c.attacker);
         Rumble.ReactionVictim(victim);
     }
 
@@ -295,22 +394,27 @@ public static class ElementReactions
         return h == null || !h.IsDead;
     }
 
+    /// Shove away from whoever set it off
+    static Vector3 AwayFrom(GameObject t, Ctx c)
+    {
+        Vector3 from = c.attacker != null ? c.attacker.transform.position : c.point;
+        Vector3 away = t.transform.position - from; away.y = 0f;
+        if (away.sqrMagnitude < 0.01f) away = UnityEngine.Random.insideUnitSphere;
+        away.y = 0f;
+        return away.normalized;
+    }
+
     // ---------- Shatter: Frozen + Earth / heavy knockback ----------
 
     static void Shatter(Recipe r, Ctx c)
     {
         var t = c.target;
+        if (t == null) return;
         Color frost = Elements.ColorOf(Element.Frost), earth = Elements.ColorOf(Element.Earth);
         Vector3 chest = AbilityKit.Chest(t);
 
         Hurt(t, r.damage + r.damagePerCounter * c.counters, c);
-
-        // knocked clean out of the ice, away from whoever broke it
-        Vector3 from = c.attacker != null ? c.attacker.transform.position : c.point;
-        Vector3 away = t.transform.position - from; away.y = 0f;
-        if (away.sqrMagnitude < 0.01f) away = UnityEngine.Random.insideUnitSphere;
-        away.y = 0f;
-        AbilityKit.Knockback(t, away.normalized * r.knockback);
+        AbilityKit.Knockback(t, AwayFrom(t, c) * r.knockback);   // knocked clean out of the ice
 
         PowerFx.IceShards(chest, frost, 34, 10f, 0.28f);
         PowerFx.Sparks(chest, Color.white, 30, 9f, 0.45f, 0.07f, 1f);
@@ -324,10 +428,10 @@ public static class ElementReactions
 
     static void Conduct(Recipe r, Ctx c)
     {
-        // Lightning met a water zone (Blinkstorm pulse, static field): electrify it
+        // Lightning met a water zone (bullet, Blinkstorm pulse, static field): electrify it
         if (c.target == null)
         {
-            if (c.zone is IElectrifiable z) z.Electrify(c.attacker, r.duration, r.zoneDps);
+            if (c.zone is IElectrifiable z) z.Electrify(c.attacker, r.duration, r.zoneDps * c.scale);
             return;
         }
 
@@ -349,7 +453,7 @@ public static class ElementReactions
         foreach (var zone in ElementZones.Overlapping(at, r.radius, Element.Water))
             if (zone is IElectrifiable z)
             {
-                z.Electrify(c.attacker, r.duration, r.zoneDps);
+                z.Electrify(c.attacker, r.duration, r.zoneDps * c.scale);
                 DualZap(AbilityKit.Chest(c.target), zone.ZoneCenter + Vector3.up * 0.3f, 0.3f);
             }
     }
@@ -410,6 +514,7 @@ public static class ElementReactions
             var clouds = ElementZones.At(c.target.transform.position, Element.Poison);
             if (clouds.Count > 0) cloud = clouds[0];
         }
+        if (cloud == null && c.target == null) return;
 
         Vector3 center = cloud != null ? cloud.ZoneCenter : c.target.transform.position;
         center = AbilityKit.Ground(center + Vector3.up);
@@ -459,12 +564,139 @@ public static class ElementReactions
         }
     }
 
+    // ---------- Thermal Shock: Chilled/Frozen + Fire ----------
+
+    static void ThermalShock(Recipe r, Ctx c)
+    {
+        var t = c.target;
+        if (t == null) return;
+        var fx = StatusEffects.Of(t);
+
+        // cash in both sides: the ice and the flames
+        if (c.consumed == ElementStatus.Burning)
+        {
+            if (fx.IsFrozen) fx.Consume(ElementStatus.Frozen);
+            else fx.ClearFreeze();
+        }
+        else fx.Consume(ElementStatus.Burning);
+
+        Hurt(t, r.damage + r.damagePerCounter * c.counters, c);
+
+        Color frost = Elements.ColorOf(Element.Frost), fire = Elements.ColorOf(Element.Fire);
+        Vector3 chest = AbilityKit.Chest(t);
+        float power = Mathf.Clamp01(c.counters / 5f);
+        PowerFx.Flash(chest, Color.white, 10f + 6f * power, 6f, 0.3f);
+        PowerFx.IceShards(chest, frost, 12 + 4 * c.counters, 7f + 3f * power, 0.2f);
+        PowerFx.Sparks(chest, fire, 20 + 6 * c.counters, 8f, 0.5f, 0.08f, 0.8f);
+        PowerFx.Puffs(chest, Color.white, 10, 3.5f, 1f, 0.7f, additive: false, lift: 2f);   // flash-boiled steam
+        AbilityKit.Shockwave(AbilityKit.Ground(chest), 1.6f + power, Color.white, 0.25f);
+    }
+
+    // ---------- Brittle: Water + Frost ----------
+
+    static void Brittle(Recipe r, Ctx c)
+    {
+        // frost met a water zone: it freezes over into slippery ice
+        if (c.target == null)
+        {
+            if (c.zone is GroundHazard water) water.FreezeOver(c.attacker, r.duration, r.traction);
+            return;
+        }
+
+        var fx = StatusEffects.Of(c.target);
+        int counters = fx.FreezeAtLeast(r.freezeTo);
+        Hurt(c.target, r.damage, c);
+
+        // puddles around them freeze too
+        foreach (var zone in ElementZones.Overlapping(c.target.transform.position, r.radius, Element.Water))
+            if (zone is GroundHazard water) water.FreezeOver(c.attacker, r.duration, r.traction);
+
+        Color frost = Elements.ColorOf(Element.Frost), water2 = Elements.ColorOf(Element.Water);
+        Vector3 chest = AbilityKit.Chest(c.target);
+        PowerFx.IceShards(chest, frost, 8 + 3 * counters, 4f, 0.16f);
+        PowerFx.Sparks(chest, Color.Lerp(frost, Color.white, 0.5f), 18, 4f, 0.5f, 0.06f, 0.3f);
+        for (int i = 0; i < 8; i++)
+        {
+            Vector3 p = chest + UnityEngine.Random.insideUnitSphere * 0.7f;
+            BulletFX.Mote(BulletFX.Flavor.Frost, frost, p, 1.5f);
+            BulletFX.Mote(BulletFX.Flavor.Water, water2, p, 1.2f);
+        }
+    }
+
+    // ---------- Mudslide: Water + Earth ----------
+
+    static void Mudslide(Recipe r, Ctx c)
+    {
+        if (c.target == null)
+        {
+            if (c.zone is GroundHazard water) water.MudOver(c.attacker, r.duration, r.slow);
+            return;
+        }
+
+        Hurt(c.target, r.damage, c);
+        Vector3 at = AbilityKit.Ground(c.target.transform.position + Vector3.up);
+        var mud = GroundHazard.Spawn(c.attacker, at, r.radius, r.duration, Elements.ColorOf(Element.Earth));
+        mud.element = Element.Earth;
+        mud.slowMultiplier = r.slow;
+        mud.blocksDash = true;
+        MudFx(at, r.radius);
+    }
+
+    internal static void MudFx(Vector3 at, float radius)
+    {
+        Color earth = Elements.ColorOf(Element.Earth), water = Elements.ColorOf(Element.Water);
+        Color mud = Color.Lerp(earth, new Color(0.25f, 0.17f, 0.1f), 0.6f);
+        PowerFx.Puffs(at + Vector3.up * 0.4f, mud, 12, 2.5f, 1.1f, 1f, lift: 0.3f);
+        for (int i = 0; i < 18; i++)
+        {
+            Vector3 p = at + Vector3.up * 0.3f + UnityEngine.Random.insideUnitSphere * radius * 0.7f;
+            BulletFX.Mote(BulletFX.Flavor.Grit, earth, p, 1.8f);
+            if (i % 3 == 0) BulletFX.Mote(BulletFX.Flavor.Water, water, p, 1.2f);
+        }
+    }
+
+    // ---------- Wildfire: Fire + Nature ----------
+
+    static void Wildfire(Recipe r, Ctx c)
+    {
+        // fire met growth on the ground: it catches, and spreads to whatever it touches
+        if (c.target == null)
+        {
+            if (c.zone is GroundHazard growth) growth.Ignite(c.attacker, r.duration, r.zoneDps * c.scale);
+            return;
+        }
+
+        Hurt(c.target, r.damage, c);
+        StatusEffects.Of(c.target).SetBurning(AbilityBurnTime);
+
+        Vector3 at = AbilityKit.Ground(c.target.transform.position + Vector3.up);
+        foreach (var zone in ElementZones.At(at, Element.Nature))
+            if (zone is GroundHazard growth) growth.Ignite(c.attacker, r.duration, r.zoneDps * c.scale);
+
+        // the vines on them burn into a patch that spreads into any growth it touches
+        var burn = GroundHazard.Spawn(c.attacker, at, r.radius, r.duration, Elements.ColorOf(Element.Fire));
+        burn.element = Element.Fire;
+        burn.damagePerSecond = r.zoneDps * c.scale;
+        EffectPool.Spawn(at, r.radius, r.duration, EffectPool.Style.Lava);
+
+        Color fire = Elements.ColorOf(Element.Fire), nature = Elements.ColorOf(Element.Nature);
+        Vector3 chest = AbilityKit.Chest(c.target);
+        PowerFx.Sparks(chest, fire, 36, 6f, 0.8f, 0.09f, -0.4f, Vector3.up, 120f);
+        for (int i = 0; i < 12; i++)
+        {
+            Vector3 p = at + Vector3.up * 0.4f + UnityEngine.Random.insideUnitSphere * r.radius * 0.6f;
+            BulletFX.Mote(BulletFX.Flavor.Embers, fire, p, 2f);
+            BulletFX.Mote(BulletFX.Flavor.Spores, nature, p, 1.5f);
+        }
+    }
+
     // ---------- Steam: Fire + Water ----------
 
     static void Steam(Recipe r, Ctx c)
     {
+        if (c.target == null) return;
         Hurt(c.target, r.damage, c);
-        SteamCloud.Spawn(AbilityKit.Ground(c.target.transform.position + Vector3.up), r.radius, r.duration, r.zoneDps, c.attacker);
+        SteamCloud.Spawn(AbilityKit.Ground(c.target.transform.position + Vector3.up), r.radius, r.duration, r.zoneDps * c.scale, c.attacker);
     }
 
     // ---------- Runner (coroutines and delays) ----------

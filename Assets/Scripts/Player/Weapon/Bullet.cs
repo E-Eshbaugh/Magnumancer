@@ -25,7 +25,7 @@ public class Bullet : MonoBehaviour
     private bool    _hasHit;
     private BulletFX _fx;
     private Element _element;      // the shooter's element (reactions, statuses)
-    private bool    _ignitedGas;   // a fire round only sets off one poison cloud
+    private bool    _zoneReacted;  // a round only sets off one zone (gas, water, brambles)
 
     // internal target position computed in FixedUpdate
     private Vector3 _targetPosition;
@@ -75,9 +75,10 @@ public class Bullet : MonoBehaviour
         bool blocked = Physics.Raycast(_targetPosition, _direction, out RaycastHit hit, moveDist,
                 Physics.DefaultRaycastLayers, QueryTriggerInteraction.Ignore);
 
-        // fire rounds flying through poison gas set it off (Combust)
-        if (_element == Element.Fire && !_ignitedGas)
-            _ignitedGas = ElementReactions.OnElementPass(_targetPosition,
+        // rounds flying through zones react with them: fire ignites gas and brambles,
+        // frost freezes water, lightning electrifies it, earth turns it to mud
+        if (_element != Element.None && !_zoneReacted)
+            _zoneReacted = ElementReactions.OnElementPass(_targetPosition,
                 blocked ? hit.point : _targetPosition + _direction * moveDist, owner, _element);
 
         if (blocked)

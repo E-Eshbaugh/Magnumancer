@@ -93,6 +93,7 @@ public class EarthquakeAbility : MonoBehaviour, IActiveAbility
 
         // The initial shockwave sets off mines/grenades and cracks crystals
         Explosions.AffectWorld(origin, quakeRadius, damagePerTick, caster);
+        ElementReactions.OnElementArea(origin, quakeRadius, caster, Element.Earth);   // puddles churn into mud
 
         // Start damage over time
         StartCoroutine(DamageOverTime(caster, origin));
