@@ -82,6 +82,10 @@ public class CharacterSelectController : MonoBehaviour
     /// Shows the picked runes in the ability text boxes (plus the wizard's weapon affinity)
     void UpdateRuneText()
     {
+        // the name takes the shade this active rune gives the wizard in the match
+        if (nameText != null && selectedWizard != null)
+            nameText.color = GlowLine.Brighten(WizardShade.Shade(selectedWizard, selectedActiveRune));
+
         var runes = RuneBook.For(selectedWizard);
         if (runes == null)
         {

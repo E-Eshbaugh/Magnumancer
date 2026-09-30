@@ -141,7 +141,7 @@ public class WeaponSynergy : MonoBehaviour, IOutgoingDamageModifier
 
     void Announce()
     {
-        AbilityKit.Shockwave(transform.position, 1.6f, GlowLine.Brighten(WizardSpawnEffect.ThemeColorOf(wizard)), 0.3f);
+        AbilityKit.Shockwave(transform.position, 1.6f, GlowLine.Brighten(WizardShade.Of(gameObject)), 0.3f);
         Rumble.Play(movement.gamepad, 0.1f, 0.35f, 0.12f);
     }
 

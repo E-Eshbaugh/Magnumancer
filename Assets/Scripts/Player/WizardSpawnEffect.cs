@@ -49,7 +49,7 @@ public class WizardSpawnEffect : MonoBehaviour
         var fx = host.AddComponent<WizardSpawnEffect>();
         fx.target = player.transform;
         fx.wizard = wizard;
-        fx.color = GlowLine.Brighten(ThemeColorOf(wizard));
+        fx.color = GlowLine.Brighten(player != null ? WizardShade.Of(player) : ThemeColorOf(wizard));
         fx.StartCoroutine(fx.Run(delay));
         return fx;
     }

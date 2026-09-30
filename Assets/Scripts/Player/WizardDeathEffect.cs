@@ -36,7 +36,7 @@ public class WizardDeathEffect : MonoBehaviour
     WizardData wizard;
 
     /// Plays the death at `position` (the wizard's feet). final = out of lives.
-    public static WizardDeathEffect Play(Vector3 position, WizardData wizard, bool final)
+    public static WizardDeathEffect Play(Vector3 position, WizardData wizard, bool final, GameObject player = null)
     {
         var host = new GameObject(final ? "WizardDeath" : "WizardLifeLost");
         host.transform.position = position;
@@ -44,7 +44,7 @@ public class WizardDeathEffect : MonoBehaviour
         fx.wizard = wizard;
         fx.final = final;
         fx.size = final ? 1f : 0.6f;
-        fx.color = GlowLine.Brighten(WizardSpawnEffect.ThemeColorOf(wizard));
+        fx.color = GlowLine.Brighten(player != null ? WizardShade.Of(player) : WizardSpawnEffect.ThemeColorOf(wizard));
         fx.StartCoroutine(fx.Run());
         return fx;
     }

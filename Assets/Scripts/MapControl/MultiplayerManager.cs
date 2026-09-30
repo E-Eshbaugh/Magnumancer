@@ -31,6 +31,9 @@ public class MultiplayerManager : MonoBehaviour
         // Deactivate all
         for (int i = 0; i < players.Length; i++) players[i].SetActive(false);
 
+        // Shades already worn, per wizard (two players on one wizard never look alike)
+        var shadesTaken = new System.Collections.Generic.Dictionary<WizardData, System.Collections.Generic.List<int>>();
+
         for (int i = 0; i < numPlayers; i++)
         {
             var go      = players[i];
@@ -55,6 +58,14 @@ public class MultiplayerManager : MonoBehaviour
             // === SETUP SEQUENCE ===
 
             go.GetComponentInChildren<PlayerMovement3D>()?.Setup(i, pad, wizard);
+
+            // The active rune picks the wizard's shade: before anything reads the color
+            var shadeHost = go.GetComponentInChildren<PlayerMovement3D>();
+            if (shadeHost != null && wizard != null)
+            {
+                if (!shadesTaken.TryGetValue(wizard, out var taken)) shadesTaken[wizard] = taken = new System.Collections.Generic.List<int>();
+                taken.Add(WizardShade.Apply(shadeHost.gameObject, wizard, DataManager.Instance.GetActiveRune(i), taken).shade);
+            }
             go.GetComponentInChildren<GunSwapControl>()?.Setup(pad, loadout);
             go.GetComponentInChildren<AmmoControl>()?.Setup(pad, loadout, wizard);
             go.GetComponentInChildren<FireController3D>()?.Setup(pad);

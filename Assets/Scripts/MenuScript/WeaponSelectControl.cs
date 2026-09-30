@@ -220,7 +220,9 @@ public class WeaponSelectControl : MonoBehaviour
         if (myWizard == null || !RuneBook.Favors(myWizard, wd)) return "";
         var a = RuneBook.AffinityOf(myWizard);
         // Color tag, not <b>: the description uses a bitmap font that can't do bold
-        string hex = ColorUtility.ToHtmlStringRGB(GlowLine.Brighten(WizardSpawnEffect.ThemeColorOf(myWizard)));
+        // in the picker's rune shade
+        var shade = WizardShade.Shade(myWizard, DataManager.Instance.GetActiveRune(activePlayerIndex));
+        string hex = ColorUtility.ToHtmlStringRGB(GlowLine.Brighten(shade));
         return $"\n<color=#{hex}>Synergy - {a.name}: {a.description}</color>";
     }
 

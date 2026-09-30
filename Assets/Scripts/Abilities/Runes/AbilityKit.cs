@@ -16,7 +16,7 @@ public static class AbilityKit
     public static WizardData Wizard(GameObject caster) => Movement(caster)?.wizard;
 
     public static Color Theme(GameObject caster)
-        => GlowLine.Brighten(WizardSpawnEffect.ThemeColorOf(Wizard(caster)));
+        => GlowLine.Brighten(WizardShade.Of(caster));   // the caster's rune shade
 
     /// Flat direction the caster's gun points
     public static Vector3 AimDir(GameObject caster)

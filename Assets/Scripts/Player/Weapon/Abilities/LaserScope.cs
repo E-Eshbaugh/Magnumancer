@@ -112,7 +112,7 @@ public class LaserScope : MonoBehaviour
     {
         var wiz = ammoControl != null ? ammoControl.wizard : null;
         Color theme = wiz != null && wiz.themeColor.maxColorComponent > 0.01f && wiz.themeColor != Color.white
-            ? wiz.themeColor
+            ? WizardShade.Of(gameObject)   // the owner's rune shade
             : fallbackColor;
         // dark hues (Hollow purple, Granite brown) are pushed bright so the beam reads
         laserColor = GlowLine.Brighten(theme);

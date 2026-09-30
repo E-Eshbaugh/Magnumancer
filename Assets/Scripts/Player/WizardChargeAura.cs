@@ -83,7 +83,7 @@ public class WizardChargeAura : MonoBehaviour
         if (player == null) return null;
         var aura = player.GetComponent<WizardChargeAura>();
         if (aura == null) aura = player.AddComponent<WizardChargeAura>();
-        aura.SetColor(WizardSpawnEffect.ThemeColorOf(wizard));
+        aura.SetColor(WizardShade.Of(player));
         return aura;
     }
 

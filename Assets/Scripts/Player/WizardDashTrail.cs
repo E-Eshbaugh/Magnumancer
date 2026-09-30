@@ -35,7 +35,7 @@ public class WizardDashTrail : MonoBehaviour
         if (player == null) return null;
         var trail = player.GetComponent<WizardDashTrail>();
         if (trail == null) trail = player.AddComponent<WizardDashTrail>();
-        trail.color = GlowLine.Brighten(WizardSpawnEffect.ThemeColorOf(wizard));
+        trail.color = GlowLine.Brighten(WizardShade.Of(player));
         return trail;
     }
 

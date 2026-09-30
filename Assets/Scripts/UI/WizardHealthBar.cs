@@ -47,7 +47,7 @@ public class WizardHealthBar : MonoBehaviour
         var bar = go.AddComponent<WizardHealthBar>();
         bar.health = health;
         bar.body = health.GetComponent<CharacterController>();
-        bar.color = GlowLine.Brighten(WizardSpawnEffect.ThemeColorOf(wizard));
+        bar.color = GlowLine.Brighten(WizardShade.Of(health.gameObject));
         health.OnHealthChanged += bar.HandleHealthChanged;
         return bar;
     }

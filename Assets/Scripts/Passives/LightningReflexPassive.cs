@@ -111,7 +111,7 @@ public class LightningReflexPassive : WizardPassive
         var go = new GameObject("LightningReflexBolt");
         var lr = go.AddComponent<LineRenderer>();
         GlowLine.Configure(lr, 2, boltWidth, GetBoltMaterial());
-        Color theme = GlowLine.Brighten(WizardSpawnEffect.ThemeColorOf(wizard));
+        Color theme = GlowLine.Brighten(WizardShade.Of(gameObject));
         lr.startColor = Color.Lerp(theme, Color.white, 0.4f);
         lr.endColor = theme;
 

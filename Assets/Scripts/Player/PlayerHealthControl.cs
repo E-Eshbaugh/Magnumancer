@@ -207,7 +207,7 @@ public class PlayerHealthControl : MonoBehaviour
         // Soulfracture marks explode on death too, not just on stock loss
         cursedPlayer?.OnStockLost();
 
-        WizardDeathEffect.Play(transform.position, Wizard(), final: true);
+        WizardDeathEffect.Play(transform.position, Wizard(), final: true, gameObject);
         if (healthMask != null) UIGreyOut.Apply(healthMask.gameObject);
 
         OnDeath?.Invoke();
@@ -231,7 +231,7 @@ public class PlayerHealthControl : MonoBehaviour
         cursedPlayer?.OnStockLost();
 
         // A smaller version of the death fireball where they fell (they respawn elsewhere)
-        WizardDeathEffect.Play(transform.position, Wizard(), final: false);
+        WizardDeathEffect.Play(transform.position, Wizard(), final: false, gameObject);
 
         // Reset health for next stock
         currentHealth = maxHealth;

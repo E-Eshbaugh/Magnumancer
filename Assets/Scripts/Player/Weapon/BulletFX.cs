@@ -200,15 +200,16 @@ public class BulletFX : MonoBehaviour
 
     // ---------- styles ----------
 
-    static readonly Dictionary<WizardData, Style> styles = new();
+    static readonly Dictionary<(WizardData, int), Style> styles = new();   // per wizard and rune shade
 
     public static Style StyleOf(GameObject owner, Light fallbackLight = null)
     {
         var wizard = AbilityKit.Wizard(owner);
         if (wizard == null)
             return MakeStyle(fallbackLight != null ? fallbackLight.color : new Color(1f, 0.75f, 0.2f), Flavor.Sparks);
-        if (!styles.TryGetValue(wizard, out var s))
-            styles[wizard] = s = MakeStyle(WizardSpawnEffect.ThemeColorOf(wizard), FlavorOf(wizard.passive));
+        int shade = WizardShade.IndexOfPlayer(owner);
+        if (!styles.TryGetValue((wizard, shade), out var s))
+            styles[(wizard, shade)] = s = MakeStyle(WizardShade.Of(owner), FlavorOf(wizard.passive));
         return s;
     }
 
