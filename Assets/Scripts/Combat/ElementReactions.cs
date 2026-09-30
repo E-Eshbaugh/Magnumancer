@@ -3,7 +3,7 @@ using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 
-public enum Reaction { Shatter, Conduct, Combust, ThermalShock, Brittle, Mudslide, Wildfire, Steam, Echo }
+public enum Reaction { Shatter, Conduct, Combust, ThermalShock, Brittle, Mudslide, Magnetize, Wildfire, BlightBloom, OvergrowthSurge, Steam, Echo }
 
 /// <summary>
 /// The Elemental Ecosystem's reactions: an element hitting a target that carries another
@@ -90,6 +90,21 @@ public static class ElementReactions
         },
         new Recipe
         {
+            id = Reaction.Magnetize, word = "MAGNETIZE", colorA = Element.Earth, colorB = Element.Lightning,
+            pairs = new[] { (Element.Lightning, ElementStatus.Staggered), (Element.Earth, ElementStatus.Charged) },
+            damage = 10f,
+            count = 4,         // chunks of charged rubble thrown around them
+            radius = 3f,       // ...landing this far out
+            reach = 2.2f,      // each arcs at anyone this close
+            zoneDps = 6f,      // damage per arc
+            interval = 0.6f,   // seconds between arcs, per chunk
+            duration = 5f,
+            shake = 0.2f,
+            oncePerZone = true,   // its rubble lands in the same mud; don't loop
+            effect = Magnetize,
+        },
+        new Recipe
+        {
             id = Reaction.Wildfire, word = "WILDFIRE", colorA = Element.Nature, colorB = Element.Fire,
             pairs = new[] { (Element.Fire, ElementStatus.Rooted), (Element.Nature, ElementStatus.Burning) },
             damage = 12f,
@@ -98,6 +113,34 @@ public static class ElementReactions
             zoneDps = 8f,
             shake = 0.2f,
             effect = Wildfire,
+        },
+        new Recipe
+        {
+            id = Reaction.BlightBloom, word = "BLIGHT BLOOM", colorA = Element.Nature, colorB = Element.Poison,
+            pairs = new[] { (Element.Nature, ElementStatus.Poisoned), (Element.Poison, ElementStatus.Rooted) },
+            damage = 8f,
+            count = 3,         // spore pods
+            radius = 1.8f,     // ring they sprout on, and each burst's poison puddle
+            interval = 1f,     // seconds before a pod bursts
+            duration = 4f,     // poison puddle
+            zoneDps = 6f,
+            shake = 0.12f,
+            oncePerZone = true,   // its puddles land in the same growth; don't loop
+            effect = BlightBloom,
+        },
+        new Recipe
+        {
+            id = Reaction.OvergrowthSurge, word = "OVERGROWTH", colorA = Element.Water, colorB = Element.Nature,
+            pairs = new[] { (Element.Nature, ElementStatus.Soaked), (Element.Water, ElementStatus.Rooted) },
+            stun = 1.2f,       // vines surge up and root them
+            heal = 12f,        // the one who set it off drinks it in
+            radius = 6f,       // growth and healing totems this close swell
+            growth = 1.4f,     // growth zones: radius and damage x1.4 (once each)
+            duration = 3f,     // ...and last this much longer
+            healBoost = 1.5f,  // healing totems heal x1.5...
+            reach = 5f,        // ...for this long
+            shake = 0.1f,
+            effect = OvergrowthSurge,
         },
         new Recipe
         {
@@ -112,16 +155,25 @@ public static class ElementReactions
         },
     };
 
-    /// Element hits (bullets flying through, blasts, other zones) meeting zones on the
-    /// ground: (the hit, the zone it meets, what happens to the zone)
-    static readonly (Element hit, Element zone, Reaction reaction)[] ZoneRules =
+    /// Element hits (blasts, other zones and, where `bullets`, rounds flying over) meeting
+    /// zones on the ground: (the hit, the zone it meets, what happens to the zone)
+    static readonly (Element hit, Element zone, Reaction reaction, bool bullets)[] ZoneRules =
     {
-        (Element.Fire, Element.Poison, Reaction.Combust),     // the gas explodes
-        (Element.Fire, Element.Nature, Reaction.Wildfire),    // the growth catches fire
-        (Element.Lightning, Element.Water, Reaction.Conduct), // the water is electrified
-        (Element.Frost, Element.Water, Reaction.Brittle),     // the water freezes into ice
-        (Element.Earth, Element.Water, Reaction.Mudslide),    // the water turns to mud
+        (Element.Fire, Element.Poison, Reaction.Combust, true),          // the gas explodes
+        (Element.Fire, Element.Nature, Reaction.Wildfire, true),         // the growth catches fire
+        (Element.Lightning, Element.Water, Reaction.Conduct, true),      // the water is electrified
+        (Element.Frost, Element.Water, Reaction.Brittle, true),          // the water freezes into ice
+        (Element.Earth, Element.Water, Reaction.Mudslide, true),         // the water turns to mud
+        (Element.Poison, Element.Nature, Reaction.BlightBloom, false),   // the growth sprouts spore pods
+        (Element.Water, Element.Nature, Reaction.OvergrowthSurge, true), // the growth swells
+        (Element.Lightning, Element.Earth, Reaction.Magnetize, false),   // the mud throws up charged rubble
+        // lava + water: a steam burst and the lava cools. Zones only, so Tidebound
+        // can't erase a lava trail just by shooting across it
+        (Element.Water, Element.Fire, Reaction.Steam, false),
     };
+
+    /// A zone can't react again for this long (a stream of bullets over one puddle)
+    public static float ZoneCooldown = 1.5f;
 
     /// Reactions can't go off on the same target again for this long
     public static float ReactionCooldown = 1f;
@@ -146,8 +198,11 @@ public static class ElementReactions
         public Element colorA, colorB;
         public (Element trigger, ElementStatus status)[] pairs;
         public bool heavyTriggers;
-        public int minCounters, freezeTo;
+        /// Zone version spawns new zones: at most once per zone so it can't feed itself
+        public bool oncePerZone;
+        public int minCounters, freezeTo, count;
         public float damage, damagePerCounter, radius, stun, knockback, duration, zoneDps, slow = 1f, traction = 1f, shake;
+        public float reach, interval, heal, growth = 1f, healBoost = 1f;
         public Action<Recipe, Ctx> effect;
     }
 
@@ -260,9 +315,9 @@ public static class ElementReactions
         if (element == Element.None || depth >= MaxDepth) return false;
         foreach (var rule in ZoneRules)
         {
-            if (rule.hit != element) continue;
+            if (rule.hit != element || !rule.bullets) continue;
             var zone = ElementZones.AlongSegment(from, to, rule.zone);
-            if (zone == null) continue;
+            if (zone == null || OnCooldown(zone)) continue;
             ZoneReaction(rule.reaction, zone, attacker, element);
             return true;
         }
@@ -315,9 +370,29 @@ public static class ElementReactions
         }
     }
 
+    static readonly Dictionary<IElementZone, float> zoneCooldowns = new();
+    static readonly HashSet<IElementZone> onceZones = new();
+
+    static bool OnCooldown(IElementZone zone)
+        => zoneCooldowns.TryGetValue(zone, out float until) && Time.time < until;
+
     static void ZoneReaction(Reaction id, IElementZone zone, GameObject attacker, Element element)
     {
+        if (OnCooldown(zone)) return;
+        if (zoneCooldowns.Count > 64)
+        {
+            var stale = new List<IElementZone>();
+            foreach (var kv in zoneCooldowns) if (Time.time >= kv.Value) stale.Add(kv.Key);
+            foreach (var z in stale) zoneCooldowns.Remove(z);
+        }
+        zoneCooldowns[zone] = Time.time + ZoneCooldown;
+
         var r = Array.Find(Table, x => x.id == id);
+        if (r.oncePerZone)
+        {
+            onceZones.RemoveWhere(z => z is UnityEngine.Object o && o == null);
+            if (!onceZones.Add(zone)) return;
+        }
         Fire(r, new Ctx { attacker = attacker, element = element, zone = zone, point = zone.ZoneCenter + Vector3.up });
     }
 
@@ -599,7 +674,7 @@ public static class ElementReactions
         // frost met a water zone: it freezes over into slippery ice
         if (c.target == null)
         {
-            if (c.zone is GroundHazard water) water.FreezeOver(c.attacker, r.duration, r.traction);
+            if (c.zone is IFreezable water) water.FreezeOver(c.attacker, r.duration, r.traction);
             return;
         }
 
@@ -609,7 +684,7 @@ public static class ElementReactions
 
         // puddles around them freeze too
         foreach (var zone in ElementZones.Overlapping(c.target.transform.position, r.radius, Element.Water))
-            if (zone is GroundHazard water) water.FreezeOver(c.attacker, r.duration, r.traction);
+            if (zone is IFreezable water) water.FreezeOver(c.attacker, r.duration, r.traction);
 
         Color frost = Elements.ColorOf(Element.Frost), water2 = Elements.ColorOf(Element.Water);
         Vector3 chest = AbilityKit.Chest(c.target);
@@ -629,7 +704,7 @@ public static class ElementReactions
     {
         if (c.target == null)
         {
-            if (c.zone is GroundHazard water) water.MudOver(c.attacker, r.duration, r.slow);
+            if (c.zone is IMuddable water) water.MudOver(c.attacker, r.duration, r.slow);
             return;
         }
 
@@ -690,11 +765,134 @@ public static class ElementReactions
         }
     }
 
+    // ---------- Magnetize: Lightning + Earth ----------
+
+    static void Magnetize(Recipe r, Ctx c)
+    {
+        Vector3 center;
+        if (c.target != null)
+        {
+            Hurt(c.target, r.damage, c);
+            center = c.target.transform.position;
+        }
+        else if (c.zone != null) center = c.zone.ZoneCenter;   // lightning met mud
+        else return;
+
+        // rubble tears up out of the ground, charged, and scatters around them
+        Vector3 ground = AbilityKit.Ground(center + Vector3.up);
+        float spin = UnityEngine.Random.value * 360f;
+        for (int i = 0; i < r.count; i++)
+        {
+            Vector3 dir = Quaternion.Euler(0f, spin + i * 360f / r.count, 0f) * Vector3.forward;
+            Vector3 land = AbilityKit.Ground(ground + dir * r.radius * UnityEngine.Random.Range(0.6f, 1f) + Vector3.up);
+            ChargedRubble.Throw(c.attacker, ground + Vector3.up * 0.5f, land, r.reach, r.zoneDps * c.scale, r.interval, r.duration);
+        }
+        RockDebris.Burst(ground, 8, 5f, 0.2f);
+        PowerFx.Sparks(ground + Vector3.up * 0.5f, Elements.ColorOf(Element.Lightning), 30, 7f, 0.4f, 0.06f, 0.8f, Vector3.up, 140f);
+    }
+
+    // ---------- Blight Bloom: Poison + Nature ----------
+
+    static void BlightBloom(Recipe r, Ctx c)
+    {
+        Vector3 center;
+        float ring = r.radius;
+        if (c.target != null)
+        {
+            Hurt(c.target, r.damage, c);
+            center = c.target.transform.position;
+        }
+        else if (c.zone != null) { center = c.zone.ZoneCenter; ring = Mathf.Max(ring, c.zone.ZoneRadius * 0.8f); }
+        else return;
+
+        Vector3 ground = AbilityKit.Ground(center + Vector3.up);
+        float spin = UnityEngine.Random.value * 360f;
+        for (int i = 0; i < r.count; i++)
+        {
+            Vector3 dir = Quaternion.Euler(0f, spin + i * 360f / r.count, 0f) * Vector3.forward;
+            Runner().StartCoroutine(SporePod(r, c, AbilityKit.Ground(ground + dir * ring + Vector3.up)));
+        }
+    }
+
+    // A pod swells out of the ground, then bursts into a poison puddle
+    static IEnumerator SporePod(Recipe r, Ctx c, Vector3 at)
+    {
+        Color poison = Elements.ColorOf(Element.Poison), nature = Elements.ColorOf(Element.Nature);
+        var pod = AbilityKit.GlowOrb(Color.Lerp(poison, nature, 0.4f), 0.1f);
+        pod.transform.position = at + Vector3.up * 0.25f;
+        float t = 0f;
+        while (t < r.interval && pod != null)
+        {
+            t += Time.deltaTime;
+            float k = t / r.interval;
+            float pulse = 1f + 0.12f * Mathf.Sin(t * (10f + 20f * k));
+            pod.transform.localScale = Vector3.one * Mathf.Lerp(0.1f, 0.6f, k) * pulse;
+            if (UnityEngine.Random.value < 0.2f)
+                BulletFX.Mote(BulletFX.Flavor.Spores, nature, pod.transform.position, 0.8f);
+            yield return null;
+        }
+        if (pod != null) UnityEngine.Object.Destroy(pod);
+
+        var puddle = GroundHazard.Spawn(c.attacker, at, r.radius, r.duration, poison);
+        puddle.element = Element.Poison;
+        puddle.damagePerSecond = r.zoneDps * c.scale;
+        PowerFx.Puffs(at + Vector3.up * 0.4f, poison, 8, 2.5f, 0.9f, 0.9f, lift: 0.8f);
+        PowerFx.Sparks(at + Vector3.up * 0.4f, nature, 14, 5f, 0.4f, 0.06f, 1f);
+        for (int i = 0; i < 6; i++)
+            BulletFX.Mote(BulletFX.Flavor.Toxic, poison, at + Vector3.up * 0.5f + UnityEngine.Random.insideUnitSphere * 0.6f, 1.6f);
+        Rumble.Blast(at, r.radius * 2f, 0.3f);
+    }
+
+    // ---------- Overgrowth Surge: Water + Nature ----------
+
+    static void OvergrowthSurge(Recipe r, Ctx c)
+    {
+        Vector3 center;
+        if (c.target != null)
+        {
+            center = c.target.transform.position;
+            StatusEffects.Of(c.target).Root(r.stun * c.scale);
+            // the triggerer drinks it in
+            var h = c.attacker != null ? c.attacker.GetComponent<PlayerHealthControl>() : null;
+            if (h != null) h.Heal(Mathf.RoundToInt(r.heal * c.scale));
+            if (c.attacker != null)
+                PowerFx.Sparks(AbilityKit.Chest(c.attacker), Elements.ColorOf(Element.Nature), 16, 3f, 0.6f, 0.07f, -0.4f, Vector3.up, 90f);
+        }
+        else if (c.zone != null) center = c.zone.ZoneCenter;
+        else return;
+
+        // growth nearby swells...
+        if (c.zone is GroundHazard hit) hit.Surge(r.growth, r.duration);
+        foreach (var zone in ElementZones.Overlapping(center, r.radius, Element.Nature))
+            if (zone is GroundHazard growth) growth.Surge(r.growth, r.duration);
+        // ...and so do healing totems
+        foreach (var totem in HealingZone.Active)
+            if (totem != null && (totem.transform.position - center).sqrMagnitude <= r.radius * r.radius)
+                totem.Surge(r.healBoost, r.reach);
+
+        Color nature = Elements.ColorOf(Element.Nature), water = Elements.ColorOf(Element.Water);
+        Vector3 ground = AbilityKit.Ground(center + Vector3.up);
+        for (int i = 0; i < 16; i++)
+        {
+            Vector3 p = ground + Vector3.up * 0.3f + UnityEngine.Random.insideUnitSphere * 1.5f;
+            BulletFX.Mote(BulletFX.Flavor.Spores, nature, p, 1.8f);
+            if (i % 2 == 0) BulletFX.Mote(BulletFX.Flavor.Water, water, p, 1.2f);
+        }
+    }
+
     // ---------- Steam: Fire + Water ----------
 
     static void Steam(Recipe r, Ctx c)
     {
-        if (c.target == null) return;
+        // water met lava: a steam burst, and the lava cools to rock
+        if (c.target == null)
+        {
+            if (c.zone == null) return;
+            Vector3 at = AbilityKit.Ground(c.zone.ZoneCenter + Vector3.up);
+            SteamCloud.Spawn(at, r.radius, r.duration, r.zoneDps * c.scale, c.attacker);
+            c.zone.Consume();
+            return;
+        }
         Hurt(c.target, r.damage, c);
         SteamCloud.Spawn(AbilityKit.Ground(c.target.transform.position + Vector3.up), r.radius, r.duration, r.zoneDps * c.scale, c.attacker);
     }
@@ -714,6 +912,8 @@ public static class ElementReactions
     {
         runner = null;
         depth = 0;
+        zoneCooldowns.Clear();
+        onceZones.Clear();
         Reacted = null;
     }
 }

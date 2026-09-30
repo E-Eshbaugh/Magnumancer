@@ -3,8 +3,9 @@ using UnityEngine;
 
 /// <summary>
 /// How blasts interact with the world beyond hurting players: they set off Viper mines
-/// (which chain into each other), cook off nearby grenades, and damage destructible
-/// items like healing crystals. Every explosion calls AffectWorld once.
+/// (which chain into each other), cook off nearby grenades, damage destructible
+/// items like healing crystals, and shove everyone caught in them (the one who set it
+/// off too). Every explosion calls AffectWorld once.
 /// Bullets use Shoot() so mines and grenades can be popped with gunfire too.
 /// </summary>
 public static class Explosions
@@ -15,14 +16,32 @@ public static class Explosions
 
     static readonly Collider[] buffer = new Collider[128];
 
+    /// Shove per point of blast damage at the center (0 = blasts don't shove), capped
+    public static float ShovePerDamage = 0.35f;
+    public static float MaxShove = 14f;
+
     /// center/radius: the blast. damage: its max damage (falls off with distance).
     /// source: the exploding object itself, so it doesn't re-trigger itself.
-    public static void AffectWorld(Vector3 center, float radius, float damage, GameObject source)
+    public static void AffectWorld(Vector3 center, float radius, float damage, GameObject source, bool shove = true)
     {
         if (radius <= 0f) return;
 
         // everyone nearby feels it (victims inside the radius the most)
         Rumble.Blast(center, radius * 1.5f);
+
+        // ...and gets shoved outward, harder near the middle
+        if (shove && damage > 0f && ShovePerDamage > 0f)
+        {
+            float force = Mathf.Min(MaxShove, damage * ShovePerDamage);
+            foreach (var e in AbilityKit.Enemies(center, radius, null))
+            {
+                Vector3 d = e.transform.position - center; d.y = 0f;
+                float k = 1f - Mathf.Clamp01(d.magnitude / radius);
+                if (d.sqrMagnitude < 0.01f) d = Random.insideUnitSphere;
+                d.y = 0f;
+                AbilityKit.Knockback(e, d.normalized * force * Mathf.Lerp(0.35f, 1f, k));
+            }
+        }
 
         int n = Physics.OverlapSphereNonAlloc(center, radius, buffer, ~0, QueryTriggerInteraction.Collide);
         var handled = new HashSet<Object>();

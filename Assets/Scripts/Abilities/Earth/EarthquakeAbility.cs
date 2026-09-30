@@ -92,7 +92,7 @@ public class EarthquakeAbility : MonoBehaviour, IActiveAbility
             Rumble.Play(movement.gamepad, 0.6f, 1.0f, 1f);
 
         // The initial shockwave sets off mines/grenades and cracks crystals
-        Explosions.AffectWorld(origin, quakeRadius, damagePerTick, caster);
+        Explosions.AffectWorld(origin, quakeRadius, damagePerTick, caster, shove: false); // own ground-only knockback
         ElementReactions.OnElementArea(origin, quakeRadius, caster, Element.Earth);   // puddles churn into mud
 
         // Start damage over time

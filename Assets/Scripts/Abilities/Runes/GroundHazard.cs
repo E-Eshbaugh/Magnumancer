@@ -10,7 +10,7 @@ using UnityEngine;
 /// element's status and can set off reactions, and it reacts with other zones
 /// (fire Combusts poison, Conduct electrifies water).
 /// </summary>
-public class GroundHazard : MonoBehaviour, IElementZone, IElectrifiable
+public class GroundHazard : MonoBehaviour, IElementZone, IElectrifiable, IFreezable, IMuddable
 {
     public GameObject owner;
     public float radius = 3f;
@@ -218,6 +218,23 @@ public class GroundHazard : MonoBehaviour, IElementZone, IElectrifiable
         duration = Age + time;
         ElementReactions.MudFx(transform.position, radius);
         ElementReactions.OnZoneChanged(this);
+    }
+
+    bool surged;
+
+    /// Overgrowth Surge: water makes the growth swell once: wider, longer and nastier
+    public void Surge(float growth, float extraTime)
+    {
+        if (surged) return;
+        surged = true;
+        radius *= growth;
+        duration += extraTime;
+        damagePerSecond *= growth;
+        if (slowMultiplier < 1f) slowMultiplier = Mathf.Max(0.2f, 1f - (1f - slowMultiplier) * growth);
+        Color nature = Elements.ColorOf(Element.Nature);
+        AbilityKit.Shockwave(transform.position, radius, nature, 0.5f);
+        for (int i = 0; i < 14; i++)
+            BulletFX.Mote(BulletFX.Flavor.Spores, nature, transform.position + Vector3.up * 0.4f + Random.insideUnitSphere * radius * 0.7f, 2f);
     }
 
     /// Wildfire: vines and brambles catch fire. It burns everyone in it, the Verdant

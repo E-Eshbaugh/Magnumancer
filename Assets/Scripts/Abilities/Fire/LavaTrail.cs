@@ -43,7 +43,15 @@ public class LavaTrail : MonoBehaviour, IElementZone
     public Vector3 ZoneCenter => zone != null ? zone.bounds.center : transform.position;
     public float ZoneRadius => zone != null ? Mathf.Min(zone.bounds.extents.x, zone.bounds.extents.z) + 0.5f : 1f;
     public float DistanceTo(Vector3 p) => zone != null ? ElementZones.FlatDistance(zone, p) : ElementZones.FlatDistance(transform.position, 1f, p);
-    public void Consume() { }   // lava isn't used up by reactions
+    /// Water hit it (Steam): the lava cools into rock and stops burning
+    public void Consume()
+    {
+        ElementZones.Unregister(this);
+        Vector3 c = ZoneCenter;
+        RockDebris.Burst(c, 10, 3f, 0.3f);
+        RockDebris.Dust(c, 2f, 10);
+        Destroy(gameObject);
+    }
 
     void Update()
     {

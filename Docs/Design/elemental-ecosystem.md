@@ -1,6 +1,6 @@
 # Elemental Ecosystem
 
-> **Status (2026-09-30):** the core is **built**: the element model, all statuses, the reaction system, element sources (bullets, abilities, zones) and eight reactions (**Conduct, Steam, Shatter, Combust, Thermal Shock, Brittle, Mudslide, Wildfire**) plus **Echo**, and the per-player **combo counter**, all with feedback. Not playtested yet. See [§6 Implementation](#6-implementation-built-2026-09-30) for what exists and how it behaves. Numbers are in the [Balance Log](balance-log.md) (Passes 3 and 4).
+> **Status (2026-09-30):** the core is **built**: the element model, all statuses, the reaction system, element sources (bullets, abilities, zones) **every reaction in §2** (Conduct, Steam, Shatter, Combust, Thermal Shock, Brittle, Mudslide, Magnetize, Wildfire, Blight Bloom, Overgrowth Surge, Echo), the per-player **combo counter**, and the environment rules (lava + water, fire vs ice walls, explosions shove, a map water/lava component), all with feedback. Not playtested yet. See [§6 Implementation](#6-implementation-built-2026-09-30) for what exists and how it behaves. Numbers are in the [Balance Log](balance-log.md) (Passes 3–5).
 
 > **Core idea:** elements aren't team-only synergies. They're an **ecosystem**. Every wizard *applies* an elemental status and every wizard can *set off* reactions on statuses others applied, **no matter who applied them**. In free-for-all that means accidental combos, stolen kills and chaos. In team modes it means planned combos and team comps.
 
@@ -81,7 +81,7 @@ In TDM, reactions still hurt everyone they touch, so friendly fire from reaction
 5. **Feedback:** reaction popup word (world-space text or glow sprite), rumble and shake, then the combo counter.
 6. **Tuning pass:** keep reaction damage roughly in the 15–35 range (health is 120 per life). Reactions should feel strong but not delete people alone.
 
-Steps 1–5 are done, including Thermal Shock, Brittle, Mudslide, Wildfire, Echo and the combo counter. Magnetize, Blight Bloom and Overgrowth Surge are still to come.
+Steps 1–5 are done: every reaction in §2, Echo and the combo counter. Step 6 (tuning) needs playtests.
 
 ## 6. Implementation (built 2026-09-30)
 
@@ -123,7 +123,7 @@ Statuses (not brands, freeze counters or void marks, which keep their old rules)
 
 ### Reaction rules
 
-- **At most one reaction per hit**, checked in table order: Shatter, Conduct, Combust, Thermal Shock, Brittle, Mudslide, Wildfire, Steam.
+- **At most one reaction per hit**, checked in table order: Shatter, Conduct, Combust, Thermal Shock, Brittle, Mudslide, Magnetize, Wildfire, Blight Bloom, Overgrowth Surge, Steam.
 - The status that matched is **consumed**, and that target can't react again for **1s**.
 - **No matter who applied the status**: it's all free-for-all. Credit (damage, kills, passives, rumble) goes to **whoever triggered it**, through `DamageEvents.Deal`.
 - **You're never hurt by your own reaction** (Combust still shoves you). Everyone else, teammates included later, is fair game.
@@ -139,9 +139,12 @@ Statuses (not brands, freeze counters or void marks, which keep their old rules)
 | **Brittle** | Soaked + frost, or Chilled + water. Tops the target up to 4 freeze counters (one more Frostwarden hit freezes them). Water zones nearby, or any a frost round flies over, **freeze into slippery ice** for 4s: everyone on it, the one who froze it included, slides (momentum carries, knockback travels further). |
 | **Mudslide** | Soaked + earth, or Staggered + water. A 4s mud patch: heavy slow and **no dashing** for enemies. Seismic Judgement or a Granite Vow round over a water zone churns it to mud. |
 | **Wildfire** | Rooted + fire, or Burning + nature. Burns the vines off (it ends the root) and leaves a spreading burn zone. Brambles and thickets it touches catch fire, **burning their Verdant owner too**, and fire rounds over growth ignite it. |
+| **Magnetize** | Staggered + lightning, or Charged + earth. Four chunks of **charged rubble** tear up and land around the target for 5s. Each arcs at anyone within 2.2m (never the triggerer): a lightning hit that Charges them, and can set off Conduct on the Soaked. Rubble landing in water electrifies it. |
+| **Blight Bloom** | Poisoned + nature, or Rooted + poison. Three **spore pods** sprout around the target, swell for 1s and burst into poison puddles, which Combust if fire finds them. |
+| **Overgrowth Surge** | Soaked + nature, or Rooted + water. Vines surge up and **root** the target for 1.2s, and the triggerer heals 12. Growth zones within 6m swell once (×1.4 size and damage, +3s) and healing totems heal ×1.5 for 5s. The support combo. |
 | **Echo** | Any reaction on a Void-marked target repeats on them 0.35s later at **1.5× damage**, with a void burst. Popup: "ECHO STEAM!". |
 
-**Zones meeting zones** is one small table (`ElementReactions.ZoneRules`): fire + gas = Combust, fire + growth = Wildfire, lightning + water = electrified, frost + water = ice, earth + water = mud. The same rules apply to bullets flying over a zone, blasts landing on one (Fireball, Brand ignite, Blinkstorm, Flash Freeze, Seismic Judgement) and zones spawning or changing on top of each other. A zone that changes (water froze, brambles caught fire) reacts again as its new element, so fires spread through growth and ice spreads across connected water.
+**Zones meeting zones** is one small table (`ElementReactions.ZoneRules`): fire + gas = Combust, fire + growth = Wildfire, lightning + water = electrified, frost + water = ice, earth + water = mud, poison + growth = Blight Bloom, water + growth = Overgrowth Surge, lightning + mud = Magnetize, water + lava = a steam burst that cools the lava to rock. Each zone can react at most once every 1.5s (`ZoneCooldown`). Blight Bloom and Magnetize (which spawn new zones) fire at most once per zone so they can't feed themselves, and they, like lava + water, don't trigger from bullets passing over (so Tidebound can't erase a lava trail by shooting across it). The same rules apply to bullets flying over a zone, blasts landing on one (Fireball, Brand ignite, Blinkstorm, Flash Freeze, Seismic Judgement) and zones spawning or changing on top of each other. A zone that changes (water froze, brambles caught fire) reacts again as its new element, so fires spread through growth and ice spreads across connected water.
 
 ### Combo counter
 
@@ -159,6 +162,18 @@ Statuses (not brands, freeze counters or void marks, which keep their old rules)
 
 `PlayerMovement3D` gained named **traction** modifiers (`SetTraction` / `ClearTraction`; the slipperiest wins) and named **dash blocks** (`SetDashBlocked`, `CanDash`), used by ice and mud zones (`GroundHazard.traction`, `GroundHazard.blocksDash`). At traction 1, movement is exactly as before.
 
+### Environment
+
+- **Lava + water**: a water zone meeting a fire zone (Undertow cast on lava, lava laid through a whirlpool) makes a Steam burst and the lava cools to rock (`LavaTrail` / fire `GroundHazard` are used up).
+- **Fire melts ice walls** twice as fast (fire rounds do ×2 to `IceWallEffect`).
+- **Explosions shove everything** caught in them, the one who set it off included: 0.35 × blast damage at the center (max 14), 35% at the edge (`Explosions.ShovePerDamage`, `MaxShove`). Seismic Judgement opts out (it has its own ground-only shove).
+- **Map water and lava**: `MapElementZone` on a collider makes map terrain an element zone. Water Soaks anyone standing in it and can be electrified, frozen to ice or churned to mud (temporarily; it's never used up). Lava sets people Burning and turns Undertow to steam. **It still has to be placed in the editor** (see below).
+
+### Needs the editor
+
+- Add `MapElementZone` (Water) to Drowned Sanctum's walkable shallows and (Fire) to Cinder Crucible's `GroundLava`. The Drowned Sanctum `Water` plane is 73×65 units under the arena, so it may be background rather than something players stand in; give the component a collider that covers only where players wade.
+- Frostgrave's `FrozenLake`: to make it "always Brittle-slippery near Frostwarden effects", give it a Water `MapElementZone` with `appliesStatus` off (so it doesn't Soak). Frost that reaches it freezes it into slippery ice for 4s.
+
 ### Not built yet
 
-Magnetize, Blight Bloom, Overgrowth Surge; environment reactions (map water, lava + water, Frostgrave ice); Steam and Wildfire from the Seed of Aloria totem; an announcer voice for combos (no audio yet); a points payout for combos in Zombies (no points system yet); reaction kill-feed icons (no kill feed yet); the TDM friendly-fire toggle (there are no teams yet); a sound per reaction (no audio assets hooked up).
+Steam and Wildfire from the Seed of Aloria totem itself; an announcer voice for combos (no audio yet); a points payout for combos in Zombies (no points system yet); reaction kill-feed icons (no kill feed yet); the TDM friendly-fire toggle (there are no teams yet); a sound per reaction (no audio assets hooked up).

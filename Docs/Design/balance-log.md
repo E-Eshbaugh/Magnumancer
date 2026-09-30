@@ -127,6 +127,20 @@ Again, nothing existing was retuned. All numbers live in `ElementReactions.Table
 | Combo window | 4s between reactions | `ReactionCombo.Window` |
 | Ice feel | acceleration lerps 4→60 u/s² with traction; knockback decay ×0.3 at traction 0 | `PlayerMovement3D` Update / FixedUpdate |
 
+## Pass 5 (2026-09-30): last reactions and environment (new numbers only)
+
+| Reaction | Recipe | Numbers |
+|---|---|---|
+| Magnetize | Staggered + Lightning, or Charged + Earth | **10**; 4 charged rubble within 3m for **5s**, each arcs every **0.6s** at one target within **2.2m** for **6** |
+| Blight Bloom | Poisoned + Nature, or Rooted + Poison | **8**; 3 pods on a 1.8m ring burst after **1s** into 1.8m poison puddles (**6 dps**, 4s) |
+| Overgrowth Surge | Soaked + Nature, or Rooted + Water | root **1.2s**, triggerer heals **12**; growth within 6m ×1.4 radius/damage +3s (once each); totems heal ×1.5 for 5s |
+
+| New rule | Value | Where | Note |
+|---|---|---|---|
+| Explosions shove | 0.35 × damage, max **14**, 35% at the edge | `Explosions.ShovePerDamage`, `MaxShove` | **New behavior** from the design ("explosions shove everything"). Grenades, fireball, brand ignite, Blinkstorm and Combust now shove; mines (0 damage) don't. Set `ShovePerDamage = 0` to turn off. |
+| Fire vs ice walls | ×2 damage | `Bullet.FireVsIce` | Fire rounds only |
+| Zone reaction cooldown | 1.5s per zone | `ElementReactions.ZoneCooldown` | Stops a bullet stream over one puddle spamming |
+
 ## Open issues / to playtest
 
 - **Blinkstorm stun is 5s** (`LightningBlastDamage`: `Stun(0.2f, 5f)`). With stuns now also blocking jumps that's very punishing. Suggest **~1.5s**.
@@ -139,4 +153,6 @@ Again, nothing existing was retuned. All numbers live in `ElementReactions.Table
 - **Echo stacks hard with Thermal Shock**: a Frozen, marked target takes 34 + 51. If The Hollow + Frostwarden + Emberguard deletes people, lower `EchoScale` (1.25?) or cap echo damage.
 - Ice (Brittle) is untested for feel. If it's frustrating rather than funny, raise `traction` (0.12) or shorten ice (4s).
 - Bullets count as "flying through" a zone when they pass over it, so a Frostwarden firing across an Undertow freezes it. That's intended to make zone reactions common; check it doesn't feel random.
+- **Blinkstorm now also shoves** (explosion shove, ~12 at the center) on top of its 5s stun. Watch that stunned players don't get flung off ledges too often.
+- Magnetize rubble arcs pick one target per pulse; 4 chunks around one player can add up (up to ~40 dps if they stand in the middle). Probably fine because it's easy to walk out, but watch it.
 - Blinkstorm's 5s stun now also Charges everyone it hits. Combined with Conduct that's a lot of lockdown; another reason to shorten it.

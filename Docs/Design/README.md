@@ -24,7 +24,7 @@ A fun, chaotic, combo-forward **couch co-op brawler**: *CoD Zombies meets Gang B
 
 | Doc | What's in it | Status |
 |---|---|---|
-| [Elemental Ecosystem](elemental-ecosystem.md) | Element statuses, reactions, team roles, implementation plan | **Built**: statuses, 8 reactions + Echo, combo counter; needs playtest. Magnetize, Blight Bloom, Overgrowth Surge next |
+| [Elemental Ecosystem](elemental-ecosystem.md) | Element statuses, reactions, team roles, implementation plan | **Built**: statuses, all 11 reactions + Echo, combo counter, environment rules; needs playtest and map placement of `MapElementZone` |
 | [Items & Drops](items-and-drops.md) | Map pickups, wonder weapons, zombies economy | Designed |
 | [Modes & Match Flow](modes-and-flow.md) | Brawl campaign, sudden death, drafts, hazards, TDM, Zombies | Designed |
 | [Balance Log](balance-log.md) | What's been tuned, where the knobs live, open issues | Up to date (2026-09-30) |

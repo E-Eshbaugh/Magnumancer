@@ -26,6 +26,18 @@ public interface IElectrifiable
     void Electrify(GameObject by, float duration, float damagePerSecond);
 }
 
+/// Water zones that Brittle freezes into slippery ice
+public interface IFreezable
+{
+    void FreezeOver(GameObject by, float duration, float iceTraction);
+}
+
+/// Water zones that Mudslide churns into mud
+public interface IMuddable
+{
+    void MudOver(GameObject by, float duration, float slow);
+}
+
 public static class ElementZones
 {
     static readonly List<IElementZone> zones = new();

@@ -9,8 +9,22 @@ public class HealingZone : MonoBehaviour
 
     private Dictionary<Transform, float> healAccumulator = new();
 
+    // Overgrowth Surge: water feeds the totem, healing harder for a while
+    float surgeMultiplier = 1f, surgeUntil;
+    public static readonly List<HealingZone> Active = new();
+
+    public void Surge(float multiplier, float duration)
+    {
+        surgeMultiplier = multiplier;
+        surgeUntil = Time.time + duration;
+        Color nature = Elements.ColorOf(Element.Nature);
+        AbilityKit.Shockwave(AbilityKit.Ground(transform.position + Vector3.up), 4f, nature, 0.6f);
+        PowerFx.Sparks(transform.position + Vector3.up, nature, 30, 4f, 0.8f, 0.08f, -0.3f, Vector3.up, 120f);
+    }
+
     void OnEnable()
     {
+        Active.Add(this);
         if (beamController != null)
         {
             Debug.Log("[HealingZone] Subscribed to HealingBeamController");
@@ -24,6 +38,7 @@ public class HealingZone : MonoBehaviour
 
     void OnDisable()
     {
+        Active.Remove(this);
         if (beamController != null)
         {
             beamController.OnHealablePlayersUpdated -= HealPlayers;
@@ -35,7 +50,8 @@ public class HealingZone : MonoBehaviour
         int numTargets = players.Count;
         if (numTargets == 0) return;
 
-        float healRatePerPlayer = maxHealPerSecond / numTargets;
+        float rate = maxHealPerSecond * (Time.time < surgeUntil ? surgeMultiplier : 1f);
+        float healRatePerPlayer = rate / numTargets;
         float healThisFrame = healRatePerPlayer * Time.deltaTime;
 
         foreach (Transform player in players)

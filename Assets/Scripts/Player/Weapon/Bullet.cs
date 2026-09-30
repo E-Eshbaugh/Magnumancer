@@ -25,6 +25,7 @@ public class Bullet : MonoBehaviour
     private bool    _hasHit;
     private BulletFX _fx;
     private Element _element;      // the shooter's element (reactions, statuses)
+    const int FireVsIce = 2;
     private bool    _zoneReacted;  // a round only sets off one zone (gas, water, brambles)
 
     // internal target position computed in FixedUpdate
@@ -135,7 +136,8 @@ public class Bullet : MonoBehaviour
         var iceWall = hitCollider.GetComponent<IceWallEffect>();
         if (iceWall != null)
         {
-            iceWall.TakeDamage(damage);
+            // fire melts ice walls twice as fast
+            iceWall.TakeDamage(_element == Element.Fire ? damage * FireVsIce : damage);
         }
         else
         {
