@@ -21,8 +21,6 @@ public class Pickup : MonoBehaviour
 
     public ItemBook.Def Def { get; private set; }
     public float Born => born;
-    /// Testing showcase item: never expires, ignores the field cap, respawns when taken
-    public bool Showcase { get; set; }
 
     float born, lifetime;
     Transform model;
@@ -131,7 +129,6 @@ public class Pickup : MonoBehaviour
 
         ItemGetFx.Play(Def, word, player, model.position, model.parent.lossyScale.x);
         ItemAudio.Pickup(Def.rarity);
-        if (Showcase && DropDirector.Instance != null) DropDirector.Instance.RespawnShowcase(Def, ground);
         Destroy(gameObject);
     }
 
