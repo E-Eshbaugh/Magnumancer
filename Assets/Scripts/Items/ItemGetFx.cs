@@ -35,7 +35,7 @@ public class ItemGetFx : MonoBehaviour
         fx.size = modelScale;
         fx.rare = rare;
         fx.StartCoroutine(fx.Run(from));
-        ItemGetText.Show(word, def.color, fx.accent, player, rare ? 1.3f : 1.05f);
+        ItemGetText.Show(word, def.color, fx.accent, player, rare ? 1.15f : 1f);
     }
 
     Vector3 Above()

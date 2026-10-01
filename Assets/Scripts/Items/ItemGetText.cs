@@ -11,8 +11,8 @@ public class ItemGetText : MonoBehaviour
 {
     const float Life = 1.8f;
     const float FadeTime = 0.4f;
-    const float FontSize = 12f;
-    const float OverHead = 4.1f;
+    const float FontSize = 7f;
+    const float OverHead = 3.4f;
 
     TextMeshPro tmp;
     Color a, b;
@@ -46,7 +46,7 @@ public class ItemGetText : MonoBehaviour
         tmp.fontStyle = FontStyles.Bold | FontStyles.Italic;
         tmp.alignment = TextAlignmentOptions.Center;
         tmp.textWrappingMode = TextWrappingModes.NoWrap;
-        tmp.characterSpacing = 6f;
+        tmp.characterSpacing = 4f;
         tmp.rectTransform.sizeDelta = new Vector2(24f, 5f);
         tmp.sortingOrder = 55;
         tmp.color = a;
@@ -84,9 +84,9 @@ public class ItemGetText : MonoBehaviour
 
         // slam in oversized, overshoot small, bounce, settle
         float s;
-        if (age < 0.09f) s = Mathf.Lerp(2.8f, 0.8f, age / 0.09f);
-        else if (age < 0.2f) s = Mathf.Lerp(0.8f, 1.18f, (age - 0.09f) / 0.11f);
-        else s = Mathf.Lerp(1.18f, 1f, Mathf.Clamp01((age - 0.2f) / 0.15f));
+        if (age < 0.09f) s = Mathf.Lerp(2f, 0.85f, age / 0.09f);
+        else if (age < 0.2f) s = Mathf.Lerp(0.85f, 1.12f, (age - 0.09f) / 0.11f);
+        else s = Mathf.Lerp(1.12f, 1f, Mathf.Clamp01((age - 0.2f) / 0.15f));
         transform.localScale = Vector3.one * s * size;
 
         float wobble = 16f * Mathf.Sin(age * 30f) * Mathf.Exp(-age * 5f);
@@ -120,7 +120,7 @@ public class ItemGetText : MonoBehaviour
             Vector3 center = (src[v0] + src[v0 + 2]) * 0.5f;
             float pop = Mathf.Clamp01((age - i * 0.03f) / 0.1f);
             float popScale = pop < 1f ? Mathf.Lerp(0f, 1.35f, pop) : Mathf.Lerp(1.35f, 1f, Mathf.Clamp01((age - i * 0.03f - 0.1f) / 0.1f));
-            float wave = Mathf.Sin(age * 11f - i * 0.65f) * 0.18f;
+            float wave = Mathf.Sin(age * 11f - i * 0.65f) * 0.1f;
 
             float along = Mathf.Clamp01((center.x - min) / width);
             Color c = Color.Lerp(a, b, along);
