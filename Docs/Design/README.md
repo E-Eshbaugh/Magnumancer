@@ -25,7 +25,7 @@ A fun, chaotic, combo-forward **couch co-op brawler**: *CoD Zombies meets Gang B
 | Doc | What's in it | Status |
 |---|---|---|
 | [Elemental Ecosystem](elemental-ecosystem.md) | Element statuses, reactions, team roles, implementation plan | **Built**: statuses, all 11 reactions + Echo, combo counter, environment rules; needs playtest and map placement of `MapElementZone` |
-| [Destructible Environment](destructible-environment.md) | Destructible props and interior walls, health bars, damage states, burning/brittle props, stubs, craters (terrain dents), bullet holes | **Two passes built**; needs playtest |
+| [Destructible Environment](destructible-environment.md) | Destructible props and interior walls, damage states, burning/brittle props, stubs, craters (terrain dents), bullet holes | **Two passes built**; needs playtest |
 | [Items & Drops](items-and-drops.md) | Map pickups, wonder weapons, leader crown, zombies economy | **Built** (brawl drops, wonder weapons, crown); needs playtest and sound clips. Zombies economy designed |
 | [Modes & Match Flow](modes-and-flow.md) | Brawl campaign, sudden death, drafts, hazards, TDM, Zombies | Designed |
 | [Balance Log](balance-log.md) | What's been tuned, where the knobs live, open issues | Up to date (2026-09-30) |
@@ -44,15 +44,15 @@ A fun, chaotic, combo-forward **couch co-op brawler**: *CoD Zombies meets Gang B
 | Glow visuals | `Assets/Scripts/Player/GlowLine.cs`, `Assets/Scripts/Abilities/Runes/AbilityKit.cs` | Additive lines, rings, zaps, glow orbs, shockwaves |
 | Ground zones | `Assets/Scripts/Abilities/Runes/GroundHazard.cs` | Damage/slow circles (poison puddles, lava, ice). Carry an element (the owner's by default) and register as element zones, as do `PoisonCloudHazard` and `LavaTrail` |
 | Explosions | `Assets/Scripts/Combat/Explosions.cs` | Shootable mines/grenades, area damage, shove, props, craters |
-| Destructible environment | `Assets/Scripts/Environment/` | `Destructible`, `DestructibleSetup` (name rules, walls, Zombies navmesh), `PropHealthBar`, `Craters`, `TerrainCraters`, `ImpactMarks` |
+| Destructible environment | `Assets/Scripts/Environment/` | `Destructible`, `DestructibleSetup` (name rules, walls, Zombies navmesh), `Craters`, `TerrainCraters`, `ImpactMarks` |
 | Wizard shades | `Assets/Scripts/Player/WizardShade.cs` | Per-player color from the active rune (3 shades per wizard; hue nudge sized to never approach another wizard's hue). Duplicate wizard + same rune: the later player gets the most different free shade. Read via `WizardShade.Of(player)` / `AbilityKit.Theme`; the model wears a recolored palette texture (`WizardShade.ModelTexture`, applied in `PlayerAppearance`). Menus show the plain wizard color |
 | Wizards and runes | `Assets/Resources/Wizards/*.asset`, `Assets/Scripts/Data/RuneBook.cs` | 3 active runes, 2 passive runes, 1 weapon affinity per wizard |
 | Weapon affinity | `Assets/Scripts/Combat/WeaponSynergy.cs` | Per-wizard bonus with favoured weapon classes |
 | Weapons | `Assets/Resources/Weapons/*/*.asset` | Tiers: Initiate, Ascendant, Archon |
 | Movement, weight, knockback | `Assets/Scripts/Player/PlayerMovement3D.cs` | Weight table, `ApplyKnockback`, `AddKnockback` (stacking), `IsAirborne`, traction (ice) and dash blocks (mud) |
-| Health, lives, death | `Assets/Scripts/Player/PlayerHealthControl.cs`, `WizardDeathEffect.cs`, `WizardSpawnEffect.cs` | Fireball death, bolt spawn, HUD grey-out |
+| Health, lives, death | `Assets/Scripts/Player/PlayerHealthControl.cs`, `WizardLifeRing.cs`, `WizardDeathEffect.cs`, `WizardSpawnEffect.cs` | Fireball death, bolt spawn, HUD grey-out. **No health bars anywhere** (wizards, props, goblins). A wizard's health is the **life ring** on the ground around them: four quarters of their current life in their shade, outside the charge clock; lost health lingers in white then drains, hits flash and kick it; below 30% it goes ember-red with a heartbeat and they trail smoke; dims at full health. World-space, so it renders through the pixel camera. Shadow Clones carry a copy |
 | Match end | `Assets/Scripts/MapControl/WinManager.cs` | Last player standing, then MainMenu (no rounds yet) |
-| Player setup | `Assets/Scripts/MapControl/MultiplayerManager.cs` | Wires wizard, loadout, passives, bars |
+| Player setup | `Assets/Scripts/MapControl/MultiplayerManager.cs` | Wires wizard, loadout, passives, life rings |
 | Rumble and shake | `Assets/Scripts/Combat/Rumble.cs`, `CameraShake` | |
 | Item drops | `Assets/Scripts/Items/` | `DropDirector` (auto-added to brawl scenes), `ItemBook` table, pickups, buffs, throwables (LB), wonder weapons (take RT), `LeaderCrown` |
 

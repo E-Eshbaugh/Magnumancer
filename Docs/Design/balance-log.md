@@ -153,7 +153,7 @@ Again, nothing existing was retuned. All numbers live in `ElementReactions.Table
 
 ## Pass 7 (2026-09-30): destructible environment (new numbers only)
 
-See [Destructible Environment](destructible-environment.md). Knobs: `DestructibleSetup.Rules` (per-prop toughness, explosive barrels), `DestructibleSetup.BaseHealth` (20 + 35 × size) and `MaxHealth` (400), `Destructible.ElementMultiplier`, `PropHealthBar.VisibleFor` (2.5s), `Craters.MinBlastDamage` (26) and `MaxScars` (40).
+See [Destructible Environment](destructible-environment.md). Knobs: `DestructibleSetup.Rules` (per-prop toughness, explosive barrels), `DestructibleSetup.BaseHealth` (20 + 35 × size) and `MaxHealth` (400), `Destructible.ElementMultiplier`, `Craters.MinBlastDamage` (26) and `MaxScars` (40).
 
 | Thing | Value |
 |---|---|

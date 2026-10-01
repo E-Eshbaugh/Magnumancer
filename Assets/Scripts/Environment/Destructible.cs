@@ -9,9 +9,8 @@ public enum PropMaterial { Stone, Wood, Plant, Crystal, Ice, Metal, Bone }
 
 /// <summary>
 /// An environment object that can be shot and blown apart: crates, pillars, statues,
-/// mushrooms, trees, interior walls. Bullets and explosions damage it; a health bar
-/// appears over it while it's being hit and fades when left alone. It darkens as it
-/// weakens and cracks at half health. At zero it crumbles (or, if explosive, blows up),
+/// mushrooms, trees, interior walls. Bullets and explosions damage it (no health bar:
+/// its state shows on the prop itself). It darkens as it weakens and cracks at half health. At zero it crumbles (or, if explosive, blows up),
 /// so cover wears away as the match goes on. Walls and big props first break down to a
 /// low stub (still half cover) before they go completely.
 ///
@@ -60,7 +59,7 @@ public class Destructible : MonoBehaviour, IElementZone
     public float HealthFraction => maxHealth > 0f ? Mathf.Clamp01(Health / maxHealth) : 0f;
     public float LastHitTime { get; private set; } = -999f;
 
-    /// The prop's world bounds (for health bar placement, debris, explosions)
+    /// The prop's world bounds (for debris and explosions)
     public Bounds Bounds { get; private set; }
 
     public bool Flammable => material == PropMaterial.Wood || material == PropMaterial.Plant;
@@ -159,7 +158,6 @@ public class Destructible : MonoBehaviour, IElementZone
         if (IsBrittle && element != Element.Frost) mult *= BrittleMultiplier;
         Health -= amount * mult;
         LastHitTime = Time.time;
-        PropHealthBar.Show(this);
 
         // elements leave their mark on the prop
         if (element == Element.Fire && Flammable) Ignite(attacker);
@@ -394,7 +392,6 @@ public class Destructible : MonoBehaviour, IElementZone
         Physics.SyncTransforms();
         restPosition = transform.position;
         Bounds = ComputeBounds();
-        PropHealthBar.Show(this);
         UpdateLook();
     }
 
@@ -442,7 +439,6 @@ public class Destructible : MonoBehaviour, IElementZone
         if (explodeDamage > 0f) Explode(attacker, center, ground);
 
         Destroyed?.Invoke(this, attacker);
-        PropHealthBar.Hide(this);
         if (batched) gameObject.SetActive(false);   // can't slump a batched mesh: gone under the debris
         else StartCoroutine(Sink());
     }
