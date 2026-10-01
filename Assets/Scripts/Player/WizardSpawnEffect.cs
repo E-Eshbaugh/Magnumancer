@@ -33,7 +33,7 @@ public class WizardSpawnEffect : MonoBehaviour
     readonly List<Renderer> hidden = new();
     Transform hiddenTarget;
 
-    // Wizards currently invisible, waiting for their bolt (health bars hide meanwhile)
+    // Wizards currently invisible, waiting for their bolt (life rings and crowns hide meanwhile)
     static readonly HashSet<Transform> arriving = new();
     public static bool IsArriving(Transform player) => player != null && arriving.Contains(player);
 

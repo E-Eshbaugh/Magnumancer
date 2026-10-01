@@ -1,6 +1,6 @@
 # Destructible Environment
 
-> **Status (2026-09-30):** two passes **built**: destructible props with health bars, damage states, burning and brittle props, crumble/explode/stub deaths, destructible interior walls, craters (real dents on Terrain maps), cracks, bullet holes and scorch marks, and Zombies nav that opens up as props break. Not playtested yet.
+> **Status (2026-09-30):** two passes **built**: destructible props with damage states, burning and brittle props, crumble/explode/stub deaths, destructible interior walls, craters (real dents on Terrain maps), cracks, bullet holes and scorch marks, and Zombies nav that opens up as props break. Not playtested yet.
 
 ## Goal
 
@@ -11,7 +11,7 @@ The arena should visibly take a beating. Cover wears away as the match goes on, 
 Matches are a **tour**: every match is a different map, and the map **fully resets** each match (Gang Beasts style; see [Modes & Match Flow](modes-and-flow.md)). So destruction only has to last one match, and wearing a map down is the point: a forest fire or a flattened dungeon is a one-match spectacle, not permanent damage.
 
 - **Pacing target:** cover should mostly survive the opening, be about half gone by the middle of a 5–10 minute match, and leave the endgame open and frantic. Tune with per-rule toughness in `DestructibleSetup.Rules`.
-- **Everything resets on map load:** props, stubs, craters, marks, burning, terrain dents (each match digs a fresh copy of the terrain, and the previous match's copy is freed), health bars, element zones, Zombies points and teams.
+- **Everything resets on map load:** props, stubs, craters, marks, burning, terrain dents (each match digs a fresh copy of the terrain, and the previous match's copy is freed), element zones, Zombies points and teams.
 
 ### Adding a map to the tour
 
@@ -33,7 +33,7 @@ Destruction sets itself up from names, so new maps mostly just work if they foll
 - **Damage:** every bullet that hits a prop (with the shooter's element) and every explosion (`Explosions.AffectWorld`, with falloff and a short delay that ripples outward).
 - **Element weaknesses:** fire ×2 against wood, plants and ice; poison ×1.5 against plants; earth ×1.5 against stone and crystal; lightning ×1.5 against metal; void ×1.5 against bone; frost ×0.5 against ice (`Destructible.ElementMultiplier`). Weak hits spray more chips.
 - **Hit feedback:** chips fly off where it was hit, and the prop jolts (skipped on static-batched meshes, which can't move).
-- **Health bar** (`PropHealthBar.cs`): the same look as the wizards' bars (frame, trailing chip that drains, flash, jolt, a pulse below 30%) in a neutral bone color. It **only appears while the prop is being hit** and fades out after **2.5s** without damage. Its width scales with the prop's size. It's drawn under the wizard bars.
+- **No health bar** (removed 2026-10-01: screen-space bars landed in the wrong spot under the pixel camera, and they cluttered the arena). A prop's health reads from the prop itself: it darkens, cracks at half, and drops to a stub.
 - **Death:**
   - **Crumble:** chunks tinted to the prop (stone grey, wood brown, Fly Agaric red...) burst out, a dust cloud rises, crystal and ice shatter with a flash, plants shed spores, then the prop slumps into the ground and is gone. Colliders turn off immediately, so bullets and players pass through.
   - **Explode** (barrels, kegs): real area damage credited to whoever broke it, the explosion shove, mines, grenades and other barrels set off (chains), gas clouds and brambles ignited (Combust / Wildfire), and a crater.

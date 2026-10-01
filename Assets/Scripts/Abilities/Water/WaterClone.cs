@@ -4,8 +4,8 @@ using UnityEngine;
 
 /// <summary>
 /// Shadow Clone: the wizard bursts into a water bomb and two of them come flying out of
-/// the mist in opposite directions, the real one and a clone (same look, gun and health
-/// bar) that copies their stick mirrored. The clone pops in a splash when time runs out.
+/// the mist in opposite directions, the real one and a clone (same look, gun and life
+/// ring) that copies their stick mirrored. The clone pops in a splash when time runs out.
 /// </summary>
 public class WaterClone : MonoBehaviour, IActiveAbility
 {
@@ -54,7 +54,7 @@ public class WaterClone : MonoBehaviour, IActiveAbility
         }
 
         clone.AddComponent<WaterCloneDecoy>().Setup(caster, cloneDuration, tint);
-        WizardHealthBar.AddDecoy(caster.GetComponent<PlayerHealthControl>(), clone.transform);
+        WizardLifeRing.AddDecoy(caster.GetComponent<PlayerHealthControl>(), clone.transform);
 
         // both fly out of the splash, opposite ways, so nobody knows which one is real
         var casterBody = caster.GetComponent<CharacterController>();

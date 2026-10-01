@@ -98,7 +98,7 @@ public class MultiplayerManager : MonoBehaviour
                 health.SetLives(Mathf.Max(1, wizard.heartCount));
                 WizardPassive.AddTo(health.gameObject, wizard, passiveRune);
             }
-            if (health != null) WizardHealthBar.AddTo(health, wizard);
+            if (health != null) WizardLifeRing.AddTo(health);
 
             // Where they start is where they come back to after losing a life
             var spawnRoot = health != null ? health.transform : go.transform;
