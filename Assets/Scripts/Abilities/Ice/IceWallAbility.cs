@@ -5,9 +5,10 @@ public class IceWallAbility : MonoBehaviour, IActiveAbility
 {
     [Header("Wall Settings")]
     [SerializeField] GameObject iceWallEffectPrefab;
-    [SerializeField] float forwardDistance = 1.2f;
-    [Tooltip("Walls never time out — they stand until shot down. Past this many, the oldest shatters.")]
-    [SerializeField] int maxWalls = 3;
+    [Tooltip("Far enough ahead that the caster isn't standing in the (thick) wall")]
+    [SerializeField] float forwardDistance = 2.2f;
+    [Tooltip("Walls can't be broken and melt on their own. Past this many, the oldest melts away early.")]
+    [SerializeField] int maxWalls = 2;
 
     private readonly System.Collections.Generic.List<IceWallEffect> walls = new();
 
@@ -29,7 +30,7 @@ public class IceWallAbility : MonoBehaviour, IActiveAbility
 
         Quaternion rotation = Quaternion.LookRotation(-forward);
 
-        // Walls last until they're broken; only the oldest goes if there are too many
+        // Too many up (cooldown cuts): the oldest melts away early
         walls.RemoveAll(w => w == null);
         while (walls.Count >= Mathf.Max(1, maxWalls))
         {

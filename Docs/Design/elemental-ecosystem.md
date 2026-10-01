@@ -165,7 +165,7 @@ Statuses (not brands, freeze counters or void marks, which keep their old rules)
 ### Environment
 
 - **Lava + water**: a water zone meeting a fire zone (Undertow cast on lava, lava laid through a whirlpool) makes a Steam burst and the lava cools to rock (`LavaTrail` / fire `GroundHazard` are used up).
-- **Fire melts ice walls** twice as fast (fire rounds do ×2 to `IceWallEffect`).
+- **Fire melts ice walls** faster. Ice walls (2026-10-01) can't be broken: they erupt from the floor (camera shake, rumble, frost ring, shoving anyone in the footprint out), stand **9s** while slumping to 40% height, then sink away. Other hits only jolt them; each fire round takes `StructureDamage × 0.01`s off the melt (`IceWallEffect.fireMeltPerDamage`). Size is ×1.8 wide, ×2 tall, ×1.3 thick vs. the old wall (`sizeScale`); max 2 up per caster.
 - **Explosions shove everything** caught in them, the one who set it off included: 0.35 × blast damage at the center (max 14), 35% at the edge (`Explosions.ShovePerDamage`, `MaxShove`). Seismic Judgement opts out (it has its own ground-only shove).
 - **Map water and lava**: `MapElementZone` on a collider makes map terrain an element zone. Water Soaks anyone standing in it and can be electrified, frozen to ice or churned to mud (temporarily; it's never used up). Lava sets people Burning and turns Undertow to steam. **It still has to be placed in the editor** (see below).
 
