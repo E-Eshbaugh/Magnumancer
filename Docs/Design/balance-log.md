@@ -208,6 +208,18 @@ All new; see [Items & Drops](items-and-drops.md) for what each item does.
 | Ember Minigun | 150 rounds, 18/s, 6 dmg, 0.5s spin-up, 75% move speed; lava 12 dps 3.5s | `EmberMinigun` statics |
 | Crown bonus | ability ready + magazine refill | `LeaderCrown.CrownBreaker` |
 
+## Pass 11 (2026-10-01): much higher drop rate
+
+Drops were too sparse for 5-10 minute 4-player matches (~15 per match).
+
+| Knob | Old | New | Where |
+|---|---|---|---|
+| First drop | 20s | **6s** | `DropDirector.firstDrop` |
+| Interval, 2 players | 45s | **14s** | `DropDirector.intervalTwoPlayers` |
+| Interval, 4 players | 30s | **8s** (~55 drops in 7.5 min) | `DropDirector.intervalFourPlayers` |
+| Items on the field | 2 | **4** | `DropDirector.maxOnField` |
+| Pickup lifetime | 30s | **20s** | `DropDirector.pickupLifetime` |
+
 ## Open issues / to playtest
 
 - **Blinkstorm stun is 5s** (`LightningBlastDamage`: `Stun(0.2f, 5f)`). With stuns now also blocking jumps that's very punishing. Suggest **~1.5s**.
@@ -229,6 +241,6 @@ All new; see [Items & Drops](items-and-drops.md) for what each item does.
 - **Destructible interior walls** (BlackOsuary's dungeon especially): check the boundary detection keeps the outer walls up on every map, and that maps don't turn into open fields too early (walls are ×2.2 toughness and leave stubs).
 - Explosive barrels (Drowned Sanctum has 7) might chain-kill. That's intended chaos, but watch the damage.
 - Blinkstorm's 5s stun now also Charges everyone it hits. Combined with Conduct that's a lot of lockdown; another reason to shorten it.
-- **Item drops are unplaytested.** Watch: whether 30-45s feels too sparse or too busy; whether drop spots land somewhere reachable on every map (add `DropPoint` objects where the auto-pick misbehaves); Thunder Maul's launch (85) on small maps; Frost Cannon (2.2s freeze on everyone in a wide cone + Shatter) possibly being oppressive; the Ember Minigun's 150 branding rounds; Overdrive on miniguns and sniper rifles (no reloads).
+- **Item drops are unplaytested.** Watch: whether 8-14s feels right (Pass 11); with ~55 drops a match, wonder weapons (~10%, ~5 a match) and Heart Relics (~2% after 3 min, ~1 a match) may need lower weights; whether drop spots land somewhere reachable on every map (add `DropPoint` objects where the auto-pick misbehaves); Thunder Maul's launch (85) on small maps; Frost Cannon (2.2s freeze on everyone in a wide cone + Shatter) possibly being oppressive; the Ember Minigun's 150 branding rounds; Overdrive on miniguns and sniper rifles (no reloads).
 - Leader crown counts any life taken, including from lingering hazards credited to the last attacker. Check it reads right.
 - Drop sounds: fill the "Item drops" slots on `Resources/ReactionSounds.asset`.

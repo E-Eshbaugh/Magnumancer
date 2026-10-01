@@ -4,7 +4,7 @@ using UnityEngine.InputSystem;
 using UnityEngine.SceneManagement;
 
 /// <summary>
-/// Drops items into brawl matches. Every 30-45s (sooner with more players) a beam marks a
+/// Drops items into brawl matches. Every 8-14s (sooner with more players) a beam marks a
 /// spot near the fight, on screen, and a couple of seconds later an item lands there, so
 /// everyone converges on it. Also runs the leader crown.
 ///
@@ -20,18 +20,18 @@ public class DropDirector : MonoBehaviour
     public static bool Enabled = true;
 
     [Header("Timing")]
-    public float firstDrop = 20f;
+    public float firstDrop = 6f;
     [Tooltip("Seconds between drops with 2 players / with 4 players (±jitter)")]
-    public float intervalTwoPlayers = 45f;
-    public float intervalFourPlayers = 30f;
+    public float intervalTwoPlayers = 14f;
+    public float intervalFourPlayers = 8f;
     [Range(0f, 0.5f)] public float jitter = 0.12f;
     [Tooltip("Beam warning before the item lands")]
     public float telegraph = 2f;
 
     [Header("Field")]
-    public int maxOnField = 2;
+    public int maxOnField = 4;
     [Tooltip("An untouched pickup disappears after this long")]
-    public float pickupLifetime = 30f;
+    public float pickupLifetime = 20f;
     [Tooltip("Drops land at least this far from every player (when there's room)")]
     public float minPlayerDistance = 2.5f;
     [Tooltip("...and at least this far from other drops")]

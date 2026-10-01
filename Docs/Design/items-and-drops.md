@@ -6,7 +6,7 @@
 
 ## Spawning
 
-- A drop lands every **30–45s** (scaling with player count) at a map spawn point, **telegraphed ~2s ahead** by a beam of light from the sky. It reuses the spawn-bolt look in white or gold, with an announcer sting.
+- A drop lands every **8–14s** (scaling with player count) at a map spawn point, **telegraphed ~2s ahead** by a beam of light from the sky. It reuses the spawn-bolt look in white or gold, with an announcer sting.
 - Pick up by walking over it. Its glow and icon are readable from anywhere on screen.
 - Rarity weights per mode; the common/rare split is tuned so a rare drop is an event.
 - Map-specific pools are possible later (Frostgrave drops more frost items, etc.).
@@ -59,9 +59,9 @@
 
 ### How it plays
 
-- **First drop at 20s**, then every **45s with 2 players → 30s with 4** (±12%). A beam marks the spot for **2s** (white, or gold plus a "RARE DROP!" call for rare drops), then a bolt strikes and the item appears.
+- **First drop at 6s**, then every **14s with 2 players → 8s with 4** (±12%): about 55 drops in a 7.5-minute 4-player match. A beam marks the spot for **2s** (white, or gold plus a "RARE DROP!" call for rare drops), then a bolt strikes and the item appears.
 - Spots are picked **each time around the living players**: open, flat floor near the middle of the fight, on screen, at least 2.5m from everyone and 4m from other drops. (Some maps scroll, so fixed points could be off camera.) A map can override this with empty objects named `DropPoint...`.
-- **At most 2 items on the field**: a new drop removes the oldest. An untouched item blinks after 25s and vanishes at 30s.
+- **At most 4 items on the field**: a new drop removes the oldest. An untouched item blinks after 15s and vanishes at 20s.
 - Pickups: a glowing model per item (built from primitives) bobbing over a dark shadow, a ring in its color (an extra gold ring if rare), a small light and its **name floating above it**. Walk over it to take it; its name (or what it did, e.g. "+40", "FROST ROUNDS!") pops over you.
 - Drops stop once the match is down to its last player (solo testing keeps them coming).
 - **Controls:** **LB throws** your held throwable (a small copy floats over your shoulder). A **wonder weapon takes RT** and replaces your gun until its ammo runs out or you lose a life. Your own gun keeps its magazine and comes back, and its LT ability waits meanwhile.
@@ -86,7 +86,7 @@
 | Ember Minigun | 150 rounds. Hold RT to spin up (0.5s), 18 rounds/s of 6-dmg **fire rounds that brand**, you move at 75% while holding it. When empty it **melts down** into a lava pool at your feet (it can't hurt you) |
 | Heart Relic | +1 life. Only drops after the match has run **3 minutes** |
 
-Drop weights (out of ~92): Rune Shard 14, Healing Draught 14, Hex 6, Goblin Bomb 6, Portal 5, Overdrive 9, Elemental Rounds 9, Blink 8, Aegis 9, each wonder weapon 1.8 (~10% that a drop is a wonder weapon), Heart Relic 2. The same item is rerolled once if it would land twice in a row.
+Drop weights (out of ~92): Rune Shard 14, Healing Draught 14, Hex 6, Goblin Bomb 6, Portal 5, Overdrive 9, Elemental Rounds 9, Blink 8, Aegis 9, each wonder weapon 1.8 (~10% that a drop is a wonder weapon: about 5 per 4-player match), Heart Relic 2. The same item is rerolled once if it would land twice in a row.
 
 ### Leader crown (built)
 
