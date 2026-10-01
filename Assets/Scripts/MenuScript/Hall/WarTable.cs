@@ -55,9 +55,11 @@ public class WarTable : MonoBehaviour
         var root = new GameObject($"Island {e.displayName}").transform;
         root.SetParent(surface, false);
         // tablePos is in screen-aligned table units: x = screen right, y = screen up (along the floor)
-        Vector3 spot = HallCamera.GroundRight * e.tablePos.x + HallCamera.GroundUp * e.tablePos.y;
+        // the land is already turned to the screen: its local x is screen-right, z screen-up
+        Vector3 spot = new Vector3(e.tablePos.x, 0f, e.tablePos.y);
         isl.home = spot + Vector3.up * (floatHeight + e.height);
         root.localPosition = isl.home;
+        root.rotation = Quaternion.identity;   // the arena faces the way it does in a match
         isl.root = root;
 
         if (e.miniature != null)
@@ -73,7 +75,7 @@ public class WarTable : MonoBehaviour
         }
 
         // the light that holds it up, and its mark on the land
-        isl.beam = GlowLine.Make(root, "Beam", 2, 0.5f, HallFx.RingMaterial());
+        isl.beam = GlowLine.Make(root, "Beam", 2, 0.07f, HallFx.RingMaterial());
         isl.beam.useWorldSpace = false;
         isl.mark = HallFx.RuneRing(surface, $"Mark {e.displayName}", islandSize * 0.42f, 0.03f, 6);
         isl.mark.transform.localPosition = spot + Vector3.up * 0.02f;
@@ -88,7 +90,7 @@ public class WarTable : MonoBehaviour
     public Vector3 Top(int i)
     {
         var isl = islands[Mathf.Clamp(i, 0, islands.Count - 1)];
-        return isl.root.position + Vector3.up * 0.35f;
+        return isl.root.position + Vector3.up * (islandSize * 0.6f);
     }
 
     public void SetFocus(bool on)
@@ -166,10 +168,10 @@ public class WarTable : MonoBehaviour
             isl.beam.SetPosition(1, Vector3.down * islandSize * 0.25f);
             float a = Focused ? (sel ? 0.55f + 0.15f * Mathf.Sin(t * 5f) : 0.1f) : 0.12f + 0.05f * Mathf.Sin(t + i);
             GlowLine.SetColor(isl.beam, isl.entry.glow, a);
-            isl.beam.widthMultiplier = sel ? 1.2f : 0.6f;
+            isl.beam.widthMultiplier = sel ? 1.8f : 1f;
             GlowLine.SetColor(isl.mark, isl.entry.glow, sel ? 0.9f : Focused ? 0.25f : 0.35f);
             isl.mark.transform.Rotate(Vector3.up, (sel ? 60f : 10f) * Time.deltaTime, Space.World);
-            isl.light.intensity = sel ? 2.2f : Focused ? 0.2f : 0.5f;
+            isl.light.intensity = sel ? 1.0f : Focused ? 0.15f : 0.35f;
         }
     }
 

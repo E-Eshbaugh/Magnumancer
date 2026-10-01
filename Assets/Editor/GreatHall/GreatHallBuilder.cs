@@ -57,8 +57,9 @@ public static class GreatHallBuilder
         var hallCam = camGo.AddComponent<HallCamera>();
         hallCam.hallFocus = new Vector3(1.9f, 1.2f, 1.9f);
         hallCam.hallSize = 8.2f;
+        hallCam.pixelHeight = 180;   // same pixel size as the arenas
         hallCam.tableFocus = new Vector3(0f, TableHeight + 1.25f, 0f) + HallCamera.GroundUp * 0.15f;
-        hallCam.tableSize = 3.9f;
+        hallCam.tableSize = 4.3f;
         hallCam.transform.rotation = Quaternion.Euler(hallCam.viewEuler);
         hallCam.transform.position = hallCam.hallFocus - hallCam.transform.forward * hallCam.distance;
         cam.orthographicSize = hallCam.hallSize;
@@ -367,12 +368,14 @@ public static class GreatHallBuilder
         var g = Group(hall, "AetherCore");
         var c = new Vector3(Half - 2.6f, 0f, Half - 2.6f);
         Piece("floor_tile_small_decorated", g, c, 45f, 1.4f);
-        var crystal = Model("Assets/Art/3DAssets/fbxFiles/Crystal_002.fbx", g, c + Vector3.up * 0.6f, 20f, 1f);
-        FitHeight(crystal, 5.2f);
+        // the core itself: a big orb-diamond turning slowly over its plinth
+        var crystal = Model("Assets/Art/3DAssets/fbxFiles/Diamond_001.fbx", g, c, 0f, 1f);
+        FitHeight(crystal, 1.9f);
         if (crystal != null)
         {
-            crystal.transform.position = c + Vector3.up * 0.6f;
-            Glow(crystal, new Color(0.35f, 0.85f, 1f), 1.8f);
+            crystal.transform.position = c + Vector3.up * 1.9f;
+            Glow(crystal, new Color(0.25f, 0.8f, 1f), 0.9f);
+            var spin = crystal.AddComponent<HallBob>(); spin.amplitude = 0.18f; spin.speed = 0.6f; spin.spin = 22f;
         }
         foreach (var (pos, yaw, gem) in new[] {
                      (c + new Vector3(-2.0f, 3.4f, 0.6f), 0f, "Gem_001"),
@@ -394,12 +397,6 @@ public static class GreatHallBuilder
         var pulse = core.gameObject.AddComponent<LightSoftPulse>();
         pulse.minIntensity = 3.5f; pulse.maxIntensity = 6f; pulse.pulseSpeed = 0.35f;
 
-        // sentinels: dormant mechs against the walls either side of the core
-        foreach (var p in new[] { new Vector3(Half - 1.6f, 0f, Half - 6.6f), new Vector3(Half - 6.6f, 0f, Half - 1.6f) })
-        {
-            var mech = Model("Assets/Art/3DAssets/MechaTrooper/Package/MechaTrooper.obj", g, p, 225f, 1f);
-            FitHeight(mech, 3.6f);
-        }
     }
 
     static void Glow(GameObject go, Color color, float intensity)
@@ -413,12 +410,14 @@ public static class GreatHallBuilder
             {
                 m = src != null ? new Material(src) : new Material(Shader.Find("Universal Render Pipeline/Lit"));
                 if (m.shader == null || !m.shader.name.Contains("Universal")) m.shader = Shader.Find("Universal Render Pipeline/Lit");
-                m.SetColor("_BaseColor", Color.Lerp(color, Color.white, 0.2f));
-                m.EnableKeyword("_EMISSION");
-                m.SetColor("_EmissionColor", color * intensity);
-                m.globalIlluminationFlags = MaterialGlobalIlluminationFlags.RealtimeEmissive;
                 AssetDatabase.CreateAsset(m, path);
             }
+            m.SetColor("_BaseColor", Color.Lerp(color, Color.black, 0.4f));   // darker body so the facets shade
+            m.SetFloat("_Smoothness", 0.75f);
+            m.EnableKeyword("_EMISSION");
+            m.SetColor("_EmissionColor", color * intensity);
+            m.globalIlluminationFlags = MaterialGlobalIlluminationFlags.RealtimeEmissive;
+            EditorUtility.SetDirty(m);
             r.sharedMaterial = m;
             r.shadowCastingMode = ShadowCastingMode.Off;
         }
@@ -489,7 +488,7 @@ public static class GreatHallBuilder
         // the land on top
         var land = new GameObject("Land");
         land.transform.SetParent(g.transform, false);
-        land.transform.localPosition = Vector3.up * TableHeight;
+        land.transform.localPosition = Vector3.up * (TableHeight + 0.04f);   // clear of the table top (no z-fighting)
         land.transform.localRotation = Quaternion.LookRotation(U);   // local x = screen right, local z = screen up
         var mesh = LandMesh(out var tex, out var emit);
         land.AddComponent<MeshFilter>().sharedMesh = mesh;
@@ -788,6 +787,8 @@ public static class GreatHallBuilder
             roll.localPosition = bannerPos + Vector3.up * 3.73f;
             roll.localRotation = Quaternion.Euler(0f, bannerYaw, 0f);
             var banner = Piece($"banner_patternA_{colors[i]}", roll, new Vector3(0f, -3.73f, 0f), 0f);
+            // it rolls up and down at runtime: static batching would freeze it
+            if (banner != null) GameObjectUtility.SetStaticEditorFlags(banner, 0);
             st.banner = roll;
             result[i] = st;
         }

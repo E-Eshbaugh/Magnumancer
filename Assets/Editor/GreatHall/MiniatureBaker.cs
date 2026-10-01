@@ -54,6 +54,10 @@ public static class MiniatureBaker
         AssetDatabase.Refresh();
     }
 
+    /// Tallest geometry kept, as a fraction of the square's side
+    public static float MaxHeightFraction = 0.28f;
+    static float ClipTop = float.MaxValue;
+
     public static string PrefabPath(string scene) => $"{Folder}/{scene}/Mini_{scene}.prefab";
 
     public static void Bake(Crop crop)
@@ -80,6 +84,9 @@ public static class MiniatureBaker
         var center = new Vector3(focus.x + crop.offset.x, groundY, focus.z + crop.offset.y);
         float half = crop.size * 0.5f;
         var rect = new Rect(center.x - half, center.z - half, crop.size, crop.size);
+
+        // nothing taller than this stands on the island (keeps neighbours on the table clear)
+        ClipTop = groundY + crop.size * MaxHeightFraction;
 
         // collect geometry by material
         var groups = new Dictionary<Material, MeshBuild>();
@@ -248,6 +255,7 @@ public static class MiniatureBaker
             poly = Clip(poly, v => r.xMax - v.p.x);
             poly = Clip(poly, v => v.p.z - r.yMin);
             poly = Clip(poly, v => r.yMax - v.p.z);
+            poly = Clip(poly, v => ClipTop - v.p.y);   // a flat lid: tall trees/spires are sliced off
             if (poly.Count < 3) return;
             int start = p.Count;
             foreach (var v in poly)

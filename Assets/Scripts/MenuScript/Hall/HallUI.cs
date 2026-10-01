@@ -110,14 +110,78 @@ public static class HallUI
     public static float Set(Text t, string text, float x, float y, float width)
     {
         float s = t.rectTransform.localScale.x;
+        bool empty = string.IsNullOrEmpty(text);
+        // Unity's layout pass misjudges wrapped bitmap-font text (it measured 1 line where
+        // 3 were drawn), so wrap here with the font's real glyph advances and hand the
+        // Text explicit line breaks: what's measured is exactly what's drawn
+        int lines = 1;
+        if (!empty)
+        {
+            if (t.horizontalOverflow == HorizontalWrapMode.Wrap) text = Wrap(t.font, text, width / s, out lines);
+            else lines = text.Split('\n').Length;
+        }
         t.text = text;
-        // measure a little narrower than it draws: the layout pass and the renderer can
-        // disagree by a glyph at the wrap boundary, and an extra line beats an overlap
-        Place(t.rectTransform, x, y, width / s - 6f, 10f);
-        float h = string.IsNullOrEmpty(text) ? 0f : t.preferredHeight;
-        t.rectTransform.sizeDelta = new Vector2(width / s, h);
-        t.gameObject.SetActive(!string.IsNullOrEmpty(text));
+        float h = empty ? 0f : LineHeight(t) * lines;
+        // generous rect so Unity never re-wraps what we already wrapped
+        bool centered = t.alignment == TextAnchor.UpperCenter || t.alignment == TextAnchor.MiddleCenter || t.alignment == TextAnchor.LowerCenter;
+        Place(t.rectTransform, centered ? x - 20f * s : x, y, width / s + 40f, h);
+        t.gameObject.SetActive(!empty);
         return h * s;
+    }
+
+    public static float LineHeight(Text t) => Mathf.Ceil((t.font != null ? t.font.lineHeight : 9) * t.lineSpacing);
+
+    /// Width of `s` in font pixels, ignoring rich-text tags
+    public static float Measure(Font font, string s)
+    {
+        float w = 0f;
+        bool tag = false;
+        foreach (char c in s)
+        {
+            if (c == '<') { tag = true; continue; }
+            if (tag) { if (c == '>') tag = false; continue; }
+            w += Advance(font, c);
+        }
+        return w;
+    }
+
+    static float Advance(Font font, char c)
+    {
+        if (font != null && font.GetCharacterInfo(c, out var info)) return info.advance;
+        if (font != null && font.GetCharacterInfo(char.ToUpperInvariant(c), out info)) return info.advance;
+        return c == ' ' ? 3f : 6f;
+    }
+
+    /// Word-wraps `text` to `width` font pixels with explicit newlines (tags kept intact)
+    public static string Wrap(Font font, string text, float width, out int lines)
+    {
+        var sb = new System.Text.StringBuilder(text.Length + 8);
+        float space = Advance(font, ' ');
+        lines = 0;
+        foreach (var para in text.Split('\n'))
+        {
+            if (lines > 0) sb.Append('\n');
+            lines++;
+            float x = 0f;
+            bool first = true;
+            foreach (var word in para.Split(' '))
+            {
+                if (word.Length == 0) continue;
+                float w = Measure(font, word);
+                if (!first && x + space + w > width)
+                {
+                    sb.Append('\n');
+                    lines++;
+                    x = 0f;
+                    first = true;
+                }
+                if (!first) { sb.Append(' '); x += space; }
+                sb.Append(word);
+                x += w;
+                first = false;
+            }
+        }
+        return sb.ToString();
     }
 
     public static Image Icon(Transform parent, string name, Sprite sprite, float px)
@@ -184,7 +248,7 @@ public static class HallUI
                     Place(icon.rectTransform, x, 0f, 30f, 30f);
                     x += 34f;
                 }
-                float w = text.preferredWidth * s;
+                float w = Measure(text.font, text.text) * s;
                 Place(text.rectTransform, x, 6f, w / s + 2f, 12f);
                 x += w + gap;
             }

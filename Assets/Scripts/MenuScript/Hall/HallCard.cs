@@ -85,7 +85,7 @@ public class HallCard
         var t = T(font, scale, color);
         t.horizontalOverflow = HorizontalWrapMode.Overflow;
         float h = HallUI.Set(t, text, x, y, 400f);
-        width = t.preferredWidth * scale;
+        width = HallUI.Measure(t.font, t.text) * scale;
         return h;
     }
 
@@ -327,8 +327,8 @@ public class HallCard
         Word("READY!", Pad, y, cat.titleFont, 4, theme, out _);
         var runes = RuneBook.For(st.Wizard);
         if (runes != null)
-            Line($"{runes.actives[st.ActiveRune].name}  /  {runes.passives[st.PassiveRune].name}", y + 40f, color: HallUI.Dim);
-        y += 66f;
+            Line($"{runes.actives[st.ActiveRune].name}  /  {runes.passives[st.PassiveRune].name}", y + 48f, color: HallUI.Dim);
+        y += 76f;
 
         float x = Pad;
         bool any = false;
