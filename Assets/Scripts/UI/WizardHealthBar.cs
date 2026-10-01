@@ -59,7 +59,7 @@ public class WizardHealthBar : MonoBehaviour
         var go = new GameObject("WizardHealthBars");
         canvas = go.AddComponent<Canvas>();
         canvas.renderMode = RenderMode.ScreenSpaceOverlay;
-        canvas.sortingOrder = -50;
+        canvas.sortingOrder = 2;   // above the maps' full-screen Pixelation image (order 0)
         var scaler = go.AddComponent<CanvasScaler>();
         scaler.uiScaleMode = CanvasScaler.ScaleMode.ScaleWithScreenSize;
         scaler.referenceResolution = new Vector2(1920f, 1080f);

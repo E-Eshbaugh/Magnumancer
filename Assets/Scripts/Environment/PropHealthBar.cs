@@ -71,7 +71,7 @@ public class PropHealthBar : MonoBehaviour
         var go = new GameObject("PropHealthBars");
         canvas = go.AddComponent<UnityEngine.Canvas>();
         canvas.renderMode = RenderMode.ScreenSpaceOverlay;
-        canvas.sortingOrder = -60;   // under the wizard bars (-50)
+        canvas.sortingOrder = 1;   // over the Pixelation image (0), under the wizard bars (2)
         var scaler = go.AddComponent<CanvasScaler>();
         scaler.uiScaleMode = CanvasScaler.ScaleMode.ScaleWithScreenSize;
         scaler.referenceResolution = new Vector2(1920f, 1080f);
