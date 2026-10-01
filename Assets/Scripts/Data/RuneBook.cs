@@ -129,7 +129,7 @@ public static class RuneBook
             {
                 Original(),
                 A("Earthwork Parapet", 14f, typeof(EarthworkParapetAbility),
-                  "A spiralling stone tower corkscrews up beneath you, lifting you to the high ground for a few seconds before sinking back into the earth."),
+                  "A jagged crag of rock heaves up beneath you, lifting you to the high ground for a few seconds before sinking back into the earth."),
                 A("Bastion Stance", 14f, typeof(BastionStanceAbility),
                   "Plant yourself: an arc of stone slabs erupts in front of you and follows your aim, blocking bullets. You can't be moved or knocked back for 5 seconds; dash to break out early."),
             },

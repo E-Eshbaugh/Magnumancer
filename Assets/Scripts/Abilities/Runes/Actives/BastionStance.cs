@@ -6,7 +6,7 @@ public class BastionStance : MonoBehaviour
 {
     public float shieldRadius = 1.4f;
     public float arcDegrees = 115f;
-    public int slabs = 5;
+    public int slabs = 6;
     public float slabHeight = 2.1f;
     public float riseTime = 0.22f;
     public float turnSpeed = 10f;
@@ -20,8 +20,9 @@ public class BastionStance : MonoBehaviour
     Color color;
     GameObject shield;
     readonly List<Transform> slabList = new();
+    readonly List<float> slabHeights = new();
     readonly List<LineRenderer> seams = new();
-    LineRenderer ring, crest;
+    LineRenderer ring;
 
     public bool Active => active;
 
@@ -63,35 +64,65 @@ public class BastionStance : MonoBehaviour
         var stone = RockDebris.StoneMaterial(Color.gray);
         var glow = AbilityKit.Glow();
 
-        slabList.Clear(); seams.Clear();
+        var owned = shield.AddComponent<OwnedMeshes>();
+
+        slabList.Clear(); slabHeights.Clear(); seams.Clear();
         for (int i = 0; i < slabs; i++)
         {
             float f = slabs == 1 ? 0.5f : i / (float)(slabs - 1);
             float ang = Mathf.Lerp(-arcDegrees * 0.5f, arcDegrees * 0.5f, f);
             Vector3 dir = Quaternion.Euler(0f, ang, 0f) * Vector3.forward;
 
-            var slab = GameObject.CreatePrimitive(PrimitiveType.Cube);
-            slab.name = "BastionSlab";
-            slab.transform.SetParent(shield.transform, false);
-            slab.transform.localPosition = dir * shieldRadius + Vector3.up * (-slabHeight * 0.5f); // starts buried
-            slab.transform.localRotation = Quaternion.LookRotation(dir) * Quaternion.Euler(Random.Range(-4f, 4f), 0f, Random.Range(-5f, 5f));
-            float h = slabHeight * Random.Range(0.85f, 1.1f);
-            slab.transform.localScale = new Vector3(0.78f, h, 0.4f);
-            slab.GetComponent<MeshRenderer>().sharedMaterial = stone;
+            // a broken sheet of rock: overlapping slabs, each with its own lean and a ragged peak
+            float h = slabHeight * Random.Range(0.95f, 1.25f);
+            float hw = Random.Range(0.4f, 0.5f), hd = Random.Range(0.18f, 0.25f);
+            var rot = Quaternion.LookRotation(dir) * Quaternion.Euler(Random.Range(-7f, 4f), Random.Range(-10f, 10f), Random.Range(-8f, 8f));
+            var slab = RockShapes.Spawn(shield.transform, owned, "BastionSlab", SlabRings(h, hw, hd),
+                                        new Vector3(Random.Range(-0.35f, 0.35f) * hw, h, Random.Range(-0.05f, 0.05f)),
+                                        i % 3 == 1 ? RockShapes.DarkStone() : stone,
+                                        dir * shieldRadius + Vector3.up * (-h - 0.05f), rot);   // starts buried
+            var mc = slab.AddComponent<MeshCollider>();
+            mc.sharedMesh = slab.GetComponent<MeshFilter>().sharedMesh;
+            mc.convex = true;
             slab.AddComponent<BastionShieldPiece>().Init(this);
             slabList.Add(slab.transform);
+            slabHeights.Add(h);
 
-            // glowing rune seam down each slab's face
-            var seam = GlowLine.Make(slab.transform, "Seam", 2, 0.07f, glow);
+            // a glowing rune crack zig-zagging up each slab's face
+            var seam = GlowLine.Make(slab.transform, "Seam", 4, 0.06f, glow);
             seam.useWorldSpace = false;
-            seam.SetPosition(0, new Vector3(0f, -0.35f, 0.52f));
-            seam.SetPosition(1, new Vector3(0f, 0.4f, 0.52f));
+            float z = hd * 1.2f, jag = Random.value < 0.5f ? 0.09f : -0.09f;
+            seam.SetPosition(0, new Vector3(0f, h * 0.25f, z));
+            seam.SetPosition(1, new Vector3(jag, h * 0.42f, z));
+            seam.SetPosition(2, new Vector3(-jag * 0.6f, h * 0.58f, z));
+            seam.SetPosition(3, new Vector3(jag * 0.4f, h * 0.74f, z * 0.9f));
             seams.Add(seam);
         }
 
         ring = GlowLine.Make(shield.transform, "BastionRing", 48, 0.1f, glow);
         ring.loop = true;
-        crest = GlowLine.Make(shield.transform, "BastionCrest", 16, 0.12f, glow);
+    }
+
+    // a flattened, tapering slab of rock (facing +z, base at y=0) narrowing towards its peak
+    static Vector3[][] SlabRings(float h, float hw, float hd)
+    {
+        const int sides = 6;
+        float[] ys = { -0.15f, h * 0.55f, h * 0.85f };
+        float[] ws = { 1f, 0.92f, 0.62f };
+        float[] ds = { 1f, 0.9f, 0.7f };
+        var rings = new Vector3[ys.Length][];
+        for (int r = 0; r < ys.Length; r++)
+        {
+            rings[r] = new Vector3[sides];
+            for (int j = 0; j < sides; j++)
+            {
+                float ang = (j + Random.Range(-0.2f, 0.2f)) * Mathf.PI * 2f / sides;
+                float jit = Random.Range(0.85f, 1.12f);
+                float y = ys[r] + (r == 0 ? 0f : Random.Range(-0.08f, 0.08f));
+                rings[r][j] = new Vector3(Mathf.Sin(ang) * hw * ws[r] * jit, y, Mathf.Cos(ang) * hd * ds[r] * jit);
+            }
+        }
+        return rings;
     }
 
     // shield: a bullet struck a slab
@@ -121,11 +152,12 @@ public class BastionStance : MonoBehaviour
         var target = Quaternion.LookRotation(AbilityKit.AimDir(gameObject));
         shield.transform.rotation = Quaternion.Slerp(shield.transform.rotation, target, turnSpeed * Time.deltaTime);
 
-        foreach (var s in slabList)
+        for (int i = 0; i < slabList.Count; i++)
         {
+            var s = slabList[i];
             if (s == null) continue;
             var p = s.localPosition;
-            p.y = Mathf.Lerp(-s.localScale.y * 0.5f, s.localScale.y * 0.5f, rise);
+            p.y = Mathf.Lerp(-slabHeights[i] - 0.05f, 0f, rise);
             s.localPosition = p;
         }
 
@@ -138,17 +170,6 @@ public class BastionStance : MonoBehaviour
         Vector3 c = ground + Vector3.up * 0.06f;
         AbilityKit.Circle(ring, c, shieldRadius + 0.25f);
         GlowLine.SetColor(ring, color, 0.6f * pulse * rise);
-
-        // a glowing crest along the top of the arc
-        int n = crest.positionCount;
-        for (int i = 0; i < n; i++)
-        {
-            float f = i / (float)(n - 1);
-            float ang = Mathf.Lerp(-arcDegrees * 0.5f, arcDegrees * 0.5f, f);
-            Vector3 d = shield.transform.rotation * (Quaternion.Euler(0f, ang, 0f) * Vector3.forward);
-            crest.SetPosition(i, ground + d * (shieldRadius + 0.22f) + Vector3.up * (slabHeight * rise + 0.02f));
-        }
-        GlowLine.SetColor(crest, Color.Lerp(color, Color.white, 0.3f), pulse * rise);
     }
 
     void End(bool crumble)
@@ -174,7 +195,7 @@ public class BastionStance : MonoBehaviour
         }
         Destroy(shield);
         shield = null;
-        slabList.Clear(); seams.Clear();
+        slabList.Clear(); slabHeights.Clear(); seams.Clear();
     }
 
     void OnDisable() => End(false);
