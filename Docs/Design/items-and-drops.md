@@ -2,6 +2,8 @@
 
 > Smash items + Brawl Stars power-ups + CoD Zombies wonder weapons. Drops create **hot spots** that pull everyone into the same fight.
 
+> *Built (2026-10-01):* drop spawning, all brawl pickups, all five wonder weapons, the leader crown. Code in `Assets/Scripts/Items/`; see **As built** below. Needs playtest. The Zombies economy is still design-only (earning points is built).
+
 ## Spawning
 
 - A drop lands every **30–45s** (scaling with player count) at a map spawn point, **telegraphed ~2s ahead** by a beam of light from the sky. It reuses the spawn-bolt look in white or gold, with an announcer sting.
@@ -53,9 +55,53 @@
 - **Power-up drops from zombies:** Max Ammo, Arcane Surge (abilities refreshed), Nuke (Meteor Fall), Double Points, Hex Bullets.
 - **Downed and revive:** a teammate holds a button to revive; bleed-out timer.
 
-## Implementation notes
+## As built (2026-10-01)
 
-- A `PickupSpawner` per map with spawn points (empty transforms) and a weighted item table (ScriptableObjects: `ItemData` with icon, color, rarity and effect prefab/type).
-- `Pickup` component: trigger collider, bob and spin, glow; on touch calls `IPickupEffect.Apply(player)`.
-- Timed buffs reuse existing modifier hooks: `AmmoControl.SetFireRateModifier`, `PlayerMovement3D.SetSpeedModifier`, `IIncomingDamageModifier` for shields.
-- The telegraph beam reuses `WizardSpawnEffect`'s bolt code or `GlowLine`.
+### How it plays
+
+- **First drop at 20s**, then every **45s with 2 players → 30s with 4** (±12%). A beam marks the spot for **2s** (white, or gold plus a "RARE DROP!" call for rare drops), then a bolt strikes and the item appears.
+- Spots are picked **each time around the living players**: open, flat floor near the middle of the fight, on screen, at least 2.5m from everyone and 4m from other drops. (Some maps scroll, so fixed points could be off camera.) A map can override this with empty objects named `DropPoint...`.
+- **At most 2 items on the field**: a new drop removes the oldest. An untouched item blinks after 25s and vanishes at 30s.
+- Pickups: a glowing model per item (built from primitives) bobbing over a dark shadow, a ring in its color (an extra gold ring if rare), a small light and its **name floating above it**. Walk over it to take it; its name (or what it did, e.g. "+40", "FROST ROUNDS!") pops over you.
+- Drops stop once the match is down to its last player (solo testing keeps them coming).
+- **Controls:** **LB throws** your held throwable (a small copy floats over your shoulder). A **wonder weapon takes RT** and replaces your gun until its ammo runs out or you lose a life. Your own gun keeps its magazine and comes back, and its LT ability waits meanwhile.
+
+### Items
+
+| Item | What it does (as built) |
+|---|---|
+| Rune Shard | Ability ready now |
+| Healing Draught | +40 HP |
+| Overdrive Orb | 8s: ×1.5 fire rate on every gun you carry, shots cost no ammo (no reloads) |
+| Elemental Rounds | Refills your held gun with a magazine of a random element that isn't yours: **Fire, Frost, Water, Lightning, Earth or Poison** (bullet-friendly statuses; Nature roots and Void marks stay ability-only). Rounds look like that element and leave its status: fire brands, frost chills (one counter per volley), water/lightning build Soaked/Charged, earth staggers, poison poisons. Ends when the magazine is spent, or you reload, swap or lose a life |
+| Blink Charm | +3 dashes with no cooldown (pips circle your waist; stacks to 6, kept until used) |
+| Aegis Sigil | 50-point shield for 6s (faint bubble, shatters when spent) |
+| Hex Grenade | Lobbed 9m; 3.2m burst of a **random element** (any of the 8), 22 dmg; leaves that element's status or sets off a reaction |
+| Goblin Bomb | Sticks to the first enemy it touches (or the floor), fizzes 1.5s, then 50 dmg / 3.8m blast (heavy: Shatters the Frozen). If the wearer loses a life it drops where they fell |
+| Portal Stone | Portal at your feet + one where it lands, linked both ways for 5s, anyone can use them (reuses Void Rift's portals) |
+| Singularity Launcher | 3 shots. Lobbed black hole: pulls enemies in for 1.6s (7m), then pops: 40 void dmg in 4m, heavy, shoves out |
+| Frost Cannon | 4 shots. 9m / 60° cone: 15 dmg and **frozen solid for 2.2s** (encased in ice, Shatter-able) |
+| Thunder Maul | 5 swings. 3.6m / 150° slam: 28 lightning dmg (heavy) and a launch of 85 (the Smash hammer) |
+| Gale Horn | 4 blasts. 12m / 65° gust: shove of 60, 4 dmg, heavy (Staggers, Shatters the Frozen) |
+| Ember Minigun | 150 rounds. Hold RT to spin up (0.5s), 18 rounds/s of 6-dmg **fire rounds that brand**, you move at 75% while holding it. When empty it **melts down** into a lava pool at your feet (it can't hurt you) |
+| Heart Relic | +1 life. Only drops after the match has run **3 minutes** |
+
+Drop weights (out of ~92): Rune Shard 14, Healing Draught 14, Hex 6, Goblin Bomb 6, Portal 5, Overdrive 9, Elemental Rounds 9, Blink 8, Aegis 9, each wonder weapon 1.8 (~10% that a drop is a wonder weapon), Heart Relic 2. The same item is rerolled once if it would land twice in a row.
+
+### Leader crown (built)
+
+- Leader = **most kills** (taking a life from another player), then **most lives left**. Nobody wears it while everyone's even; a tie keeps it where it is.
+- A gold crown floats over the leader. **Taking a life from the crown holder** makes your ability ready, refills your magazine and pops "CROWN BREAKER!". The crown then goes to whoever leads (the breaker wins ties).
+
+### Code map
+
+| Piece | Where |
+|---|---|
+| Item table (names, rarity, colors, weights) | `Items/ItemBook.cs`. Kept in code like RuneBook, not ScriptableObjects; a per-mode table can plug into `ItemBook.Roll` |
+| Timing, placement, bootstrap, crown | `Items/DropDirector.cs` (added automatically to match scenes with a `MultiplayerManager` and no `GoblinSpawner`; `DropDirector.Enabled` switches it off), `Items/LeaderCrown.cs` |
+| Beam, pickup, models, labels | `Items/DropBeam.cs`, `Items/Pickup.cs`, `Items/ItemVisuals.cs` |
+| Effects | `Items/ItemEffects.cs` (instant items + tuning statics), `Items/Buffs/*`, `Items/Throwables/*`, `Items/Wonder/*` |
+| Sounds | Empty slots on `Resources/ReactionSounds.asset` → "Item drops" (incoming, land, rare announcer, pickup, crown taken). Until they're filled, the strike borrows the Conduct crackle and the rest is silent |
+| Hooks added to existing code | `AmmoControl.SetFiringBlocked` / `SetFreeAmmo` / `ShotElement`; `FireController3D.Shoot(..., element)`; `Bullet.element`; `BulletFX.StyleOf(Element)`; `ElementReactions.BulletHit(..., infused)`; `PlayerHealthControl.AddLife` / `LivesLeft`; LT gun abilities wait while `FiringBlocked` |
+
+**Testing in the editor:** keys **1-9** drop items 1-9 (ItemBook order) next to player 1, **Shift+1-6** items 10-15, **0** sends a random drop with its beam.

@@ -37,7 +37,7 @@ public class RemoteDetonator : MonoBehaviour
         var gun = ammoControl != null ? ammoControl.currentGun : null;
         bool active = gun != null && gun.remoteDetonate && gamepad != null;
 
-        bool held = active && !GamePause.InputBlocked && gamepad.leftTrigger.ReadValue() > triggerThreshold;
+        bool held = active && !GamePause.InputBlocked && !ammoControl.FiringBlocked && gamepad.leftTrigger.ReadValue() > triggerThreshold;
 
         if (held)
         {

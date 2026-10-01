@@ -68,7 +68,7 @@ public class OverClock : MonoBehaviour
 
         if (!isActive)
         {
-            if (!GamePause.InputBlocked && gamepad.leftTrigger.wasPressedThisFrame && now >= nextReadyTime)
+            if (!GamePause.InputBlocked && !ammoControl.FiringBlocked && gamepad.leftTrigger.wasPressedThisFrame && now >= nextReadyTime)
                 ActivateOverclock(gun, now);
             // the bar drained while active, so it refills over what's left of the cooldown
             weaponAbility?.ReportCooldown(nextReadyTime, Mathf.Max(0.01f, cooldown - duration));

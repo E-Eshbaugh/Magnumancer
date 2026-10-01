@@ -49,6 +49,13 @@ public static class ReactionAudio
         if (clip != null) Voice(clip, b.announcerVolume, 1f, 0f);
     }
 
+    /// The sound bank (item drop clips live there too)
+    public static ReactionSoundBank Sounds => Bank();
+
+    /// Plays any clip through the shared 2D voices (scaled by the bank's master volume)
+    public static void PlayClip(AudioClip clip, float volume = 1f, float pitch = 1f, float maxLength = 0f)
+        => Voice(clip, volume, pitch, maxLength);
+
     static void Voice(AudioClip clip, float volume, float pitch, float maxLength)
     {
         if (clip == null) return;

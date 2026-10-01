@@ -24,6 +24,19 @@ public class ReactionSoundBank : ScriptableObject
     public AudioClip comboOverload;     // 5+
     [Range(0f, 1f)] public float announcerVolume = 0.9f;
 
+    [Header("Item drops (empty = the fallbacks in ItemAudio)")]
+    [Tooltip("The beam appears: a drop is coming")]
+    public AudioClip dropIncoming;
+    [Tooltip("The drop strikes the ground")]
+    public AudioClip dropLand;
+    [Tooltip("Announcer for a rare drop (wonder weapon, heart relic)")]
+    public AudioClip rareDropAnnouncer;
+    [Tooltip("Someone picks an item up")]
+    public AudioClip pickup;
+    [Tooltip("The crown holder is taken down")]
+    public AudioClip crownTaken;
+    [Range(0f, 1f)] public float itemVolume = 0.8f;
+
     public Entry Find(Reaction r)
     {
         if (reactions == null) return null;

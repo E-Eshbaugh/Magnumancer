@@ -19,6 +19,7 @@ public class Bullet : MonoBehaviour
 
     [HideInInspector] public GameObject owner; // player who fired it (damage credit)
     [HideInInspector] public int structureDamage = -1; // damage to props, walls and crystals (-1 = same as damage)
+    [HideInInspector] public Element element;  // set before Initialize to carry another element (None = the shooter's)
 
     int StructureDamage => structureDamage >= 0 ? structureDamage : damage;
 
@@ -27,7 +28,8 @@ public class Bullet : MonoBehaviour
     private float   _originalIntensity;
     private bool    _hasHit;
     private BulletFX _fx;
-    private Element _element;      // the shooter's element (reactions, statuses)
+    private Element _element;      // the shooter's element (reactions, statuses), or the one it was loaded with
+    private bool    _infused;      // carries an element other than the shooter's (Elemental Rounds, Ember Minigun)
     const int FireVsIce = 2;
     private bool    _zoneReacted;  // a round only sets off one zone (gas, water, brambles)
 
@@ -62,9 +64,12 @@ public class Bullet : MonoBehaviour
     public void Initialize(Vector3 dir)
     {
         _direction = dir.normalized;
-        // tracer, trail and glow in the shooter's wizard colors (owner/damage are set by now)
-        _fx = BulletFX.Attach(this, _direction);
-        _element = Elements.Of(owner);
+        var own = Elements.Of(owner);
+        _element = element != Element.None ? element : own;
+        _infused = _element != own;
+        // tracer, trail and glow in the shooter's wizard colors (owner/damage are set by now),
+        // or in the loaded element's colors
+        _fx = BulletFX.Attach(this, _direction, _infused ? _element : Element.None);
     }
 
     void FixedUpdate()
@@ -174,7 +179,7 @@ public class Bullet : MonoBehaviour
         // Elements: set off a reaction with whatever's on them, or leave our own status
         var struck = ph != null ? ph.gameObject : (goblin != null ? goblin.gameObject : null);
         if (struck != null && struck != owner)
-            ElementReactions.BulletHit(struck, owner, damage, hitPoint);
+            ElementReactions.BulletHit(struck, owner, damage, hitPoint, _infused ? _element : Element.None);
         // 3) snap both target and actual to impact
         _targetPosition = hitPoint;
         transform.position = hitPoint;

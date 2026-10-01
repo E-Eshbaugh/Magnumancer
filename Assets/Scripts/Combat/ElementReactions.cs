@@ -266,9 +266,11 @@ public static class ElementReactions
 
     /// A bullet landed: react, or build the shooter's element status (Tidebound bullets
     /// build Soaked, Voltborn bullets build Charged, heavy Granite Vow rounds Stagger).
-    public static bool BulletHit(GameObject target, GameObject shooter, float damage, Vector3 point)
+    /// infused: the round carries another element (Elemental Rounds, Ember Minigun). Those
+    /// rounds leave the statuses a wizard's passive would: fire brands, frost chills.
+    public static bool BulletHit(GameObject target, GameObject shooter, float damage, Vector3 point, Element infused = Element.None)
     {
-        var element = Elements.Of(shooter);
+        var element = infused != Element.None ? infused : Elements.Of(shooter);
         bool heavy = damage >= HeavyBulletDamage;
         if (OnElementHit(target, shooter, element, damage, point, heavy)) return true;
         if (!IsTarget(target, shooter)) return false;
@@ -280,7 +282,27 @@ public static class ElementReactions
             case Element.Lightning: fx.BuildCharge(damage, ChargeBuildup); break;
             case Element.Earth: if (heavy) fx.Stagger(); break;
         }
+        if (infused != Element.None) InfusedStatus(fx, shooter, infused);
         return false;
+    }
+
+    /// One volley's pellets only add one brand or freeze counter
+    public static float InfusedStackGap = 0.15f;
+    public static float InfusedStaggerTime = 0.6f;
+
+    static void InfusedStatus(StatusEffects fx, GameObject shooter, Element element)
+    {
+        switch (element)
+        {
+            case Element.Fire:
+                if (shooter != null && Time.time - fx.LastBrandFrom(shooter) >= InfusedStackGap) fx.AddBrand(shooter);
+                break;
+            case Element.Frost:
+                if (Time.time - fx.LastFreezeTime >= InfusedStackGap) fx.AddFreeze();
+                break;
+            case Element.Poison: fx.Poison(); break;
+            case Element.Earth: fx.Stagger(InfusedStaggerTime); break;
+        }
     }
 
     /// An ability of the caster's element hit target: react, or leave the full status.

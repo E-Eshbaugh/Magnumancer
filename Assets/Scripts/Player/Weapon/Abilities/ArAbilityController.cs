@@ -146,6 +146,15 @@ public class ArAbilityController : MonoBehaviour
         this.gamepadOverride = pad;
     }
 
+    AmmoControl ammoControl;
+
+    // A wonder weapon has the trigger: the gun's own abilities wait
+    bool GunLocked()
+    {
+        if (ammoControl == null) ammoControl = GetComponentInParent<PlayerMovement3D>()?.GetComponentInChildren<AmmoControl>();
+        return ammoControl != null && ammoControl.FiringBlocked;
+    }
+
 
     void Update()
     {
@@ -154,8 +163,9 @@ public class ArAbilityController : MonoBehaviour
             : null;
         pad = gamepadOverride;
 
-        // Swapped away (or paused) mid-aim: don't leave the arc hanging in the air
-        if (currentGun == null || !currentGun.grenadeLauncher || pad == null || GamePause.InputBlocked)
+        // Swapped away (or paused, or a wonder weapon took the trigger) mid-aim: don't
+        // leave the arc hanging in the air
+        if (currentGun == null || !currentGun.grenadeLauncher || pad == null || GamePause.InputBlocked || GunLocked())
         {
             if (aiming) CancelAiming();
             return;

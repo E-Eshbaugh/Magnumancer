@@ -132,7 +132,8 @@ public class LaserScope : MonoBehaviour
     {
         float laserRange = ammoControl != null && ammoControl.currentGun != null ? ammoControl.currentGun.laserRange : 0f;
         bool wantScope = gamepad != null && firePoint != null && laserRange > 0f
-            && !GamePause.InputBlocked && gamepad.leftTrigger.ReadValue() > 0.1f;
+            && !GamePause.InputBlocked && !(ammoControl != null && ammoControl.FiringBlocked)
+            && gamepad.leftTrigger.ReadValue() > 0.1f;
 
         SetScoped(wantScope);
         if (!scoped)

@@ -87,6 +87,31 @@ public class AmmoControl : MonoBehaviour
         apply(Mathf.Max(0.05f, m));
     }
 
+    // Named trigger locks (a wonder weapon owns the trigger) and free-ammo grants (Overdrive Orb)
+    readonly System.Collections.Generic.HashSet<string> firingBlocks = new();
+    readonly System.Collections.Generic.HashSet<string> freeAmmo = new();
+
+    /// While blocked the gun doesn't fire or reload (another weapon is using the trigger)
+    public void SetFiringBlocked(string key, bool blocked)
+    {
+        if (blocked) { firingBlocks.Add(key); StopReload(); }
+        else firingBlocks.Remove(key);
+    }
+
+    public bool FiringBlocked => firingBlocks.Count > 0;
+
+    /// Shots cost no ammo and the gun never needs a reload (the magazine is topped up first)
+    public void SetFreeAmmo(string key, bool on)
+    {
+        if (on) { freeAmmo.Add(key); RefillMagazine(); }
+        else freeAmmo.Remove(key);
+    }
+
+    public bool FreeAmmo => freeAmmo.Count > 0;
+
+    /// The element each shot carries, if not the wizard's own (Elemental Rounds). Null = own.
+    public System.Func<Element> ShotElement;
+
     /// Adds a fraction of the magazine (Tidal Momentum). Doesn't interrupt a reload.
     public void AddAmmoFraction(float fraction)
     {
@@ -189,6 +214,8 @@ public class AmmoControl : MonoBehaviour
         if (gunControl != null && currentGunIndex != gunControl.currentGunIndex)
             OnGunEquipped(gunControl.currentGunIndex);
 
+        if (FiringBlocked) return;
+
         float now = Time.time;
 
         if (currentGun.isShotgun)
@@ -226,13 +253,13 @@ public class AmmoControl : MonoBehaviour
             {
                 StopReload();
                 FireCurrentGun();
-                ammoCount--;
+                if (!FreeAmmo) ammoCount--;
                 nextFireTime = now + 1f / Mathf.Max(0.01f, currentGun.attackSpeed * FireRateMultiplier);
                 UpdateAmmoBar();
             }
         }
 
-        if (ammoCount <= 0 && !IsReloading)
+        if (ammoCount <= 0 && !IsReloading && !FreeAmmo)
             StartReload();
 
         // Manual reload (X) tops up; rounds already loaded are kept
@@ -301,8 +328,9 @@ public class AmmoControl : MonoBehaviour
                 break;
         }
 
+        Element element = ShotElement != null ? ShotElement() : Element.None;
         for (int i = 0; i < projectiles; i++)
-            fire.Shoot(currentAmmoPrefab, spread, currentGun.recoil, damage, structureDamage);
+            fire.Shoot(currentAmmoPrefab, spread, currentGun.recoil, damage, structureDamage, element);
 
         if (fire.firePoint != null)
             BulletFX.MuzzleFlash(fire.Owner, fire.firePoint.position, fire.ShotDirection(),

@@ -26,7 +26,7 @@ A fun, chaotic, combo-forward **couch co-op brawler**: *CoD Zombies meets Gang B
 |---|---|---|
 | [Elemental Ecosystem](elemental-ecosystem.md) | Element statuses, reactions, team roles, implementation plan | **Built**: statuses, all 11 reactions + Echo, combo counter, environment rules; needs playtest and map placement of `MapElementZone` |
 | [Destructible Environment](destructible-environment.md) | Destructible props and interior walls, health bars, damage states, burning/brittle props, stubs, craters (terrain dents), bullet holes | **Two passes built**; needs playtest |
-| [Items & Drops](items-and-drops.md) | Map pickups, wonder weapons, zombies economy | Designed |
+| [Items & Drops](items-and-drops.md) | Map pickups, wonder weapons, leader crown, zombies economy | **Built** (brawl drops, wonder weapons, crown); needs playtest and sound clips. Zombies economy designed |
 | [Modes & Match Flow](modes-and-flow.md) | Brawl campaign, sudden death, drafts, hazards, TDM, Zombies | Designed |
 | [Balance Log](balance-log.md) | What's been tuned, where the knobs live, open issues | Up to date (2026-09-30) |
 
@@ -54,5 +54,6 @@ A fun, chaotic, combo-forward **couch co-op brawler**: *CoD Zombies meets Gang B
 | Match end | `Assets/Scripts/MapControl/WinManager.cs` | Last player standing, then MainMenu (no rounds yet) |
 | Player setup | `Assets/Scripts/MapControl/MultiplayerManager.cs` | Wires wizard, loadout, passives, bars |
 | Rumble and shake | `Assets/Scripts/Combat/Rumble.cs`, `CameraShake` | |
+| Item drops | `Assets/Scripts/Items/` | `DropDirector` (auto-added to brawl scenes), `ItemBook` table, pickups, buffs, throwables (LB), wonder weapons (take RT), `LeaderCrown` |
 
 Known intentional quirks (don't "fix"): Akimbo's off-hand fires backwards; the map select's slot 4 loads CinderCrucibleZombies; players are immune to their own mines and poison.

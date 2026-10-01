@@ -58,7 +58,7 @@ public class AkimboController : MonoBehaviour
         if (weapon == null || !weapon.akimbo) return;
 
         float now = Time.time;
-        bool inputOk = !GamePause.InputBlocked;
+        bool inputOk = !GamePause.InputBlocked && !ammoControl.FiringBlocked;   // a wonder weapon has the trigger
 
         // 1) Activate Akimbo
         if (inputOk && !akimboActive && gamepad.leftTrigger.wasPressedThisFrame && now >= nextAkimboReadyTime)

@@ -49,9 +49,10 @@ public class BulletFX : MonoBehaviour
     TrailRenderer trail;
 
     /// Dresses up a freshly fired bullet. Call after owner/damage are set.
-    public static BulletFX Attach(Bullet bullet, Vector3 dir)
+    /// infused: a round loaded with another element wears that element's colors and bits.
+    public static BulletFX Attach(Bullet bullet, Vector3 dir, Element infused = Element.None)
     {
-        var style = StyleOf(bullet.owner, bullet.GetComponentInChildren<Light>());
+        var style = infused != Element.None ? StyleOf(infused) : StyleOf(bullet.owner, bullet.GetComponentInChildren<Light>());
 
         // The tracer replaces the little brass mesh
         foreach (var r in bullet.GetComponentsInChildren<MeshRenderer>())
@@ -210,6 +211,16 @@ public class BulletFX : MonoBehaviour
         int shade = WizardShade.IndexOfPlayer(owner);
         if (!styles.TryGetValue((wizard, shade), out var s))
             styles[(wizard, shade)] = s = MakeStyle(WizardShade.Of(owner), FlavorOf(wizard.passive));
+        return s;
+    }
+
+    static readonly Dictionary<Element, Style> elementStyles = new();
+
+    /// An element's own bullet look (Elemental Rounds, Ember Minigun)
+    public static Style StyleOf(Element element)
+    {
+        if (!elementStyles.TryGetValue(element, out var s))
+            elementStyles[element] = s = MakeStyle(Elements.ColorOf(element), Elements.FlavorOf(element));
         return s;
     }
 

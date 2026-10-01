@@ -189,6 +189,25 @@ Shotguns felt underpowered, and LT slugs could be spammed: they swapped the whol
 
 Zombies progress walls (`DestructibleWall`) still take normal damage, so slugs don't change Zombies pacing.
 
+## Pass 10 (2026-10-01): item drops (first numbers)
+
+All new; see [Items & Drops](items-and-drops.md) for what each item does.
+
+| Knob | Value | Where |
+|---|---|---|
+| Drop timing | first at 20s, then 45s (2 players) → 30s (4), ±12%, 2s beam | `DropDirector` fields |
+| Field | max 2 items, 30s each | `DropDirector.maxOnField`, `pickupLifetime` |
+| Weights | see items doc; wonder weapons ~10% of drops, Heart Relic after 3 min | `ItemBook.All` |
+| Healing / Overdrive / Blink / Aegis | +40 HP · 8s ×1.5 fire rate, free ammo · 3 charges (max 6) · 50 shield for 6s | `ItemEffects` statics, `BlinkCharm.MaxCharges` |
+| Elemental Rounds | one magazine; brands/chills once per 0.15s volley; earth stagger 0.6s | `ElementalRounds.Pool`, `ElementReactions.InfusedStackGap` / `InfusedStaggerTime` |
+| Hex / Goblin Bomb / Portal | 22 dmg 3.2m · 50 dmg 3.8m, 1.5s fuse · 5s | `ThrownItem` statics |
+| Singularity | 3 shots; pull 7m for 1.6s (max 11/s); pop 40 dmg 4m, shove 24 | `SingularityLauncher`, `Singularity` statics |
+| Frost Cannon | 4 shots; 9m 60° cone, 15 dmg, frozen 2.2s | `FrostCannon` statics |
+| Thunder Maul | 5 swings; 3.6m 150°, 28 dmg, launch 85 | `ThunderMaul` statics |
+| Gale Horn | 4 blasts; 12m 65°, shove 60, 4 dmg | `GaleHorn` statics |
+| Ember Minigun | 150 rounds, 18/s, 6 dmg, 0.5s spin-up, 75% move speed; lava 12 dps 3.5s | `EmberMinigun` statics |
+| Crown bonus | ability ready + magazine refill | `LeaderCrown.CrownBreaker` |
+
 ## Open issues / to playtest
 
 - **Blinkstorm stun is 5s** (`LightningBlastDamage`: `Stun(0.2f, 5f)`). With stuns now also blocking jumps that's very punishing. Suggest **~1.5s**.
@@ -210,3 +229,6 @@ Zombies progress walls (`DestructibleWall`) still take normal damage, so slugs d
 - **Destructible interior walls** (BlackOsuary's dungeon especially): check the boundary detection keeps the outer walls up on every map, and that maps don't turn into open fields too early (walls are ×2.2 toughness and leave stubs).
 - Explosive barrels (Drowned Sanctum has 7) might chain-kill. That's intended chaos, but watch the damage.
 - Blinkstorm's 5s stun now also Charges everyone it hits. Combined with Conduct that's a lot of lockdown; another reason to shorten it.
+- **Item drops are unplaytested.** Watch: whether 30-45s feels too sparse or too busy; whether drop spots land somewhere reachable on every map (add `DropPoint` objects where the auto-pick misbehaves); Thunder Maul's launch (85) on small maps; Frost Cannon (2.2s freeze on everyone in a wide cone + Shatter) possibly being oppressive; the Ember Minigun's 150 branding rounds; Overdrive on miniguns and sniper rifles (no reloads).
+- Leader crown counts any life taken, including from lingering hazards credited to the last attacker. Check it reads right.
+- Drop sounds: fill the "Item drops" slots on `Resources/ReactionSounds.asset`.

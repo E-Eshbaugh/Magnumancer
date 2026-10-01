@@ -73,6 +73,18 @@ public class PlayerHealthControl : MonoBehaviour
         UpdateStockUI();
     }
 
+    /// Lives left including the current one (0 once eliminated)
+    public int LivesLeft => isDead ? 0 : stockCount + 1;
+
+    /// One more life (Heart Relic). Shows another heart.
+    public void AddLife()
+    {
+        if (isDead) return;
+        stockCount++;
+        maxLives = Mathf.Max(maxLives, stockCount + 1);
+        UpdateStockUI();
+    }
+
     /// Where this player starts the match — and comes back to after losing a life.
     public void SetSpawnPoint(Vector3 position, Quaternion rotation)
     {

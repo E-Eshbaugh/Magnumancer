@@ -91,6 +91,10 @@ public class StatusEffects : MonoBehaviour
 
     public void ClearBrands(GameObject attacker) => brands.Remove(attacker);
 
+    /// When attacker last branded this target (-999 if never)
+    public float LastBrandFrom(GameObject attacker)
+        => attacker != null && lastBrandTime.TryGetValue(attacker, out float t) ? t : -999f;
+
     /// Live brands from this attacker (0 if they've decayed)
     public int BrandCount(GameObject attacker)
     {
@@ -120,6 +124,7 @@ public class StatusEffects : MonoBehaviour
     }
 
     public int FreezeStacks => freezeStacks;
+    public float LastFreezeTime => lastFreezeTime;
 
     /// Tops freeze counters up to at least n (Brittle); returns the count
     public int FreezeAtLeast(int n)
