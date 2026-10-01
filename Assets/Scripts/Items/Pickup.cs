@@ -1,16 +1,20 @@
 using System.Collections.Generic;
-using TMPro;
 using UnityEngine;
 
 /// <summary>
-/// An item on the ground: its glowing model bobs and spins over a dark shadow and a ring
-/// in its color (gold rings for rare drops), lit by a small light, with its name floating
-/// above. Walk over it to take it. Pickups that sit too long blink, then fade away.
+/// An item on the ground: a big, solid-colored model (big enough to keep its shape through
+/// the pixel filter) bobs and spins over a dark shadow and a ring in its color (gold rings
+/// for rare drops), lit by a small light. Walk over it to take it (ItemGetFx plays the
+/// moment). Pickups that sit too long blink, then fade away.
 /// </summary>
 public class Pickup : MonoBehaviour
 {
-    public float pickupRadius = 1.2f;
-    public float bobHeight = 0.15f;
+    public float pickupRadius = 1.5f;
+    public float bobHeight = 0.2f;
+    [Tooltip("Model size on the ground (rare drops are bigger still)")]
+    public float modelScale = 2.2f;
+    public float rareModelScale = 2.6f;
+    public float hoverHeight = 1.35f;
     public float spinSpeed = 90f;
     [Tooltip("Blinks for this long before it disappears")]
     public float warnTime = 5f;
@@ -24,7 +28,6 @@ public class Pickup : MonoBehaviour
     Transform model;
     LineRenderer ring, outerRing;
     Light glow;
-    TextMeshPro label;
     Vector3 ground;
     bool taken;
 
@@ -48,33 +51,32 @@ public class Pickup : MonoBehaviour
         lifetime = life;
         bool rare = def.rarity >= Rarity.Rare;
 
-        ItemVisuals.Shadow(transform, rare ? 1.1f : 0.85f).transform.localPosition = Vector3.up * 0.03f;
+        ItemVisuals.Shadow(transform, rare ? 1.6f : 1.3f).transform.localPosition = Vector3.up * 0.03f;
 
         var holder = new GameObject("Spin").transform;
         holder.SetParent(transform, false);
-        holder.localPosition = Vector3.up * 0.95f;
-        model = ItemVisuals.Model(def.id, holder);
-        if (rare) holder.localScale = Vector3.one * 1.35f;
+        holder.localPosition = Vector3.up * hoverHeight;
+        model = ItemVisuals.Model(def.id, holder, solid: true);
+        holder.localScale = Vector3.one * Size;
 
-        ring = ItemVisuals.Ring(transform, 0.75f, def.color, 0.07f);
-        if (rare || def.rarity == Rarity.VeryRare)
-            outerRing = ItemVisuals.Ring(transform, 1.05f, ItemBook.Gold, 0.05f);
+        ring = ItemVisuals.Ring(transform, 1.15f, def.color, 0.14f);
+        if (rare)
+            outerRing = ItemVisuals.Ring(transform, 1.5f, ItemBook.Gold, 0.11f);
 
         var lightGo = new GameObject("Glow");
         lightGo.transform.SetParent(transform, false);
-        lightGo.transform.localPosition = Vector3.up * 1f;
+        lightGo.transform.localPosition = Vector3.up * hoverHeight;
         glow = lightGo.AddComponent<Light>();
         glow.type = LightType.Point;
         glow.color = def.color;
-        glow.range = rare ? 4.5f : 3f;
-        glow.intensity = rare ? 3.5f : 2.2f;
+        glow.range = rare ? 6f : 4.5f;
+        glow.intensity = rare ? 3.5f : 2.5f;
         glow.shadows = LightShadows.None;
-
-        label = ItemVisuals.Label(transform, def.name.ToUpperInvariant(), rare ? ItemBook.Gold : def.color, rare ? 5.5f : 4.5f);
-        if (label != null) label.transform.localPosition = Vector3.up * 2f;
 
         live.Add(this);
     }
+
+    float Size => Def.rarity >= Rarity.Rare ? rareModelScale : modelScale;
 
     void OnDestroy() => live.Remove(this);
 
@@ -88,8 +90,8 @@ public class Pickup : MonoBehaviour
         // pops in, then bobs and spins
         float popIn = Mathf.Clamp01(age / 0.25f);
         float scale = popIn < 1f ? Mathf.Lerp(0.2f, 1.15f, popIn) : 1f;
-        model.parent.localScale = Vector3.one * scale * (Def.rarity >= Rarity.Rare ? 1.35f : 1f);
-        model.parent.localPosition = Vector3.up * (0.95f + Mathf.Sin(age * 2.6f) * bobHeight);
+        model.parent.localScale = Vector3.one * scale * Size;
+        model.parent.localPosition = Vector3.up * (hoverHeight + Mathf.Sin(age * 2.6f) * bobHeight);
         model.parent.localRotation = Quaternion.Euler(0f, age * spinSpeed, 0f);
 
         // about to vanish: blink faster and faster
@@ -97,20 +99,14 @@ public class Pickup : MonoBehaviour
         model.gameObject.SetActive(visible);
 
         float pulse = 0.75f + 0.25f * Mathf.Sin(age * 5f);
-        AbilityKit.Circle(ring, ground + Vector3.up * 0.06f, 0.75f + 0.05f * Mathf.Sin(age * 3f));
+        AbilityKit.Circle(ring, ground + Vector3.up * 0.06f, 1.15f + 0.07f * Mathf.Sin(age * 3f));
         GlowLine.SetColor(ring, Def.color, (visible ? 0.9f : 0.3f) * pulse);
         if (outerRing != null)
         {
-            AbilityKit.Circle(outerRing, ground + Vector3.up * 0.06f, 1.05f + 0.08f * Mathf.Sin(age * 2f + 1f));
+            AbilityKit.Circle(outerRing, ground + Vector3.up * 0.06f, 1.5f + 0.1f * Mathf.Sin(age * 2f + 1f));
             GlowLine.SetColor(outerRing, ItemBook.Gold, (visible ? 0.8f : 0.25f) * pulse);
         }
-        glow.intensity = (Def.rarity >= Rarity.Rare ? 3.5f : 2.2f) * pulse * (visible ? 1f : 0.3f);
-
-        if (label != null)
-        {
-            label.transform.rotation = ItemVisuals.Billboard(label.transform.rotation);
-            label.alpha = visible ? 1f : 0.4f;
-        }
+        glow.intensity = (Def.rarity >= Rarity.Rare ? 3.5f : 2.5f) * pulse * (visible ? 1f : 0.3f);
 
         if (age > 0.2f) TryCollect();
     }
@@ -133,13 +129,7 @@ public class Pickup : MonoBehaviour
         taken = true;
         string word = ItemEffects.Apply(Def, player) ?? Def.name.ToUpperInvariant() + "!";
 
-        Vector3 at = ground + Vector3.up;
-        AbilityKit.Shockwave(ground, 1.6f, Def.color, 0.35f);
-        PowerFx.Sparks(at, Def.color, Def.rarity >= Rarity.Rare ? 40 : 20, 6f, 0.5f, 0.07f, 0.5f);
-        PowerFx.Flash(at, Def.color, 5f, 5f, 0.3f);
-        ReactionPopup.Show(word, Def.color, Def.rarity >= Rarity.Rare ? ItemBook.Gold : Color.white,
-                           AbilityKit.Chest(player) + Vector3.up * 1.8f, Def.rarity >= Rarity.Rare ? 0.9f : 0.65f);
-        Rumble.Play(player, 0.3f, 0.7f, 0.2f);
+        ItemGetFx.Play(Def, word, player, model.position, model.parent.lossyScale.x);
         ItemAudio.Pickup(Def.rarity);
         if (Showcase && DropDirector.Instance != null) DropDirector.Instance.RespawnShowcase(Def, ground);
         Destroy(gameObject);

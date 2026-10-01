@@ -1,15 +1,26 @@
-using TMPro;
 using UnityEngine;
 
 /// <summary>
-/// Glowing looks for items: each item's little model (built from primitives, no assets),
-/// floating name labels, rings and the dark ground shadow that keeps a pickup readable on
-/// bright floors. The same model is what a wonder weapon looks like in your hands.
+/// Looks for items: each item's little model (built from primitives, no assets), rings
+/// and the dark ground shadow that keeps a pickup readable on bright floors. The same
+/// model is what a wonder weapon looks like in your hands. Models come glowing (additive)
+/// or solid (flat, unshaded color: keeps its shape through bloom and the pixel filter).
 /// </summary>
 public static class ItemVisuals
 {
-    static Material labelMaterial, shadowMaterial;
+    static Material shadowMaterial, solidMaterial;
     static MaterialPropertyBlock block;
+    static bool buildingSolid;
+
+    // Flat, unshaded color: alpha-blended at full alpha, so it doesn't add light (glowing
+    // parts blow out to white under bloom and lose their shape)
+    static Material Solid()
+    {
+        if (solidMaterial != null) return solidMaterial;
+        solidMaterial = GlowLine.CreateMaterial(1f, additive: false);
+        solidMaterial.name = "ItemSolid";
+        return solidMaterial;
+    }
 
     /// A glowing primitive (no collider) tinted `color`
     public static GameObject Part(PrimitiveType type, Transform parent, Vector3 pos, Vector3 scale, Color color,
@@ -22,10 +33,10 @@ public static class ItemVisuals
         go.transform.localRotation = Quaternion.Euler(euler);
         go.transform.localScale = scale;
         var r = go.GetComponent<MeshRenderer>();
-        r.sharedMaterial = AbilityKit.Glow();
+        r.sharedMaterial = buildingSolid ? Solid() : AbilityKit.Glow();
         r.shadowCastingMode = UnityEngine.Rendering.ShadowCastingMode.Off;
         r.receiveShadows = false;
-        Tint(r, color, glow);
+        Tint(r, color, buildingSolid ? 1.15f : glow);
         return go;
     }
 
@@ -38,8 +49,16 @@ public static class ItemVisuals
         r.SetPropertyBlock(block);
     }
 
-    /// The item's model under `parent`, about 0.7 units tall, centered on the parent
-    public static Transform Model(ItemId id, Transform parent)
+    /// The item's model under `parent`, about 0.7 units tall, centered on the parent.
+    /// solid = flat colors instead of glowing ones (pickups on the ground)
+    public static Transform Model(ItemId id, Transform parent, bool solid = false)
+    {
+        buildingSolid = solid;
+        try { return BuildModel(id, parent); }
+        finally { buildingSolid = false; }
+    }
+
+    static Transform BuildModel(ItemId id, Transform parent)
     {
         var root = new GameObject($"Model ({id})").transform;
         root.SetParent(parent, false);
@@ -176,39 +195,6 @@ public static class ItemVisuals
         lr.enabled = fraction > 0.01f;
     }
 
-    /// Floating name label (billboard it to the camera yourself)
-    public static TextMeshPro Label(Transform parent, string text, Color color, float fontSize = 4.5f)
-    {
-        var font = TMP_Settings.defaultFontAsset;
-        if (font == null) return null;
-        var go = new GameObject("Label");
-        go.transform.SetParent(parent, false);
-        var tmp = go.AddComponent<TextMeshPro>();
-        tmp.font = font;
-        tmp.fontSharedMaterial = LabelMaterial(font);
-        tmp.text = text;
-        tmp.fontSize = fontSize;
-        tmp.fontStyle = FontStyles.Bold;
-        tmp.alignment = TextAlignmentOptions.Center;
-        tmp.textWrappingMode = TextWrappingModes.NoWrap;
-        tmp.rectTransform.sizeDelta = new Vector2(12f, 2f);
-        tmp.color = Color.Lerp(color, Color.white, 0.35f);
-        tmp.sortingOrder = 40;
-        return tmp;
-    }
-
-    static Material LabelMaterial(TMP_FontAsset font)
-    {
-        if (labelMaterial != null) return labelMaterial;
-        labelMaterial = new Material(font.material) { name = "ItemLabel" };
-        labelMaterial.EnableKeyword(ShaderUtilities.Keyword_Outline);
-        labelMaterial.SetFloat(ShaderUtilities.ID_FaceDilate, 0.2f);
-        labelMaterial.SetFloat(ShaderUtilities.ID_OutlineWidth, 0.3f);
-        labelMaterial.SetColor(ShaderUtilities.ID_OutlineColor, new Color(0.05f, 0.03f, 0.08f, 1f));
-        labelMaterial.renderQueue = 3500;
-        return labelMaterial;
-    }
-
     /// Soft dark disc on the ground under a pickup so its glow reads on bright floors
     public static GameObject Shadow(Transform parent, float radius)
     {
@@ -244,7 +230,7 @@ public static class ItemVisuals
     [RuntimeInitializeOnLoadMethod(RuntimeInitializeLoadType.SubsystemRegistration)]
     static void ResetStatics()
     {
-        labelMaterial = null;
         shadowMaterial = null;
+        solidMaterial = null;
     }
 }
