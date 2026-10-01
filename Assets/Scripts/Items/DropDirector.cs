@@ -19,6 +19,12 @@ public class DropDirector : MonoBehaviour
 {
     public static bool Enabled = true;
 
+    /// TESTING (temporary): every item is laid out in a ring around the players at match
+    /// start, and each comes back a few seconds after it's taken. Normal drops still run.
+    public static bool ShowcaseAllItems = true;
+    public static float ShowcaseRespawn = 5f;
+    bool showcased;
+
     [Header("Timing")]
     public float firstDrop = 6f;
     [Tooltip("Seconds between drops with 2 players / with 4 players (±jitter)")]
@@ -127,6 +133,7 @@ public class DropDirector : MonoBehaviour
     {
         incoming.RemoveAll(b => b == null);
         DebugKeys();
+        if (ShowcaseAllItems && !showcased && MatchTime > 1.5f && LivingPlayers().Count > 0) Showcase();
         if (finished) return;
 
         int alive = PlayersInMatch().Count;
@@ -149,10 +156,12 @@ public class DropDirector : MonoBehaviour
     {
         // full field: the oldest pickup makes room
         var onField = Pickup.Live;
-        if (onField.Count + incoming.Count >= maxOnField && onField.Count > 0)
+        int dropped = 0;
+        foreach (var p in onField) if (p != null && !p.Showcase) dropped++;
+        if (dropped + incoming.Count >= maxOnField && dropped > 0)
         {
             Pickup oldest = null;
-            foreach (var p in onField) if (p != null && (oldest == null || p.Born < oldest.Born)) oldest = p;
+            foreach (var p in onField) if (p != null && !p.Showcase && (oldest == null || p.Born < oldest.Born)) oldest = p;
             if (oldest != null) Destroy(oldest.gameObject);
         }
 
@@ -203,6 +212,39 @@ public class DropDirector : MonoBehaviour
             if (score > best) { best = score; spot = floor; found = true; }
         }
         return found;
+    }
+
+    // ---------- showcase (testing) ----------
+
+    // Every item in a ring around the players, in ItemBook order, on open floor where possible
+    void Showcase()
+    {
+        showcased = true;
+        var players = LivingPlayers();
+        Vector3 center = Vector3.zero;
+        foreach (var p in players) center += p.transform.position;
+        center /= players.Count;
+
+        int n = ItemBook.All.Length;
+        for (int i = 0; i < n; i++)
+        {
+            float a = i / (float)n * Mathf.PI * 2f;
+            Vector3 dir = new Vector3(Mathf.Cos(a), 0f, Mathf.Sin(a));
+            Vector3 spot = AbilityKit.Ground(center + dir * 6f + Vector3.up);
+            foreach (float r in new[] { 6f, 5f, 7f, 4f, 8f, 3.5f, 9f })
+                if (TryFloor(center + dir * r, center.y, out var floor)) { spot = floor; break; }
+            Pickup.Spawn(ItemBook.All[i], spot, Mathf.Infinity).Showcase = true;
+        }
+    }
+
+    /// A showcase item was taken: put the same one back in the same spot shortly
+    public void RespawnShowcase(ItemBook.Def def, Vector3 at) => StartCoroutine(RespawnLater(def, at));
+
+    System.Collections.IEnumerator RespawnLater(ItemBook.Def def, Vector3 at)
+    {
+        yield return new WaitForSeconds(ShowcaseRespawn);
+        Pickup.Spawn(def, at, Mathf.Infinity).Showcase = true;
+        AbilityKit.Shockwave(at, 1.4f, def.color, 0.3f);
     }
 
     bool FarFromDrops(Vector3 p)
