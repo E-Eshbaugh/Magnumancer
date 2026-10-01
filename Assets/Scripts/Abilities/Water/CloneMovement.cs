@@ -13,6 +13,7 @@ public class CloneMovement : MonoBehaviour
     public float dashTime = 0.2f;
 
     private CharacterController controller;
+    private Animator animator;
     private Vector3 velocity;
     private bool isJumping = false;
     private bool isDashing = false;
@@ -22,6 +23,7 @@ public class CloneMovement : MonoBehaviour
     void Start()
     {
         controller = GetComponent<CharacterController>();
+        animator = GetComponentInChildren<Animator>();
     }
 
     void Update()
@@ -29,12 +31,13 @@ public class CloneMovement : MonoBehaviour
         if (gamepad == null || GamePause.InputBlocked) return;
 
         Vector2 rawInput = gamepad.leftStick.ReadValue();
+        if (rawInput.sqrMagnitude < 0.01f) rawInput = Vector2.zero;
         Vector3 inputDir = new Vector3(rawInput.x, 0f, -rawInput.y); // ← mirror vertical input
 
-        Vector3 move = inputDir.normalized * moveSpeed;
+        Vector3 move = Vector3.ClampMagnitude(inputDir, 1f) * moveSpeed; // analog, like the caster
 
         // Handle dash
-        if (gamepad.buttonEast.wasPressedThisFrame && !isDashing)
+        if (gamepad.buttonEast.wasPressedThisFrame && !isDashing && inputDir.sqrMagnitude > 0.01f)
         {
             dashDir = inputDir.normalized;
             dashTimer = dashTime;
@@ -72,5 +75,8 @@ public class CloneMovement : MonoBehaviour
         Vector3 flatMove = new Vector3(move.x, 0f, move.z);
         if (flatMove.sqrMagnitude > 0.01f)
             transform.rotation = Quaternion.LookRotation(flatMove);
+
+        // walk like the caster does, so it doesn't glide around in its idle pose
+        if (animator) animator.SetFloat("Speed", isDashing ? 1f : rawInput.magnitude);
     }
 }

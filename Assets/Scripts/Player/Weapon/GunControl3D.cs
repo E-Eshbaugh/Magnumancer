@@ -17,6 +17,7 @@ public class GunSwapControl : MonoBehaviour
     private AkimboController akimboControl;
 
     private GameObject currentGun;
+    public GameObject CurrentGun => currentGun;
     public int currentGunIndex = 0;
     public WeaponData[] loadout;
 

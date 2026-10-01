@@ -37,6 +37,10 @@ public class WizardHealthBar : MonoBehaviour
     float flashT, shakeT, shakeAmp, lastChange = -99f;
     bool built;
 
+    // Decoys (Shadow Clone) show the wizard's health over a stand-in; gone when it is
+    Transform decoy;
+    bool isDecoy;
+
     static Canvas canvas;
 
     public static WizardHealthBar AddTo(PlayerHealthControl health, WizardData wizard)
@@ -49,6 +53,18 @@ public class WizardHealthBar : MonoBehaviour
         bar.body = health.GetComponent<CharacterController>();
         bar.color = GlowLine.Brighten(WizardShade.Of(health.gameObject));
         health.OnHealthChanged += bar.HandleHealthChanged;
+        return bar;
+    }
+
+    /// A copy of health's bar floating over decoy instead, so it can't be told apart by its missing bar
+    public static WizardHealthBar AddDecoy(PlayerHealthControl health, Transform decoy)
+    {
+        if (health == null || decoy == null) return null;
+        var bar = AddTo(health, null);
+        bar.name = $"HealthBar ({decoy.name})";
+        bar.decoy = decoy;
+        bar.isDecoy = true;
+        bar.body = decoy.GetComponent<CharacterController>();
         return bar;
     }
 
@@ -147,7 +163,7 @@ public class WizardHealthBar : MonoBehaviour
 
     void LateUpdate()
     {
-        if (health == null) { Destroy(gameObject); return; }
+        if (health == null || (isDecoy && decoy == null)) { Destroy(gameObject); return; }
         if (!built) return;
 
         var cam = Camera.main;
@@ -197,7 +213,7 @@ public class WizardHealthBar : MonoBehaviour
 
     Vector3 HeadPoint()
     {
-        var t = health.transform;
+        var t = isDecoy ? decoy : health.transform;
         float top = 2f;
         if (body != null)
             top = (body.center.y + body.height * 0.5f) * t.lossyScale.y;
