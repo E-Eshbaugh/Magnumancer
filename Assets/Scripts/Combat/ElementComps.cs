@@ -49,7 +49,8 @@ public static class ElementComps
         return null;
     }
 
-    /// One line for the select screen (legacy UI Text rich text). `picked` = wizards
+    /// One line for the select screen (legacy UI Text rich text; color tags only, no <b>:
+    /// the description uses the Bone bitmap font, which can't do bold). `picked` = wizards
     /// locked in earlier this pick, by slot; `teamMode` = co-op/teams, where comps matter.
     public static string Hint(WizardData wizard, IList<(int slot, WizardData wizard)> picked, bool teamMode)
     {
@@ -62,13 +63,13 @@ public static class ElementComps
             {
                 var c = Between(wizard, other);
                 if (c == null) continue;
-                sb.Append($"<color=#FFD24A><b>{c.name.ToUpper()}</b> with P{slot + 1}'s {other.wizardName}! {c.pitch}.</color>\n");
+                sb.Append($"<color=#FFD24A>{c.name.ToUpper()} with P{slot + 1}'s {other.wizardName}! {c.pitch}.</color>\n");
                 return sb.ToString();
             }
 
         string role = RoleOf(wizard.passive);
         Color theme = GlowLine.Brighten(WizardSpawnEffect.ThemeColorOf(wizard));
-        if (role.Length > 0) sb.Append($"<color=#{ColorUtility.ToHtmlStringRGB(theme)}><b>{role}</b></color>");
+        if (role.Length > 0) sb.Append($"<color=#{ColorUtility.ToHtmlStringRGB(theme)}>{role}</color>");
         foreach (var c in Comps)
         {
             if (wizard.passive != c.a && wizard.passive != c.b) continue;
