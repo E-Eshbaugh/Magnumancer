@@ -15,7 +15,7 @@ A fun, chaotic, combo-forward **couch co-op brawler**: *CoD Zombies meets Gang B
 ### Design pillars
 
 1. **Everything interacts.** Elements react with each other no matter who applied them, in every mode, even free-for-all. See [Elemental Ecosystem](elemental-ecosystem.md).
-2. **Readable chaos.** Each player's bullets, trails and effects are in their wizard's color, **shaded by their active rune** (Rune I = the wizard's own color, II a shifted softer shade, III the other way and pale). Several players can pick the same wizard and still tell each other apart, and see which rune they're running. Big moments get big feedback (flash, shake, rumble, slow-mo), and the HUD stays out of the way.
+2. **Readable chaos.** Each player's model, bullets, trails and effects are in their wizard's color, **shaded by their active rune** (Rune I = the wizard's own color, II a shifted softer shade, III the other way and pale). Several players can pick the same wizard and still tell each other apart, and see which rune they're running. Big moments get big feedback (flash, shake, rumble, slow-mo), and the HUD stays out of the way.
 3. **Builds matter.** Wizard choice, runes, loadout orbs and weapon weight all trade against each other.
 4. **Always something to do.** Short dash cooldowns, kill rewards, item drops and fast respawns. Nobody sits out long.
 5. **Anti-snowball.** Comebacks should be possible: crowns/bounties on the leader, and losers pick first in drafts.
@@ -45,7 +45,7 @@ A fun, chaotic, combo-forward **couch co-op brawler**: *CoD Zombies meets Gang B
 | Ground zones | `Assets/Scripts/Abilities/Runes/GroundHazard.cs` | Damage/slow circles (poison puddles, lava, ice). Carry an element (the owner's by default) and register as element zones, as do `PoisonCloudHazard` and `LavaTrail` |
 | Explosions | `Assets/Scripts/Combat/Explosions.cs` | Shootable mines/grenades, area damage, shove, props, craters |
 | Destructible environment | `Assets/Scripts/Environment/` | `Destructible`, `DestructibleSetup` (name rules, walls, Zombies navmesh), `PropHealthBar`, `Craters`, `TerrainCraters`, `ImpactMarks` |
-| Wizard shades | `Assets/Scripts/Player/WizardShade.cs` | Per-player color from the active rune (3 shades per wizard; hue nudge sized to never approach another wizard's hue). Duplicate wizard + same rune: the later player gets the most different free shade. Read via `WizardShade.Of(player)` / `AbilityKit.Theme` |
+| Wizard shades | `Assets/Scripts/Player/WizardShade.cs` | Per-player color from the active rune (3 shades per wizard; hue nudge sized to never approach another wizard's hue). Duplicate wizard + same rune: the later player gets the most different free shade. Read via `WizardShade.Of(player)` / `AbilityKit.Theme`; the model wears a recolored palette texture (`WizardShade.ModelTexture`, applied in `PlayerAppearance`). Menus show the plain wizard color |
 | Wizards and runes | `Assets/Resources/Wizards/*.asset`, `Assets/Scripts/Data/RuneBook.cs` | 3 active runes, 2 passive runes, 1 weapon affinity per wizard |
 | Weapon affinity | `Assets/Scripts/Combat/WeaponSynergy.cs` | Per-wizard bonus with favoured weapon classes |
 | Weapons | `Assets/Resources/Weapons/*/*.asset` | Tiers: Initiate, Ascendant, Archon |

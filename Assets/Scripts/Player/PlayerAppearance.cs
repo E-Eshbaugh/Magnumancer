@@ -8,11 +8,14 @@ public class PlayerAppearance : MonoBehaviour
     [SerializeField] float alphaOverride = 0.4f;
 
     private WizardData wizardData;
+    private int shade;
     private bool isInitialized = false;
 
-    public void Setup(WizardData data)
+    /// shade: the rune shade to wear (WizardShade); -1 looks it up from the player this is on
+    public void Setup(WizardData data, int shade = -1)
     {
         wizardData = data;
+        this.shade = shade >= 0 ? shade : WizardShade.IndexOfModel(gameObject);
         if (targetRenderers == null || targetRenderers.Length == 0)
             targetRenderers = GetComponentsInChildren<Renderer>(true);
 
@@ -34,6 +37,8 @@ public class PlayerAppearance : MonoBehaviour
 
             var mats = rend.sharedMaterials;
             Material matInstance = new Material(wizardData.material);
+            // the active rune's shade recolors the wizard's robes
+            if (shade > 0) matInstance.mainTexture = WizardShade.ModelTexture(wizardData, shade, matInstance.mainTexture);
 
             if (makeTransparent)
             {

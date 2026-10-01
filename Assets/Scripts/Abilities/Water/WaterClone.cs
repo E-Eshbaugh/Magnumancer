@@ -24,7 +24,7 @@ public class WaterClone : MonoBehaviour, IActiveAbility
             if (appearance != null)
             {
                 appearance.makeTransparent = true; // must be set before Setup applies the material
-                appearance.Setup(caster.GetComponent<PlayerMovement3D>().wizard);
+                appearance.Setup(caster.GetComponent<PlayerMovement3D>().wizard, WizardShade.IndexOfPlayer(caster));
             }
         }
 
