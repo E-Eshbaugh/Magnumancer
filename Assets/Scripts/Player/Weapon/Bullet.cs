@@ -30,7 +30,6 @@ public class Bullet : MonoBehaviour
     private BulletFX _fx;
     private Element _element;      // the shooter's element (reactions, statuses), or the one it was loaded with
     private bool    _infused;      // carries an element other than the shooter's (Elemental Rounds, Ember Minigun)
-    const int FireVsIce = 2;
     private bool    _zoneReacted;  // a round only sets off one zone (gas, water, brambles)
 
     // internal target position computed in FixedUpdate
@@ -144,8 +143,9 @@ public class Bullet : MonoBehaviour
         var iceWall = hitCollider.GetComponent<IceWallEffect>();
         if (iceWall != null)
         {
-            // fire melts ice walls twice as fast
-            iceWall.TakeDamage(_element == Element.Fire ? StructureDamage * FireVsIce : StructureDamage);
+            // ice walls can't be broken, but fire melts them faster
+            if (_element == Element.Fire) iceWall.Scorch(StructureDamage);
+            else iceWall.TakeDamage(StructureDamage);
         }
         else
         {

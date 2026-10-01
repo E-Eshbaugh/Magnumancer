@@ -129,19 +129,20 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: f7eb56a6d56e3be4ea16d4357b0eea86, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  riseFromBelow: 3
-  riseSpeed: 10
-  raycastHeight: 5
-  groundLayers:
-    serializedVersion: 2
-    m_Bits: 16
-  maxHealth: 200
+  sizeScale: {x: 1.8, y: 2, z: 1.3}
+  riseDuration: 0.22
+  overshoot: 0.12
+  shakeIntensity: 0.25
+  shakeDuration: 0.3
+  eruptKnockback: 16
+  lifetime: 9
+  meltedHeight: 0.4
+  meltedWidth: 0.85
+  fireMeltPerDamage: 0.01
+  sinkDuration: 0.5
   destroyVFX: {fileID: 0}
   destroySFX: {fileID: 0}
   audioSource: {fileID: 0}
-  riseHeight: 2
-  riseDuration: 0.3
-  meltDuration: 0.5
 --- !u!208 &-5298015916839579822
 NavMeshObstacle:
   m_ObjectHideFlags: 0

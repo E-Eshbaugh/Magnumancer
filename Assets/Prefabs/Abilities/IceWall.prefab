@@ -46,7 +46,8 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   iceWallEffectPrefab: {fileID: 7645638516130853302, guid: a420aacf556217f4b9bd9372758f9b2a, type: 3}
-  forwardDistance: 1.2
+  forwardDistance: 2.2
+  maxWalls: 2
 --- !u!114 &-7167326800659796695
 MonoBehaviour:
   m_ObjectHideFlags: 0
