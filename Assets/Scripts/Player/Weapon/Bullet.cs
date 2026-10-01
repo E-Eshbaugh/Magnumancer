@@ -18,6 +18,9 @@ public class Bullet : MonoBehaviour
     public float knockbackPerDamage = 0.18f;
 
     [HideInInspector] public GameObject owner; // player who fired it (damage credit)
+    [HideInInspector] public int structureDamage = -1; // damage to props, walls and crystals (-1 = same as damage)
+
+    int StructureDamage => structureDamage >= 0 ? structureDamage : damage;
 
     private Vector3 _direction;
     private Light   _light;
@@ -137,14 +140,14 @@ public class Bullet : MonoBehaviour
         if (iceWall != null)
         {
             // fire melts ice walls twice as fast
-            iceWall.TakeDamage(_element == Element.Fire ? damage * FireVsIce : damage);
+            iceWall.TakeDamage(_element == Element.Fire ? StructureDamage * FireVsIce : StructureDamage);
         }
         else
         {
             var crystal = hitCollider.GetComponentInParent<CrystalHealth>();
             if (crystal != null)
             {
-                crystal.TakeDamage(damage);
+                crystal.TakeDamage(StructureDamage);
             }
         }
 
@@ -160,13 +163,13 @@ public class Bullet : MonoBehaviour
         // environment props wear down (fire burns wood faster, earth smashes stone...)
         var prop = hitCollider.GetComponentInParent<Destructible>();
         if (prop != null)
-            prop.TakeDamage(damage, owner, hitPoint, _element);
+            prop.TakeDamage(StructureDamage, owner, hitPoint, _element);
 
         // the world itself (floors, walls) keeps a bullet hole or scorch mark
         bool solidWorld = ph == null && goblin == null && prop == null && iceWall == null && !setOff
                           && (hitCollider.attachedRigidbody == null || hitCollider.attachedRigidbody.isKinematic);
         if (solidWorld)
-            ImpactMarks.Mark(hitPoint, hitNormal, _element, damage);
+            ImpactMarks.Mark(hitPoint, hitNormal, _element, StructureDamage);
 
         // Elements: set off a reaction with whatever's on them, or leave our own status
         var struck = ph != null ? ph.gameObject : (goblin != null ? goblin.gameObject : null);

@@ -12,6 +12,10 @@ using System.Collections;
 ///    rounds already in the mag are kept. Swapping away cancels it.
 ///  • Shell-by-shell (pump/lever shotguns, grenade launcher): one round at a time;
 ///    pull the trigger with anything loaded to interrupt and fire. Loaded shells stay.
+///
+/// Shotguns (LT): chamber a slug. It fires on the next trigger pull ahead of the
+/// buckshot (which stays loaded): a light hit on players but a wrecking ball for
+/// props, walls, ice walls and crystals. One slug, then a short cooldown.
 /// </summary>
 public class AmmoControl : MonoBehaviour
 {
@@ -39,6 +43,18 @@ public class AmmoControl : MonoBehaviour
     public float swapDelayPerWeight = 0.06f;
     [Tooltip("Taking a life reloads the gun in your hands")]
     public bool refillOnKill = true;
+
+    [Header("Shotgun Slugs")]
+    [Tooltip("Slugs chambered per LT press")]
+    public int slugRounds = 1;
+    [Tooltip("Seconds after the last slug fires before you can chamber another")]
+    public float slugCooldown = 3.5f;
+    [Tooltip("Seconds to rack the slug in before it can fire")]
+    public float slugChamberTime = 0.2f;
+    [Tooltip("Slug damage to players, as a fraction of a full buckshot volley")]
+    public float slugPlayerDamage = 0.4f;
+    [Tooltip("Slug damage to props, walls, ice walls and crystals, as a multiple of a full buckshot volley")]
+    public float slugStructureDamage = 4f;
 
     private FireController3D fire;
     private PlayerMovement3D movement;
@@ -95,8 +111,10 @@ public class AmmoControl : MonoBehaviour
 
     // Per-slot state that survives swapping
     private int[] magazines;
-    private bool[] slugLoaded;
+    private int[] slugsChambered;
+    private float[] slugReadyTime;
     private bool isSetup;
+    private WeaponAbilityControl abilityBar;
 
     void Awake()
     {
@@ -121,7 +139,9 @@ public class AmmoControl : MonoBehaviour
         }
 
         magazines = new int[guns.Length];
-        slugLoaded = new bool[guns.Length];
+        slugsChambered = new int[guns.Length];
+        slugReadyTime = new float[guns.Length];
+        abilityBar = WeaponAbilityControl.FindFor(this);
         RefillAll();
         isSetup = true;
 
@@ -171,28 +191,45 @@ public class AmmoControl : MonoBehaviour
 
         float now = Time.time;
 
-        // Shotgun shell swap (LT): buckshot <-> slug. Switching shells means reloading
-        // with the new ones.
-        if (currentGun.isShotgun && gamepad.leftTrigger.wasPressedThisFrame)
+        if (currentGun.isShotgun)
         {
-            slugLoaded[currentGunIndex] = !slugLoaded[currentGunIndex];
-            Rumble.GunAbility(gamepad);
-            RefreshAmmoPrefab();
-            ammoCount = 0;
-            StartReload();
-            return;
+            // LT: chamber a slug (off cooldown), or press again to unload it unspent
+            if (gamepad.leftTrigger.wasPressedThisFrame)
+            {
+                if (IsSlug) UnloadSlug();
+                else if (now >= slugReadyTime[currentGunIndex]) ChamberSlug(now);
+            }
+            // full while ready or loaded, refills after the slug goes off
+            abilityBar?.ReportCooldown(IsSlug ? 0f : slugReadyTime[currentGunIndex], slugCooldown);
         }
 
-        // Magazine reloads lock the gun; shell reloads can be interrupted by firing
-        bool canFire = ammoCount > 0 && now >= nextFireTime && (!IsReloading || IsShellReload(currentGun));
-
-        if (canFire && TriggerPulled())
+        if (IsSlug)
         {
-            StopReload();
-            FireCurrentGun();
-            ammoCount--;
-            nextFireTime = now + 1f / Mathf.Max(0.01f, currentGun.attackSpeed * FireRateMultiplier);
-            UpdateAmmoBar();
+            // A chambered slug fires ahead of the buckshot, even mid-reload (the reload carries on)
+            if (now >= nextFireTime && TriggerPulled())
+            {
+                FireCurrentGun();
+                if (--slugsChambered[currentGunIndex] <= 0)
+                {
+                    slugReadyTime[currentGunIndex] = now + slugCooldown;
+                    RefreshAmmoPrefab();
+                }
+                nextFireTime = now + 1f / Mathf.Max(0.01f, currentGun.attackSpeed * FireRateMultiplier);
+            }
+        }
+        else
+        {
+            // Magazine reloads lock the gun; shell reloads can be interrupted by firing
+            bool canFire = ammoCount > 0 && now >= nextFireTime && (!IsReloading || IsShellReload(currentGun));
+
+            if (canFire && TriggerPulled())
+            {
+                StopReload();
+                FireCurrentGun();
+                ammoCount--;
+                nextFireTime = now + 1f / Mathf.Max(0.01f, currentGun.attackSpeed * FireRateMultiplier);
+                UpdateAmmoBar();
+            }
         }
 
         if (ammoCount <= 0 && !IsReloading)
@@ -217,14 +254,34 @@ public class AmmoControl : MonoBehaviour
 
     string FireType => IsSlug ? "semi" : currentGun.fireType;
 
-    bool IsSlug => currentGun.isShotgun && slugLoaded != null && slugLoaded[currentGunIndex];
+    bool IsSlug => currentGun.isShotgun && slugsChambered != null && slugsChambered[currentGunIndex] > 0;
+
+    void ChamberSlug(float now)
+    {
+        slugsChambered[currentGunIndex] = Mathf.Max(1, slugRounds);
+        RefreshAmmoPrefab();
+        nextFireTime = Mathf.Max(nextFireTime, now + slugChamberTime);
+        Rumble.GunAbility(gamepad);
+        if (audioSource && currentGun.reloadSound)
+            audioSource.PlayOneShot(currentGun.reloadSound);
+    }
+
+    void UnloadSlug()
+    {
+        slugsChambered[currentGunIndex] = 0;
+        RefreshAmmoPrefab();
+        Rumble.ShellLoaded(gamepad);
+    }
 
     bool HasCustomBullet => wizard != null && wizard.customBulletPrefab != null && !currentGun.megaBomb;
 
     void FireCurrentGun()
     {
-        // Shotgun damage is per pellet; a slug hits as hard as the full volley
-        int damage = IsSlug ? currentGun.damage * Mathf.Max(1, currentGun.pelletCount) : currentGun.damage;
+        // Shotgun damage is per pellet; a slug is measured against the full volley:
+        // lighter on players, far heavier on cover
+        int volley = currentGun.damage * Mathf.Max(1, currentGun.pelletCount);
+        int damage = IsSlug ? Mathf.Max(1, Mathf.RoundToInt(volley * slugPlayerDamage)) : currentGun.damage;
+        int structureDamage = IsSlug ? Mathf.RoundToInt(volley * slugStructureDamage) : -1;
         if (ShotDamageModifier != null) damage = ShotDamageModifier(damage);
 
         float spread = currentGun.spreadAngle * spreadMultiplier;
@@ -245,11 +302,11 @@ public class AmmoControl : MonoBehaviour
         }
 
         for (int i = 0; i < projectiles; i++)
-            fire.Shoot(currentAmmoPrefab, spread, currentGun.recoil, damage);
+            fire.Shoot(currentAmmoPrefab, spread, currentGun.recoil, damage, structureDamage);
 
         if (fire.firePoint != null)
             BulletFX.MuzzleFlash(fire.Owner, fire.firePoint.position, fire.ShotDirection(),
-                BulletFX.ShotPower(damage * projectiles));
+                BulletFX.ShotPower(IsSlug ? volley : damage * projectiles));
 
         if (audioSource && currentGun.fireSound)
         {
@@ -318,6 +375,10 @@ public class AmmoControl : MonoBehaviour
         StopReload();
         for (int i = 0; i < guns.Length; i++)
             magazines[i] = guns[i] != null ? guns[i].ammoCapacity : 0;
+        // respawn / match start: no slug chambered, and one ready to go
+        if (slugsChambered != null) System.Array.Clear(slugsChambered, 0, slugsChambered.Length);
+        if (slugReadyTime != null) System.Array.Clear(slugReadyTime, 0, slugReadyTime.Length);
+        if (currentGun != null) RefreshAmmoPrefab();
         if (currentGun != null) ammoCount = currentGun.ammoCapacity;
         UpdateAmmoBar();
     }

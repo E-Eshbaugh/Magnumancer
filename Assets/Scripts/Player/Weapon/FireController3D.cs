@@ -54,8 +54,9 @@ public class FireController3D : MonoBehaviour
     /// <summary>
     /// Spawns prefabToUse and propels it down firePoint.forward (with optional spread).
     /// damage (if >= 0) overrides the projectile's own damage with the weapon's stat.
+    /// structureDamage (if >= 0) is what it does to props and walls instead (slugs).
     /// </summary>
-    public void Shoot(GameObject prefabToUse, float spreadAngle, float recoil, int damage = -1)
+    public void Shoot(GameObject prefabToUse, float spreadAngle, float recoil, int damage = -1, int structureDamage = -1)
     {
         if (prefabToUse == null || firePoint == null)
         {
@@ -85,6 +86,7 @@ public class FireController3D : MonoBehaviour
         if (proj.TryGetComponent<Bullet>(out var bulletComp))
         {
             if (damage >= 0) bulletComp.damage = damage;
+            bulletComp.structureDamage = structureDamage;
             bulletComp.owner = Owner;
             bulletComp.Initialize(dir);
         }

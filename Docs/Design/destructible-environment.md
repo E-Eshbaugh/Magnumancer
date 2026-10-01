@@ -29,6 +29,7 @@ Destruction sets itself up from names, so new maps mostly just work if they foll
 
 ### Destructible props (`Assets/Scripts/Environment/Destructible.cs`)
 
+- **Shotgun slugs (LT) are breaching rounds:** ×4 a full buckshot volley against props, walls, ice walls and crystals, but only 40% against players, on a 3.5s cooldown (see [Balance Log](balance-log.md), Pass 9).
 - **Damage:** every bullet that hits a prop (with the shooter's element) and every explosion (`Explosions.AffectWorld`, with falloff and a short delay that ripples outward).
 - **Element weaknesses:** fire ×2 against wood, plants and ice; poison ×1.5 against plants; earth ×1.5 against stone and crystal; lightning ×1.5 against metal; void ×1.5 against bone; frost ×0.5 against ice (`Destructible.ElementMultiplier`). Weak hits spray more chips.
 - **Hit feedback:** chips fly off where it was hit, and the prop jolts (skipped on static-batched meshes, which can't move).

@@ -175,6 +175,20 @@ See [Destructible Environment](destructible-environment.md). Knobs: `Destructibl
 | Terrain craters | 0.12m per metre of radius, max 0.5m each, 1.2m total | `TerrainCraters` |
 | Bullet marks | pool of 220 | `ImpactMarks.Max` |
 
+## Pass 9 (2026-10-01): shotgun slugs as breaching rounds
+
+Shotguns felt underpowered, and LT slugs could be spammed: they swapped the whole magazine to slugs that each hit as hard as a full volley. Now a shotgun is either a close-range brawler (buckshot) or a cover-clearing tool (slugs).
+
+| Knob | Old | New | Where |
+|---|---|---|---|
+| LT on a shotgun | swap the whole mag to slugs (forced reload) | **chamber 1 slug**; fires next, buckshot stays loaded; LT again unloads it unspent | `AmmoControl.slugRounds` |
+| Slug cooldown | none | **3.5s** after the slug fires (gun-ability bar refills) | `AmmoControl.slugCooldown` |
+| Rack time | full reload | **0.2s** | `AmmoControl.slugChamberTime` |
+| Slug vs players | 100% of a full volley | **40%** (Scrapshot 22, Dustbreaker 29, Hellthrasher 17) | `AmmoControl.slugPlayerDamage` |
+| Slug vs structures | 100% of a full volley | **×4 a full volley** (Scrapshot 224, Dustbreaker 288, Hellthrasher 168) on props, interior walls, ice walls and Nature crystals | `AmmoControl.slugStructureDamage`, `Bullet.structureDamage` |
+
+Zombies progress walls (`DestructibleWall`) still take normal damage, so slugs don't change Zombies pacing.
+
 ## Open issues / to playtest
 
 - **Blinkstorm stun is 5s** (`LightningBlastDamage`: `Stun(0.2f, 5f)`). With stuns now also blocking jumps that's very punishing. Suggest **~1.5s**.
