@@ -181,9 +181,8 @@ Shotguns felt underpowered, and LT slugs could be spammed: they swapped the whol
 
 | Knob | Old | New | Where |
 |---|---|---|---|
-| LT on a shotgun | swap the whole mag to slugs (forced reload) | **chamber 1 slug**; fires next, buckshot stays loaded; LT again unloads it unspent | `AmmoControl.slugRounds` |
-| Slug cooldown | none | **3.5s** after the slug fires (gun-ability bar refills) | `AmmoControl.slugCooldown` |
-| Rack time | full reload | **0.2s** | `AmmoControl.slugChamberTime` |
+| LT on a shotgun | swap the whole mag to slugs (forced reload) | **reload with slugs**: dumps the mag and loads a full mag of slugs (normal reload time, which is the cost; no cooldown). LT with a partial slug mag tops it up | `AmmoControl.StartReload(slugs)` |
+| Back to buckshot | LT again | **any normal reload** (X, or running dry) dumps leftover slugs and loads buckshot | `AmmoControl` |
 | Slug vs players | 100% of a full volley | **40%** (Scrapshot 22, Dustbreaker 29, Hellthrasher 17) | `AmmoControl.slugPlayerDamage` |
 | Slug vs structures | 100% of a full volley | **×4 a full volley** (Scrapshot 224, Dustbreaker 288, Hellthrasher 168) on props, interior walls, ice walls and Nature crystals | `AmmoControl.slugStructureDamage`, `Bullet.structureDamage` |
 
