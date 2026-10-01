@@ -36,6 +36,6 @@ public class WinManager : MonoBehaviour
     {
         // (optional) show a "You Win!" UI here before the wait
         yield return new WaitForSeconds(3f);
-        SceneManager.LoadScene("MainMenu");
+        SceneManager.LoadScene(MenuScenes.Hall);
     }
 }

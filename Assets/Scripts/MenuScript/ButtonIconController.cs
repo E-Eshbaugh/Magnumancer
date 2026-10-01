@@ -33,7 +33,7 @@ public class ButtonIconController : MonoBehaviour
 
         if (Gamepad.current.aButton.IsPressed() && SceneManager.GetActiveScene().name != "MainMenu")
         {
-            SceneManager.LoadScene("MainMenu");
+            SceneManager.LoadScene(MenuScenes.Hall);
         }
     }
 }

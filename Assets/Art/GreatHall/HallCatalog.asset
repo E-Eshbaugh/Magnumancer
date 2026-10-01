@@ -1,0 +1,127 @@
+%YAML 1.1
+%TAG !u! tag:unity3d.com,2011:
+--- !u!114 &11400000
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 49b6963bd41ab428eaa01a85688c2060, type: 3}
+  m_Name: HallCatalog
+  m_EditorClassIdentifier: Assembly-CSharp::HallCatalog
+  wizards:
+  - {fileID: 11400000, guid: 5711602331590214eb056242b61f4d06, type: 2}
+  - {fileID: 11400000, guid: efe1934e25ff9464b98098e4ae76321f, type: 2}
+  - {fileID: 11400000, guid: c2e4085bfdeaac345962d1b317f073f6, type: 2}
+  - {fileID: 11400000, guid: c89197986482db246b09d8e35d14e410, type: 2}
+  - {fileID: 11400000, guid: 9a075f37315249247a5e818e40407ecc, type: 2}
+  - {fileID: 11400000, guid: 0c2837b8f6daab94fa135c6007d87dd7, type: 2}
+  - {fileID: 11400000, guid: b9e5602ff2b536e428cfb65cb6a4c20e, type: 2}
+  - {fileID: 11400000, guid: 7628abb6914d53c45b4de5b81b57db98, type: 2}
+  initiate:
+  - {fileID: 11400000, guid: a9185a17e638c0b43bc9521d7c8a0e2b, type: 2}
+  - {fileID: 11400000, guid: da1ae560b6a869f4c8a4cb39d809fe56, type: 2}
+  - {fileID: 11400000, guid: e9e3fa9f90558b84d8489bbdeb9f3b7a, type: 2}
+  ascendant:
+  - {fileID: 11400000, guid: 4338d4f21f1138846a835288a1c6bdcd, type: 2}
+  - {fileID: 11400000, guid: c345cbe9f03696741a59f1f90f67d0be, type: 2}
+  - {fileID: 11400000, guid: ec5ea3d0336884a4094c89174154072a, type: 2}
+  - {fileID: 11400000, guid: f52eec34bda8d124ea310a5e17d1d0b4, type: 2}
+  archon:
+  - {fileID: 11400000, guid: ba907eeb7f55263498b3ec19d9243e67, type: 2}
+  - {fileID: 11400000, guid: 7fa214f30a53fc04d95a27b9379ec90b, type: 2}
+  - {fileID: 11400000, guid: bc12418186f4a394fbea057b19a8c1f6, type: 2}
+  - {fileID: 11400000, guid: 6b0a595098a55b541ae6c1103fa5c0df, type: 2}
+  - {fileID: 11400000, guid: ecb09edd8cf8b9b44b92cf15aa5091f2, type: 2}
+  placeholder: {fileID: 11400000, guid: 39dc9dbba0c274e4bbb0acd7bd5eab1d, type: 2}
+  tierNames:
+  - Initiate
+  - Ascended
+  - Archon
+  maps:
+  - scene: Oldwoods3D
+    displayName: The Oldwoods
+    flavor: The last Lost Grove. The Verdant Circle buried its traps under every root.
+    miniature: {fileID: 1515265693261919113, guid: 5bde5b26cd18f48dbbd16d6acb1480b1, type: 3}
+    tablePos: {x: -1.05, y: -1.35}
+    height: 0.05
+    glow: {r: 0.45, g: 1, b: 0.45, a: 1}
+  - scene: Stormspire
+    displayName: Stormspire
+    flavor: Storm-wracked peaks where the Voltborn learned to strike and vanish.
+    miniature: {fileID: 1864879113965382174, guid: c9233666f472b4e08bcb11c8406a2de4, type: 3}
+    tablePos: {x: -1.05, y: 1.35}
+    height: 0.55
+    glow: {r: 1, g: 0.92, b: 0.35, a: 1}
+  - scene: FungalHollow
+    displayName: Fungal Hollow
+    flavor: A grove gone to spore. The Blightward still tend what grows here.
+    miniature: {fileID: 1778677783997697841, guid: d3574a7dfe8a24bc0b5bb89a0cafb911, type: 3}
+    tablePos: {x: -3.15, y: -1.35}
+    height: 0.1
+    glow: {r: 0.75, g: 1, b: 0.3, a: 1}
+  - scene: Riftforge
+    displayName: Riftforge
+    flavor: A canyon fortress on the lip of a Dark Rift. Granite Vow ground.
+    miniature: {fileID: 1737369127483119573, guid: 553f208f757074a2e99733d8f2766174, type: 3}
+    tablePos: {x: 1.05, y: 1.35}
+    height: 0.45
+    glow: {r: 1, g: 0.6, b: 0.3, a: 1}
+  - scene: CinderCrucibleZombies
+    displayName: Cinder Crucible
+    flavor: The Emberguard's volcanic forge. Goblins crawl up from its depths.
+    miniature: {fileID: 8608501547111897109, guid: cb6a56730637d4dafa6f37602efbd6f1, type: 3}
+    tablePos: {x: 3.15, y: 1.35}
+    height: 0.5
+    glow: {r: 1, g: 0.4, b: 0.15, a: 1}
+  - scene: DrownedSanctum
+    displayName: Drowned Sanctum
+    flavor: Flooded ruins of the old healing springs, held by the Tidebound.
+    miniature: {fileID: 4259601750230487447, guid: 649a26d78650049029e3b894a9680cc5, type: 3}
+    tablePos: {x: 1.05, y: -1.35}
+    height: 0
+    glow: {r: 0.3, g: 0.7, b: 1, a: 1}
+  - scene: BlackOsuary
+    displayName: Black Ossuary
+    flavor: Cursed tunnels where the Hollow chase the magic nobody should.
+    miniature: {fileID: 5150072979807848576, guid: 4f215af1f62344967b535b62ba1bd9bd, type: 3}
+    tablePos: {x: 3.15, y: -1.35}
+    height: 0.1
+    glow: {r: 0.7, g: 0.35, b: 1, a: 1}
+  - scene: Frostgrave
+    displayName: Frostgrave
+    flavor: A shattered glacier sanctuary. The Frostwardens never miss twice.
+    miniature: {fileID: 243345584303030140, guid: ea8d20cf8cdc74d01a6ae2f6daf02cde, type: 3}
+    tablePos: {x: -3.15, y: 1.35}
+    height: 0.6
+    glow: {r: 0.6, g: 0.9, b: 1, a: 1}
+  modes:
+  - name: Deathmatch
+    description: Every magus for themselves. Last soul standing drinks the fading light.
+  - name: Team Deathmatch
+    description: Two pacts, two sworn foes. Hold formation and reap their lives in tandem.
+  - name: Waves
+    description: Goblin tides claw up from a Dark Rift. Hold the line together until it stills.
+  wizardModel: {fileID: 919132149155446097, guid: 231007177a16e5b4da2f96f9c54e101a, type: 3}
+  wizardAnimator: {fileID: 9100000, guid: 9802c9d0a9e8444bf94f466b5fa4865b, type: 2}
+  titleFont: {fileID: 12800000, guid: 4012217dee8a8554c9e3d021d0e7eb38, type: 2}
+  bodyFont: {fileID: 12800000, guid: bede3409dbfa14544b827475acf4e4a8, type: 2}
+  heart: {fileID: 429835477, guid: dfea8f0b60b16a441a7891b0b31070e0, type: 3}
+  orb: {fileID: -1977350268, guid: 23cbd1ec105216a4ab6739c01cee3cd1, type: 3}
+  btnA: {fileID: 1981921880, guid: 0e90c38a23b5b48478f68d9bec139ef0, type: 3}
+  btnB: {fileID: 284763395, guid: 0e90c38a23b5b48478f68d9bec139ef0, type: 3}
+  btnX: {fileID: -1290956742, guid: 0e90c38a23b5b48478f68d9bec139ef0, type: 3}
+  btnY: {fileID: 1821680277, guid: 0e90c38a23b5b48478f68d9bec139ef0, type: 3}
+  btnLB: {fileID: -1209240092, guid: 0e90c38a23b5b48478f68d9bec139ef0, type: 3}
+  btnRB: {fileID: -284676648, guid: 0e90c38a23b5b48478f68d9bec139ef0, type: 3}
+  btnDpad: {fileID: -714586492, guid: 0e90c38a23b5b48478f68d9bec139ef0, type: 3}
+  btnStick: {fileID: 0}
+  btnMenu: {fileID: 1495865672, guid: 0e90c38a23b5b48478f68d9bec139ef0, type: 3}
+  playerColors:
+  - {r: 0.95, g: 0.26, b: 0.26, a: 1}
+  - {r: 0.26, g: 0.55, b: 1, a: 1}
+  - {r: 0.35, g: 0.9, b: 0.35, a: 1}
+  - {r: 1, g: 0.82, b: 0.2, a: 1}

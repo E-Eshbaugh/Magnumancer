@@ -110,7 +110,7 @@ public class PauseUIControl : MonoBehaviour
             case 1:
                 // Return to MainMenu scene
                 GamePause.Resume(); // unpause before scene load
-                SceneManager.LoadScene("MainMenu");
+                SceneManager.LoadScene(MenuScenes.Hall);
                 break;
             case 2:
                 // Settings placeholder
