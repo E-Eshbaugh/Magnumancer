@@ -5,15 +5,15 @@ using UnityEngine.SceneManagement;
 
 /// <summary>
 /// Wires the game's sound effects to what's happening, without gameplay scripts having to
-/// call it: hits, hit markers, kills, lives lost, kill-streak callouts (DamageEvents),
-/// per-player sounds (adds PlayerSfx to every player), the match-start gong and the
-/// victory/defeat sting, Zombies points, and the War Table in the Great Hall.
+/// call it: hit markers, lives lost, zombie deaths (DamageEvents), per-player sounds (adds
+/// PlayerSfx to every player), the Zombies start gong / defeat sting and points, and the War
+/// Table in the Great Hall. Hit thuds, kill chimes, the announcer, music and brawl round
+/// stings belong to the Feel systems (HitFeedback, MatchDirector, MusicDirector).
 /// Boots itself once and survives scene loads; everything per-match resets on each load.
 /// </summary>
 public class SfxDirector : MonoBehaviour
 {
     const float ScanInterval = 0.25f;
-    const int SpreeKills = 3;
 
     static SfxDirector instance;
 
@@ -25,7 +25,6 @@ public class SfxDirector : MonoBehaviour
     bool matchEnded;
     int maxStanding;
     bool horde;
-    readonly Dictionary<GameObject, int> streaks = new();
     readonly List<PlayerHealthControl> players = new();
 
     // Great Hall
@@ -72,7 +71,6 @@ public class SfxDirector : MonoBehaviour
     {
         matchStarted = matchEnded = false;
         maxStanding = 0;
-        streaks.Clear();
         players.Clear();
         hallSeen = false;
         lastMode = lastMap = -1;
@@ -109,27 +107,21 @@ public class SfxDirector : MonoBehaviour
         int standing = 0;
         foreach (var p in players) if (Standing(p)) standing++;
 
+        // Brawl rounds have their own show (MatchDirector: "ROUND N / FIGHT!", victory and
+        // draw stings, announcer). Zombies gets a gong when the run starts and a sting when
+        // the horde wins.
         if (!matchStarted && standing > 0)
         {
             matchStarted = true;
             horde = FindAnyObjectByType<GoblinSpawner>() != null;
-            Sfx.Play(SfxId.MatchStart);
+            if (horde) Sfx.Play(SfxId.MatchStart);
         }
         maxStanding = Mathf.Max(maxStanding, standing);
 
-        // Mirrors WinManager: last wizard standing wins a brawl; the horde wins when everyone's down
-        if (!matchEnded && matchStarted)
+        if (horde && !matchEnded && maxStanding > 0 && standing == 0)
         {
-            if (!horde && maxStanding >= 2 && standing <= 1)
-            {
-                matchEnded = true;
-                Sfx.Play(standing == 1 ? SfxId.Victory : SfxId.Defeat);
-            }
-            else if (maxStanding > 0 && standing == 0)
-            {
-                matchEnded = true;
-                Sfx.Play(SfxId.Defeat);
-            }
+            matchEnded = true;
+            Sfx.Play(SfxId.Defeat);
         }
     }
 
@@ -156,13 +148,8 @@ public class SfxDirector : MonoBehaviour
             return;
         }
 
-        if (player != null)
-            Sfx.Play(SfxId.Hurt, at, Mathf.Clamp(0.55f + 2f * amount / Mathf.Max(1f, player.maxHealth), 0.55f, 1.2f));
-        else if (victim.GetComponentInParent<GoblinHealth>() != null)
-            Sfx.Play(SfxId.MonsterHit, at);
-        else return;
-
-        // the shooter's hit marker
+        // the body thud is HitFeedback's (players and monsters); this adds the shooter's hit marker
+        if (player == null && victim.GetComponentInParent<GoblinHealth>() == null) return;
         if (attacker != null && attacker != victim && IsPlayer(attacker))
             Sfx.Play(SfxId.HitMarker, at, player != null ? 1f : 0.6f);
     }
@@ -172,30 +159,16 @@ public class SfxDirector : MonoBehaviour
         if (victim == null) return;
         bool playerDied = IsPlayer(victim);
 
+        // A player's kill chime and the announcer (first blood, multi-kills...) are
+        // HitFeedback's and MatchDirector's; this adds the soul leaving, and the zombie splat
         if (playerDied)
         {
             Sfx.Play(SfxId.LifeLost, at);
-            streaks.Remove(victim);
-        }
-        else Sfx.Play(SfxId.MonsterDeath, at);
-
-        if (attacker == null || attacker == victim || !IsPlayer(attacker)) return;
-
-        if (!playerDied)
-        {
-            Sfx.Play(SfxId.KillConfirm, at, 0.35f, 1.15f);   // a lighter ding per zombie
             return;
         }
-
-        Sfx.Play(SfxId.KillConfirm, at);
-
-        // announcer: kill streaks (3, 6, 9...) and sniper picks
-        streaks.TryGetValue(attacker, out int n);
-        streaks[attacker] = ++n;
-        var gun = attacker.GetComponentInChildren<AmmoControl>();
-        if (n % SpreeKills == 0) Sfx.Play(SfxId.KillingSpree);
-        else if (gun != null && gun.currentGun != null && gun.currentGun.weaponClass == WeaponClass.Sniper)
-            Sfx.Play(SfxId.Headshot);
+        Sfx.Play(SfxId.MonsterDeath, at);
+        if (attacker != null && attacker != victim && IsPlayer(attacker))
+            Sfx.Play(SfxId.KillConfirm, at, 0.35f, 1.15f);   // a lighter ding per zombie
     }
 
     void OnPoints(GameObject player, int total, int delta)
