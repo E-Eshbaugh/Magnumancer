@@ -27,6 +27,8 @@ A fun, chaotic, combo-forward **couch co-op brawler**: *CoD Zombies meets Gang B
 | [Elemental Ecosystem](elemental-ecosystem.md) | Element statuses, reactions, team roles, implementation plan | **Built**: statuses, all 11 reactions + Echo, combo counter, environment rules; needs playtest and map placement of `MapElementZone` |
 | [Destructible Environment](destructible-environment.md) | Destructible props and interior walls, damage states, burning/brittle props, stubs, craters (terrain dents), bullet holes | **Two passes built**; needs playtest |
 | [Items & Drops](items-and-drops.md) | Map pickups, wonder weapons, leader crown, zombies economy | **Built** (brawl drops, wonder weapons, crown); needs playtest and sound clips. Zombies economy designed |
+| [Zombies Ability Compatibility](zombies-abilities.md) | Active/passive audit, humans-versus-zombies damage rules, enemy melee and gameplay checks | **Built**; combat tuning needs playtest |
+| [Pack-a-Punch / Runeforge](pack-a-punch.md) | Points HUD and overhead activity; final-stage forge flow; all 12 weapons × 8 wizards × 3 active × 2 passive runes | **Points + first forge built** (baseline + 9 active-rune power-ups); remaining combinations planned |
 | [Modes & Match Flow](modes-and-flow.md) | Brawl campaign, sudden death, drafts, hazards, TDM, Zombies | Designed |
 | [Balance Log](balance-log.md) | What's been tuned, where the knobs live, open issues | Up to date (2026-09-30) |
 
@@ -56,4 +58,6 @@ A fun, chaotic, combo-forward **couch co-op brawler**: *CoD Zombies meets Gang B
 | Rumble and shake | `Assets/Scripts/Combat/Rumble.cs`, `CameraShake` | |
 | Item drops | `Assets/Scripts/Items/` | `DropDirector` (auto-added to brawl scenes), `ItemBook` table, pickups, buffs, throwables (LB), wonder weapons (take RT), `LeaderCrown` |
 
-Known intentional quirks (don't "fix"): Akimbo's off-hand fires backwards; the map select's slot 4 loads CinderCrucibleZombies; players are immune to their own mines and poison.
+Known intentional quirks (don't "fix"): Akimbo's off-hand fires backwards; players are immune to their own mines and poison.
+
+Modes keep their lore names on the War Table: **Modus Solitaria** (Deathmatch), **Bellum Foedera** (Team Deathmatch), **Custodia Perpetua** (Waves). The table only shows maps for the chosen mode: the eight PvP arenas (Cinder Crucible = `CinderCrucible`), or in Custodia Perpetua the Waves maps (currently just `CinderCrucibleZombies`, marked `waves` in `HallCatalog`).

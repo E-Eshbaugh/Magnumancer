@@ -33,7 +33,7 @@ public class ViperNestAbility : MonoBehaviour, IActiveAbility
     {
         isRunning = true;
 
-        Transform firePoint = caster.transform.Find("GunPlaceHolder").Find("firePoint");
+        Transform firePoint = caster.transform.Find("GunPlaceHolder")?.Find("firePoint");
         Vector3 spawnPos = firePoint ? firePoint.position : caster.transform.position;
 
         Vector3 baseAim = caster.GetComponentInChildren<GunOrbitController>()?.aimDirection ?? caster.transform.forward;

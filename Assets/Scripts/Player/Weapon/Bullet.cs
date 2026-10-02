@@ -20,6 +20,7 @@ public class Bullet : MonoBehaviour
     [HideInInspector] public GameObject owner; // player who fired it (damage credit)
     [HideInInspector] public int structureDamage = -1; // damage to props, walls and crystals (-1 = same as damage)
     [HideInInspector] public Element element;  // set before Initialize to carry another element (None = the shooter's)
+    [HideInInspector] public bool forged;      // Pack-a-Punch round: hits trigger the owner's rune power-up
 
     int StructureDamage => structureDamage >= 0 ? structureDamage : damage;
 
@@ -31,6 +32,7 @@ public class Bullet : MonoBehaviour
     private Element _element;      // the shooter's element (reactions, statuses), or the one it was loaded with
     private bool    _infused;      // carries an element other than the shooter's (Elemental Rounds, Ember Minigun)
     private bool    _zoneReacted;  // a round only sets off one zone (gas, water, brambles)
+    private bool    _throughOwnWall; // forged round that flew through its owner's ice wall (Rampart)
 
     // internal target position computed in FixedUpdate
     private Vector3 _targetPosition;
@@ -83,6 +85,13 @@ public class Bullet : MonoBehaviour
         bool blocked = Physics.Raycast(_targetPosition, _direction, out RaycastHit hit, moveDist,
                 Physics.DefaultRaycastLayers, QueryTriggerInteraction.Ignore);
 
+        // Rampart: a forged round flies through its owner's own ice wall
+        if (blocked && forged && ForgedRunes.PassesOwnWall(owner, hit.collider))
+        {
+            _throughOwnWall = true;
+            blocked = FirstHitPastOwnWall(moveDist, out hit);
+        }
+
         // rounds flying through zones react with them: fire ignites gas and brambles,
         // frost freezes water, lightning electrifies it, earth turns it to mud
         if (_element != Element.None && !_zoneReacted)
@@ -99,6 +108,23 @@ public class Bullet : MonoBehaviour
             // advance target position
             _targetPosition += _direction * moveDist;
         }
+    }
+
+    static readonly RaycastHit[] passHits = new RaycastHit[16];
+
+    bool FirstHitPastOwnWall(float moveDist, out RaycastHit first)
+    {
+        first = default;
+        int n = Physics.RaycastNonAlloc(_targetPosition, _direction, passHits, moveDist,
+            Physics.DefaultRaycastLayers, QueryTriggerInteraction.Ignore);
+        float best = float.MaxValue;
+        for (int i = 0; i < n; i++)
+        {
+            if (passHits[i].distance >= best || ForgedRunes.PassesOwnWall(owner, passHits[i].collider)) continue;
+            best = passHits[i].distance;
+            first = passHits[i];
+        }
+        return best < float.MaxValue;
     }
 
     void Update()
@@ -132,7 +158,7 @@ public class Bullet : MonoBehaviour
                 if ((ph = c.GetComponentInParent<PlayerHealthControl>()) != null)
                     break;
         }
-        if (ph != null)
+        if (ph != null && Teams.CanHarm(ph.gameObject, owner))
         {
             ph.TakeDamage(damage, owner);
             if (ph.movement != null && ph.gameObject != owner)
@@ -157,7 +183,7 @@ public class Bullet : MonoBehaviour
         }
 
         //Goblin
-        var goblin = hitCollider.GetComponent<GoblinHealth>();
+        var goblin = hitCollider.GetComponentInParent<GoblinHealth>();
         if (goblin != null)
             goblin.TakeDamage(damage, owner);
 
@@ -180,6 +206,8 @@ public class Bullet : MonoBehaviour
         var struck = ph != null ? ph.gameObject : (goblin != null ? goblin.gameObject : null);
         if (struck != null && struck != owner)
             ElementReactions.BulletHit(struck, owner, damage, hitPoint, _infused ? _element : Element.None);
+        if (forged && struck != null && struck != owner)
+            ForgedRunes.OnForgedHit(owner, struck, damage, hitPoint, _direction, _throughOwnWall);
         // 3) snap both target and actual to impact
         _targetPosition = hitPoint;
         transform.position = hitPoint;

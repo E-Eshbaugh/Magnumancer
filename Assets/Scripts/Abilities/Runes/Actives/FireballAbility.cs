@@ -3,7 +3,7 @@ using UnityEngine;
 using Magnumancer.Abilities;
 
 /// Emberguard — Rune III: Fireball. Hurls a ball of fire at wherever the nearest enemy
-/// player is standing when it's cast (they can still move out of the way while it
+/// is standing when it's cast (they can still move out of the way while it
 /// flies). It bursts on landing and leaves a pool of lava. With nobody in range it's
 /// thrown along your aim instead.
 public class FireballAbility : MonoBehaviour, IActiveAbility
@@ -29,7 +29,7 @@ public class FireballAbility : MonoBehaviour, IActiveAbility
     {
         Color theme = AbilityKit.Theme(caster);
         Vector3 from = AbilityKit.Chest(caster);
-        var target = NearestEnemyPlayer(caster);
+        var target = NearestEnemy(caster);
         Vector3 to = target != null
             ? AbilityKit.Ground(target.transform.position + Vector3.up)   // their spot at launch
             : AbilityKit.AimPoint(caster, distance);
@@ -126,14 +126,13 @@ public class FireballAbility : MonoBehaviour, IActiveAbility
         return ps;
     }
 
-    // Closest living enemy *player* (monsters don't count) within targetRange
-    GameObject NearestEnemyPlayer(GameObject caster)
+    // Closest living opponent, including goblins, within targetRange.
+    GameObject NearestEnemy(GameObject caster)
     {
         GameObject best = null;
         float bestDist = float.MaxValue;
         foreach (var e in AbilityKit.Enemies(caster.transform.position, targetRange, caster))
         {
-            if (e.GetComponent<PlayerHealthControl>() == null) continue;
             float d = (e.transform.position - caster.transform.position).sqrMagnitude;
             if (d < bestDist) { bestDist = d; best = e; }
         }

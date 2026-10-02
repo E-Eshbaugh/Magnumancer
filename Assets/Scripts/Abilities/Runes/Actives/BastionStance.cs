@@ -84,6 +84,7 @@ public class BastionStance : MonoBehaviour
             var mc = slab.AddComponent<MeshCollider>();
             mc.sharedMesh = slab.GetComponent<MeshFilter>().sharedMesh;
             mc.convex = true;
+            AbilityKit.BlockNavigation(mc);
             slab.AddComponent<BastionShieldPiece>().Init(this);
             slabList.Add(slab.transform);
             slabHeights.Add(h);

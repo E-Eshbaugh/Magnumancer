@@ -150,7 +150,7 @@ public static class DestructibleSetup
         }
         if (made.Count > 0) Debug.Log($"[Destructibles] {made.Count} props in {scene.name} can be destroyed");
 
-        if (zombies && RebuildZombiesNavmesh && made.Count > 0) PrepareNavmesh(made);
+        if (zombies && RebuildZombiesNavmesh) PrepareNavmesh(made);
     }
 
     static bool IsBoundary(Bounds wall, Bounds rect)
@@ -182,13 +182,58 @@ public static class DestructibleSetup
             }
             d.gameObject.AddComponent<NavMeshModifier>().ignoreFromBuild = true;
         }
+        // Progression barriers must carve a temporary obstacle, not bake a permanent
+        // hole. Opening one then connects its room without another full rebuild.
+        foreach (var wall in UnityEngine.Object.FindObjectsByType<DestructibleWall>(FindObjectsInactive.Include, FindObjectsSortMode.None))
+        {
+            var modifier = wall.GetComponent<NavMeshModifier>();
+            if (modifier == null) modifier = wall.gameObject.AddComponent<NavMeshModifier>();
+            modifier.ignoreFromBuild = true;
+            if (wall.GetComponentInChildren<NavMeshObstacle>(true) == null)
+            {
+                var collider = wall.GetComponentInChildren<Collider>(true);
+                if (collider != null)
+                {
+                    var obstacle = collider.gameObject.AddComponent<NavMeshObstacle>();
+                    obstacle.shape = NavMeshObstacleShape.Box;
+                    var bounds = collider.bounds;
+                    Vector3 scale = collider.transform.lossyScale;
+                    obstacle.center = collider.transform.InverseTransformPoint(bounds.center);
+                    obstacle.size = new Vector3(bounds.size.x / Mathf.Max(0.001f, Mathf.Abs(scale.x)),
+                        bounds.size.y / Mathf.Max(0.001f, Mathf.Abs(scale.y)), bounds.size.z / Mathf.Max(0.001f, Mathf.Abs(scale.z)));
+                    obstacle.carving = true;
+                    obstacle.carveOnlyStationary = false;
+                }
+            }
+        }
         // players standing at their spawns shouldn't punch holes either
         foreach (var p in UnityEngine.Object.FindObjectsByType<PlayerMovement3D>(FindObjectsSortMode.None))
             if (p.GetComponent<NavMeshModifier>() == null) p.gameObject.AddComponent<NavMeshModifier>().ignoreFromBuild = true;
 
+        var wholeSceneSurfaces = new HashSet<(int agent, int layers, int area)>();
         foreach (var surface in surfaces)
         {
-            try { surface.BuildNavMesh(); }
+            // The Zombies scene has two whole-scene surfaces collecting identical
+            // geometry. Overlaid meshes create ambiguous edges on the stairs.
+            var coverage = (surface.agentTypeID, surface.layerMask.value, surface.defaultArea);
+            if (surface.collectObjects == CollectObjects.All && wholeSceneSurfaces.Contains(coverage))
+            {
+                surface.RemoveData();
+                surface.enabled = false;
+                continue;
+            }
+            // Follow the same ramps and solid surfaces as CharacterController.
+            // Finer voxels preserve stair connections and small landing platforms.
+            surface.useGeometry = NavMeshCollectGeometry.PhysicsColliders;
+            surface.overrideVoxelSize = true;
+            surface.voxelSize = 0.1f;
+            surface.buildHeightMesh = true;
+            try
+            {
+                surface.BuildNavMesh();
+                if (surface.navMeshData != null && surface.collectObjects == CollectObjects.All)
+                    wholeSceneSurfaces.Add(coverage);
+            }
             catch (Exception e) { Debug.LogWarning($"[Destructibles] Couldn't rebuild the Zombies navmesh ({e.Message}); broken props will leave their old hole."); }
         }
         Debug.Log($"[Destructibles] Rebuilt the Zombies navmesh around {props.Count} destructible props " +

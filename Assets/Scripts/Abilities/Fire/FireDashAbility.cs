@@ -83,24 +83,10 @@ public class FireDashAbility : MonoBehaviour, IActiveAbility
             Collider[] hits = Physics.OverlapSphere(caster.transform.position, enemyHitboxRadius, enemyLayer);
             foreach (var h in hits)
             {
-                if (!hitEnemies.Contains(h.gameObject))
-                {
-                    var enemyHealth = h.GetComponent<PlayerHealthControl>();
-                    if (enemyHealth != null)
-                    {
-                        enemyHealth.TakeDamage(dashDamage, caster);
-                        hitEnemies.Add(h.gameObject);
-                        ElementReactions.AbilityHit(h.gameObject, caster, dashDamage);
-                    }
-
-                    var goblin = h.GetComponent<GoblinHealth>();
-                    if (goblin != null)
-                    {
-                        goblin.TakeDamage(dashDamage, caster);
-                        hitEnemies.Add(h.gameObject);
-                        ElementReactions.AbilityHit(h.gameObject, caster, dashDamage);
-                    }
-                }
+                var target = DamageEvents.RootOf(h);
+                if (!DamageEvents.IsEnemy(target, caster) || !DamageEvents.IsAlive(target) || !hitEnemies.Add(target)) continue;
+                DamageEvents.Deal(target, dashDamage, caster);
+                ElementReactions.AbilityHit(target, caster, dashDamage);
             }
 
             elapsed += dt;

@@ -42,11 +42,28 @@ public static class DamageEvents
 
     /// The object that "is" a combatant for this collider (players/monsters have a rigidbody root).
     public static GameObject RootOf(Collider col)
-        => col.attachedRigidbody ? col.attachedRigidbody.gameObject : col.gameObject;
+    {
+        if (col == null) return null;
+        var player = col.GetComponentInParent<PlayerHealthControl>();
+        if (player != null) return player.gameObject;
+        var monster = col.GetComponentInParent<GoblinHealth>();
+        if (monster != null) return monster.gameObject;
+        return col.attachedRigidbody ? col.attachedRigidbody.gameObject : col.gameObject;
+    }
+
+    public static bool IsAlive(GameObject go)
+    {
+        if (go == null || !go.activeInHierarchy) return false;
+        if (go.TryGetComponent<PlayerHealthControl>(out var player)) return player.IsStanding;
+        return go.TryGetComponent<GoblinHealth>(out var monster) && !monster.IsDead;
+    }
+
+    public static bool IsEnemy(GameObject go, GameObject owner)
+        => go != null && go != owner && IsCombatant(go) && !Teams.SameTeam(go, owner) && Teams.CanHarm(go, owner);
 
     /// True for another player or a monster.
     public static bool IsCombatant(GameObject go)
-        => go != null && (go.CompareTag("Monster") || go.GetComponent<PlayerHealthControl>() != null);
+        => go != null && (go.GetComponent<GoblinHealth>() != null || go.GetComponent<PlayerHealthControl>() != null);
 }
 
 /// Scales damage this object deals.

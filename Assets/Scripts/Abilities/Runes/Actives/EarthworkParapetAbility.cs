@@ -20,6 +20,10 @@ public class EarthworkParapetAbility : MonoBehaviour, IActiveAbility
     public float shoveRadius = 2.4f;
     public float shoveForce = 14f;
     public float shoveDamage = 10f;
+    GameObject activeTower;
+
+    /// The tower is up (Highground: forged shots from on top kick rubble)
+    public bool TowerUp => activeTower != null;
 
     public void Activate(GameObject caster) => StartCoroutine(Raise(caster));
 
@@ -31,6 +35,8 @@ public class EarthworkParapetAbility : MonoBehaviour, IActiveAbility
         Color theme = AbilityKit.Theme(caster);
 
         var tower = Build(ground);
+        activeTower = tower;
+        Destroy(tower, riseTime + holdTime + sinkTime + 0.2f);
         Vector3 buried = ground - Vector3.up * (height + 0.2f);
         tower.transform.position = buried;
 
@@ -84,6 +90,7 @@ public class EarthworkParapetAbility : MonoBehaviour, IActiveAbility
         }
         if (movement != null) movement.elevation = 0f;
         Destroy(tower);
+        activeTower = null;
     }
 
     void OnDisable()
@@ -91,6 +98,7 @@ public class EarthworkParapetAbility : MonoBehaviour, IActiveAbility
         // caster died mid-ability: don't leave their shots angled down
         var m = GetComponentInParent<PlayerMovement3D>();
         if (m != null) m.elevation = 0f;
+        if (activeTower != null) Destroy(activeTower);
     }
 
     bool OnTop(GameObject caster, Vector3 ground)
@@ -119,6 +127,7 @@ public class EarthworkParapetAbility : MonoBehaviour, IActiveAbility
         var mc = crag.AddComponent<MeshCollider>();
         mc.sharedMesh = crag.GetComponent<MeshFilter>().sharedMesh;
         mc.convex = true;
+        AbilityKit.BlockNavigation(mc);
 
         // shards jutting from its flanks, leaning away as if the rock split while it heaved up
         // (visual only, so they never snag anyone or crowd the crown)

@@ -132,7 +132,7 @@ public class WeaponSynergy : MonoBehaviour, IOutgoingDamageModifier
         if (!active || wizard == null || wizard.passive != PassiveType.VerdantResurgence) return;
         if (GetComponent<VerdantResurgencePassive>() != null) return;
         var health = GetComponent<PlayerHealthControl>();
-        if (health == null || health.IsDead || health.currentHealth >= health.maxHealth) return;
+        if (health == null || !health.IsStanding || health.currentHealth >= health.maxHealth) return;
         if (Time.time - health.LastDamageTime < GroveDelay) { healPending = 0f; return; }
         healPending += GroveRegen * Time.deltaTime;
         int whole = Mathf.FloorToInt(healPending);

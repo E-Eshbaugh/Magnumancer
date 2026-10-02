@@ -38,7 +38,7 @@ public class RockslideAbility : MonoBehaviour, IActiveAbility
 
         float nextDebris = 0f, nextDust = 0f;
         Vector3 spinAxis = Vector3.Cross(Vector3.up, dir);
-        for (float t = 0; t < time; t += Time.deltaTime)
+        for (float t = 0; t < time && !PlayerHealthControl.IsIncapacitated(caster.transform); t += Time.deltaTime)
         {
             Vector3 step = dir * speed * Time.deltaTime;
             if (cc != null && cc.enabled) cc.Move(step); else caster.transform.position += step;

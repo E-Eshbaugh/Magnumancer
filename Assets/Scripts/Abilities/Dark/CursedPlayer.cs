@@ -77,49 +77,19 @@ public class CursedPlayer : MonoBehaviour
         Collider[] affected = Physics.OverlapSphere(center, explosionRadius, damageLayers);
         foreach (Collider nearby in affected)
         {
-            GameObject victim = DamageEvents.RootOf(nearby);
-            if (!alreadyHit.Add(victim)) continue;
-            if (victim == exclude) continue; // the burst shouldn't hit whoever is bursting
-            Transform target = nearby.transform;
-            float distance = Vector3.Distance(center, target.position);
-
-            // Line-of-sight check
-            if (Physics.Linecast(center, target.position, out RaycastHit hit,
-                    Physics.DefaultRaycastLayers, QueryTriggerInteraction.Ignore))
+            var victim = DamageEvents.RootOf(nearby);
+            if (!alreadyHit.Add(victim) || victim == exclude) continue;
+            if (!DamageEvents.IsCombatant(victim))
             {
-                // Hit an ice wall
-                IceWallEffect wallBlock = hit.transform.GetComponent<IceWallEffect>();
-                if (wallBlock != null && hit.transform != target)
-                {
-                    wallBlock.TakeDamage(Mathf.RoundToInt(maxDamage));
-                    continue;
-                }
-
-                if (hit.transform != target)
-                    continue; // Obstructed
+                nearby.GetComponentInParent<IceWallEffect>()?.TakeDamage(Mathf.RoundToInt(maxDamage));
+                continue;
             }
+            if (!DamageEvents.IsEnemy(victim, attacker) || !DamageEvents.IsAlive(victim)) continue;
+            if (!AbilityKit.ClearPath(center + Vector3.up, victim, exclude)) continue;
 
-            // Damage falloff
-            float distancePercent = Mathf.Clamp01(1f - (distance / explosionRadius));
-            float damageToApply = maxDamage * distancePercent;
-
-            // Apply health damage
-            var health = nearby.GetComponent<PlayerHealthControl>();
-            if (health != null)
-                health.TakeDamage(damageToApply, attacker);
-
-            var goblin = nearby.GetComponent<GoblinHealth>();
-            if (goblin != null)
-                goblin.TakeDamage(damageToApply, attacker);
-
-            // Directly damage walls
-            var wall = nearby.GetComponent<IceWallEffect>();
-            if (wall != null)
-                wall.TakeDamage(Mathf.RoundToInt(damageToApply));
+            float distance = Vector3.Distance(center, victim.transform.position);
+            float damageToApply = maxDamage * Mathf.Clamp01(1f - distance / explosionRadius);
+            DamageEvents.Deal(victim, damageToApply, attacker);
         }
     }
-
-
-
-
 }

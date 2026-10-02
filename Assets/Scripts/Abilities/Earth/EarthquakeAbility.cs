@@ -117,63 +117,28 @@ public class EarthquakeAbility : MonoBehaviour, IActiveAbility
             Collider[] affected = Physics.OverlapSphere(origin, quakeRadius, damageLayers);
             foreach (Collider nearby in affected)
             {
-                GameObject victim = nearby.attachedRigidbody ? nearby.attachedRigidbody.gameObject : nearby.gameObject;
-                if (!alreadyHit.Add(victim)) continue;
-                GameObject target = nearby.gameObject;
-                if (target == caster) continue;
-
-                Vector3 direction = (target.transform.position - origin).normalized;
-                float distance = Vector3.Distance(target.transform.position, origin);
-
-                // Ground shockwave: players in the air are untouched (monsters can't jump)
-                var mover = target.GetComponentInParent<PlayerMovement3D>();
-                if (mover != null && mover.IsAirborne) continue;
-
-                // Line-of-sight check
-                if (Physics.Linecast(origin, target.transform.position, out RaycastHit hit,
-                    Physics.DefaultRaycastLayers, QueryTriggerInteraction.Ignore))
+                var victim = DamageEvents.RootOf(nearby);
+                if (!alreadyHit.Add(victim) || victim == caster) continue;
+                if (!DamageEvents.IsCombatant(victim))
                 {
-                    IceWallEffect wallBlock = hit.transform.GetComponent<IceWallEffect>();
-                    if (wallBlock != null && hit.transform != target.transform)
-                    {
-                        wallBlock.TakeDamage(damagePerTick);
-                        continue;
-                    }
-
-                    if (hit.transform != target.transform)
-                        continue;
+                    nearby.GetComponentInParent<IceWallEffect>()?.TakeDamage(damagePerTick);
+                    continue;
                 }
+                if (!DamageEvents.IsEnemy(victim, caster) || !DamageEvents.IsAlive(victim)) continue;
+                var mover = victim.GetComponent<PlayerMovement3D>();
+                if (mover != null && mover.IsAirborne) continue;
+                if (!AbilityKit.ClearPath(origin + Vector3.up, victim, caster)) continue;
 
-                // Apply knockback (once on first tick only)
-                var movementScript = target.GetComponentInParent<PlayerMovement3D>();
-                if (elapsed == 0f && movementScript != null)
-                    movementScript.ApplyKnockback(direction * knockbackForce);
-
-                // Seismic Judgement: the first shockwave briefly stuns
-                if (elapsed == 0f && DamageEvents.IsCombatant(victim))
+                if (elapsed == 0f)
                 {
+                    Vector3 direction = victim.transform.position - origin;
+                    direction.y = 0f;
+                    AbilityKit.Knockback(victim, direction.normalized * knockbackForce);
                     StatusEffects.Of(victim).Stun(stunSpeedMultiplier, stunDuration);
-                    // Earth + heavy shove: Shatters the Frozen, Staggers everyone else
                     ElementReactions.AbilityHit(victim, caster, damagePerTick, heavy: true);
                 }
-
-                // Damage players
-                var health = target.GetComponentInParent<PlayerHealthControl>();
-                if (health != null)
-                    health.TakeDamage(damagePerTick, caster);
-
-                var goblin = nearby.GetComponent<GoblinHealth>();
-                if (goblin != null)
-                    goblin.TakeDamage(damagePerTick, caster);
-
-                // Rumble
-                if (movementScript != null)
-                    Rumble.Play(movementScript.gamepad, 0.2f, 0.6f, 0.25f);
-
-                // Ice wall damage
-                var wall = target.GetComponentInParent<IceWallEffect>();
-                if (wall != null)
-                    wall.TakeDamage(damagePerTick);
+                DamageEvents.Deal(victim, damagePerTick, caster);
+                Rumble.Play(victim, 0.2f, 0.6f, 0.25f);
             }
 
             elapsed += tickInterval;

@@ -11,6 +11,13 @@ public class GoblinAnimationControl : MonoBehaviour
 
     private bool isDead = false;
 
+    void Awake()
+    {
+        // Prefabs have AI enabled: explicitly hold it until the arrival effect ends.
+        var chase = GetComponent<GoblinChaseNav>();
+        if (chase != null) chase.enabled = false;
+    }
+
     void Start()
     {
         if (spawnVFX)
@@ -24,13 +31,18 @@ public class GoblinAnimationControl : MonoBehaviour
 
     void OnSpawnComplete()
     {
-        GetComponent<GoblinChaseNav>().enabled = true;
+        if (isDead) return;
+        var chase = GetComponent<GoblinChaseNav>();
+        if (chase != null) chase.enabled = true;
     }
 
     public void OnDeath()
     {
         if (isDead) return;
         isDead = true;
+        CancelInvoke();
+        var chase = GetComponent<GoblinChaseNav>();
+        if (chase != null) chase.enabled = false;
 
         if (deathVFX)
         {

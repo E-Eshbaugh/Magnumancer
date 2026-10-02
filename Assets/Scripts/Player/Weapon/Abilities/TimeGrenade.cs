@@ -93,7 +93,8 @@ public class GrenadeExplodeAfterDelay : MonoBehaviour
         Collider[] affected = Physics.OverlapSphere(transform.position, explosionRadius, damageLayers);
         foreach (Collider nearby in affected)
         {
-            GameObject victim = nearby.attachedRigidbody ? nearby.attachedRigidbody.gameObject : nearby.gameObject;
+            GameObject victim = DamageEvents.RootOf(nearby);
+            if (!Teams.CanHarm(victim, owner)) continue;
             if (!alreadyHit.Add(victim)) continue;
             Transform target = nearby.transform;
             float distance = Vector3.Distance(transform.position, target.position);

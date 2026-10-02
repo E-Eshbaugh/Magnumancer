@@ -52,7 +52,7 @@ public class RiptideAbility : MonoBehaviour, IActiveAbility
         float speed = distance / surgeTime;
         float nextSpray = 0f;
 
-        for (float t = 0; t < surgeTime; t += Time.deltaTime)
+        for (float t = 0; t < surgeTime && !PlayerHealthControl.IsIncapacitated(caster.transform); t += Time.deltaTime)
         {
             Vector3 step = dir * speed * Time.deltaTime;
             if (cc != null && cc.enabled) cc.Move(step); else caster.transform.position += step;
@@ -89,7 +89,7 @@ public class RiptideAbility : MonoBehaviour, IActiveAbility
         bool recalled = false;
         for (float t = 0; t < returnWindow; t += Time.deltaTime)
         {
-            if (caster == null || !caster.activeInHierarchy) break;
+            if (caster == null || !caster.activeInHierarchy || PlayerHealthControl.IsIncapacitated(caster.transform) || current == null) break;
             // flowing dashes along the way home
             Vector3 from = caster.transform.position + Vector3.up * 0.15f, to = anchor + Vector3.up * 0.15f;
             for (int i = 0; i < current.positionCount; i++)
@@ -110,7 +110,7 @@ public class RiptideAbility : MonoBehaviour, IActiveAbility
         if (current != null) Destroy(current.gameObject);
 
         // 4) rush home
-        if (recalled && caster != null)
+        if (recalled && caster != null && !PlayerHealthControl.IsIncapacitated(caster.transform))
         {
             Vector3 start = caster.transform.position;
             var streak = new GameObject("RiptideReturn");
@@ -118,7 +118,7 @@ public class RiptideAbility : MonoBehaviour, IActiveAbility
             var core = GlowLine.Make(streak.transform, "RushFoam", 2, 0.2f, AbilityKit.Glow());
             Splash(start, water, foam, wiz, 0.9f);
             Rumble.Play(caster, 0.5f, 0.6f, 0.2f);
-            for (float t = 0; t < returnTime; t += Time.deltaTime)
+            for (float t = 0; t < returnTime && !PlayerHealthControl.IsIncapacitated(caster.transform); t += Time.deltaTime)
             {
                 Vector3 p = Vector3.Lerp(start, anchor, t / returnTime);
                 caster.GetComponent<PlayerMovement3D>()?.Teleport(p, caster.transform.rotation);
@@ -127,7 +127,8 @@ public class RiptideAbility : MonoBehaviour, IActiveAbility
                 SetPath(core, pts, foam, 1f);
                 yield return null;
             }
-            caster.GetComponent<PlayerMovement3D>()?.Teleport(anchor, caster.transform.rotation);
+            if (!PlayerHealthControl.IsIncapacitated(caster.transform))
+                caster.GetComponent<PlayerMovement3D>()?.Teleport(anchor, caster.transform.rotation);
             StatusEffects.Of(caster).ClearFreeze();          // the tide washes it off
             Splash(anchor, water, foam, wiz, 1.2f);
             AbilityKit.Shockwave(anchor, 2.5f, water, 0.35f);

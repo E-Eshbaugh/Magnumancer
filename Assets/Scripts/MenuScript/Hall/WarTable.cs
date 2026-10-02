@@ -8,7 +8,8 @@ using UnityEngine.InputSystem;
 /// arena floating above it as a miniature island (baked by MiniatureBaker). While the
 /// players pick wizards it's the hall's centrepiece; once everyone's ready the camera
 /// moves in and the stick points at an island (by screen direction). The chosen island
-/// rises into a beam of light; A dives into it.
+/// rises into a beam of light; A dives into it. Only the maps for the chosen mode are on
+/// the table: PvP arenas, or the Waves (Zombies) maps.
 /// </summary>
 public class WarTable : MonoBehaviour
 {
@@ -22,6 +23,7 @@ public class WarTable : MonoBehaviour
     public int Selected { get; private set; }
     public int Count => islands.Count;
     public bool Focused { get; private set; }
+    public bool WavesMode { get; private set; }
 
     class Island
     {
@@ -47,6 +49,35 @@ public class WarTable : MonoBehaviour
         if (surface == null) surface = transform;
         for (int i = 0; i < catalog.maps.Length; i++) islands.Add(Build(catalog.maps[i], i));
         Selected = 0;
+        ShowMode(false);
+    }
+
+    /// Is island i on the table for the current mode?
+    public bool IsShown(int i) => i >= 0 && i < islands.Count && islands[i].entry.waves == WavesMode;
+
+    /// Puts the PvP or the Waves maps on the table. If the chosen map leaves, the nearest
+    /// remaining island takes over (Cinder Crucible's two versions share a spot).
+    public void ShowMode(bool waves)
+    {
+        WavesMode = waves;
+        for (int i = 0; i < islands.Count; i++)
+        {
+            bool on = IsShown(i);
+            islands[i].root.gameObject.SetActive(on);
+            islands[i].mark.gameObject.SetActive(on);
+        }
+        if (IsShown(Selected) || islands.Count == 0) return;
+
+        Vector2 from = islands[Mathf.Clamp(Selected, 0, islands.Count - 1)].entry.tablePos;
+        int best = -1;
+        float bestDist = float.MaxValue;
+        for (int i = 0; i < islands.Count; i++)
+        {
+            if (!IsShown(i)) continue;
+            float d = (islands[i].entry.tablePos - from).sqrMagnitude;
+            if (d < bestDist) { bestDist = d; best = i; }
+        }
+        if (best >= 0) Selected = best;
     }
 
     Island Build(HallCatalog.MapEntry e, int i)
@@ -101,7 +132,7 @@ public class WarTable : MonoBehaviour
 
     public void Select(int i)
     {
-        if (i < 0 || i >= islands.Count || i == Selected) return;
+        if (i < 0 || i >= islands.Count || i == Selected || !IsShown(i)) return;
         Selected = i;
         AbilityKit.Shockwave(islands[i].root.position + Vector3.down * 0.05f, islandSize * 0.8f, islands[i].entry.glow, 0.3f);
     }
@@ -135,7 +166,7 @@ public class WarTable : MonoBehaviour
         float bestScore = float.MaxValue;
         for (int i = 0; i < islands.Count; i++)
         {
-            if (i == Selected) continue;
+            if (i == Selected || !IsShown(i)) continue;
             Vector2 to = cam.WorldToViewportPoint(islands[i].root.position);
             Vector2 d = to - from;
             d.x *= aspect;
@@ -155,6 +186,7 @@ public class WarTable : MonoBehaviour
         for (int i = 0; i < islands.Count; i++)
         {
             var isl = islands[i];
+            if (!IsShown(i)) continue;
             bool sel = Focused && i == Selected;
             isl.lift = Mathf.MoveTowards(isl.lift, sel ? 1f : 0f, Time.deltaTime * 3f);
             float e = isl.lift * isl.lift * (3f - 2f * isl.lift);

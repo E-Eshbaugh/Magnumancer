@@ -9,25 +9,28 @@ public class WinManager : MonoBehaviour
 
     private bool endSequenceStarted = false;
     private int maxAliveSeen = 0;
+    GoblinSpawner horde;
+
+    void Start() => horde = FindAnyObjectByType<GoblinSpawner>();
 
     void Update()
     {
-        // tally up how many players remain
-        int aliveCount = 0;
-        foreach (var tag in playerTags)
-            aliveCount += GameObject.FindGameObjectsWithTag(tag).Length;
-        maxAliveSeen = Mathf.Max(maxAliveSeen, aliveCount);
+        int standingCount = 0;
+        foreach (var player in PlayerHealthControl.ActivePlayers)
+            if (player.IsStanding) standingCount++;
+        maxAliveSeen = Mathf.Max(maxAliveSeen, standingCount);
 
-        // once only one is left, start the end sequence
-        // (only if the match actually had 2+ players, so solo testing doesn't end instantly)
-        if (!endSequenceStarted && aliveCount == 1 && maxAliveSeen >= 2)
+        // Co-op continues with one rescuer left; only a full team wipe ends the run.
+        bool wavesCleared = Teams.HumansVsHorde && horde != null && horde.CurrentWave > 0 && horde.AllWavesComplete;
+        bool ended = wavesCleared || (Teams.HumansVsHorde
+            ? standingCount == 0 && maxAliveSeen > 0
+            : (standingCount <= 1 && maxAliveSeen >= 2) || (standingCount == 0 && maxAliveSeen > 0));
+        if (!endSequenceStarted && ended)
         {
             endSequenceStarted = true;
-
-            // the last wizard standing gets a victory rumble
-            foreach (var tag in playerTags)
-                foreach (var winner in GameObject.FindGameObjectsWithTag(tag))
-                    Rumble.Play(winner, 0.6f, 1f, 1.2f);
+            if (wavesCleared || !Teams.HumansVsHorde)
+                foreach (var winner in PlayerHealthControl.ActivePlayers)
+                    if (winner.IsStanding) Rumble.Play(winner.gameObject, 0.6f, 1f, 1.2f);
             StartCoroutine(WaitAndReturnToMainMenu());
         }
     }

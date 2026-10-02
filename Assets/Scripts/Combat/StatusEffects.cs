@@ -52,6 +52,32 @@ public class StatusEffects : MonoBehaviour
     float agentBaseSpeed;
     float stunMultiplier = 1f;
     Coroutine stunRoutine;
+    readonly Dictionary<string, float> speedModifiers = new();
+    Vector3 knockbackVelocity;
+    bool movingByForce, savedStopped;
+    public bool IsKnockedBack => movingByForce;
+
+    public void SetSpeedModifier(string key, float multiplier)
+    {
+        speedModifiers[key] = Mathf.Clamp01(multiplier);
+        ApplySpeed();
+    }
+
+    public void ClearSpeedModifier(string key)
+    {
+        speedModifiers.Remove(key);
+        ApplySpeed();
+    }
+
+    public void Knockback(Vector3 force)
+    {
+        if (agent == null || !agent.isActiveAndEnabled || !agent.isOnNavMesh) return;
+        force.y = 0f;
+        knockbackVelocity = Vector3.ClampMagnitude(force, 45f);
+        if (!movingByForce) savedStopped = agent.isStopped;
+        movingByForce = true;
+        agent.isStopped = true;
+    }
 
     public static StatusEffects Of(GameObject target)
     {
@@ -69,6 +95,17 @@ public class StatusEffects : MonoBehaviour
 
     void Update()
     {
+        if (movingByForce && agent != null && agent.isActiveAndEnabled && agent.isOnNavMesh)
+        {
+            // NavMeshAgent.Move constrains the shove/pull to walkable ground.
+            agent.Move(knockbackVelocity * Time.deltaTime);
+            knockbackVelocity = Vector3.MoveTowards(knockbackVelocity, Vector3.zero, 35f * Time.deltaTime);
+            if (knockbackVelocity.sqrMagnitude < 0.01f)
+            {
+                agent.isStopped = savedStopped;
+                movingByForce = false;
+            }
+        }
         if (freezeStacks > 0 && Time.time - lastFreezeTime > freezeDecayTime)
         {
             freezeStacks = 0;
@@ -327,10 +364,12 @@ public class StatusEffects : MonoBehaviour
     void ApplySpeed()
     {
         float freezeMult = 1f - freezeSlowPerStack * freezeStacks;
+        float zoneMult = 1f;
+        foreach (var multiplier in speedModifiers.Values) zoneMult *= multiplier;
         if (movement != null)
-            movement.SetSpeedModifier("freeze", freezeMult);
+            movement.SetSpeedModifier("freeze", freezeMult * zoneMult);
         else if (agent != null)
-            agent.speed = agentBaseSpeed * freezeMult * stunMultiplier;
+            agent.speed = agentBaseSpeed * freezeMult * stunMultiplier * zoneMult;
     }
 
     void OnDisable()
@@ -338,5 +377,12 @@ public class StatusEffects : MonoBehaviour
         DamageEvents.Killed -= OnKilled;
         // don't leave a player permanently slowed if this component goes away
         if (movement != null) movement.ClearSpeedModifier("freeze");
+        if (agent != null)
+        {
+            agent.speed = agentBaseSpeed;
+            if (movingByForce && agent.isActiveAndEnabled && agent.isOnNavMesh) agent.isStopped = savedStopped;
+        }
+        movingByForce = false;
+        knockbackVelocity = Vector3.zero;
     }
 }

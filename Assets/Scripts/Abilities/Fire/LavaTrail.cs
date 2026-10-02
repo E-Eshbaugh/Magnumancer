@@ -19,12 +19,9 @@ public class LavaTrail : MonoBehaviour, IElementZone
     [SerializeField] float slowMultiplier = 0.5f;
     [SerializeField] float lifetime = 10f;
 
-    [Header("Target Settings")]
-    [SerializeField] string playerTag = "Player";
-
     [HideInInspector] public GameObject owner; // set by FireDashAbility; immune to this trail
 
-    private HashSet<GameObject> affectedPlayers = new();
+    private readonly Dictionary<Collider, GameObject> occupants = new();
     private bool hasLanded = false;
     private bool firstFramePassed = false;
 
@@ -78,63 +75,45 @@ public class LavaTrail : MonoBehaviour, IElementZone
     {
         while (true)
         {
-            foreach (var player in affectedPlayers)
+            foreach (var target in new HashSet<GameObject>(occupants.Values))
             {
-                var health = player.GetComponent<PlayerHealthControl>();
-                if (health != null)
-                {
-                    health.TakeDamage(damagePerTick, owner);
-                    ElementReactions.ZoneHit(player, owner, Element.Fire, damagePerTick);
-                }
+                if (!DamageEvents.IsAlive(target)) continue;
+                DamageEvents.Deal(target, damagePerTick, owner);
+                ElementReactions.ZoneHit(target, owner, Element.Fire, damagePerTick);
             }
-
             yield return new WaitForSeconds(tickInterval);
         }
     }
 
     void OnTriggerEnter(Collider other)
     {
-        if (!other.tag.StartsWith(playerTag)) return;
-        if (other.gameObject == owner) return;
-        if (affectedPlayers.Contains(other.gameObject)) return;
-
-        affectedPlayers.Add(other.gameObject);
-
-        var move = other.GetComponent<PlayerMovement3D>();
-        if (move != null)
-            move.currentMoveSpeed *= slowMultiplier;
-
-        Rumble.Hold(move?.gamepad, RumbleKey, 0.1f, 0.2f);
+        var target = DamageEvents.RootOf(other);
+        if (!DamageEvents.IsEnemy(target, owner) || !DamageEvents.IsAlive(target)) return;
+        occupants[other] = target;
+        StatusEffects.Of(target).SetSpeedModifier(RumbleKey, slowMultiplier);
+        Rumble.Hold(target.GetComponent<PlayerMovement3D>()?.gamepad, RumbleKey, 0.1f, 0.2f);
     }
 
     void OnTriggerExit(Collider other)
     {
-        if (!other.tag.StartsWith(playerTag)) return;
-        if (!affectedPlayers.Contains(other.gameObject)) return;
+        if (!occupants.TryGetValue(other, out var target)) return;
+        occupants.Remove(other);
+        if (!occupants.ContainsValue(target)) Release(target);
+    }
 
-        affectedPlayers.Remove(other.gameObject);
-
-        var move = other.GetComponent<PlayerMovement3D>();
-        if (move != null)
-            move.currentMoveSpeed /= slowMultiplier;
-
-        Rumble.Release(move?.gamepad, RumbleKey);
+    void Release(GameObject target)
+    {
+        if (target == null) return;
+        target.GetComponent<StatusEffects>()?.ClearSpeedModifier(RumbleKey);
+        Rumble.Release(target.GetComponent<PlayerMovement3D>()?.gamepad, RumbleKey);
     }
 
     string RumbleKey => "lava" + GetEntityId();
 
-    void OnDestroy()
+    void OnDisable()
     {
         ElementZones.Unregister(this);
-        foreach (var player in affectedPlayers)
-        {
-            var move = player.GetComponent<PlayerMovement3D>();
-            if (move != null)
-                move.currentMoveSpeed /= slowMultiplier;
-
-            Rumble.Release(move?.gamepad, RumbleKey);
-        }
-
-        affectedPlayers.Clear();
+        foreach (var target in new HashSet<GameObject>(occupants.Values)) Release(target);
+        occupants.Clear();
     }
 }

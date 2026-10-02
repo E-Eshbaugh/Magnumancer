@@ -16,6 +16,7 @@ public class ContagionAbility : MonoBehaviour, IActiveAbility
     public void Activate(GameObject caster)
     {
         Vector3 origin = caster.transform.position;
+        ForgedRunes.ContagionCast(caster);   // Outbreak: a forged gun spreads it further
         RollingSmokeFx.Spawn(origin, radius, travelTime, CloudDark, CloudLight);
 
         // infect each enemy as the rolling front reaches them

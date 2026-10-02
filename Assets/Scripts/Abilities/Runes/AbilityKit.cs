@@ -76,20 +76,26 @@ public static class AbilityKit
         return point;
     }
 
-    static readonly Collider[] buffer = new Collider[64];
+    static Collider[] buffer = new Collider[64];
 
     /// Living enemies (other players, monsters) with a collider inside the sphere
-    public static List<GameObject> Enemies(Vector3 center, float radius, GameObject caster)
+    public static List<GameObject> Enemies(Vector3 center, float radius, GameObject caster, bool includeTeammates = false)
     {
         var found = new List<GameObject>();
         int n = Physics.OverlapSphereNonAlloc(center, radius, buffer, Physics.DefaultRaycastLayers, QueryTriggerInteraction.Ignore);
+        // A horde (or multi-collider enemies) must not silently fill the query buffer.
+        while (n == buffer.Length)
+        {
+            System.Array.Resize(ref buffer, buffer.Length * 2);
+            n = Physics.OverlapSphereNonAlloc(center, radius, buffer, Physics.DefaultRaycastLayers, QueryTriggerInteraction.Ignore);
+        }
         for (int i = 0; i < n; i++)
         {
             var root = DamageEvents.RootOf(buffer[i]);
             if (root == null || root == caster || found.Contains(root)) continue;
-            if (!DamageEvents.IsCombatant(root)) continue;
-            var h = root.GetComponent<PlayerHealthControl>();
-            if (h != null && h.IsDead) continue;
+            if (!DamageEvents.IsAlive(root)) continue;
+            if (!Teams.CanHarm(root, caster)) continue;
+            if (!includeTeammates && Teams.SameTeam(root, caster)) continue;
             found.Add(root);
         }
         return found;
@@ -113,10 +119,39 @@ public static class AbilityKit
         return best;
     }
 
-    public static void Knockback(GameObject target, Vector3 force)
+    public static void Knockback(GameObject target, Vector3 force, GameObject source = null)
     {
+        if (!Teams.CanHarm(target, source)) return;
         var m = target != null ? target.GetComponent<PlayerMovement3D>() : null;
         if (m != null) m.ApplyKnockback(force);
+        else if (target != null && target.TryGetComponent<GoblinHealth>(out var monster) && !monster.IsDead)
+            StatusEffects.Of(target).Knockback(force);
+    }
+
+    /// Area spells ignore their source and combatant bodies, but solid cover still blocks them.
+    public static bool ClearPath(Vector3 from, GameObject target, GameObject source)
+    {
+        foreach (var hit in Physics.RaycastAll(from, Chest(target) - from,
+                     Vector3.Distance(from, Chest(target)), Physics.DefaultRaycastLayers, QueryTriggerInteraction.Ignore))
+        {
+            if (source != null && hit.transform.IsChildOf(source.transform)) continue;
+            if (hit.transform.IsChildOf(target.transform) || DamageEvents.IsCombatant(DamageEvents.RootOf(hit.collider))) continue;
+            return false;
+        }
+        return true;
+    }
+
+    /// Runtime cover must also cut a hole in the baked goblin navigation mesh.
+    public static void BlockNavigation(MeshCollider collider)
+    {
+        if (collider == null || collider.sharedMesh == null) return;
+        var obstacle = collider.GetComponent<UnityEngine.AI.NavMeshObstacle>();
+        if (obstacle == null) obstacle = collider.gameObject.AddComponent<UnityEngine.AI.NavMeshObstacle>();
+        obstacle.shape = UnityEngine.AI.NavMeshObstacleShape.Box;
+        obstacle.center = collider.sharedMesh.bounds.center;
+        obstacle.size = collider.sharedMesh.bounds.size;
+        obstacle.carving = true;
+        obstacle.carveOnlyStationary = false;
     }
 
     public static Vector3 Chest(GameObject go) => go.transform.position + Vector3.up * 1.1f;

@@ -21,8 +21,6 @@ public class MineExplosionController : MonoBehaviour
     private bool isArmed = false;
     private bool hasExploded = false;
 
-    private static readonly string[] validPlayerTags = { "Player1", "Player2", "Player3", "Player4", "Monster" };
-
     void Start()
     {
         Invoke(nameof(Arm), armTime);
@@ -35,16 +33,11 @@ public class MineExplosionController : MonoBehaviour
         Collider[] nearby = Physics.OverlapSphere(transform.position, detectionRadius);
         foreach (Collider col in nearby)
         {
-            // the Blightward who planted it can walk over their own mines
-            if (owner != null && DamageEvents.RootOf(col) == owner) continue;
-
-            foreach (string tag in validPlayerTags)
+            var target = DamageEvents.RootOf(col);
+            if (DamageEvents.IsEnemy(target, owner) && DamageEvents.IsAlive(target))
             {
-                if (col.CompareTag(tag))
-                {
-                    Explode();
-                    return;
-                }
+                Explode();
+                return;
             }
         }
     }
@@ -74,7 +67,7 @@ public class MineExplosionController : MonoBehaviour
         {
             Vector3 pos = spawnPoint ? spawnPoint.position : transform.position;
             var cloud = Instantiate(poisonCloudPrefab, pos, Quaternion.identity);
-            if (cloud.TryGetComponent<PoisonCloudHazard>(out var hazard))
+            if ((cloud.GetComponentInChildren<PoisonCloudHazard>() is PoisonCloudHazard hazard))
             {
                 hazard.owner = owner;
                 hazard.ownerImmune = true; // your own poison doesn't hurt you

@@ -28,6 +28,7 @@ public static class MiniatureBaker
         new Crop { scene = "Stormspire" },
         new Crop { scene = "FungalHollow" },
         new Crop { scene = "Riftforge" },
+        new Crop { scene = "CinderCrucible" },
         new Crop { scene = "CinderCrucibleZombies" },
         new Crop { scene = "DrownedSanctum" },
         new Crop { scene = "BlackOsuary" },
@@ -52,6 +53,24 @@ public static class MiniatureBaker
         }
         AssetDatabase.SaveAssets();
         AssetDatabase.Refresh();
+        LinkCatalog();
+    }
+
+    /// Points every War Table entry at its own scene's miniature (a map without one keeps what it had)
+    static void LinkCatalog()
+    {
+        foreach (var guid in AssetDatabase.FindAssets("t:HallCatalog"))
+        {
+            var cat = AssetDatabase.LoadAssetAtPath<HallCatalog>(AssetDatabase.GUIDToAssetPath(guid));
+            if (cat == null || cat.maps == null) continue;
+            foreach (var m in cat.maps)
+            {
+                var mini = AssetDatabase.LoadAssetAtPath<GameObject>(PrefabPath(m.scene));
+                if (mini != null) m.miniature = mini;
+            }
+            EditorUtility.SetDirty(cat);
+        }
+        AssetDatabase.SaveAssets();
     }
 
     /// Tallest geometry kept, as a fraction of the square's side

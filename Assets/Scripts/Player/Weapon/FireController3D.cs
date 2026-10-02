@@ -56,10 +56,12 @@ public class FireController3D : MonoBehaviour
     /// damage (if >= 0) overrides the projectile's own damage with the weapon's stat.
     /// structureDamage (if >= 0) is what it does to props and walls instead (slugs).
     /// element (if not None) makes the round carry that element instead of the wizard's.
+    /// forged: a Pack-a-Punch round (its hits trigger the wizard's rune power-up).
     /// </summary>
     public void Shoot(GameObject prefabToUse, float spreadAngle, float recoil, int damage = -1, int structureDamage = -1,
-                      Element element = Element.None)
+                      Element element = Element.None, bool forged = false)
     {
+        if (PlayerHealthControl.IsIncapacitated(this)) return;
         if (prefabToUse == null || firePoint == null)
         {
             Debug.LogError($"{name}: Missing prefab or firePoint in Shoot()");
@@ -91,6 +93,7 @@ public class FireController3D : MonoBehaviour
             bulletComp.structureDamage = structureDamage;
             bulletComp.owner = Owner;
             bulletComp.element = element;
+            bulletComp.forged = forged;
             bulletComp.Initialize(dir);
         }
         else if (proj.TryGetComponent<Rigidbody>(out var rb))

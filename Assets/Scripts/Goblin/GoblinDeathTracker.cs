@@ -4,6 +4,8 @@ public class GoblinDeathTracker : MonoBehaviour
 {
     [HideInInspector] public GoblinSpawner spawner;
     [HideInInspector] public GameObject tracked;
+    [HideInInspector] public bool guaranteedLoot;
+    [HideInInspector] public bool lootRolled;
 
     private bool _notified;
 
@@ -16,4 +18,3 @@ public class GoblinDeathTracker : MonoBehaviour
         spawner.NotifyEnemyDeath(tracked ? tracked : gameObject);
     }
 }
-

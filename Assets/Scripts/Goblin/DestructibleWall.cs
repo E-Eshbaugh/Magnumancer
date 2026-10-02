@@ -31,6 +31,7 @@ public class DestructibleWall : MonoBehaviour
     public UnityEvent onWallDestroyed;
 
     private bool isDestroyed = false;
+    public bool IsDestroyed => isDestroyed;
 
     /// Normalized health [0..1] for UI
     public float CurrentHealth01 => Mathf.Clamp01(currentHealth / Mathf.Max(1f, maxHealth));

@@ -41,7 +41,7 @@ public class ThrowableSlot : MonoBehaviour
         icon.rotation = Quaternion.Euler(0f, Time.time * 120f, 0f);
 
         var pad = movement != null ? movement.gamepad : null;
-        if (pad == null || GamePause.InputBlocked || WizardSpawnEffect.IsArriving(transform)) return;
+        if (pad == null || GamePause.InputBlocked || PlayerHealthControl.IsIncapacitated(this) || WizardSpawnEffect.IsArriving(transform)) return;
         if (pad.leftShoulder.wasPressedThisFrame) Throw();
     }
 

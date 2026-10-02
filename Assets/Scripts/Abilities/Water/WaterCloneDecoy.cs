@@ -8,6 +8,12 @@ using UnityEngine;
 /// </summary>
 public class WaterCloneDecoy : MonoBehaviour
 {
+    public static readonly HashSet<WaterCloneDecoy> Active = new();
+    public bool CanLure => !popped && caster != null && caster.activeInHierarchy && Time.time < expiresAt
+                           && (casterHealth == null || casterHealth.IsStanding);
+    void OnEnable() => Active.Add(this);
+    void OnDisable() => Active.Remove(this);
+
     GameObject caster;
     PlayerMovement3D casterMove;
     PlayerHealthControl casterHealth;
@@ -15,6 +21,10 @@ public class WaterCloneDecoy : MonoBehaviour
     CloneMovement cloneMove;
     Color tint;
     float expiresAt;
+    bool popped;
+
+    // A committed zombie attack consumes the decoy instead of hurting its caster.
+    public void HitByMonster() { if (CanLure) Pop(); }
 
     // decoy gun: mesh-only copy of the caster's held gun (no gun scripts run on it)
     GameObject gunSource;
@@ -44,7 +54,7 @@ public class WaterCloneDecoy : MonoBehaviour
 
     void Update()
     {
-        bool casterGone = caster == null || !caster.activeInHierarchy || (casterHealth != null && casterHealth.IsDead);
+        bool casterGone = caster == null || !caster.activeInHierarchy || (casterHealth != null && !casterHealth.IsStanding);
         if (casterGone || Time.time >= expiresAt)
         {
             Pop();
@@ -118,6 +128,9 @@ public class WaterCloneDecoy : MonoBehaviour
 
     void Pop()
     {
+        if (popped) return;
+        popped = true;
+        Active.Remove(this);
         WaterCloneBurst.Play(transform.position, tint, 0.6f);
         Destroy(gameObject);
     }

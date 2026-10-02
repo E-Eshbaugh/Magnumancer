@@ -64,7 +64,7 @@ public class SiphonTether : MonoBehaviour
     {
         float now = Time.time;
         bool gone = caster == null || target == null || !caster.activeInHierarchy || !target.activeInHierarchy
-                    || (target.GetComponent<PlayerHealthControl>()?.IsDead ?? false);
+                    || PlayerHealthControl.IsIncapacitated(target.transform);
         if (!snapping && (gone || now - started >= duration
             || Vector3.Distance(caster.transform.position, target.transform.position) > breakRange))
         {

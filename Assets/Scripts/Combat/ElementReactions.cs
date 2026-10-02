@@ -524,10 +524,11 @@ public static class ElementReactions
 
     static bool IsTarget(GameObject target, GameObject attacker)
     {
+        if (!Teams.CanHarm(target, attacker)) return false;
         if (target == null || target == attacker || !target.activeInHierarchy) return false;
         if (!DamageEvents.IsCombatant(target)) return false;
         var h = target.GetComponent<PlayerHealthControl>();
-        return h == null || !h.IsDead;
+        return h == null || h.IsStanding;
     }
 
     /// Shove away from whoever set it off
@@ -573,7 +574,7 @@ public static class ElementReactions
 
         Vector3 at = c.target.transform.position;
         var chain = new List<GameObject> { c.target };
-        foreach (var e in AbilityKit.Enemies(at, r.radius, c.attacker))
+        foreach (var e in AbilityKit.Enemies(at, r.radius, c.attacker, includeTeammates: true))
         {
             if (e == c.target) continue;
             var fx = StatusEffects.Of(e);

@@ -144,27 +144,35 @@ public static class GreatHallBuilder
 
         cat.modes = new[]
         {
-            new HallCatalog.ModeEntry { name = "Deathmatch", description = "Every magus for themselves. Last soul standing drinks the fading light." },
-            new HallCatalog.ModeEntry { name = "Team Deathmatch", description = "Two pacts, two sworn foes. Hold formation and reap their lives in tandem." },
-            new HallCatalog.ModeEntry { name = "Waves", description = "Goblin tides claw up from a Dark Rift. Hold the line together until it stills." },
+            // the old book menu's lore names (index = DataManager.SelectedMode: 0 DM, 1 TDM, 2 Waves)
+            new HallCatalog.ModeEntry { name = "Modus Solitaria", description = "Deathmatch. Four magi stride in alone: no oath, no ally, only will. The last soul standing drinks the fading light." },
+            new HallCatalog.ModeEntry { name = "Bellum Foedera", description = "Team Deathmatch. Two pacts, two sworn foes. Hold formation and reap their lives in tandem." },
+            new HallCatalog.ModeEntry { name = "Custodia Perpetua", description = "Waves. Goblin tides claw up from a Dark Rift. Hold the line together until it stills.", waves = true },
         };
 
         var m = new List<HallCatalog.MapEntry>();
-        void Map(string scene, string name, string flavor, Vector2 pos, float h, Color glow)
-            => m.Add(new HallCatalog.MapEntry
+        GameObject Mini(string scene) => AssetDatabase.LoadAssetAtPath<GameObject>(MiniatureBaker.PrefabPath(scene));
+        void Map(string scene, string name, string flavor, Vector2 pos, float h, Color glow, bool waves = false, string miniFallback = null)
+        {
+            var mini = Mini(scene);
+            if (mini == null && miniFallback != null) mini = Mini(miniFallback);   // until the next bake
+            m.Add(new HallCatalog.MapEntry
             {
-                scene = scene, displayName = name, flavor = flavor, tablePos = pos, height = h, glow = glow,
-                miniature = AssetDatabase.LoadAssetAtPath<GameObject>(MiniatureBaker.PrefabPath(scene)),
+                scene = scene, displayName = name, flavor = flavor, tablePos = pos, height = h, glow = glow, waves = waves,
+                miniature = mini,
             });
+        }
         // index = DataManager.SelectedMap (same order the book menu used)
         Map("Oldwoods3D", "The Oldwoods", "The last Lost Grove. The Verdant Circle buried its traps under every root.", new Vector2(-1.05f, -1.35f), 0.05f, new Color(0.45f, 1f, 0.45f));
         Map("Stormspire", "Stormspire", "Storm-wracked peaks where the Voltborn learned to strike and vanish.", new Vector2(-1.05f, 1.35f), 0.55f, new Color(1f, 0.92f, 0.35f));
         Map("FungalHollow", "Fungal Hollow", "A grove gone to spore. The Blightward still tend what grows here.", new Vector2(-3.15f, -1.35f), 0.1f, new Color(0.75f, 1f, 0.3f));
         Map("Riftforge", "Riftforge", "A canyon fortress on the lip of a Dark Rift. Granite Vow ground.", new Vector2(1.05f, 1.35f), 0.45f, new Color(1f, 0.6f, 0.3f));
-        Map("CinderCrucibleZombies", "Cinder Crucible", "The Emberguard's volcanic forge. Goblins crawl up from its depths.", new Vector2(3.15f, 1.35f), 0.5f, new Color(1f, 0.4f, 0.15f));
+        Map("CinderCrucible", "Cinder Crucible", "The Emberguard's volcanic forge, where the careless learn how deep the lava runs.", new Vector2(3.15f, 1.35f), 0.5f, new Color(1f, 0.4f, 0.15f), miniFallback: "CinderCrucibleZombies");
         Map("DrownedSanctum", "Drowned Sanctum", "Flooded ruins of the old healing springs, held by the Tidebound.", new Vector2(1.05f, -1.35f), 0f, new Color(0.3f, 0.7f, 1f));
         Map("BlackOsuary", "Black Ossuary", "Cursed tunnels where the Hollow chase the magic nobody should.", new Vector2(3.15f, -1.35f), 0.1f, new Color(0.7f, 0.35f, 1f));
         Map("Frostgrave", "Frostgrave", "A shattered glacier sanctuary. The Frostwardens never miss twice.", new Vector2(-3.15f, 1.35f), 0.6f, new Color(0.6f, 0.9f, 1f));
+        // Waves maps (only on the table in a Waves mode); it shares PvP Cinder Crucible's spot
+        Map("CinderCrucibleZombies", "Cinder Crucible", "The Emberguard's volcanic forge. Goblins crawl up from its depths.", new Vector2(3.15f, 1.35f), 0.5f, new Color(1f, 0.4f, 0.15f), waves: true);
         cat.maps = m.ToArray();
 
         EditorUtility.SetDirty(cat);

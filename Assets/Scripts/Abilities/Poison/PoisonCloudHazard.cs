@@ -18,6 +18,7 @@ public class PoisonCloudHazard : MonoBehaviour, IElementZone
     public float reactionPadding = 0.6f;
 
     private Dictionary<GameObject, Coroutine> activeDamageCoroutines = new();
+    private readonly Dictionary<Collider, GameObject> occupants = new();
     private Collider zone;
 
     void Start()
@@ -44,37 +45,24 @@ public class PoisonCloudHazard : MonoBehaviour, IElementZone
 
     private void OnTriggerEnter(Collider other)
     {
-        if (IsPlayer(other.gameObject))
-        {
-            if (!activeDamageCoroutines.ContainsKey(other.gameObject))
-            {
-                // Start damaging immediately
-                Coroutine c = StartCoroutine(DamageOverTime(other.gameObject));
-                activeDamageCoroutines.Add(other.gameObject, c);
-            }
-        }
+        var target = DamageEvents.RootOf(other);
+        if (!DamageEvents.IsAlive(target) || (ownerImmune && target == owner)
+            || Teams.SameTeam(target, owner) || !Teams.CanHarm(target, owner)) return;
+        occupants[other] = target;
+        if (!activeDamageCoroutines.ContainsKey(target))
+            activeDamageCoroutines[target] = StartCoroutine(DamageOverTime(target));
     }
 
     private void OnTriggerExit(Collider other)
     {
-        if (activeDamageCoroutines.TryGetValue(other.gameObject, out Coroutine c))
+        if (!occupants.TryGetValue(other, out var target)) return;
+        occupants.Remove(other);
+        if (occupants.ContainsValue(target)) return;
+        if (activeDamageCoroutines.TryGetValue(target, out var routine))
         {
-            StopCoroutine(c);
-            activeDamageCoroutines.Remove(other.gameObject);
+            StopCoroutine(routine);
+            activeDamageCoroutines.Remove(target);
         }
-    }
-
-    private bool IsPlayer(GameObject obj)
-    {
-        if (ownerImmune && obj == owner) return false;
-        foreach (string tag in playerTags)
-        {
-            if (obj.CompareTag(tag))
-            {
-                return true;
-            }
-        }
-        return false;
     }
 
     private IEnumerator DamageOverTime(GameObject player)
@@ -129,5 +117,6 @@ public class PoisonCloudHazard : MonoBehaviour, IElementZone
         }
 
         activeDamageCoroutines.Clear();
+        occupants.Clear();
     }
 }

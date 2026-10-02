@@ -219,12 +219,77 @@ Drops were too sparse for 5-10 minute 4-player matches (~15 per match).
 | Items on the field | 2 | **4** | `DropDirector.maxOnField` |
 | Pickup lifetime | 30s | **20s** | `DropDirector.pickupLifetime` |
 
+## Pass 12 (2026-10-01): zombie melee (first numbers)
+
+Goblins and the existing boss now attack humans and Shadow Clones after a visible, committed windup. Values live on `GoblinChaseNav` and currently apply to both prefabs.
+
+| Knob | Value |
+|---|---|
+| Damage per swing | 12 |
+| Reach / forward arc | 1.8m / 100° |
+| Maximum target height difference | 1.1m |
+| Windup / recovery | 0.45s / 0.9s |
+| Spawn grace | Existing `GoblinAnimationControl.spawnEffectDuration` (1s on prefabs) |
+
+Range, direction and cover are checked at impact. Stun, root, freeze and knockback interrupt attacks. A clone absorbs one hit. Damage remains zombie-attributed, allowing shields, invulnerability and retaliation while preserving zero human friendly fire. Playtest crowd telegraphs, survival pressure and boss-specific tuning.
+
+## Pass 13 (2026-10-01): brisk co-op wave pacing
+
+First balance pass for the new 300–400 HP single-life wizards and teammate revival. The goal is a short opening, steady pressure, and enough breathing room to reload or finish a rescue. Exact match duration and perceived difficulty still need controller playtesting.
+
+| Knob | Before | New default |
+|---|---|---|
+| Ordinary zombie damage | 12 at every wave | 50 initially, +2.5/wave, capped at 70 (rounded on spawn) |
+| Hits to down, 300 / 400 HP wizard | 25 / 34 | 6 / 8 early; 5 / 6 late |
+| Crowd-hit protection | None | 0.35s after a damaging horde hit; no effect in free-for-all |
+| Ordinary zombies per solo wave | 3 × wave | 8 + 4 × (wave − 1) |
+| Additional players | Same count | +60% ordinary zombies and +4 concurrent enemies per extra player |
+| Spawn delivery | Entire wave at once | 1.1s between enemies initially, −0.075s/wave to a 0.35s floor; faster for larger parties |
+| Alive cap, solo | Unlimited | 8 initially, +2/wave, capped at 18 |
+| Arrival / breaks | Immediate opening; 2s between waves | 3s opening; 8s between waves; 12s after boss waves |
+| Zombie health | Fixed prefab health | +14% of base/wave, capped at 3×; ordinary 50 → 113 HP by wave 10 |
+| Ordinary movement | Fixed 4 m/s | 3.2 initially, +0.15/wave to 4.4; ±8% individual variation |
+| Ordinary swing | 0.45s windup / 0.9s recovery | Windup stays readable; recovery gradually reaches 0.65s |
+| Minibosses | Increasing count every wave from wave 2 | Waves divisible by 3, except boss waves; 1 solo/duo, 2 trio/squad |
+| Bosses | Increasing count from wave 4; scene boss pool empty | One every fifth wave; use the scene's large-monster pool if no dedicated boss is assigned |
+| Elite combat | Same damage/timing as ordinary zombies | Miniboss 1.4× damage; boss 1.75× damage and health; 0.65s warning / 1.1s recovery, 75% ordinary movement |
+| Spawn positions | Random in the configured box | The Cinder Crucible uses 24 authored entrances: 7 in the starting area, 3 in the central passage, 3 in each wing, and 8 in the far hall. Available entrances rotate least-recently-used, stay at least 8m from every player, and require a complete NavMesh route within 45m of a standing teammate. Maps without authored entrances keep the legacy 9–18m random-area fallback. |
+
+| Wave | Solo ordinary count / alive cap | Four-player ordinary count / alive cap | Ordinary HP / damage |
+|---|---|---|---|
+| 1 | 8 / 8 | 23 / 20 | 50 / 50 |
+| 5 | 24 / 16 | 68 / 28 | 78 / 60 |
+| 10 | 44 / 18 | 124 / 30 | 113 / 70 |
+
+Counts exclude the elite; the alive cap includes it. A downed teammate does not reduce a wave's budget. Pending reinforcements must be exhausted before the wave-clear break can begin. Failed spawn searches retain their ticket; pause and team wipes stop the stream. The configured ten-wave run now returns to the hall on completion. Loot odds and guaranteed elite drops are preserved.
+
+Tuning lives on `GoblinSpawner`, with crowd-hit grace on `PlayerHealthControl`. The existing Cinder Crucible Zombies scene explicitly uses four additional ordinary zombies per wave.
+
+Validation: 27 pacing checks, 37 revival checks, 123 existing combat/navigation/loot checks, and 24-entrance checks on the actual Cinder Crucible scene passed in isolated Unity play-mode runs. Spawn and transition timing are verified mechanically; fun, crowd readability and session duration still need a controller playtest.
+
+## Pass 14 (2026-10-01): Runeforge (Pack-a-Punch) first numbers
+
+| Knob | Value | Where |
+|---|---|---|
+| Price | 2,500 per gun | `ForgedRunes.Price` / `Runeforge.price` |
+| Unlock | after wave 5 is cleared | `Runeforge.unlockAfterWave` |
+| Baseline | ×1.5 damage, ×1.5 magazine (rounded up) | `ForgedRunes.DamageMultiplier/MagazineMultiplier` |
+| Payload interval | 0.75s per owner | `ForgedRunes.PayloadInterval` |
+| Secondary damage | 50% of the shot, ≤3 targets, 2.5m | `ForgedRunes.Secondary*` |
+| Furnace | +1s per 3 payloads, +2s cap per cast | `ForgedRunes.Furnace` |
+| Deepwinter | max(30, shot) burst | `ForgedRunes.Deepwinter` |
+| Sanctuary | 5 HP per forged kill in a totem | `ForgedRunes.SanctuaryHeal` |
+| Outbreak | 3 leaps per cast, 6m | `ForgedRunes.OutbreaksPerCast/OutbreakRange` |
+| Usurper | +50% for 4s | `ForgedRunes.UsurpBonus/UsurpTime` |
+
+Rough affordability: a solo run earns ~8,000 points by the end of wave 5 (80 goblins at ~100 points each including hits), four players ~5,600 each, so everyone can forge one or two guns when it wakes. Secondary is double the plan's 25% because the rune effect is currently the entire power-up (see [pack-a-punch.md](pack-a-punch.md#built-the-first-playable-forge-2026-10-01)).
+
 ## Open issues / to playtest
 
 - **Blinkstorm stun is 5s** (`LightningBlastDamage`: `Stun(0.2f, 5f)`). With stuns now also blocking jumps that's very punishing. Suggest **~1.5s**.
 - Check that gunfire knockback isn't too floaty or too weak (`knockbackPerDamage` 0.18). Should shotguns get an extra multiplier?
 - Pack weight rarely triggers under current orb budgets (most loadouts total 5–12). Consider allowance 6.
-- Match length is untested with 120 HP and 3–4 hearts. Add sudden death (see [Modes & Match Flow](modes-and-flow.md)) as the hard cap.
+- Playtest the ten-wave Zombies run with 300/400 HP wizards at 1–4 players; focus on late-wave crowd pressure, revive opportunities and actual run duration.
 - Ability damage values (Rune II and III actives) haven't had a dedicated pass.
 - Blightward (lime) and Verdant Circle (green) bullet colors are the closest pair; tweak a `themeColor` if they're hard to tell apart.
 - **Elemental reactions (Pass 3) are unplaytested.** Watch for: Tidebound shotguns turning every Emberguard target into Steam (Water + 2 brands), how often a sniper Shatters (any 30+ damage round on someone Frozen), and whether Combust chains through a Viper's Nest's three clouds are fun or oppressive.
@@ -243,3 +308,4 @@ Drops were too sparse for 5-10 minute 4-player matches (~15 per match).
 - **Item drops are unplaytested.** Watch: whether 8-14s feels right (Pass 11); with ~55 drops a match, wonder weapons (~10%, ~5 a match) and Heart Relics (~2% after 3 min, ~1 a match) may need lower weights; whether drop spots land somewhere reachable on every map (add `DropPoint` objects where the auto-pick misbehaves); Thunder Maul's launch (85) on small maps; Frost Cannon (2.2s freeze on everyone in a wide cone + Shatter) possibly being oppressive; the Ember Minigun's 150 branding rounds; Overdrive on miniguns and sniper rifles (no reloads).
 - Leader crown counts any life taken, including from lingering hazards credited to the last attacker. Check it reads right.
 - Drop sounds: fill the "Item drops" slots on `Resources/ReactionSounds.asset`.
+- **Runeforge (Pass 14) is unplaytested.** Check: whether 2,500 is affordable for every player at wave 5 in 1–4 player runs; that the auto-placed forge lands somewhere sensible on Cinder Crucible (place a `Runeforge` in the scene if not); Usurper on bosses (+50% for 4s may delete a boss); Rampart chokepoints making Frostwarden too safe; whether 50% secondary splash at a 0.75s interval is noticeable on SMGs/miniguns without being dominant on snipers.

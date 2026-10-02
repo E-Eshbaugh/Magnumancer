@@ -135,6 +135,7 @@ public class AkimboController : MonoBehaviour
         {
             mover.damage = weapon.damage;
             mover.owner = OwnerPlayer();
+            mover.forged = ammoControl.CurrentForged;   // a forged gun's off-hand is forged too
             mover.Initialize(dir);
         }
         else if (proj.TryGetComponent<Rigidbody>(out var rb))

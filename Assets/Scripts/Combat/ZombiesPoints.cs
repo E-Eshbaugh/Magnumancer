@@ -4,11 +4,8 @@ using UnityEngine;
 using UnityEngine.SceneManagement;
 
 /// <summary>
-/// Zombies economy, earning side (items-and-drops.md): hits, kills and, with a bonus,
-/// elemental reactions and combos earn points, per player. Active only in maps with a
-/// GoblinSpawner. Spending (wall buys, doors) should call TrySpend. Big earns pop a small
-/// "+60" over the player; there's no HUD total yet (it comes with wall buys).
-/// Also puts all players on one team for the Teams hook.
+/// Per-player, per-run Zombies currency. Combat rewards and purchases share one ledger;
+/// PointsChanged drives both the crest total and the temporary overhead readout.
 /// </summary>
 public static class ZombiesPoints
 {
@@ -26,52 +23,71 @@ public static class ZombiesPoints
 
     static readonly Dictionary<GameObject, int> points = new();
 
-    public static int Get(GameObject player) => player != null && points.TryGetValue(player, out int p) ? p : 0;
+    // Child hitboxes/guns resolve to the same wallet as their owning wizard.
+    static GameObject Owner(GameObject player)
+        => player != null ? player.GetComponentInParent<PlayerHealthControl>()?.gameObject : null;
 
+    public static int Get(GameObject player)
+    {
+        player = Owner(player);
+        return player != null && points.TryGetValue(player, out int p) ? p : 0;
+    }
+
+    /// Reject invalid/free purchases and never report success without a debit.
     public static bool TrySpend(GameObject player, int cost)
     {
-        if (!Active || Get(player) < cost) return false;
-        Add(player, -cost, false);
+        player = Owner(player);
+        if (!Active || player == null || cost <= 0 || Get(player) < cost ||
+            !player.GetComponent<PlayerHealthControl>().IsStanding) return false;
+        Change(player, -cost);
         return true;
     }
 
-    static void Add(GameObject player, int amount, bool show)
+    static void Earn(GameObject player, int amount)
     {
-        if (player == null || player.GetComponent<PlayerHealthControl>() == null) return;
-        if (amount > 0) amount = Mathf.RoundToInt(amount * Multiplier);
-        points[player] = Get(player) + amount;
-        PointsChanged?.Invoke(player, points[player], amount);
-        if (show && amount > 0)
-        {
-            Color theme = AbilityKit.Theme(player);
-            ReactionPopup.Show($"+{amount}", theme, Color.white, player.transform.position + Vector3.up * 2.4f, 0.5f);
-        }
+        player = Owner(player);
+        if (!Active || player == null || amount <= 0 ||
+            float.IsNaN(Multiplier) || float.IsInfinity(Multiplier) || Multiplier <= 0f) return;
+        // Saturate instead of wrapping the wallet during long runs or stacked bonuses.
+        double scaled = Math.Round((double)amount * Multiplier);
+        int award = (int)Math.Min(int.MaxValue - Get(player), scaled);
+        if (award > 0) Change(player, award);
     }
 
-    static bool IsMonster(GameObject go) => go != null && go.CompareTag("Monster");
+    static void Change(GameObject player, int amount)
+    {
+        int total = Get(player) + amount;
+        points[player] = total;
+        PointsChanged?.Invoke(player, total, amount);
+    }
+
+    static bool IsMonster(GameObject go) => go != null && go.GetComponentInParent<GoblinHealth>() != null;
 
     static void OnDamaged(GameObject victim, GameObject attacker, float amount)
     {
-        if (Active && amount > 0f && IsMonster(victim)) Add(attacker, PerHit, false);
+        // Pack-a-Punch splash damage pays kills, not hits (no fabricated hit income)
+        if (Active && amount > 0f && IsMonster(victim) && !ForgedRunes.DealingSecondary) Earn(attacker, PerHit);
     }
 
     static void OnKilled(GameObject victim, GameObject attacker, Vector3 position)
     {
-        if (Active && IsMonster(victim)) Add(attacker, PerKill, true);
+        if (Active && IsMonster(victim)) Earn(attacker, PerKill);
     }
 
     static void OnReacted(Reaction reaction, GameObject attacker, GameObject target, Vector3 point)
     {
-        if (Active) Add(attacker, PerReaction, true);
+        if (Active) Earn(attacker, PerReaction);
     }
 
     static void OnComboEnded(GameObject player, int count)
     {
-        if (Active) Add(player, PerComboStep * count, true);
+        if (Active) Earn(player, (int)Math.Min(int.MaxValue, (long)Math.Max(0, PerComboStep) * Math.Max(0, count)));
     }
 
     static void OnSceneLoaded(Scene scene, LoadSceneMode mode)
     {
+        // Additive scenery must not erase an ongoing run.
+        if (mode == LoadSceneMode.Additive) return;
         points.Clear();
         Multiplier = 1f;
         Active = UnityEngine.Object.FindAnyObjectByType<GoblinSpawner>() != null;
@@ -95,7 +111,7 @@ public static class ZombiesPoints
         DamageEvents.Damaged -= OnDamaged; DamageEvents.Damaged += OnDamaged;
         DamageEvents.Killed -= OnKilled; DamageEvents.Killed += OnKilled;
         SceneManager.sceneLoaded -= OnSceneLoaded; SceneManager.sceneLoaded += OnSceneLoaded;
-        ElementReactions.Reacted += OnReacted;      // reset each session
-        ReactionCombo.ComboEnded += OnComboEnded;   // reset each session
+        ElementReactions.Reacted -= OnReacted; ElementReactions.Reacted += OnReacted;
+        ReactionCombo.ComboEnded -= OnComboEnded; ReactionCombo.ComboEnded += OnComboEnded;
     }
 }

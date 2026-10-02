@@ -25,7 +25,8 @@ public class ChainSurgeAbility : MonoBehaviour, IActiveAbility
 
         var struck = new System.Collections.Generic.HashSet<GameObject>();
         float dmg = damage;
-        for (int i = 0; i <= extraJumps && target != null; i++)
+        int jumps = extraJumps + ForgedRunes.ConsumeRelayJumps(caster);   // Conductor relay
+        for (int i = 0; i <= jumps && target != null; i++)
         {
             struck.Add(target);
             Vector3 to = AbilityKit.Chest(target);

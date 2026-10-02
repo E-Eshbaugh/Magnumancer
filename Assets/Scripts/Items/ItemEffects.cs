@@ -60,7 +60,7 @@ public static class ItemEffects
                 var health = player.GetComponent<PlayerHealthControl>();
                 if (health != null) health.AddLife();
                 CameraShake.Shake(0.15f, 0.2f);
-                return "+1 LIFE!";
+                return "+MAX HEALTH!";
             }
         }
         return null;

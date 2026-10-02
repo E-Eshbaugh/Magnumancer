@@ -106,9 +106,9 @@ public class DropDirector : MonoBehaviour
             playersRefreshed = Time.time;
             inMatch.Clear();
             foreach (var h in FindObjectsByType<PlayerHealthControl>())
-                if (!h.IsDead && h.isActiveAndEnabled) inMatch.Add(h);
+                if (h.IsStanding) inMatch.Add(h);
         }
-        inMatch.RemoveAll(p => p == null || p.IsDead || !p.isActiveAndEnabled);
+        inMatch.RemoveAll(p => p == null || !p.IsStanding);
         return inMatch;
     }
 

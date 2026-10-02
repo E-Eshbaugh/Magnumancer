@@ -81,12 +81,14 @@ public class PlayerMovement3D : MonoBehaviour
 
     public void ApplyKnockback(Vector3 force)
     {
+        if (PlayerHealthControl.IsIncapacitated(this)) return;
         knockbackVelocity = force * knockbackMultiplier * WeightKnockbackScale;
     }
 
     /// Gunfire shoves: hits stack up (a shotgun volley pushes harder than one pellet), capped.
     public void AddKnockback(Vector3 force)
     {
+        if (PlayerHealthControl.IsIncapacitated(this)) return;
         force.y = 0f;
         Vector3 v = knockbackVelocity + force * knockbackMultiplier * WeightKnockbackScale;
         knockbackVelocity = Vector3.ClampMagnitude(v, Mathf.Max(maxHitKnockback, knockbackVelocity.magnitude));
@@ -120,7 +122,7 @@ public class PlayerMovement3D : MonoBehaviour
 
     void Update()
     {
-        if (gamepad == null) return;
+        if (gamepad == null || PlayerHealthControl.IsIncapacitated(this)) return;
 
         dashCooldownTimer = Mathf.Max(0f, dashCooldownTimer - Time.deltaTime);
 
@@ -191,6 +193,13 @@ public class PlayerMovement3D : MonoBehaviour
     void FixedUpdate()
     {
         if (controller == null || gamepad == null) return;
+        if (PlayerHealthControl.IsIncapacitated(this))
+        {
+            // Fall to the floor if downed mid-jump, without steering or knockback.
+            verticalVelocity = controller.isGrounded ? -0.5f : verticalVelocity + gravity * Time.fixedDeltaTime;
+            controller.Move(Vector3.up * verticalVelocity * Time.fixedDeltaTime);
+            return;
+        }
 
         Vector3 finalMotion = moveDirection + knockbackVelocity;
         controller.Move(finalMotion * Time.fixedDeltaTime);
@@ -210,6 +219,15 @@ public class PlayerMovement3D : MonoBehaviour
             dashTimer -= Time.fixedDeltaTime;
             if (dashTimer <= 0f) isDashing = false;
         }
+    }
+
+    public void StopForDowned()
+    {
+        CancelDash();
+        knockbackVelocity = slideVelocity = moveDirection = Vector3.zero;
+        verticalVelocity = -0.5f;
+        StickMagnitude = 0f;
+        if (animator != null) animator.SetFloat("Speed", 0f);
     }
 
     /// Moves the player instantly (respawn), clearing momentum, knockback and dashes.

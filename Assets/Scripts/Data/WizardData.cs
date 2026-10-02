@@ -4,6 +4,7 @@ using UnityEngine;
 public class WizardData : ScriptableObject
 {
     public string wizardName;
+    [Tooltip("Health stat: each heart grants 100 HP in one life") ]
     public int heartCount;
     public int orbCount;
     public int loadoutOrbs;

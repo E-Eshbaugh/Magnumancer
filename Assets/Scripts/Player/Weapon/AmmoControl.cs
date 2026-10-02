@@ -93,7 +93,7 @@ public class AmmoControl : MonoBehaviour
         else firingBlocks.Remove(key);
     }
 
-    public bool FiringBlocked => firingBlocks.Count > 0;
+    public bool FiringBlocked => firingBlocks.Count > 0 || PlayerHealthControl.IsIncapacitated(this);
 
     /// Shots cost no ammo and the gun never needs a reload (the magazine is topped up first)
     public void SetFreeAmmo(string key, bool on)
@@ -103,6 +103,41 @@ public class AmmoControl : MonoBehaviour
     }
 
     public bool FreeAmmo => freeAmmo.Count > 0;
+
+    // Named X-button locks: the Runeforge owns X while you can buy there
+    readonly System.Collections.Generic.HashSet<string> reloadButtonBlocks = new();
+
+    /// While blocked, X doesn't start a manual reload (running dry still reloads)
+    public void SetReloadButtonBlocked(string key, bool blocked)
+    {
+        if (blocked) reloadButtonBlocks.Add(key); else reloadButtonBlocks.Remove(key);
+    }
+
+    // ---------- Pack-a-Punch (Runeforge) ----------
+
+    private bool[] forged; // per loadout slot; lasts the run (swaps, downs and revives keep it)
+
+    public bool IsForged(int slot) => forged != null && slot >= 0 && slot < forged.Length && forged[slot];
+    public bool CurrentForged => IsForged(currentGunIndex);
+
+    /// Upgrades this player's runtime copy of a loadout gun (the shared asset is never
+    /// touched) and fills its magazine once. False if the slot can't be forged.
+    public bool ForgeSlot(int slot, float damageMultiplier, float magazineMultiplier)
+    {
+        if (!isSetup || slot < 0 || slot >= guns.Length || guns[slot] == null || IsForged(slot)) return false;
+        var gun = guns[slot];
+        gun.damage = Mathf.CeilToInt(gun.damage * damageMultiplier);
+        gun.ammoCapacity = Mathf.CeilToInt(gun.ammoCapacity * magazineMultiplier);
+        forged[slot] = true;
+        magazines[slot] = gun.ammoCapacity;
+        if (slot == currentGunIndex && currentGun == gun)
+        {
+            StopReload();
+            ammoCount = gun.ammoCapacity;
+            UpdateAmmoBar();
+        }
+        return true;
+    }
 
     /// The element each shot carries, if not the wizard's own (Elemental Rounds). Null = own.
     public System.Func<Element> ShotElement;
@@ -158,6 +193,7 @@ public class AmmoControl : MonoBehaviour
 
         magazines = new int[guns.Length];
         slugMag = new bool[guns.Length];
+        forged = new bool[guns.Length];
         RefillAll();
         isSetup = true;
 
@@ -235,7 +271,7 @@ public class AmmoControl : MonoBehaviour
 
         // Manual reload (X) tops up (rounds already loaded are kept); with slugs loaded,
         // it dumps them and goes back to buckshot
-        if (gamepad.buttonWest.wasPressedThisFrame && (IsSlug || !IsReloading && ammoCount < currentGun.ammoCapacity))
+        if (gamepad.buttonWest.wasPressedThisFrame && reloadButtonBlocks.Count == 0 && (IsSlug || !IsReloading && ammoCount < currentGun.ammoCapacity))
             StartReload();
     }
 
@@ -285,7 +321,7 @@ public class AmmoControl : MonoBehaviour
 
         Element element = ShotElement != null ? ShotElement() : Element.None;
         for (int i = 0; i < projectiles; i++)
-            fire.Shoot(currentAmmoPrefab, spread, currentGun.recoil, damage, structureDamage, element);
+            fire.Shoot(currentAmmoPrefab, spread, currentGun.recoil, damage, structureDamage, element, CurrentForged);
 
         if (fire.firePoint != null)
             BulletFX.MuzzleFlash(fire.Owner, fire.firePoint.position, fire.ShotDirection(),

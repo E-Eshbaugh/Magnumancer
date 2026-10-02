@@ -1,7 +1,7 @@
 using UnityEngine;
 
 /// <summary>
-/// The Hollow — Last Rites: when on the last life stock, every 20 seconds gain
+/// The Hollow — Last Rites: while at or below 30% health, every 20 seconds gain
 /// 3 seconds of invincibility and double damage (triggers as soon as you reach it).
 /// </summary>
 public class LastRitesPassive : WizardPassive, IOutgoingDamageModifier
@@ -24,13 +24,13 @@ public class LastRitesPassive : WizardPassive, IOutgoingDamageModifier
 
         if (!IsAlive) return;
 
-        if (health.stockCount > 0)
+        if (health.currentHealth > health.maxHealth * 0.3f)
         {
             nextProc = -1f;
             return;
         }
 
-        if (nextProc < 0f) nextProc = Time.time; // just reached the last life
+        if (nextProc < 0f) nextProc = Time.time; // just entered critical health
 
         if (Time.time >= nextProc)
         {

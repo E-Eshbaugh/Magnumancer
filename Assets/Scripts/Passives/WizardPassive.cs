@@ -19,9 +19,9 @@ public abstract class WizardPassive : MonoBehaviour
 
     /// Another player or a monster (never ourselves).
     protected bool IsEnemy(GameObject other)
-        => other != null && other != gameObject && DamageEvents.IsCombatant(other);
+        => DamageEvents.IsEnemy(other, gameObject);
 
-    protected bool IsAlive => health != null && !health.IsDead;
+    protected bool IsAlive => health != null && health.IsStanding;
 
     PassiveGlow glow;
     /// Subtle glow around the player for buff indicators

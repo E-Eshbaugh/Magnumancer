@@ -88,7 +88,7 @@ public abstract class WonderWeapon : MonoBehaviour
     {
         if (ending) return;
         var pad = Pad;
-        bool input = pad != null && !GamePause.InputBlocked && !WizardSpawnEffect.IsArriving(transform);
+        bool input = pad != null && !GamePause.InputBlocked && !PlayerHealthControl.IsIncapacitated(this) && !WizardSpawnEffect.IsArriving(transform);
         bool trigger = input && (Automatic ? pad.rightTrigger.ReadValue() > 0.1f : pad.rightTrigger.wasPressedThisFrame);
         Tick(trigger);
     }

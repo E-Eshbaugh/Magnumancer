@@ -12,14 +12,21 @@ public class Infection : MonoBehaviour
     float until, nextTick, nextSpread;
     LineRenderer ring;
 
-    public static void Apply(GameObject target, GameObject source, Color color)
+    /// Outbreak (forged gun) already leapt from this infection
+    [HideInInspector] public bool forgeSpread;
+    public GameObject Source => source;
+    public Color Color => color;
+    public float Remaining => Mathf.Max(0f, until - Time.time);
+
+    /// time: how long it burns (negative = the full duration)
+    public static void Apply(GameObject target, GameObject source, Color color, float time = -1f)
     {
         if (target == null) return;
         var inf = target.GetComponent<Infection>();
         if (inf == null) inf = target.AddComponent<Infection>();
         inf.source = source;
         inf.color = color;
-        inf.until = Time.time + inf.duration;
+        inf.until = Time.time + (time >= 0f ? time : inf.duration);
     }
 
     void Start()

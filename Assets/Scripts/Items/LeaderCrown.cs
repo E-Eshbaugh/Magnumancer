@@ -71,7 +71,7 @@ public class LeaderCrown : MonoBehaviour
             pendingFavored = null;
         }
         // the holder was knocked out of the match
-        if (holder != null && (!holder.activeInHierarchy || Health(holder) == null || Health(holder).IsDead))
+        if (holder != null && (!holder.activeInHierarchy || Health(holder) == null || !Health(holder).IsStanding))
             Decide(null);
 
         Draw();

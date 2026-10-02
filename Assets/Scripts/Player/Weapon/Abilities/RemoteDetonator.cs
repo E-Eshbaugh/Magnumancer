@@ -58,7 +58,7 @@ public class RemoteDetonator : MonoBehaviour
         {
             holding = false;
             // Swapping guns or pausing doesn't blow them — only releasing LT does
-            if (active && !GamePause.InputBlocked)
+            if (active && !GamePause.InputBlocked && !ammoControl.FiringBlocked)
             {
                 Rumble.Play(gamepad, 0f, 0.5f, 0.08f, fade: false); // the "click" (blasts rumble on their own)
                 DetonateAll();

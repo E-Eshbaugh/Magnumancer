@@ -33,6 +33,8 @@ public class HallCatalog : ScriptableObject
         public float height = 1f;
         [Tooltip("Glow of its beam and the land beneath it")]
         public Color glow = new Color(0.4f, 0.9f, 1f);
+        [Tooltip("A Waves (Zombies) map: only on the table in a Waves mode. Every other map is PvP only.")]
+        public bool waves;
     }
 
     [Header("War Table")]
@@ -43,6 +45,8 @@ public class HallCatalog : ScriptableObject
     {
         public string name;
         [TextArea] public string description;
+        [Tooltip("Co-op against the horde: the War Table shows only Waves maps")]
+        public bool waves;
     }
     public ModeEntry[] modes;
 

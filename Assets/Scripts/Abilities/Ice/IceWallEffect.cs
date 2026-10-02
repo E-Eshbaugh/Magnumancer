@@ -49,6 +49,9 @@ public class IceWallEffect : MonoBehaviour
     Coroutine shake;
     float lastHitFx = -1f;
 
+    /// The Frostwarden who raised it (null for walls from elsewhere)
+    [HideInInspector] public GameObject owner;
+
     /// How much of its life is left (0..1)
     public float HealthFraction => 1f - melt;
 
@@ -98,6 +101,7 @@ public class IceWallEffect : MonoBehaviour
         }
 
         transform.position = end;
+        foreach (var collider in GetComponentsInChildren<MeshCollider>()) AbilityKit.BlockNavigation(collider);
         risen = true;
     }
 
@@ -116,15 +120,15 @@ public class IceWallEffect : MonoBehaviour
         Vector3 halfExtents = new Vector3(size.x * 0.5f, size.y * 0.5f, size.z * 0.5f + 0.4f);
         var hits = Physics.OverlapBox(center, halfExtents, transform.rotation,
             Physics.DefaultRaycastLayers, QueryTriggerInteraction.Ignore);
-        var shoved = new System.Collections.Generic.HashSet<PlayerMovement3D>();
+        var shoved = new System.Collections.Generic.HashSet<GameObject>();
         foreach (var c in hits)
         {
-            var m = c.GetComponentInParent<PlayerMovement3D>();
-            if (m == null || !shoved.Add(m)) continue;
+            var target = DamageEvents.RootOf(c);
+            if (!DamageEvents.IsAlive(target) || !shoved.Add(target)) continue;
 
-            float side = Vector3.Dot(m.transform.position - center, transform.forward);
-            m.ApplyKnockback(transform.forward * (side >= 0f ? 1f : -1f) * eruptKnockback);
-            Rumble.Play(m.gamepad, 0.6f, 0.4f, 0.25f);
+            float side = Vector3.Dot(target.transform.position - center, transform.forward);
+            AbilityKit.Knockback(target, transform.forward * (side >= 0f ? 1f : -1f) * eruptKnockback);
+            Rumble.Play(target, 0.6f, 0.4f, 0.25f);
         }
     }
 

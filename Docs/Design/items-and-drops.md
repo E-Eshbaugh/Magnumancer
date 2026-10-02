@@ -2,7 +2,7 @@
 
 > Smash items + Brawl Stars power-ups + CoD Zombies wonder weapons. Drops create **hot spots** that pull everyone into the same fight.
 
-> *Built (2026-10-01):* drop spawning, all brawl pickups, all five wonder weapons, the leader crown. Code in `Assets/Scripts/Items/`; see **As built** below. Needs playtest. The Zombies economy is still design-only (earning points is built).
+> *Built (2026-10-01):* drop spawning, all brawl pickups, all five wonder weapons, the leader crown, and zombie kill loot. Code in `Assets/Scripts/Items/`; see **As built** below. Needs playtest. Zombies points and kill loot are built; spending remains design-only.
 
 ## Spawning
 
@@ -23,7 +23,7 @@
 | **Aegis Sigil** | Uncommon | 50-point shield for 6s |
 | **Throwables** | Common | Hex grenade (random element burst), sticky goblin bomb, portal stone (drop a 5s two-way portal) |
 | **Wonder Weapon** | Rare | Replaces your held slot until its ammo runs out (below) |
-| **Heart Relic** | Very rare / long modes only | +1 life |
+| **Heart Relic** | Very rare / long modes only | +100 maximum and current HP |
 
 ### Wonder weapons (limited ammo, huge personality)
 
@@ -40,7 +40,7 @@
 
 ## Zombies economy (co-op)
 
-> *Built (2026-09-30):* earning points (`ZombiesPoints`: hits, kills, reactions, combos). Spending (wall buys) and a HUD total are next.
+> *Built (2026-10-01):* earning points (`ZombiesPoints`: hits, kills, reactions, combos), validated `TrySpend`, a total below each player's corner crest and a temporary overhead balance/activity readout for all gains and spends. Purchase interactions remain planned. See [Pack-a-Punch / Runeforge](pack-a-punch.md) for the final-stage box and the full weapon/wizard/rune upgrade plan.
 
 - **Points:** hits, kills, and **reactions (bonus!)** earn points, so the combo counter directly pays.
 - **Mystery Box:** random roll, including wonder weapons.
@@ -51,8 +51,9 @@
   - *Ironhide* (knockback immune).
   - *Phoenix Rite* (self-revive once).
   - *Quick Sigil* (faster ability cooldown).
-- **Enchanting Altar** (Pack-a-Punch): upgrades a gun to an elemental version with a new name, a bigger magazine and the element on every hit.
-- **Power-up drops from zombies:** Max Ammo, Arcane Surge (abilities refreshed), Nuke (Meteor Fall), Double Points, Hex Bullets.
+- **Runeforge** (Pack-a-Punch / Enchanting Altar, *first version built 2026-10-01: wakes after wave 5, baseline upgrade + 9 active-rune power-ups*): unlocks in the final map stage and upgrades a carried gun into a weapon-specific form with active- and passive-rune effects. Proposed cost 2,500; one upgrade per slot. All 576 combinations, effect limits and implementation gates are specified in [the Runeforge plan](pack-a-punch.md).
+- **Kill loot (built):** regular zombies have a **15% chance** to spawn one existing PvP pickup at their death position; **minibosses and bosses always drop one**. Uses the same weighted item pool, including wonder weapons and the Heart Relic's three-minute gate. Loot appears immediately on the floor, lasts **30s**, and can be collected by any standing teammate. No timed PvP drops or leader crown in Zombies. Boss guarantees bypass the chance roll; there is no field cap that can suppress a boss reward. Tune `zombieDropChance` and `lootLifetime` on `GoblinSpawner`. Despawning enemies or unloading a scene gives no loot.
+- **Future Zombies-specific power-ups (not built):** Max Ammo, Arcane Surge (abilities refreshed), Nuke (Meteor Fall), Double Points, Hex Bullets.
 - **Downed and revive:** a teammate holds a button to revive; bleed-out timer.
 
 ## As built (2026-10-01)
@@ -84,7 +85,7 @@
 | Thunder Maul | 5 swings. 3.6m / 150° slam: 28 lightning dmg (heavy) and a launch of 85 (the Smash hammer) |
 | Gale Horn | 4 blasts. 12m / 65° gust: shove of 60, 4 dmg, heavy (Staggers, Shatters the Frozen) |
 | Ember Minigun | 150 rounds. Hold RT to spin up (0.5s), 18 rounds/s of 6-dmg **fire rounds that brand**, you move at 75% while holding it. When empty it **melts down** into a lava pool at your feet (it can't hurt you) |
-| Heart Relic | +1 life. Only drops after the match has run **3 minutes** |
+| Heart Relic | +100 maximum and current HP. Only drops after the match has run **3 minutes** |
 
 Drop weights (out of ~92): Rune Shard 14, Healing Draught 14, Hex 6, Goblin Bomb 6, Portal 5, Overdrive 9, Elemental Rounds 9, Blink 8, Aegis 9, each wonder weapon 1.8 (~10% that a drop is a wonder weapon: about 5 per 4-player match), Heart Relic 2. The same item is rerolled once if it would land twice in a row.
 
@@ -99,9 +100,12 @@ Drop weights (out of ~92): Rune Shard 14, Healing Draught 14, Hex 6, Goblin Bomb
 |---|---|
 | Item table (names, rarity, colors, weights) | `Items/ItemBook.cs`. Kept in code like RuneBook, not ScriptableObjects; a per-mode table can plug into `ItemBook.Roll` |
 | Timing, placement, bootstrap, crown | `Items/DropDirector.cs` (added automatically to match scenes with a `MultiplayerManager` and no `GoblinSpawner`; `DropDirector.Enabled` switches it off), `Items/LeaderCrown.cs` |
+| Zombie kill loot and guaranteed boss rewards | `Goblin/GoblinSpawner.cs`, `Goblin/GoblinDeathTracker.cs`; listens to actual combat deaths, classifies both boss spawn pools for guaranteed loot, and rolls at most once per monster. Also respects `DropDirector.Enabled`. |
 | Beam, pickup, models, labels | `Items/DropBeam.cs`, `Items/Pickup.cs`, `Items/ItemVisuals.cs` |
 | Effects | `Items/ItemEffects.cs` (instant items + tuning statics), `Items/Buffs/*`, `Items/Throwables/*`, `Items/Wonder/*` |
 | Sounds | Empty slots on `Resources/ReactionSounds.asset` → "Item drops" (incoming, land, rare announcer, pickup, crown taken). Until they're filled, the strike borrows the Conduct crackle and the rest is silent |
 | Hooks added to existing code | `AmmoControl.SetFiringBlocked` / `SetFreeAmmo` / `ShotElement`; `FireController3D.Shoot(..., element)`; `Bullet.element`; `BulletFX.StyleOf(Element)`; `ElementReactions.BulletHit(..., infused)`; `PlayerHealthControl.AddLife` / `LivesLeft`; LT gun abilities wait while `FiringBlocked` |
 
 **Testing in the editor:** keys **1-9** drop items 1-9 (ItemBook order) next to player 1, **Shift+1-6** items 10-15, **0** sends a random drop with its beam.
+
+**Zombie loot verification (2026-10-01):** the isolated Unity Play Mode run of `ZombiesAbilityChecks.Run` passed all **117 assertions**, including 17 new kill-loot checks: regular-drop chance boundaries, both boss spawn pools, nonlethal hits, duplicate death events, ground placement, the Heart Relic time gate, expiration, untracked enemies and despawn cleanup. No gameplay errors; Unity's unrelated Search indexing exception was recorded separately. Drop frequency and readability in a crowd still need controller playtesting.

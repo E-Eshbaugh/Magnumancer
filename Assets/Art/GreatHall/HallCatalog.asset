@@ -49,6 +49,7 @@ MonoBehaviour:
     tablePos: {x: -1.05, y: -1.35}
     height: 0.05
     glow: {r: 0.45, g: 1, b: 0.45, a: 1}
+    waves: 0
   - scene: Stormspire
     displayName: Stormspire
     flavor: Storm-wracked peaks where the Voltborn learned to strike and vanish.
@@ -56,6 +57,7 @@ MonoBehaviour:
     tablePos: {x: -1.05, y: 1.35}
     height: 0.55
     glow: {r: 1, g: 0.92, b: 0.35, a: 1}
+    waves: 0
   - scene: FungalHollow
     displayName: Fungal Hollow
     flavor: A grove gone to spore. The Blightward still tend what grows here.
@@ -63,6 +65,7 @@ MonoBehaviour:
     tablePos: {x: -3.15, y: -1.35}
     height: 0.1
     glow: {r: 0.75, g: 1, b: 0.3, a: 1}
+    waves: 0
   - scene: Riftforge
     displayName: Riftforge
     flavor: A canyon fortress on the lip of a Dark Rift. Granite Vow ground.
@@ -70,13 +73,15 @@ MonoBehaviour:
     tablePos: {x: 1.05, y: 1.35}
     height: 0.45
     glow: {r: 1, g: 0.6, b: 0.3, a: 1}
-  - scene: CinderCrucibleZombies
+    waves: 0
+  - scene: CinderCrucible
     displayName: Cinder Crucible
-    flavor: The Emberguard's volcanic forge. Goblins crawl up from its depths.
-    miniature: {fileID: 8608501547111897109, guid: cb6a56730637d4dafa6f37602efbd6f1, type: 3}
+    flavor: The Emberguard's volcanic forge, where the careless learn how deep the lava runs.
+    miniature: {fileID: 7823403490781582488, guid: d2d5c1d43658149e8a63cdfc650c4adc, type: 3}
     tablePos: {x: 3.15, y: 1.35}
     height: 0.5
     glow: {r: 1, g: 0.4, b: 0.15, a: 1}
+    waves: 0
   - scene: DrownedSanctum
     displayName: Drowned Sanctum
     flavor: Flooded ruins of the old healing springs, held by the Tidebound.
@@ -84,6 +89,7 @@ MonoBehaviour:
     tablePos: {x: 1.05, y: -1.35}
     height: 0
     glow: {r: 0.3, g: 0.7, b: 1, a: 1}
+    waves: 0
   - scene: BlackOsuary
     displayName: Black Ossuary
     flavor: Cursed tunnels where the Hollow chase the magic nobody should.
@@ -91,6 +97,7 @@ MonoBehaviour:
     tablePos: {x: 3.15, y: -1.35}
     height: 0.1
     glow: {r: 0.7, g: 0.35, b: 1, a: 1}
+    waves: 0
   - scene: Frostgrave
     displayName: Frostgrave
     flavor: A shattered glacier sanctuary. The Frostwardens never miss twice.
@@ -98,13 +105,25 @@ MonoBehaviour:
     tablePos: {x: -3.15, y: 1.35}
     height: 0.6
     glow: {r: 0.6, g: 0.9, b: 1, a: 1}
+    waves: 0
+  - scene: CinderCrucibleZombies
+    displayName: Cinder Crucible
+    flavor: The Emberguard's volcanic forge. Goblins crawl up from its depths.
+    miniature: {fileID: 8608501547111897109, guid: cb6a56730637d4dafa6f37602efbd6f1, type: 3}
+    tablePos: {x: 3.15, y: 1.35}
+    height: 0.5
+    glow: {r: 1, g: 0.4, b: 0.15, a: 1}
+    waves: 1
   modes:
-  - name: Deathmatch
-    description: Every magus for themselves. Last soul standing drinks the fading light.
-  - name: Team Deathmatch
-    description: Two pacts, two sworn foes. Hold formation and reap their lives in tandem.
-  - name: Waves
-    description: Goblin tides claw up from a Dark Rift. Hold the line together until it stills.
+  - name: Modus Solitaria
+    description: 'Deathmatch. Four magi stride in alone: no oath, no ally, only will. The last soul standing drinks the fading light.'
+    waves: 0
+  - name: Bellum Foedera
+    description: Team Deathmatch. Two pacts, two sworn foes. Hold formation and reap their lives in tandem.
+    waves: 0
+  - name: Custodia Perpetua
+    description: Waves. Goblin tides claw up from a Dark Rift. Hold the line together until it stills.
+    waves: 1
   wizardModel: {fileID: 919132149155446097, guid: 231007177a16e5b4da2f96f9c54e101a, type: 3}
   wizardAnimator: {fileID: 9100000, guid: 9802c9d0a9e8444bf94f466b5fa4865b, type: 2}
   titleFont: {fileID: 12800000, guid: 4012217dee8a8554c9e3d021d0e7eb38, type: 2}

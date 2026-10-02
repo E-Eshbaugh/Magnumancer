@@ -15,6 +15,16 @@ public class IceEncase : MonoBehaviour
     void OnEnable() => active.Add(this);
     void OnDisable() => active.Remove(this);
 
+    bool forgeBurst;
+
+    /// Deepwinter (forged gun): true once per encasing, if target is in the ice right now
+    public static bool ClaimForgeBurst(GameObject t)
+    {
+        foreach (var e in active)
+            if (e != null && e.enabled && e.target == t && !e.forgeBurst) { e.forgeBurst = true; return true; }
+        return false;
+    }
+
     /// Shatters the ice around target right now (Shatter reaction)
     public static void BreakOn(GameObject t)
     {

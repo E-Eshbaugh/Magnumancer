@@ -22,7 +22,7 @@ public class VirulentShroudPassive : WizardPassive
 
         // The cloud prefab handles its own fade-out and cleanup
         var cloud = SpawnEffect(position, 0f);
-        if (cloud != null && cloud.TryGetComponent<PoisonCloudHazard>(out var hazard))
+        if (cloud != null && (cloud.GetComponentInChildren<PoisonCloudHazard>() is PoisonCloudHazard hazard))
         {
             hazard.owner = gameObject;
             hazard.ownerImmune = true;

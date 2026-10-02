@@ -88,7 +88,8 @@ public class MapSelectController : MonoBehaviour
             case 1: return "Stormspire";
             case 2: return "FungalHollow";
             case 3: return "Riftforge";
-            case 4: return "CinderCrucibleZombies";
+            // Cinder Crucible: the PvP arena, or its Zombies version in Waves (mode 2)
+            case 4: return DataManager.Instance != null && DataManager.Instance.SelectedMode == 2 ? "CinderCrucibleZombies" : "CinderCrucible";
             case 5: return "DrownedSanctum";
             case 6: return "BlackOsuary";
             case 7: return "Frostgrave";

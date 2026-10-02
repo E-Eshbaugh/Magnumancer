@@ -91,18 +91,20 @@ public class MultiplayerManager : MonoBehaviour
             var appearance = go.GetComponentInChildren<PlayerAppearance>();
             if (appearance != null) appearance.Setup(wizard);
 
-            // Wizard stats: hearts are lives, plus the wizard's passive
+            // Wizard hearts scale one health pool, plus the wizard's passive
             var health = go.GetComponentInChildren<PlayerHealthControl>();
             if (health != null && wizard != null)
             {
-                health.SetLives(Mathf.Max(1, wizard.heartCount));
+                health.SetHealthStat(Mathf.Max(1, wizard.heartCount));
                 WizardPassive.AddTo(health.gameObject, wizard, passiveRune);
             }
             if (health != null) WizardLifeRing.AddTo(health);
+            if (health != null && (ZombiesPoints.Active || FindAnyObjectByType<GoblinSpawner>() != null))
+                PlayerPointsDisplay.Bind(health, i < uiControllers.Length ? uiControllers[i] : null);
 
-            // Where they start is where they come back to after losing a life
+
+            // Initial arrival effect; revives happen where the wizard fell
             var spawnRoot = health != null ? health.transform : go.transform;
-            if (health != null) health.SetSpawnPoint(spawnRoot.position, spawnRoot.rotation);
             WizardSpawnEffect.Play(spawnRoot.gameObject, wizard, i * arrivalStagger);
 
             // Ability charge shown as flames on the wizard; dashes leave a lightning trail
@@ -116,6 +118,10 @@ public class MultiplayerManager : MonoBehaviour
 
             Debug.Log($"Player {i} wired. Pad: {pad?.displayName ?? "None"}, Wizard: {wizard?.wizardName ?? "NULL"}, Guns: {loadout?.Length ?? 0}");
         }
+
+        // Some prototype arenas (including Zombies) have no placed match controller.
+        if (FindAnyObjectByType<WinManager>() == null)
+            new GameObject("WinManager").AddComponent<WinManager>();
 
         Debug.Log("=== Multiplayer Setup Complete ===");
     }

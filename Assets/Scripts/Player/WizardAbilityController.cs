@@ -75,24 +75,27 @@ public class WizardAbilityController : MonoBehaviour
 
     void Update()
     {
-        if (!isInitialized || gamepad == null || GamePause.InputBlocked) return;
+        if (!isInitialized || gamepad == null || GamePause.InputBlocked || PlayerHealthControl.IsIncapacitated(this)) return;
 
         if (gamepad.buttonNorth.wasPressedThisFrame)
         {
             if (cooldown != null && cooldown.IsOnCooldown())
                 return;
 
+            // Start before the hit: Kindling may refresh this cast's cooldown on a kill.
+            if (cooldown != null) cooldown.TriggerCooldown();
             abilityInstance?.Activate(gameObject);
 
             // No target (e.g. Soul Swap with nobody in reach): no cooldown, no fanfare
             if (abilityInstance is IAbilityOutcome outcome && outcome.Fizzled)
+            {
+                if (cooldown != null) cooldown.Refresh();
                 return;
+            }
 
             Rumble.WizardAbility(gameObject);
             OnAbilityActivated?.Invoke();
 
-            if (cooldown != null)
-                cooldown.TriggerCooldown();
         }
     }
 }

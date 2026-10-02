@@ -19,38 +19,13 @@ public class VoidShotProjectile : MonoBehaviour
 
     private void OnTriggerEnter(Collider other)
     {
-        // Monsters (waves mode): damage and void-mark them so they burst when they die
-        if (other.CompareTag("Monster"))
-        {
-            if (alreadyHit.Add(other.gameObject) && other.TryGetComponent<GoblinHealth>(out var goblin))
-            {
-                StatusEffects.Of(other.gameObject).MarkVoid(caster);
-                goblin.TakeDamage(damage, caster);
-            }
-            return;
-        }
+        var target = DamageEvents.RootOf(other);
+        if (!DamageEvents.IsEnemy(target, caster) || !DamageEvents.IsAlive(target) || !alreadyHit.Add(target)) return;
 
-        if (!other.CompareTag("Player1") &&
-            !other.CompareTag("Player2") &&
-            !other.CompareTag("Player3") &&
-            !other.CompareTag("Player4"))
-            return;
-
-        // Prevent repeat hits
-        if (alreadyHit.Contains(other.gameObject) || other.transform.tag == caster.transform.tag)
-            return;
-
-        alreadyHit.Add(other.gameObject);
-
-        // Mark and damage
-        CursedPlayer curseHandler = other.GetComponent<CursedPlayer>();
-        if (curseHandler != null)
-        {
-            curseHandler.ApplyCurse(caster);
-            curseHandler.ApplyDamage(damage, caster);
-        }
-        StatusEffects.Of(other.gameObject).MarkVoid(caster);   // Marked: the next reaction on them Echoes
-
-        // ⚠️ Do NOT destroy the projectile — it pierces!
+        // Mark before damage: a lethal beam hit must still trigger Soulfracture.
+        StatusEffects.Of(target).MarkVoid(caster);
+        target.GetComponent<CursedPlayer>()?.ApplyCurse(caster);
+        DamageEvents.Deal(target, damage, caster);
+        // The beam pierces combatants, hitting each root once.
     }
 }

@@ -46,7 +46,7 @@ public class GunSwapControl : MonoBehaviour
 
     void Update()
     {
-        if (!isInitialized || gamepad == null || GamePause.InputBlocked) return;
+        if (!isInitialized || gamepad == null || GamePause.InputBlocked || PlayerHealthControl.IsIncapacitated(this)) return;
 
         if (gamepad.dpad.up.wasPressedThisFrame && gunPrefabs[0] != null) EquipGun(0);
         if (gamepad.dpad.right.wasPressedThisFrame && gunPrefabs[1] != null) EquipGun(1);

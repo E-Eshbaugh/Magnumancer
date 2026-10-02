@@ -20,8 +20,9 @@ public class AbilityCooldown : MonoBehaviour
     /// Makes the ability ready now
     public void Refresh()
     {
-        if (!coolingDown) return;
-        timer = 0.001f;
+        timer = 0f;
+        coolingDown = false;
+        if (ui != null) ui.SetCooldownFill(1f);
     }
 
     /// 0 = just used, 1 = ready (drives the crest glow and the wizard's charge aura)

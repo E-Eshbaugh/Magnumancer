@@ -42,7 +42,7 @@ public class GroundHazard : MonoBehaviour, IElementZone, IElectrifiable, IFreeza
 
     const float Tick = 0.25f;
     const float ShockTick = 0.5f;
-    readonly HashSet<PlayerMovement3D> slowed = new();
+    readonly HashSet<StatusEffects> slowed = new();
     readonly HashSet<PlayerMovement3D> sliding = new();
     readonly HashSet<PlayerMovement3D> mired = new();
     PlayerMovement3D boostedOwner;
@@ -93,7 +93,7 @@ public class GroundHazard : MonoBehaviour, IElementZone, IElectrifiable, IFreeza
         GlowLine.SetColor(edge, tint, 0.9f * fadeIn * fadeOut * armed);
         GlowLine.SetColor(inner, tint, 0.45f * (1f - Mathf.Repeat(age * 0.6f, 1f)) * fadeOut * armed);
 
-        var inside = AbilityKit.Enemies(transform.position, radius, owner);
+        var inside = AbilityKit.Enemies(transform.position, radius, owner, includeTeammates: fromReaction.HasValue);
 
         // Snare: first enemy in (after arming) gets rooted and it's spent
         if (IsSnare)
@@ -120,11 +120,11 @@ public class GroundHazard : MonoBehaviour, IElementZone, IElectrifiable, IFreeza
             }
 
         // Slow while inside
-        var now = new HashSet<PlayerMovement3D>();
+        var now = new HashSet<StatusEffects>();
         if (slowMultiplier < 1f)
             foreach (var e in inside)
             {
-                var m = e.GetComponent<PlayerMovement3D>();
+                var m = StatusEffects.Of(e);
                 if (m == null) continue;
                 m.SetSpeedModifier(key, slowMultiplier);
                 now.Add(m);

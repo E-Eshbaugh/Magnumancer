@@ -18,9 +18,9 @@ MonoBehaviour:
   loadoutOrbs: 10
   factionEmblem: {fileID: -1861122501, guid: d812d7af151532745a44f9a32bbfe38a, type: 3}
   charcterImage: {fileID: 1591709252, guid: 83fa121b3217fa84ca11623844a0189b, type: 3}
-  passiveAbilityTxt: 'Last Rites: When on last life stock, every 20 seconds gain 3 seconds of invincibility and double damage.'
+  passiveAbilityTxt: 'Last Rites: While at or below 30% health, every 20 seconds gain 3 seconds of invincibility and double damage.'
   activeAbilityTxt: 'Soulfracture Beam: Fire a piercing void ray that marks hit enemies.
-    Marked enemies explode on death or loss of next life stock, dealing area damage.'
+    Marked enemies explode on death or being downed, dealing area damage.'
   loreText: Wielders of forsaken magics, the Hollow were not an original Great Faction,
     instead abandoned their kin of various factions to chase unspeakable power. Hidden
     in cursed ruins and shadowed tunnels, they mastered every form of magnumancy,

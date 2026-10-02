@@ -155,7 +155,7 @@ public class WizardChargeAura : MonoBehaviour
     {
         if (flames == null) return;
 
-        bool hidden = health != null && health.IsDead;
+        bool hidden = health != null && !health.IsStanding;
         float charge = ability != null ? ability.Charge : 0f;
         bool ready = !hidden && charge >= 1f;
 

@@ -298,10 +298,11 @@ public class WizardDeathEffect : MonoBehaviour
         }
     }
 
-    readonly MaterialPropertyBlock block = new();
+    MaterialPropertyBlock block;
 
     void SetScorchAlpha(Renderer r, float a)
     {
+        block ??= new MaterialPropertyBlock();
         var c = Color.Lerp(color, Color.black, 0.9f);
         c.a = a;
         block.SetColor("_BaseColor", c);

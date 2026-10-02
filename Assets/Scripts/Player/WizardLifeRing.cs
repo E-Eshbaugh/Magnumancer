@@ -191,7 +191,7 @@ public class WizardLifeRing : MonoBehaviour
     {
         if (health == null) { Destroy(this); return; }
 
-        bool show = !health.IsDead && health.isActiveAndEnabled
+        bool show = health.IsStanding
                     && !WizardSpawnEffect.IsArriving(health.transform);
         if (!show)
         {

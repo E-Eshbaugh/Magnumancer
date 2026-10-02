@@ -78,6 +78,7 @@ public class HallDirector : MonoBehaviour
 
         hallCamera.CutToHall();
         SelectedMode = Mathf.Clamp(DataManager.Instance.SelectedMode, 0, Mathf.Max(0, catalog.modes.Length - 1));
+        if (table != null) table.ShowMode(WavesMode);
         RestoreLastParty();
         if (table != null && DataManager.Instance.SelectedMap >= 0 && DataManager.Instance.SelectedMap < table.Count)
             table.Select(DataManager.Instance.SelectedMap);
@@ -233,10 +234,14 @@ public class HallDirector : MonoBehaviour
         if (JoinedCount == 0) BackToHall();
     }
 
+    /// The chosen mode is fought against the horde (Waves): only Waves maps are offered
+    bool WavesMode => catalog.modes.Length > 0 && catalog.modes[Mathf.Clamp(SelectedMode, 0, catalog.modes.Length - 1)].waves;
+
     void SetMode(int m, Gamepad pad)
     {
         int n = Mathf.Max(1, catalog.modes.Length);
         SelectedMode = (m + n) % n;
+        if (table != null) table.ShowMode(WavesMode);   // PvP arenas or the Waves maps
         Rumble.Swap(pad);
         foreach (var s in stations) if (s != null) s.Refresh();   // comp hints read the mode
     }

@@ -12,9 +12,9 @@ public class VoidRift : MonoBehaviour
     float until, radius, ownerSpeed, ownerSpeedTime;
     Color color;
     VoidPortalFx portalA, portalB;
-    readonly Dictionary<PlayerMovement3D, float> cooldown = new();
+    readonly Dictionary<GameObject, float> cooldown = new();
     // players standing in a portal who haven't stepped off it yet
-    readonly HashSet<PlayerMovement3D> inside = new();
+    readonly HashSet<GameObject> inside = new();
     float armedAt;
 
     public void Begin(GameObject caster, Vector3 pa, float r, Color c, float speed, float speedTime)
@@ -39,9 +39,9 @@ public class VoidRift : MonoBehaviour
         until = Time.time + duration;
         armedAt = Time.time + 0.4f;
         // whoever is standing on a portal right now has to step off first
-        foreach (var m in FindObjectsByType<PlayerMovement3D>())
-            if (Flat(m.transform.position - a) <= radius || Flat(m.transform.position - b) <= radius)
-                inside.Add(m);
+        foreach (var target in Travellers())
+            if (Flat(target.transform.position - a) <= radius || Flat(target.transform.position - b) <= radius)
+                inside.Add(target);
     }
 
     void Update()
@@ -49,24 +49,41 @@ public class VoidRift : MonoBehaviour
         if (Time.time >= until) { Close(); return; }
         if (!linked || Time.time < armedAt) return;
 
-        foreach (var m in FindObjectsByType<PlayerMovement3D>())
+        foreach (var target in Travellers())
         {
-            Vector3 p = m.transform.position;
+            Vector3 p = target.transform.position;
             Vector3? exit = null;
             if (Flat(p - a) <= radius) exit = b;
             else if (Flat(p - b) <= radius) exit = a;
 
-            if (exit == null) { inside.Remove(m); continue; }
-            if (inside.Contains(m)) continue;
-            if (cooldown.TryGetValue(m, out float t) && Time.time < t) continue;
+            if (exit == null) { inside.Remove(target); continue; }
+            if (inside.Contains(target)) continue;
+            if (cooldown.TryGetValue(target, out float t) && Time.time < t) continue;
 
-            m.Teleport(exit.Value + Vector3.up * 0.05f, m.transform.rotation);
-            cooldown[m] = Time.time + 1.2f; // don't bounce straight back
-            inside.Add(m);                  // must step off the exit before using it
+            var m = target.GetComponent<PlayerMovement3D>();
+            if (m != null) m.Teleport(exit.Value + Vector3.up * 0.05f, m.transform.rotation);
+            else
+            {
+                var agent = target.GetComponent<UnityEngine.AI.NavMeshAgent>();
+                if (agent == null || !agent.isActiveAndEnabled || !agent.isOnNavMesh) continue;
+                var filter = new UnityEngine.AI.NavMeshQueryFilter { agentTypeID = agent.agentTypeID, areaMask = agent.areaMask };
+                if (!UnityEngine.AI.NavMesh.SamplePosition(exit.Value, out var landing, 1.5f, filter)
+                    || !agent.Warp(landing.position)) continue;
+            }
+            cooldown[target] = Time.time + 1.2f; // don't bounce straight back
+            inside.Add(target);                  // must step off the exit before using it
             AbilityKit.Shockwave(exit.Value, 1.5f, color, 0.3f);
-            Rumble.Play(m.gameObject, 0.3f, 0.6f, 0.15f);
-            if (m.gameObject == owner) StartCoroutine(Boost(m));
+            Rumble.Play(target, 0.3f, 0.6f, 0.15f);
+            if (m != null && target == owner) StartCoroutine(Boost(m));
         }
+    }
+
+    static IEnumerable<GameObject> Travellers()
+    {
+        foreach (var player in FindObjectsByType<PlayerMovement3D>())
+            if (DamageEvents.IsAlive(player.gameObject)) yield return player.gameObject;
+        foreach (var monster in FindObjectsByType<GoblinHealth>())
+            if (DamageEvents.IsAlive(monster.gameObject)) yield return monster.gameObject;
     }
 
     void Close()

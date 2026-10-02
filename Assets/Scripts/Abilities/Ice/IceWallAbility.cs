@@ -22,11 +22,7 @@ public class IceWallAbility : MonoBehaviour, IActiveAbility
         Vector3 testPoint = eyeLevel + forward * forwardDistance;
 
         // Ignore players/monsters and triggers (poison clouds, lava) so the wall lands on the floor
-        if (Physics.Raycast(testPoint, Vector3.down, out RaycastHit hit, 5f,
-                ~LayerMask.GetMask("Player"), QueryTriggerInteraction.Ignore))
-        {
-            testPoint = hit.point;
-        }
+        testPoint = AbilityKit.Ground(testPoint);
 
         Quaternion rotation = Quaternion.LookRotation(-forward);
 
@@ -41,6 +37,7 @@ public class IceWallAbility : MonoBehaviour, IActiveAbility
         var wall = Instantiate(iceWallEffectPrefab, testPoint, rotation).GetComponent<IceWallEffect>();
         if (wall != null)
         {
+            wall.owner = caster;   // Rampart: the caster's forged rounds fly through
             wall.BeginRise();
             walls.Add(wall);
         }
