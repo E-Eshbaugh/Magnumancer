@@ -18,9 +18,15 @@ public class CameraShake : MonoBehaviour
         camTransform = Camera.main.transform;
     }
 
+    // The shake in progress, so a small one (a bullet hit) can't cut off a big one (an explosion)
+    private float activeIntensity, activeUntil;
+
     public static void Shake(float intensity, float duration)
     {
         if (instance == null) return;
+        if (Time.time < instance.activeUntil && intensity < instance.activeIntensity * 0.75f) return;
+        instance.activeIntensity = intensity;
+        instance.activeUntil = Time.time + duration;
         instance.StopAllCoroutines();
         instance.ClearOffset();
         instance.StartCoroutine(instance.DoShake(intensity, duration));

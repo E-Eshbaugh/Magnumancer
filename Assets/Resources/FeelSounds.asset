@@ -1,0 +1,33 @@
+%YAML 1.1
+%TAG !u! tag:unity3d.com,2011:
+--- !u!114 &11400000
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 14532e8875a94d429ac3fa8bb2386550, type: 3}
+  m_Name: FeelSounds
+  m_EditorClassIdentifier:
+  hurt:
+  - {fileID: 8300000, guid: ad13ce1653307ff4ca0016b6f29a23b3, type: 3}
+  - {fileID: 8300000, guid: e78e5a0c24ceb6f45a2ed8c3ed6d1a92, type: 3}
+  - {fileID: 8300000, guid: f0ee2bee9f098414ab95ac5b848da118, type: 3}
+  - {fileID: 8300000, guid: 91c249279a5219441807859953a6a0d5, type: 3}
+  - {fileID: 8300000, guid: 20d1e4c7504e4134bbd58e51918c0d87, type: 3}
+  heavyHurt:
+  - {fileID: 8300000, guid: 3e98cc67e10cee8449c10a533d46b2b1, type: 3}
+  - {fileID: 8300000, guid: 93e6fc769ddd0464bbb65fed8828708c, type: 3}
+  - {fileID: 8300000, guid: dc24524e3db18b94db255bd756910f09, type: 3}
+  - {fileID: 8300000, guid: e6a85dd657354574db894229775d5578, type: 3}
+  - {fileID: 8300000, guid: b2b7f8985c7d1d0448d65f4db0b5b627, type: 3}
+  hurtVolume: 0.55
+  announcerVolume: 1
+  musicDuck: 0.45
+  hallMusic: {fileID: 0}
+  battleMusic: []
+  victoryStinger: {fileID: 0}
+  musicVolume: 0.5
