@@ -1388,7 +1388,7 @@ MonoBehaviour:
   m_GameObject: {fileID: 173101825}
   m_Enabled: 1
   m_EditorHideFlags: 0
-  m_Script: {fileID: 1412757536}
+  m_Script: {fileID: 11500000, guid: 64e698a1738f41f3a713cb742df5e04d, type: 3}
   m_Name: 
   m_EditorClassIdentifier: Assembly-CSharp::HallBob
   amplitude: 0.08
@@ -3212,7 +3212,7 @@ MonoBehaviour:
   m_GameObject: {fileID: 496815915}
   m_Enabled: 1
   m_EditorHideFlags: 0
-  m_Script: {fileID: 1412757536}
+  m_Script: {fileID: 11500000, guid: 64e698a1738f41f3a713cb742df5e04d, type: 3}
   m_Name: 
   m_EditorClassIdentifier: Assembly-CSharp::HallBob
   amplitude: 0.08
@@ -3893,7 +3893,7 @@ MonoBehaviour:
   m_GameObject: {fileID: 632514616}
   m_Enabled: 1
   m_EditorHideFlags: 0
-  m_Script: {fileID: 1412757536}
+  m_Script: {fileID: 11500000, guid: 64e698a1738f41f3a713cb742df5e04d, type: 3}
   m_Name: 
   m_EditorClassIdentifier: Assembly-CSharp::HallBob
   amplitude: 0.18
@@ -5309,7 +5309,7 @@ MonoBehaviour:
   m_GameObject: {fileID: 962532776}
   m_Enabled: 1
   m_EditorHideFlags: 0
-  m_Script: {fileID: 1412757536}
+  m_Script: {fileID: 11500000, guid: 64e698a1738f41f3a713cb742df5e04d, type: 3}
   m_Name: 
   m_EditorClassIdentifier: Assembly-CSharp::HallBob
   amplitude: 0.25
@@ -6130,7 +6130,7 @@ MonoBehaviour:
   m_GameObject: {fileID: 1111669780}
   m_Enabled: 1
   m_EditorHideFlags: 0
-  m_Script: {fileID: 1412757536}
+  m_Script: {fileID: 11500000, guid: 64e698a1738f41f3a713cb742df5e04d, type: 3}
   m_Name: 
   m_EditorClassIdentifier: Assembly-CSharp::HallBob
   amplitude: 0.08
@@ -6304,7 +6304,7 @@ MonoBehaviour:
   m_GameObject: {fileID: 1121228653}
   m_Enabled: 1
   m_EditorHideFlags: 0
-  m_Script: {fileID: 1412757536}
+  m_Script: {fileID: 11500000, guid: 64e698a1738f41f3a713cb742df5e04d, type: 3}
   m_Name: 
   m_EditorClassIdentifier: Assembly-CSharp::HallBob
   amplitude: 0.25
@@ -6965,7 +6965,7 @@ MonoBehaviour:
   m_GameObject: {fileID: 1237850473}
   m_Enabled: 1
   m_EditorHideFlags: 0
-  m_Script: {fileID: 1412757536}
+  m_Script: {fileID: 11500000, guid: 64e698a1738f41f3a713cb742df5e04d, type: 3}
   m_Name: 
   m_EditorClassIdentifier: Assembly-CSharp::HallBob
   amplitude: 0.08
@@ -8059,21 +8059,6 @@ Transform:
   m_CorrespondingSourceObject: {fileID: -8679921383154817045, guid: 724abd0485268544d95619b2a6b631ec, type: 3}
   m_PrefabInstance: {fileID: 1412255788}
   m_PrefabAsset: {fileID: 0}
---- !u!115 &1412757536
-MonoScript:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_Name: 
-  serializedVersion: 7
-  m_DefaultReferences: {}
-  m_Icon: {fileID: 0}
-  m_Type: 0
-  m_ExecutionOrder: 0
-  m_ClassName: HallBob
-  m_Namespace: 
-  m_AssemblyName: Assembly-CSharp
 --- !u!1001 &1421974045
 PrefabInstance:
   m_ObjectHideFlags: 0
@@ -9423,7 +9408,7 @@ MonoBehaviour:
   m_GameObject: {fileID: 1715679440}
   m_Enabled: 1
   m_EditorHideFlags: 0
-  m_Script: {fileID: 1412757536}
+  m_Script: {fileID: 11500000, guid: 64e698a1738f41f3a713cb742df5e04d, type: 3}
   m_Name: 
   m_EditorClassIdentifier: Assembly-CSharp::HallBob
   amplitude: 0.25
