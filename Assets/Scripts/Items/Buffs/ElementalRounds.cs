@@ -46,6 +46,7 @@ public class ElementalRounds : MonoBehaviour
         Unhook();
         ammo = gun;
         Element = element;
+        Sfx.Play(PlayerSfx.CastSound(element), transform.position, 0.6f, 1.2f);
         color = Elements.ColorOf(element);
 
         ammo.RefillMagazine();

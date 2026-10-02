@@ -100,6 +100,9 @@ public class OverClock : MonoBehaviour
         isActive = true;
         Rumble.GunAbility(gamepad);
         Rumble.Hold(gamepad, "overclock", 0.06f, 0.14f); // the minigun hums while overclocked
+        Sfx.Play(SfxId.Overclock, transform.position);
+        Sfx.Play(SfxId.GunAbility, transform.position);
+        Sfx.StartLoop(this, SfxId.EmberSpinLoop, 0.5f, 1.3f);
         endTime = now + duration;
         nextReadyTime = now + cooldown;
         ammoControl.RefillMagazine();
@@ -118,6 +121,7 @@ public class OverClock : MonoBehaviour
         boostedGun = null;
         isActive = false;
         Rumble.Release(gamepad, "overclock");
+        Sfx.StopLoop(this);
     }
 
     void OnDisable() => DeactivateOverclock();

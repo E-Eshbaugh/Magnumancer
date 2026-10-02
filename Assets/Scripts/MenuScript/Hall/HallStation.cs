@@ -156,6 +156,7 @@ public class HallStation : MonoBehaviour
         for (int i = 0; i < 4; i++) { Loadout[i] = null; SetSlotGun(i, null, fly: false); }
         Pad = null;
         SetStage(Stage.Empty);
+        Ui(SfxId.UiBack);
     }
 
     void SetStage(Stage s)
@@ -232,6 +233,8 @@ public class HallStation : MonoBehaviour
         Burst(big: true);
         Play("Swap");
         Rumble.Swap(Pad);
+        Ui(SfxId.UiMove);
+        Sfx.Play(SfxId.Blink, transform.position, 0.5f);
         Refresh();
     }
 
@@ -323,6 +326,7 @@ public class HallStation : MonoBehaviour
             {
                 if (i == slot) return;
                 Flash("Already packed");
+                Ui(SfxId.UiError);
                 return;
             }
         int after = Spent - (Loadout[slot] != null ? Loadout[slot].orbCost : 0) + w.orbCost;
@@ -330,12 +334,14 @@ public class HallStation : MonoBehaviour
         {
             Flash($"Not enough orbs ({after}/{Budget})");
             Rumble.Play(Pad, 0.35f, 0.1f, 0.12f);
+            Ui(SfxId.UiError);
             return;
         }
         Loadout[slot] = w;
         SetSlotGun(slot, w, fly: true);
         Play("Pick");
         Rumble.ReloadDone(Pad);
+        Ui(SfxId.UiEquip);
         if (w.reloadSound != null) AudioSource.PlayClipAtPoint(w.reloadSound, transform.position, 0.6f);
         Refresh();
     }
@@ -347,6 +353,7 @@ public class HallStation : MonoBehaviour
         Loadout[slot] = null;
         SetSlotGun(slot, null, fly: false);
         Rumble.Swap(Pad);
+        Ui(SfxId.UiBack);
         Refresh();
     }
 
@@ -370,6 +377,7 @@ public class HallStation : MonoBehaviour
         WeaponIndex = (WeaponIndex + dir + l.Length) % l.Length;
         ShowHandGun();
         Rumble.Swap(Pad);
+        Ui(SfxId.UiMove);
         Refresh();
     }
 
@@ -379,6 +387,7 @@ public class HallStation : MonoBehaviour
         WeaponIndex = 0;
         ShowHandGun();
         Rumble.Swap(Pad);
+        Ui(SfxId.UiMove);
         Refresh();
     }
 
@@ -399,13 +408,14 @@ public class HallStation : MonoBehaviour
                 if (p.dpad.down.wasPressedThisFrame) SetActiveRune(ActiveRune + 1);
                 if (p.dpad.right.wasPressedThisFrame) SetPassiveRune(PassiveRune + 1);
                 if (p.dpad.left.wasPressedThisFrame) SetPassiveRune(PassiveRune - 1);
-                if (p.buttonNorth.wasPressedThisFrame) { ShowLore = !ShowLore; Rumble.Swap(p); Refresh(); }
+                if (p.buttonNorth.wasPressedThisFrame) { ShowLore = !ShowLore; Rumble.Swap(p); Ui(SfxId.UiMove); Refresh(); }
                 if (p.buttonSouth.wasPressedThisFrame)
                 {
                     FitBudget();
                     SetStage(Stage.Armory);
                     Play("Pick");
                     Rumble.ReloadDone(p);
+                    Ui(SfxId.UiConfirm);
                 }
                 else if (p.buttonEast.wasPressedThisFrame) director.RequestLeave(this);
                 break;
@@ -427,8 +437,9 @@ public class HallStation : MonoBehaviour
                     Play("Cheer");
                     Burst(big: true);
                     Rumble.Play(p, 0.6f, 0.9f, 0.35f);
+                    Ui(SfxId.UiReady);
                 }
-                else if (p.buttonEast.wasPressedThisFrame) { SetStage(Stage.Wizard); Play("Idle", 0.2f); Rumble.Swap(p); }
+                else if (p.buttonEast.wasPressedThisFrame) { SetStage(Stage.Wizard); Play("Idle", 0.2f); Rumble.Swap(p); Ui(SfxId.UiBack); }
                 break;
 
             case Stage.Ready:
@@ -437,10 +448,14 @@ public class HallStation : MonoBehaviour
                     SetStage(Stage.Armory);
                     Play("Idle", 0.2f);
                     Rumble.Swap(p);
+                    Ui(SfxId.UiBack);
                 }
                 break;
         }
     }
+
+    // Menu sounds pan toward this player's station
+    void Ui(SfxId id) => Sfx.Play(id, transform.position);
 
     void SetActiveRune(int r)
     {
@@ -449,6 +464,8 @@ public class HallStation : MonoBehaviour
         Burst(big: false);
         Play("Rune");
         Rumble.Swap(Pad);
+        Ui(SfxId.UiMove);
+        Sfx.Play(PlayerSfx.CastSound(Elements.Of(Wizard)), transform.position, 0.35f, 1.15f);   // a taste of the spell
         Refresh();
     }
 
@@ -457,6 +474,7 @@ public class HallStation : MonoBehaviour
         PassiveRune = (r + RuneBook.PassiveCount) % RuneBook.PassiveCount;
         Burst(big: false);
         Rumble.Swap(Pad);
+        Ui(SfxId.UiMove);
         Refresh();
     }
 

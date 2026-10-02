@@ -55,6 +55,7 @@ public class LightningFence : MonoBehaviour
             if (DistanceToSegment(p, a, b) > touchRadius + 0.5f) continue;
             shocked.Add(e);
             DamageEvents.Deal(e, damage, owner);
+            Sfx.Play(SfxId.Zap, e.transform.position);
             StatusEffects.Of(e).Stun(0.35f, 0.5f);
             ElementReactions.AbilityHit(e, owner, damage);
             AbilityKit.Zap(ClosestOnSegment(p, a, b), p, core, 0.15f, 0.15f);

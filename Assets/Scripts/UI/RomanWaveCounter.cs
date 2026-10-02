@@ -52,6 +52,7 @@ public class RomanWaveCounter : MonoBehaviour
         wave = Mathf.Max(0, wave);
         bool increased = wave > _currentWave;
         _currentWave = wave;
+        if (increased && wave > 0 && Application.isPlaying) Sfx.Play(SfxId.WaveStart);   // drums: here they come
 
         string roman = ToRoman(wave, allowVeryLargeRomans);
         string tail = (showArabicAfterThreshold && wave >= arabicAppendThreshold) ? $" ({wave})" : string.Empty;

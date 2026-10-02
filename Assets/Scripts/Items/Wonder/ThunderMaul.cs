@@ -18,6 +18,9 @@ public class ThunderMaul : WonderWeapon
     {
         Vector3 aim = Aim, from = transform.position;
         Vector3 slam = AbilityKit.Ground(from + aim * 1.8f + Vector3.up);
+        Sfx.Play(SfxId.ThunderMaul, slam);
+        Sfx.Play(SfxId.LandHeavy, slam, 1f, 0.7f);   // the hammer hitting the floor
+        Sfx.Play(SfxId.Zap, slam);
 
         foreach (var e in InCone(from, aim, Reach, Arc))
         {

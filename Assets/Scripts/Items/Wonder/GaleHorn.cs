@@ -20,6 +20,8 @@ public class GaleHorn : WonderWeapon
     protected override void Fire()
     {
         Vector3 aim = Aim, from = transform.position;
+        Sfx.Play(SfxId.GaleHorn, from);
+        Sfx.Play(SfxId.Gust, from);
         ConeBlast.Spawn(Muzzle, aim, Range, Cone, GustSpeed, Air, color, 80);
         for (int i = 0; i < 3; i++) Run(Ring(Muzzle, aim, i * 0.07f, color));
         PowerFx.Flash(Muzzle, color, 6f, 5f, 0.25f);

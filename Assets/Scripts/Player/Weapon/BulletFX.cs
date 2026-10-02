@@ -177,6 +177,12 @@ public class BulletFX : MonoBehaviour
         head = point;
         transform.position = point;
         Burst(style, point, normal, dir, width, hitCombatant);
+        // hitting a fighter sounds through DamageEvents (thud + hit marker); this is the world
+        if (!hitCombatant)
+        {
+            Sfx.Play(SfxId.BulletImpact, point);
+            if (Random.value < 0.1f) Sfx.Play(SfxId.Ricochet, point);
+        }
         End();
     }
 

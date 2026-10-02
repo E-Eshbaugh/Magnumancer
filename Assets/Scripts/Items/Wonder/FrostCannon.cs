@@ -19,6 +19,8 @@ public class FrostCannon : WonderWeapon
     protected override void Fire()
     {
         Vector3 aim = Aim, from = transform.position;
+        Sfx.Play(SfxId.FrostCannon, from);
+        Sfx.Play(SfxId.CastFrost, from, 0.8f, 0.8f);
         ConeBlast.Spawn(Muzzle, aim, Range, Cone, BlastSpeed, Mist, Color.white, 90);
         PowerFx.Flash(Muzzle, color, 8f, 6f, 0.3f);
         PowerFx.IceShards(Muzzle + aim * 0.5f, color, 10, 6f, 0.1f);

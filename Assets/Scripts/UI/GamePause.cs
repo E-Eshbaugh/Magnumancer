@@ -16,15 +16,23 @@ public static class GamePause
 
     public static void Pause()
     {
+        bool was = IsPaused;
         IsPaused = true;
         Time.timeScale = 0f;
+        AudioListener.pause = true;   // the fight's sounds hold; menu sounds started now still play
+        if (!was) Sfx.Play(SfxId.UiPause);
     }
 
     public static void Resume()
     {
-        if (IsPaused) resumedFrame = Time.frameCount;
+        if (IsPaused)
+        {
+            resumedFrame = Time.frameCount;
+            Sfx.Play(SfxId.UiUnpause);
+        }
         IsPaused = false;
         Time.timeScale = 1f;
+        AudioListener.pause = false;
     }
 
     // Scene reloads keep statics around; never start a match paused
@@ -33,5 +41,6 @@ public static class GamePause
     {
         IsPaused = false;
         resumedFrame = -1;
+        AudioListener.pause = false;
     }
 }

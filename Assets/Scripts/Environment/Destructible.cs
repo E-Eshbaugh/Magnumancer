@@ -165,6 +165,7 @@ public class Destructible : MonoBehaviour, IElementZone
 
         if (!quiet)
         {
+            Sfx.Play(SfxId.PropHit, point, Mathf.Clamp(amount / 40f, 0.5f, 1f), MaterialPitch);
             Chips(point, Mathf.Clamp(amount / 15f, 0.5f, 2f) * (mult > 1f ? 1.5f : 1f));
             if (!batched)
             {
@@ -234,6 +235,7 @@ public class Destructible : MonoBehaviour, IElementZone
     {
         cracked = true;
         Vector3 c = Bounds.center;
+        Sfx.Play(SfxId.PropHit, c, 1f, MaterialPitch * 0.75f);
         RockDebris.Dust(new Vector3(c.x, Bounds.min.y, c.z), Mathf.Max(0.5f, debrisScale * 0.6f), 5);
         Chips(c + Vector3.up * Bounds.extents.y * 0.5f, 1.5f);
         if (!batched)
@@ -379,6 +381,7 @@ public class Destructible : MonoBehaviour, IElementZone
             RockDebris.Chunk(p, v, UnityEngine.Random.Range(0.12f, 0.28f) * debrisScale, UnityEngine.Random.Range(1f, 1.8f), mat, col);
         }
         RockDebris.Dust(new Vector3(before.center.x, before.min.y, before.center.z), Mathf.Max(0.8f, debrisScale), 8);
+        BreakSound(before.center, 0.8f);
         Rumble.Blast(before.center, Mathf.Max(3f, debrisScale * 3f), 0.3f);
         CameraShake.Shake(0.05f + 0.03f * debrisScale, 0.15f);
 
@@ -393,6 +396,22 @@ public class Destructible : MonoBehaviour, IElementZone
         restPosition = transform.position;
         Bounds = ComputeBounds();
         UpdateLook();
+    }
+
+    // Wood knocks high, stone and metal low; crystal and ice shatter like glass
+    float MaterialPitch => material switch
+    {
+        PropMaterial.Wood or PropMaterial.Plant or PropMaterial.Bone => 1.15f,
+        PropMaterial.Stone or PropMaterial.Metal => 0.85f,
+        _ => 1.3f,
+    };
+
+    void BreakSound(Vector3 at, float volume)
+    {
+        float size = Mathf.Clamp(debrisScale, 0.5f, 2.5f);
+        if (material == PropMaterial.Crystal || material == PropMaterial.Ice)
+            Sfx.Play(SfxId.ShieldBreak, at, volume, 0.8f);
+        Sfx.Play(SfxId.PropBreak, at, volume * Mathf.Lerp(0.7f, 1f, size / 2.5f), MaterialPitch * Mathf.Lerp(1.15f, 0.8f, size / 2.5f));
     }
 
     void Break(GameObject attacker)
@@ -433,6 +452,7 @@ public class Destructible : MonoBehaviour, IElementZone
         if (charred > 0.2f)
             PowerFx.Puffs(center, new Color(0.1f, 0.08f, 0.07f, 1f), 8, 2f, 1.2f, 1.2f, lift: 1.5f);   // burnt out
 
+        BreakSound(center, 1f);
         Rumble.Blast(center, Mathf.Max(3f, debrisScale * 3f), 0.35f);
         CameraShake.Shake(0.05f + 0.04f * debrisScale, 0.15f);
 

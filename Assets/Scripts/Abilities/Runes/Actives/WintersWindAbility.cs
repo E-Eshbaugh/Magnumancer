@@ -50,6 +50,7 @@ public class WintersWindAbility : MonoBehaviour, IActiveAbility
         var fx = StatusEffects.Of(enemy);
         for (int i = 0; i < freezeStacks; i++) fx.AddFreeze();
         Rumble.Play(enemy, 0.5f, 0.4f, 0.25f);
+        Sfx.Play(SfxId.Gust, enemy.transform.position, 0.7f, 1.3f);
     }
 
     // ---------- visuals ----------

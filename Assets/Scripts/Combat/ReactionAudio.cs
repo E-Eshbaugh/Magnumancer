@@ -17,6 +17,9 @@ public static class ReactionAudio
     static int next;
     static readonly Dictionary<Reaction, float> lastPlayed = new();
 
+    /// Frame a reaction last sounded (Sfx drops an explosion boom the reaction already covers)
+    public static int LastPlayFrame { get; private set; } = -1;
+
     static ReactionSoundBank Bank()
     {
         if (!loaded)
@@ -32,6 +35,7 @@ public static class ReactionAudio
         var b = Bank();
         var e = b != null ? b.Find(reaction) : null;
         if (e == null || e.clips == null || e.clips.Length == 0) return;
+        LastPlayFrame = Time.frameCount;
         if (lastPlayed.TryGetValue(reaction, out float last) && Time.time - last < MinGap) return;
         lastPlayed[reaction] = Time.time;
 
@@ -89,6 +93,7 @@ public static class ReactionAudio
         loaded = false;
         voices = null;
         next = 0;
+        LastPlayFrame = -1;
         lastPlayed.Clear();
     }
 }

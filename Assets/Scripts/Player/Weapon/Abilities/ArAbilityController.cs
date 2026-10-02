@@ -245,6 +245,7 @@ public class ArAbilityController : MonoBehaviour
         if (Time.time < nextFireAllowed) return;
         nextFireAllowed = Time.time + Mathf.Max(fireCooldown, abilityCooldown);
         Rumble.GunAbility(pad);
+        Sfx.Play(SfxId.LauncherThunk, transform.position);
 
         GameObject g = grenadePrefab;
         bool builtFallback = false;
