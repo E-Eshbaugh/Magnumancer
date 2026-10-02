@@ -177,9 +177,9 @@ public class HallCard
         {
             var a = runes.actives[st.ActiveRune];
             var p = runes.passives[st.PassiveRune];
-            y = Section(y, $"ACTIVE  {RuneBook.Numeral(st.ActiveRune)}/{RuneBook.Numeral(RuneBook.ActiveCount - 1)}", "D-pad left/right",
+            y = Section(y, $"ACTIVE  {RuneBook.Numeral(st.ActiveRune)}/{RuneBook.Numeral(RuneBook.ActiveCount - 1)}", "D-pad up/down",
                         $"{a.name}  {HallUI.Tint($"{a.cooldown:0}s", HallUI.Dim)}", a.description, theme);
-            y = Section(y, $"PASSIVE  {RuneBook.Numeral(st.PassiveRune)}/{RuneBook.Numeral(RuneBook.PassiveCount - 1)}", "D-pad up/down",
+            y = Section(y, $"PASSIVE  {RuneBook.Numeral(st.PassiveRune)}/{RuneBook.Numeral(RuneBook.PassiveCount - 1)}", "D-pad left/right",
                         p.name, p.description, theme);
             string hint = CompHint();
             if (!string.IsNullOrEmpty(hint)) y += Line(hint.Trim(), y, color: HallUI.Dim) + 8f;

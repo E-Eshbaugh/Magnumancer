@@ -25,7 +25,7 @@ public class CharacterSelectController : MonoBehaviour
     public WizardData selectedWizard;
 
     [Header("-- Runes --")]
-    [Tooltip("D-pad left/right picks the active rune, up/down the passive rune")]
+    [Tooltip("D-pad up/down picks the active rune, left/right the passive rune")]
     public bool showRuneHints = true;
     public int selectedActiveRune;
     public int selectedPassiveRune;
@@ -63,11 +63,11 @@ public class CharacterSelectController : MonoBehaviour
         rightPressed = isPressedR;
         leftPressed = isPressedL;
 
-        // Runes: d-pad left/right = active (3), up/down = passive (2)
+        // Runes: d-pad up/down = active (3), left/right = passive (2)
         bool changed = false;
-        if (activePad.dpad.right.wasPressedThisFrame) { selectedActiveRune = (selectedActiveRune + 1) % RuneBook.ActiveCount; changed = true; }
-        if (activePad.dpad.left.wasPressedThisFrame) { selectedActiveRune = (selectedActiveRune + RuneBook.ActiveCount - 1) % RuneBook.ActiveCount; changed = true; }
-        if (activePad.dpad.up.wasPressedThisFrame || activePad.dpad.down.wasPressedThisFrame)
+        if (activePad.dpad.down.wasPressedThisFrame) { selectedActiveRune = (selectedActiveRune + 1) % RuneBook.ActiveCount; changed = true; }
+        if (activePad.dpad.up.wasPressedThisFrame) { selectedActiveRune = (selectedActiveRune + RuneBook.ActiveCount - 1) % RuneBook.ActiveCount; changed = true; }
+        if (activePad.dpad.left.wasPressedThisFrame || activePad.dpad.right.wasPressedThisFrame)
         {
             selectedPassiveRune = (selectedPassiveRune + 1) % RuneBook.PassiveCount;
             changed = true;

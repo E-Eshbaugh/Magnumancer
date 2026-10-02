@@ -5,7 +5,7 @@ using UnityEngine.InputSystem;
 /// <summary>
 /// One player's spot in the Great Hall: a rune dais where their wizard stands once they
 /// join (X). Each player picks on their own pad, all at once:
-///  • Wizard — LB/RB (or left stick) wizard, d-pad ◄► active rune, ▲▼ passive rune, Y lore;
+///  • Wizard — LB/RB (or left stick) wizard, d-pad ▲▼ active rune, ◄► passive rune, Y lore;
 ///  • Armory — LB/RB tier, stick browses (the gun appears in the wizard's hand), d-pad
 ///    slots it: the gun flies to that side of the wizard (up/right/down/left), X+d-pad clears;
 ///  • Ready — the wizard cheers and their guns orbit them like in a match.
@@ -395,10 +395,10 @@ public class HallStation : MonoBehaviour
                 if (p.rightShoulder.wasPressedThisFrame) ChangeWizard(+1);
                 else if (p.leftShoulder.wasPressedThisFrame) ChangeWizard(-1);
                 else { int s = StickFlick(p); if (s != 0) ChangeWizard(s); }
-                if (p.dpad.right.wasPressedThisFrame) SetActiveRune(ActiveRune + 1);
-                if (p.dpad.left.wasPressedThisFrame) SetActiveRune(ActiveRune - 1);
-                if (p.dpad.up.wasPressedThisFrame) SetPassiveRune(PassiveRune - 1);
-                if (p.dpad.down.wasPressedThisFrame) SetPassiveRune(PassiveRune + 1);
+                if (p.dpad.up.wasPressedThisFrame) SetActiveRune(ActiveRune - 1);
+                if (p.dpad.down.wasPressedThisFrame) SetActiveRune(ActiveRune + 1);
+                if (p.dpad.right.wasPressedThisFrame) SetPassiveRune(PassiveRune + 1);
+                if (p.dpad.left.wasPressedThisFrame) SetPassiveRune(PassiveRune - 1);
                 if (p.buttonNorth.wasPressedThisFrame) { ShowLore = !ShowLore; Rumble.Swap(p); Refresh(); }
                 if (p.buttonSouth.wasPressedThisFrame)
                 {
