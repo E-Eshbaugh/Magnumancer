@@ -15,6 +15,7 @@ public class HallCard
     const float Pad = 16f;
     const float Margin = 22f;
     const float Inner = Width - Pad * 2f;
+    const float EmblemSize = 96f;
     public const float MaxHeight = 500f;
 
     readonly HallStation st;
@@ -153,11 +154,11 @@ public class HallCard
             if (w.factionEmblem != null)
             {
                 var e = I(w.factionEmblem, Color.white);
-                HallUI.Place(e.rectTransform, Width - Pad - 56f, 10f, 56f, 56f);
+                HallUI.Place(e.rectTransform, Width - Pad - EmblemSize + 4f, 8f, EmblemSize, EmblemSize);
             }
         }
         prompts.Root.gameObject.SetActive(false);
-        return 84f;
+        return EmblemSize + 16f;
     }
 
     // ---------- wizard ----------
