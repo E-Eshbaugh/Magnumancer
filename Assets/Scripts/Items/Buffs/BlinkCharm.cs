@@ -38,6 +38,7 @@ public class BlinkCharm : MonoBehaviour
     void Dashed()
     {
         PowerFx.Sparks(AbilityKit.Chest(gameObject), color, 10, 4f, 0.3f, 0.06f, 0f);
+        Sfx.Play(SfxId.Blink, transform.position);
         if (--charges <= 0) { Destroy(this); return; }
         RebuildPips();
     }

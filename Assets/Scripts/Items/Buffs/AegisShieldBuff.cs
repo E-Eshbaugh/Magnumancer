@@ -28,6 +28,7 @@ public class AegisShieldBuff : MonoBehaviour, IIncomingDamageModifier
         maxShield = points;
         shield = points;
         duration = time;
+        Sfx.Play(SfxId.ShieldUp, transform.position);
         until = Time.time + time;
         flash = 1f;
         if (bubble == null)
@@ -58,6 +59,7 @@ public class AegisShieldBuff : MonoBehaviour, IIncomingDamageModifier
     void Shatter()
     {
         Vector3 at = AbilityKit.Chest(gameObject);
+        Sfx.Play(SfxId.ShieldBreak, at);
         PowerFx.IceShards(at, color, 14, 5f, 0.12f);
         PowerFx.Flash(at, color, 5f, 4f, 0.25f);
         AbilityKit.Shockwave(transform.position, 1.8f, color, 0.3f);

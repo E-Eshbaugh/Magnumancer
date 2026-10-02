@@ -193,7 +193,10 @@ public class LaserScope : MonoBehaviour
     void SetFocusFeedback(bool ready, float wave)
     {
         if (ready && !wasFocusReady)
+        {
             Rumble.Play(gamepad, 0.35f, 0.8f, 0.15f);
+            Sfx.Play(SfxId.ScopeFocus, transform.position);
+        }
 
         if (ready) Rumble.Hold(gamepad, "focus", 0.08f * wave, 0.05f + 0.3f * wave);
         else if (wasFocusReady) Rumble.Release(gamepad, "focus");

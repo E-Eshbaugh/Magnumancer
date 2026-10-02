@@ -28,6 +28,7 @@ public static class Explosions
 
         // everyone nearby feels it (victims inside the radius the most)
         Rumble.Blast(center, radius * 1.5f);
+        Boom(center, radius, damage, source, shove);
 
         // ...and gets shoved outward, harder near the middle
         if (shove && damage > 0f && ShovePerDamage > 0f)
@@ -90,6 +91,24 @@ public static class Explosions
         // big blasts scar the floor for the rest of the match
         if (shove && damage >= Craters.MinBlastDamage)
             Craters.Blast(center, radius * 0.45f);
+    }
+
+    /// The blast's sound. Grenades, Viper mines and Cursed bursts play their own clip, and a
+    /// reaction's blast is covered by the reaction's sound (Sfx.PlayLate drops it then).
+    static void Boom(Vector3 center, float radius, float damage, GameObject source, bool shove)
+    {
+        if (source != null && (source.GetComponent<GrenadeExplodeOnImpact>() != null
+                               || source.GetComponent<GrenadeExplodeAfterDelay>() != null
+                               || source.GetComponent<MineExplosionController>() != null
+                               || source.GetComponent<CursedPlayer>() != null))
+            return;
+
+        // ground pulses (an earthquake's ticks) rumble rather than bang
+        if (!shove) { Sfx.Play(SfxId.Quake, center); return; }
+
+        bool big = radius >= 4f || damage >= 45f;
+        Sfx.PlayLate(big ? SfxId.ExplosionBig : SfxId.Explosion, center,
+                     Mathf.Clamp(0.65f + damage / 120f, 0.65f, 1.1f), big ? 1f : Mathf.Lerp(1.15f, 0.95f, radius / 4f));
     }
 
     /// ClosestPoint doesn't support non-convex mesh colliders (floors, big props): use bounds

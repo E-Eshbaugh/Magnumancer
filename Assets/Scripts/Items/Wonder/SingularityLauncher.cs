@@ -12,6 +12,7 @@ public class SingularityLauncher : WonderWeapon
     protected override void Fire()
     {
         Singularity.Launch(gameObject, Muzzle, AbilityKit.AimPoint(gameObject, Range), color);
+        Sfx.Play(SfxId.SingularityShot, transform.position);
         PowerFx.Flash(Muzzle, color, 5f, 4f, 0.2f);
     }
 }

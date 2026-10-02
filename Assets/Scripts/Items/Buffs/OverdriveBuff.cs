@@ -23,6 +23,7 @@ public class OverdriveBuff : MonoBehaviour
     {
         duration = time; rate = fireRate; color = c;
         until = Time.time + time;
+        Sfx.Play(SfxId.PowerUp, transform.position);
         guns = GetComponentsInChildren<AmmoControl>(true);
         foreach (var g in guns)
         {

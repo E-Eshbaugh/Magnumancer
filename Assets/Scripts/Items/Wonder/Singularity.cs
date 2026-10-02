@@ -45,6 +45,7 @@ public class Singularity : MonoBehaviour
         Vector3 center = to + Vector3.up * 1f;
         transform.position = center;
         Build();
+        Sfx.Play(SfxId.CastVoid, to, 1f, 0.75f);
         AbilityKit.Shockwave(to, PullRadius, color, 0.4f);
         CameraShake.Shake(0.1f, 0.2f);
 
@@ -58,6 +59,9 @@ public class Singularity : MonoBehaviour
             ringB.transform.Rotate(Vector3.forward, -540f * Time.deltaTime, Space.Self);
             ringA.widthMultiplier = ringB.widthMultiplier = Mathf.Lerp(0.5f, 1.4f, k);
             glow.intensity = Mathf.Lerp(2f, 7f, k);
+            // a low drone that winds up until it pops
+            Sfx.StartLoop(this, SfxId.EmberSpinLoop);
+            Sfx.SetLoop(this, 0.4f + 0.6f * k, Mathf.Lerp(0.25f, 0.6f, k * k));
 
             bool rumble = Time.time >= nextRumble;
             if (rumble) nextRumble = Time.time + 0.2f;
@@ -81,6 +85,7 @@ public class Singularity : MonoBehaviour
     void Pop(Vector3 ground)
     {
         Vector3 at = ground + Vector3.up;
+        Sfx.StopLoop(this);
         Explosions.AffectWorld(ground, PopRadius, PopDamage, gameObject);
         foreach (var e in AbilityKit.Enemies(ground, PopRadius, owner))
         {

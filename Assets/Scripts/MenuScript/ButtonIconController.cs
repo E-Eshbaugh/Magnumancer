@@ -33,6 +33,7 @@ public class ButtonIconController : MonoBehaviour
 
         if (Gamepad.current.aButton.IsPressed() && SceneManager.GetActiveScene().name != "MainMenu")
         {
+            Sfx.Play(SfxId.UiLaunch);   // the voices survive the scene load
             SceneManager.LoadScene(MenuScenes.Hall);
         }
     }

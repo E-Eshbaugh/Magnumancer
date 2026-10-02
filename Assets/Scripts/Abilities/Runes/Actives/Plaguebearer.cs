@@ -37,6 +37,7 @@ public class Plaguebearer : MonoBehaviour
         AbilityKit.Shockwave(transform.position, radius + 1f, toxic, 0.4f);
         CameraShake.Shake(0.15f, 0.2f);
         Rumble.Play(gameObject, 0.6f, 0.5f, 0.3f);
+        Sfx.Play(SfxId.GasBurst, transform.position);
     }
 
     void Build()

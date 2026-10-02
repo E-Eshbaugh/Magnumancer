@@ -45,6 +45,7 @@ public class ThrownItem : MonoBehaviour
         Vector3 from = AbilityKit.Chest(thrower) + aim * 0.6f;
         Vector3 to = AbilityKit.AimPoint(thrower, ThrowRange);
         transform.position = from;
+        Sfx.Play(SfxId.Throw, from);
         model = ItemVisuals.Model(def.id, transform);
         model.localScale = Vector3.one * 0.8f;
 
@@ -94,6 +95,8 @@ public class ThrownItem : MonoBehaviour
             }
             case ItemId.PortalStone:
                 if (rift != null) rift.Link(to, PortalTime);
+                Sfx.Play(SfxId.Blink, to);
+                Sfx.Play(SfxId.CastVoid, to, 0.6f, 1.2f);
                 AbilityKit.Shockwave(to, 1.8f, def.color, 0.35f);
                 Destroy(gameObject);
                 break;
@@ -109,6 +112,7 @@ public class ThrownItem : MonoBehaviour
     {
         var element = (Element)Random.Range(1, 9);   // any element but None
         Color c = Elements.ColorOf(element);
+        Sfx.Play(PlayerSfx.CastSound(element), at);   // it sounds like the element it rolled
 
         foreach (var e in AbilityKit.Enemies(at, HexRadius, thrower))
         {
@@ -153,11 +157,14 @@ public class ThrownItem : MonoBehaviour
             DamageEvents.Killed += Unstick;
         }
         else at = AbilityKit.Ground(at + Vector3.up) + Vector3.up * 0.3f;
+        Sfx.Play(SfxId.StickyThunk, at);
+        Sfx.Play(SfxId.FuseHiss, at);
 
         var light = gameObject.AddComponent<Light>();
         light.type = LightType.Point; light.color = def.color; light.range = 3f; light.shadows = LightShadows.None;
 
         float t = 0f;
+        bool wasOn = false;
         while (t < BombFuse)
         {
             t += Time.deltaTime;
@@ -171,6 +178,8 @@ public class ThrownItem : MonoBehaviour
             light.intensity = on ? 4f : 0.5f;
             model.localScale = Vector3.one * (on ? 0.9f : 0.75f);
             if (on && onVictim) Rumble.Play(stuckTo, 0.1f, 0.3f, 0.05f, fade: false);
+            if (on && !wasOn) Sfx.Play(SfxId.UiMove, at, 1f, Mathf.Lerp(1.3f, 1.9f, t / BombFuse));   // beep... beep.. beepbeep
+            wasOn = on;
             if (Random.value < 0.3f) PowerFx.Sparks(at + Vector3.up * 0.2f, Color.Lerp(def.color, Color.white, 0.5f), 1, 2f, 0.25f, 0.05f, 0.5f);
             yield return null;
         }

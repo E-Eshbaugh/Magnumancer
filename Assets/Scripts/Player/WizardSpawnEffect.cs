@@ -91,6 +91,8 @@ public class WizardSpawnEffect : MonoBehaviour
         RevealWizard();
         CameraShake.Shake(0.12f, 0.15f);
         Rumble.Spawn(target.gameObject);
+        Sfx.Play(SfxId.Respawn, ground);
+        Sfx.Play(SfxId.Zap, ground, 0.7f, 0.8f);
         var flash = MakeFlash(ground);
         var ring = MakeLine("Ring", 41, 0.18f);
         ring.loop = true;

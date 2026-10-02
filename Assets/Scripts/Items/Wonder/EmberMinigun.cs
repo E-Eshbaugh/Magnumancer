@@ -59,6 +59,10 @@ public class EmberMinigun : WonderWeapon
         if (spin > 0.05f) Rumble.Hold(pad, SpeedKey, 0.1f * spin, 0.25f * spin);
         else Rumble.Release(pad, SpeedKey);
 
+        // the barrels whine up as they spin
+        if (spin > 0.02f) { Sfx.StartLoop(this, SfxId.EmberSpinLoop); Sfx.SetLoop(this, spin, 0.5f + 0.7f * spin); }
+        else Sfx.StopLoop(this);
+
         // hotter as it empties
         float heat = 1f - Ammo / (float)MaxAmmo;
         if (Mathf.Abs(heat - shownHeat) > 0.02f)
@@ -74,6 +78,7 @@ public class EmberMinigun : WonderWeapon
         if (fire != null && bullet != null)
         {
             fire.Shoot(bullet, Spread, 0.12f, Damage, element: Element.Fire);
+            Sfx.Play(SfxId.EmberShot, transform.position, 1f, Mathf.Lerp(1f, 1.15f, 1f - Ammo / (float)MaxAmmo));
             if (fire.firePoint != null)
                 BulletFX.MuzzleFlash(fire.Owner, fire.firePoint.position, fire.ShotDirection(), BulletFX.ShotPower(Damage));
         }
@@ -91,6 +96,9 @@ public class EmberMinigun : WonderWeapon
         lava.damagePerSecond = 12f;
         lava.slowMultiplier = 0.7f;
         EffectPool.Spawn(ground, 2.4f, 3.5f, EffectPool.Style.Lava);
+        Sfx.StopLoop(this);
+        Sfx.Play(SfxId.ExplosionBig, ground, 0.8f, 1.2f);
+        Sfx.Play(SfxId.CastFire, ground);
         PowerFx.Flash(ground + Vector3.up, color, 10f, 7f, 0.4f);
         PowerFx.Sparks(ground + Vector3.up * 0.5f, color, 40, 7f, 0.7f, 0.08f, 1f, Vector3.up, 150f);
         PowerFx.Puffs(ground + Vector3.up, new Color(0.15f, 0.1f, 0.08f, 1f), 8, 2f, 1f, 1.2f, lift: 1.5f);
@@ -102,5 +110,6 @@ public class EmberMinigun : WonderWeapon
     {
         if (movement != null) movement.ClearSpeedModifier(SpeedKey);
         Rumble.Release(Pad, SpeedKey);
+        Sfx.StopLoop(this);
     }
 }

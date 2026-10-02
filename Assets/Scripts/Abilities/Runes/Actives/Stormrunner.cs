@@ -47,6 +47,7 @@ public class Stormrunner : MonoBehaviour
         AbilityKit.Shockwave(transform.position, 3f, color, 0.35f);
         CameraShake.Shake(0.2f, 0.2f);
         Rumble.Play(gameObject, 0.5f, 1f, 0.3f);
+        Sfx.Play(SfxId.ThunderMaul, transform.position, 0.8f, 1.1f);   // the sky answers
     }
 
     void Blink()
@@ -73,6 +74,8 @@ public class Stormrunner : MonoBehaviour
         PowerFx.Sparks(from + Vector3.up, core, 14, 5f, 0.35f, 0.06f, 1f);
         PowerFx.Sparks(to + Vector3.up, core, 18, 6f, 0.4f, 0.06f, 1f);
         Rumble.Play(gameObject, 0.2f, 0.7f, 0.12f);
+        Sfx.Play(SfxId.Blink, to);
+        Sfx.Play(SfxId.Zap, to, 0.7f);
     }
 
     void Update()

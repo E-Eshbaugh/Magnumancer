@@ -46,12 +46,14 @@ public class PauseUIControl : MonoBehaviour
             _stickReleased = false;
             _currentIndex = Mathf.Max(0, _currentIndex - 1);
             UpdateActiveSelector();
+            Sfx.Play(SfxId.UiMove);
         }
         else if (_stickReleased && y < -threshold)
         {
             _stickReleased = false;
             _currentIndex = Mathf.Min(selectors.Length - 1, _currentIndex + 1);
             UpdateActiveSelector();
+            Sfx.Play(SfxId.UiMove);
         }
 
         // 2) Confirm with A (buttonSouth)
@@ -109,11 +111,13 @@ public class PauseUIControl : MonoBehaviour
                 break;
             case 1:
                 // Return to MainMenu scene
+                Sfx.Play(SfxId.UiConfirm);
                 GamePause.Resume(); // unpause before scene load
                 SceneManager.LoadScene(MenuScenes.Hall);
                 break;
             case 2:
                 // Settings placeholder
+                Sfx.Play(SfxId.UiError);
                 Debug.Log("PauseMenu: Settings selected (not implemented)");
                 break;
         }
